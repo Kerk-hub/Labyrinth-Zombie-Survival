@@ -203,11 +203,9 @@ GM.FogRed = 30
 GM.FogGreen = 30
 GM.FogBlue = 30
 
-function GM:ClickedPlayerButton(pl, button)
-end
+function GM:ClickedPlayerButton(pl, button) end
 
-function GM:ClickedEndBoardPlayerButton(pl, button)
-end
+function GM:ClickedEndBoardPlayerButton(pl, button) end
 
 function GM:CenterNotify(...)
 	if self.CenterNotificationHUD and self.CenterNotificationHUD:IsValid() then
@@ -242,14 +240,11 @@ function GM:_InputMouseApply(cmd, x, y, ang)
 	end
 end
 
-function GM:_GUIMousePressed(mc)
-end
+function GM:_GUIMousePressed(mc) end
 
-function GM:TryHumanPickup(pl, entity)
-end
+function GM:TryHumanPickup(pl, entity) end
 
-function GM:AddExtraOptions(list, window)
-end
+function GM:AddExtraOptions(list, window) end
 
 function GM:SpawnMenuEnabled()
 	return false
@@ -269,11 +264,9 @@ function GM:_HUDWeaponPickedUp(wep)
 	end
 end
 
-function GM:HUDItemPickedUp(itemname)
-end
+function GM:HUDItemPickedUp(itemname) end
 
-function GM:HUDAmmoPickedUp(itemname, amount)
-end
+function GM:HUDAmmoPickedUp(itemname, amount) end
 
 function GM:InitPostEntity()
 	self:CreateLateVGUI()
@@ -285,7 +278,9 @@ function GM:InitPostEntity()
 
 	gamemode.Call("EvaluateFilmMode")
 
-	timer.Simple(2, function() GAMEMODE:GetFogData() end)
+	timer.Simple(2, function()
+		GAMEMODE:GetFogData()
+	end)
 
 	RunConsoleCommand("pp_bloom", "0")
 end
@@ -319,7 +314,9 @@ function GM:SetupFog()
 end
 
 function GM:_SetupWorldFog()
-	if self.DeathFog == 0 and not MySelf.DimVision then return end
+	if self.DeathFog == 0 and not MySelf.DimVision then
+		return
+	end
 
 	self:SetupFog()
 
@@ -334,7 +331,9 @@ function GM:_SetupWorldFog()
 end
 
 function GM:_SetupSkyboxFog(skyboxscale)
-	if self.DeathFog == 0 and not MySelf.DimVision then return end
+	if self.DeathFog == 0 and not MySelf.DimVision then
+		return
+	end
 
 	self:SetupFog()
 
@@ -352,7 +351,11 @@ function GM:PreDrawSkyBox()
 	self.DrawingInSky = true
 end
 
-local matSky = CreateMaterial("SkyOverride", "UnlitGeneric", {["$basetexture"] = "color/white", ["$vertexcolor"] = 1, ["$vertexalpha"] = 1, ["$model"] = 1})
+local matSky = CreateMaterial(
+	"SkyOverride",
+	"UnlitGeneric",
+	{ ["$basetexture"] = "color/white", ["$vertexcolor"] = 1, ["$vertexalpha"] = 1, ["$model"] = 1 }
+)
 local colSky = Color(0, 30, 0)
 function GM:PostDrawSkyBox()
 	self.DrawingInSky = false
@@ -364,17 +367,17 @@ function GM:PostDrawSkyBox()
 		colSky.g = self.DeathFog * 30
 
 		cam_Start3D(EyePos(), EyeAngles())
-			render_SuppressEngineLighting(true)
+		render_SuppressEngineLighting(true)
 
-			render_SetMaterial(matSky)
+		render_SetMaterial(matSky)
 
-			render_DrawQuadEasy(Vector(0, 0, 10240), Vector(0, 0, -1), 20480, 20480, colSky, 0)
-			render_DrawQuadEasy(Vector(0, 10240, 0), Vector(0, -1, 0), 20480, 20480, colSky, 0)
-			render_DrawQuadEasy(Vector(0, -10240, 0), Vector(0, 1, 0), 20480, 20480, colSky, 0)
-			render_DrawQuadEasy(Vector(10240, 0, 0), Vector(-1, 0, 0), 20480, 20480, colSky, 0)
-			render_DrawQuadEasy(Vector(-10240, 0, 0), Vector(1, 0, 0), 20480, 20480, colSky, 0)
+		render_DrawQuadEasy(Vector(0, 0, 10240), Vector(0, 0, -1), 20480, 20480, colSky, 0)
+		render_DrawQuadEasy(Vector(0, 10240, 0), Vector(0, -1, 0), 20480, 20480, colSky, 0)
+		render_DrawQuadEasy(Vector(0, -10240, 0), Vector(0, 1, 0), 20480, 20480, colSky, 0)
+		render_DrawQuadEasy(Vector(10240, 0, 0), Vector(-1, 0, 0), 20480, 20480, colSky, 0)
+		render_DrawQuadEasy(Vector(-10240, 0, 0), Vector(1, 0, 0), 20480, 20480, colSky, 0)
 
-			render_SuppressEngineLighting(false)
+		render_SuppressEngineLighting(false)
 		cam_End3D()
 	end
 end
@@ -412,9 +415,13 @@ function GM.PostPlayerDrawMedical(pl)
 
 			render_SuppressEngineLighting(true)
 			render_ModelMaterialOverride(matAura)
-			render_SetBlend((1 - dist / MedicalAuraDistance) * 0.1 * (1 + math.abs(math.sin((CurTime() + pl:EntIndex()) * 4)) * 0.05))
+			render_SetBlend(
+				(1 - dist / MedicalAuraDistance)
+					* 0.1
+					* (1 + math.abs(math.sin((CurTime() + pl:EntIndex()) * 4)) * 0.05)
+			)
 			render_SetColorModulation(1 - green, green, pl:GetDTBool(DT_PLAYER_BOOL_FRAIL) and 1 or 0)
-				pl:DrawModel()
+			pl:DrawModel()
 			render_SetColorModulation(1, 1, 1)
 			render_SetBlend(1)
 			render_ModelMaterialOverride()
@@ -546,12 +553,26 @@ function GM:DrawFearMeter(power, screenscale)
 	surface_SetMaterial(matNeedle)
 	surface_SetDrawColor(160, 160, 160, 225)
 	local rot = math.Clamp((0.5 - currentpower) + math.sin(RealTime() * 10) * 0.01, -0.5, 0.5) * 300
-	surface_DrawTexturedRectRotated(w * 0.5 - math.max(0, rot * size * -0.0001), h - half_size - math.abs(rot) * size * 0.00015, size, size, rot)
+	surface_DrawTexturedRectRotated(
+		w * 0.5 - math.max(0, rot * size * -0.0001),
+		h - half_size - math.abs(rot) * size * 0.00015,
+		size,
+		size,
+		rot
+	)
 
 	if P_Team(MySelf) == TEAM_UNDEAD then
 		if self:GetDynamicSpawning() and self:ShouldUseAlternateDynamicSpawn() then
 			local obs = MySelf:GetObserverTarget()
-			spawngreen = math.Approach(spawngreen, self:DynamicSpawnIsValid(obs and obs:IsValid() and obs:IsPlayer() and obs:Team() == TEAM_UNDEAD and obs or MySelf) and 1 or 0, FrameTime() * 4)
+			spawngreen = math.Approach(
+				spawngreen,
+				self:DynamicSpawnIsValid(
+					obs and obs:IsValid() and obs:IsPlayer() and obs:Team() == TEAM_UNDEAD and obs or MySelf
+				)
+						and 1
+					or 0,
+				FrameTime() * 4
+			)
 
 			local sy = my + size * 0.6953
 			local gsize = size * 0.085
@@ -563,7 +584,14 @@ function GM:DrawFearMeter(power, screenscale)
 		end
 
 		if currentpower > 0 and not self.ZombieEscape then
-			draw_SimpleTextBlurry(translate.Format("resist_x", math.ceil(self:GetDamageResistance(currentpower) * 100)), "ZSDamageResistance", w * 0.5, my + size * 0.75, Color(currentpower * 200, 200 - currentpower * 200, 0, 255), TEXT_ALIGN_CENTER)
+			draw_SimpleTextBlurry(
+				translate.Format("resist_x", math.ceil(self:GetDamageResistance(currentpower) * 100)),
+				"ZSDamageResistance",
+				w * 0.5,
+				my + size * 0.75,
+				Color(currentpower * 200, 200 - currentpower * 200, 0, 255),
+				TEXT_ALIGN_CENTER
+			)
 		end
 	end
 
@@ -576,7 +604,7 @@ function GM:DrawFearMeter(power, screenscale)
 
 		local sigils = GAMEMODE.CachedSigils
 		local corruptsigils = 0
-		for i=1, self.MaxSigils do
+		for i = 1, self.MaxSigils do
 			sigil = sigils[i]
 			health = 0
 			maxhealth = 0
@@ -655,8 +683,7 @@ function GM:IsBabyMode()
 	return GetGlobalBool("babymode", false)
 end
 
-function GM:PostRender()
-end
+function GM:PostRender() end
 
 local lastwarntim = -1
 --local NextGas = 0
@@ -728,7 +755,13 @@ function GM:_Think()
 	if myteam == TEAM_HUMAN then
 		local wep = MySelf:GetActiveWeapon()
 		if wep:IsValid() and wep.GetIronsights and wep:GetIronsights() then
-			self.FOVLerp = math.Approach(self.FOVLerp, wep.IsScoped and not self.DisableScopes and wep.IronsightsMultiplier or not wep.IsScoped and wep.IronsightsMultiplier or 0.6, FrameTime() * 4)
+			self.FOVLerp = math.Approach(
+				self.FOVLerp,
+				wep.IsScoped and not self.DisableScopes and wep.IronsightsMultiplier
+					or not wep.IsScoped and wep.IronsightsMultiplier
+					or 0.6,
+				FrameTime() * 4
+			)
 		elseif self.FOVLerp ~= 1 then
 			self.FOVLerp = math.Approach(self.FOVLerp, 1, FrameTime() * 5)
 		end
@@ -778,7 +811,9 @@ local cv_ShouldPlayMusic = CreateClientConVar("zs_playmusic", 1, true, false)
 local NextBeat = 0
 local LastBeatLevel = 0
 function GM:PlayBeats(teamid, fear)
-	if RealTime() <= NextBeat or not gamemode.Call("ShouldPlayBeats", teamid, fear) then return end
+	if RealTime() <= NextBeat or not gamemode.Call("ShouldPlayBeats", teamid, fear) then
+		return
+	end
 
 	--if (LASTHUMAN or self:GetAllSigilsDestroyed()) and cv_ShouldPlayMusic:GetBool() then
 	if LASTHUMAN and cv_ShouldPlayMusic:GetBool() then
@@ -787,10 +822,14 @@ function GM:PlayBeats(teamid, fear)
 		return
 	end
 
-	if fear <= 0 or not self.BeatsEnabled then return end
+	if fear <= 0 or not self.BeatsEnabled then
+		return
+	end
 
 	local beats = self.Beats[teamid == TEAM_HUMAN and self.BeatSetHuman or self.BeatSetZombie]
-	if not beats then return end
+	if not beats then
+		return
+	end
 
 	LastBeatLevel = math.Approach(LastBeatLevel, math.ceil(fear * 10), 3)
 
@@ -817,7 +856,16 @@ function GM:DrawPackUpBar(x, y, fraction, notowner, screenscale)
 	surface_DrawRect(startx + 3, y + 3, barwidth - 6, barheight - 6)
 	surface_DrawOutlinedRect(startx, y, maxbarwidth, barheight)
 
-	draw_SimpleText(notowner and CurTime() % 2 < 1 and translate.Format("requires_x_people", 4) or notowner and translate.Get("packing_others_object") or translate.Get("packing"), "ZSHUDFontSmall", x, y - draw_GetFontHeight("ZSHUDFontSmall") - 2, col, TEXT_ALIGN_CENTER)
+	draw_SimpleText(
+		notowner and CurTime() % 2 < 1 and translate.Format("requires_x_people", 4)
+			or notowner and translate.Get("packing_others_object")
+			or translate.Get("packing"),
+		"ZSHUDFontSmall",
+		x,
+		y - draw_GetFontHeight("ZSHUDFontSmall") - 2,
+		col,
+		TEXT_ALIGN_CENTER
+	)
 end
 
 local colSigilTeleport = Color(125, 215, 255, 220)
@@ -841,9 +889,30 @@ function GM:DrawSigilTeleportBar(x, y, fraction, target, screenscale)
 	surface_DrawRect(startx + 3, y + 3, barwidth - 6, barheight - 6)
 	surface_DrawOutlinedRect(startx, y, maxbarwidth, barheight)
 
-	draw_SimpleText(translate.Format("teleporting_to_sigil", letter), "ZSHUDFontSmall", x, y - draw_GetFontHeight("ZSHUDFontSmall") - 2, colSigilTeleport, TEXT_ALIGN_CENTER)
-	draw_SimpleText(translate.Get("press_shift_to_cancel"), "ZSHUDFontSmaller", x, y + draw_GetFontHeight("ZSHUDFontSmaller") - 16, colSigilTeleport, TEXT_ALIGN_CENTER)
-	draw_SimpleText(translate.Get("point_at_a_sigil_to_choose_destination"), "ZSHUDFontSmaller", x, y + draw_GetFontHeight("ZSHUDFontSmaller") * 2 - 16, colSigilTeleport, TEXT_ALIGN_CENTER)
+	draw_SimpleText(
+		translate.Format("teleporting_to_sigil", letter),
+		"ZSHUDFontSmall",
+		x,
+		y - draw_GetFontHeight("ZSHUDFontSmall") - 2,
+		colSigilTeleport,
+		TEXT_ALIGN_CENTER
+	)
+	draw_SimpleText(
+		translate.Get("press_shift_to_cancel"),
+		"ZSHUDFontSmaller",
+		x,
+		y + draw_GetFontHeight("ZSHUDFontSmaller") - 16,
+		colSigilTeleport,
+		TEXT_ALIGN_CENTER
+	)
+	draw_SimpleText(
+		translate.Get("point_at_a_sigil_to_choose_destination"),
+		"ZSHUDFontSmaller",
+		x,
+		y + draw_GetFontHeight("ZSHUDFontSmaller") * 2 - 16,
+		colSigilTeleport,
+		TEXT_ALIGN_CENTER
+	)
 end
 
 function GM:HumanHUD(screenscale)
@@ -853,9 +922,21 @@ function GM:HumanHUD(screenscale)
 	local packup = MySelf.PackUp
 	local sigiltp = MySelf.SigilTeleport
 	if packup and packup:IsValid() then
-		self:DrawPackUpBar(w * 0.5, h * 0.55, 1 - packup:GetTimeRemaining() / packup:GetMaxTime(), packup:GetNotOwner(), screenscale)
+		self:DrawPackUpBar(
+			w * 0.5,
+			h * 0.55,
+			1 - packup:GetTimeRemaining() / packup:GetMaxTime(),
+			packup:GetNotOwner(),
+			screenscale
+		)
 	elseif sigiltp and sigiltp:IsValid() then
-		self:DrawSigilTeleportBar(w * 0.5, h * 0.55, 1 - sigiltp:GetTimeRemaining() / sigiltp:GetMaxTime(), sigiltp:GetTargetSigil(), screenscale)
+		self:DrawSigilTeleportBar(
+			w * 0.5,
+			h * 0.55,
+			1 - sigiltp:GetTimeRemaining() / sigiltp:GetMaxTime(),
+			sigiltp:GetTargetSigil(),
+			screenscale
+		)
 	end
 
 	if not self.RoundEnded then
@@ -863,15 +944,48 @@ function GM:HumanHUD(screenscale)
 			local txth = draw_GetFontHeight("ZSHUDFontSmall")
 			local desiredzombies = self:GetDesiredStartingZombies()
 
-			draw_SimpleTextBlurry(translate.Get("waiting_for_players").." "..util.ToMinutesSecondsCD(math.max(0, self:GetWaveStart() - curtime)), "ZSHUDFontSmall", w * 0.5, h * 0.25, COLOR_GRAY, TEXT_ALIGN_CENTER)
+			draw_SimpleTextBlurry(
+				translate.Get("waiting_for_players")
+					.. " "
+					.. util.ToMinutesSecondsCD(math.max(0, self:GetWaveStart() - curtime)),
+				"ZSHUDFontSmall",
+				w * 0.5,
+				h * 0.25,
+				COLOR_GRAY,
+				TEXT_ALIGN_CENTER
+			)
 
 			if desiredzombies > 0 then
-				draw_SimpleTextBlurry(translate.Get(self:HasSigils() and "humans_furthest_from_sigils_are_zombies" or "humans_closest_to_spawns_are_zombies"), "ZSHUDFontSmall", w * 0.5, h * 0.25 + txth, COLOR_GRAY, TEXT_ALIGN_CENTER)
-				draw_SimpleTextBlurry(translate.Format("number_of_initial_zombies_this_game", self.WaveOneZombies * 100, desiredzombies), "ZSHUDFontSmall", w * 0.5, h * 0.7, COLOR_GRAY, TEXT_ALIGN_CENTER)
+				draw_SimpleTextBlurry(
+					translate.Get(
+						self:HasSigils() and "humans_furthest_from_sigils_are_zombies"
+							or "humans_closest_to_spawns_are_zombies"
+					),
+					"ZSHUDFontSmall",
+					w * 0.5,
+					h * 0.25 + txth,
+					COLOR_GRAY,
+					TEXT_ALIGN_CENTER
+				)
+				draw_SimpleTextBlurry(
+					translate.Format("number_of_initial_zombies_this_game", self.WaveOneZombies * 100, desiredzombies),
+					"ZSHUDFontSmall",
+					w * 0.5,
+					h * 0.7,
+					COLOR_GRAY,
+					TEXT_ALIGN_CENTER
+				)
 
 				for i, pl in ipairs(self.ZombieVolunteers) do
 					if pl:IsValid() then
-						draw_SimpleTextBlurry(translate.Get("zombie_volunteers"), "ZSHUDFontSmall", w * 0.5, h * 0.7 + txth, COLOR_GRAY, TEXT_ALIGN_CENTER)
+						draw_SimpleTextBlurry(
+							translate.Get("zombie_volunteers"),
+							"ZSHUDFontSmall",
+							w * 0.5,
+							h * 0.7 + txth,
+							COLOR_GRAY,
+							TEXT_ALIGN_CENTER
+						)
 						break
 					end
 				end
@@ -880,7 +994,14 @@ function GM:HumanHUD(screenscale)
 				txth = draw_GetFontHeight("ZSHUDFontTiny")
 				for i, pl in ipairs(self.ZombieVolunteers) do
 					if pl:IsValid() then
-						draw_SimpleTextBlurry(pl:Name(), "ZSHUDFontTiny", w * 0.5, y, pl == MySelf and COLOR_SOFTRED or COLOR_GRAY, TEXT_ALIGN_CENTER)
+						draw_SimpleTextBlurry(
+							pl:Name(),
+							"ZSHUDFontTiny",
+							w * 0.5,
+							y,
+							pl == MySelf and COLOR_SOFTRED or COLOR_GRAY,
+							TEXT_ALIGN_CENTER
+						)
 						y = y + txth * 0.8
 					end
 				end
@@ -894,23 +1015,47 @@ function GM:HumanHUD(screenscale)
 			surface_SetDrawColor(30, 30, 230, 180)
 			surface_DrawOutlinedRect(w * 0.4, h * 0.35, w * 0.2, 12)
 			surface_DrawRect(w * 0.4, h * 0.35, w * 0.2 * (1 - drown:GetDrown()), 12)
-			draw_SimpleTextBlurry(translate.Get("breath").." ", "ZSHUDFontSmall", w * 0.4, h * 0.35 + 6, COLOR_LBLUE, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+			draw_SimpleTextBlurry(
+				translate.Get("breath") .. " ",
+				"ZSHUDFontSmall",
+				w * 0.4,
+				h * 0.35 + 6,
+				COLOR_LBLUE,
+				TEXT_ALIGN_RIGHT,
+				TEXT_ALIGN_CENTER
+			)
 		end
 	end
 
 	local lockon = self.HumanMenuLockOn
 	if lockon and self:ValidMenuLockOnTarget(MySelf, lockon) then
 		local txth = draw_GetFontHeight("ZSHUDFontSmall")
-		draw_SimpleTextBlurry(translate.Format("giving_items_to", lockon:Name()), "ZSHUDFontSmall", w * 0.5, h * 0.55 + txth, COLOR_GRAY, TEXT_ALIGN_CENTER)
+		draw_SimpleTextBlurry(
+			translate.Format("giving_items_to", lockon:Name()),
+			"ZSHUDFontSmall",
+			w * 0.5,
+			h * 0.55 + txth,
+			COLOR_GRAY,
+			TEXT_ALIGN_CENTER
+		)
 	end
 
 	if gamemode.Call("PlayerCanPurchase", MySelf) then
-		draw_SimpleTextBlurry(translate.Get("press_f2_for_the_points_shop"), "ZSHUDFontSmall", w * 0.5, screenscale * 135, COLOR_GRAY, TEXT_ALIGN_CENTER)
+		draw_SimpleTextBlurry(
+			translate.Get("press_f2_for_the_points_shop"),
+			"ZSHUDFontSmall",
+			w * 0.5,
+			screenscale * 135,
+			COLOR_GRAY,
+			TEXT_ALIGN_CENTER
+		)
 	end
 end
 
 function GM:_HUDPaint()
-	if self.FilmMode then return end
+	if self.FilmMode then
+		return
+	end
 
 	local screenscale = BetterScreenScale()
 	local myteam = P_Team(MySelf)
@@ -928,7 +1073,15 @@ function GM:_HUDPaint()
 	end
 
 	if GetGlobalBool("classicmode") then
-		draw_SimpleTextBlurry(translate.Get("classic_mode"), "ZSHUDFontSmaller", 4, ScrH() - 4, COLOR_GRAY, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM_REAL)
+		draw_SimpleTextBlurry(
+			translate.Get("classic_mode"),
+			"ZSHUDFontSmaller",
+			4,
+			ScrH() - 4,
+			COLOR_GRAY,
+			TEXT_ALIGN_LEFT,
+			TEXT_ALIGN_BOTTOM_REAL
+		)
 	end
 end
 
@@ -940,13 +1093,27 @@ function GM:ZombieObserverHUD(obsmode)
 		local target = MySelf:GetObserverTarget()
 		if target and target:IsValid() then
 			if target:IsPlayer() and P_Team(target) == TEAM_UNDEAD then
-				draw_SimpleTextBlur(translate.Format("observing_x", target:Name(), math.max(0, target:Health())), "ZSHUDFontSmall", w * 0.5, h * 0.75 - texh - 32, COLOR_DARKRED, TEXT_ALIGN_CENTER)
+				draw_SimpleTextBlur(
+					translate.Format("observing_x", target:Name(), math.max(0, target:Health())),
+					"ZSHUDFontSmall",
+					w * 0.5,
+					h * 0.75 - texh - 32,
+					COLOR_DARKRED,
+					TEXT_ALIGN_CENTER
+				)
 			end
 
 			if target.IsCreeperNest or target.MinionSpawn then
 				local txt = target.IsCreeperNest and "Nest" or "Gore Child"
 
-				draw_SimpleTextBlur(translate.Format("observing_x_simple", txt), "ZSHUDFontSmall", w * 0.5, h * 0.75 - texh - 32, COLOR_DARKRED, TEXT_ALIGN_CENTER)
+				draw_SimpleTextBlur(
+					translate.Format("observing_x_simple", txt),
+					"ZSHUDFontSmall",
+					w * 0.5,
+					h * 0.75 - texh - 32,
+					COLOR_DARKRED,
+					TEXT_ALIGN_CENTER
+				)
 			end
 
 			dyn = self:GetDynamicSpawning() and self:DynamicSpawnIsValid(target)
@@ -957,18 +1124,57 @@ function GM:ZombieObserverHUD(obsmode)
 	local x, y = w / 2, h * 0.68
 
 	if self:GetWaveActive() then
-		draw_SimpleTextBlurry(translate.Get("press_lmb_to_spawn"), "ZSHUDFontSmall", x, y, COLOR_GRAY, TEXT_ALIGN_CENTER)
-		draw_SimpleTextBlurry(translate.Get("press_rmb_to_spawn_close"), "ZSHUDFontSmall", x, y + space, COLOR_GRAY, TEXT_ALIGN_CENTER)
-		draw_SimpleTextBlurry(translate.Get("press_reload_to_spawn_far"), "ZSHUDFontSmall", x, y + space * 2, COLOR_GRAY, TEXT_ALIGN_CENTER)
-		draw_SimpleTextBlurry(translate.Get("press_alt_nest_menu"), "ZSHUDFontSmaller", x, y + space * 4, COLOR_GRAY, TEXT_ALIGN_CENTER)
+		draw_SimpleTextBlurry(
+			translate.Get("press_lmb_to_spawn"),
+			"ZSHUDFontSmall",
+			x,
+			y,
+			COLOR_GRAY,
+			TEXT_ALIGN_CENTER
+		)
+		draw_SimpleTextBlurry(
+			translate.Get("press_rmb_to_spawn_close"),
+			"ZSHUDFontSmall",
+			x,
+			y + space,
+			COLOR_GRAY,
+			TEXT_ALIGN_CENTER
+		)
+		draw_SimpleTextBlurry(
+			translate.Get("press_reload_to_spawn_far"),
+			"ZSHUDFontSmall",
+			x,
+			y + space * 2,
+			COLOR_GRAY,
+			TEXT_ALIGN_CENTER
+		)
+		draw_SimpleTextBlurry(
+			translate.Get("press_alt_nest_menu"),
+			"ZSHUDFontSmaller",
+			x,
+			y + space * 4,
+			COLOR_GRAY,
+			TEXT_ALIGN_CENTER
+		)
 	end
 
-	draw_SimpleTextBlurry(translate.Get("press_jump_to_free_roam"), "ZSHUDFontSmall", x, y + space * 3, COLOR_GRAY, TEXT_ALIGN_CENTER)
+	draw_SimpleTextBlurry(
+		translate.Get("press_jump_to_free_roam"),
+		"ZSHUDFontSmall",
+		x,
+		y + space * 3,
+		COLOR_GRAY,
+		TEXT_ALIGN_CENTER
+	)
 end
 
 local colLifeStats = Color(255, 50, 50, 255)
 function GM:ZombieHUD()
-	if self.LifeStatsEndTime and CurTime() < self.LifeStatsEndTime and (self.LifeStatsBarricadeDamage > 0 or self.LifeStatsHumanDamage > 0 or self.LifeStatsBrainsEaten > 0) then
+	if
+		self.LifeStatsEndTime
+		and CurTime() < self.LifeStatsEndTime
+		and (self.LifeStatsBarricadeDamage > 0 or self.LifeStatsHumanDamage > 0 or self.LifeStatsBrainsEaten > 0)
+	then
 		colLifeStats.a = math.Clamp((self.LifeStatsEndTime - CurTime()) / (self.LifeStatsLifeTime * 0.33), 0, 1) * 255
 
 		local th = draw_GetFontHeight("ZSHUDFontSmall")
@@ -979,15 +1185,36 @@ function GM:ZombieHUD()
 		y = y + th
 
 		if self.LifeStatsBarricadeDamage > 0 then
-			draw_SimpleTextBlur(translate.Format("x_damage_to_barricades", self.LifeStatsBarricadeDamage), "ZSHUDFontSmall", x, y, colLifeStats, TEXT_ALIGN_LEFT)
+			draw_SimpleTextBlur(
+				translate.Format("x_damage_to_barricades", self.LifeStatsBarricadeDamage),
+				"ZSHUDFontSmall",
+				x,
+				y,
+				colLifeStats,
+				TEXT_ALIGN_LEFT
+			)
 			y = y + th
 		end
 		if self.LifeStatsHumanDamage > 0 then
-			draw_SimpleTextBlur(translate.Format("x_damage_to_humans", self.LifeStatsHumanDamage), "ZSHUDFontSmall", x, y, colLifeStats, TEXT_ALIGN_LEFT)
+			draw_SimpleTextBlur(
+				translate.Format("x_damage_to_humans", self.LifeStatsHumanDamage),
+				"ZSHUDFontSmall",
+				x,
+				y,
+				colLifeStats,
+				TEXT_ALIGN_LEFT
+			)
 			y = y + th
 		end
 		if self.LifeStatsBrainsEaten > 0 then
-			draw_SimpleTextBlur(translate.Format("x_brains_eaten", self.LifeStatsBrainsEaten), "ZSHUDFontSmall", x, y, colLifeStats, TEXT_ALIGN_LEFT)
+			draw_SimpleTextBlur(
+				translate.Format("x_brains_eaten", self.LifeStatsBrainsEaten),
+				"ZSHUDFontSmall",
+				x,
+				y,
+				colLifeStats,
+				TEXT_ALIGN_LEFT
+			)
 			y = y + th
 		end
 	end
@@ -1000,7 +1227,14 @@ function GM:ZombieHUD()
 		local y = ScrH() * 0.3
 
 		if not self:GetWaveActive() then
-			draw_SimpleTextBlur(translate.Get("waiting_for_next_wave"), "ZSHUDFont", x, y, COLOR_DARKRED, TEXT_ALIGN_CENTER)
+			draw_SimpleTextBlur(
+				translate.Get("waiting_for_next_wave"),
+				"ZSHUDFont",
+				x,
+				y,
+				COLOR_DARKRED,
+				TEXT_ALIGN_CENTER
+			)
 		end
 	end
 
@@ -1009,9 +1243,30 @@ function GM:ZombieHUD()
 		if pl and pl:IsValid() then
 			local x, y = ScrW() / 2, ScrH() * 0.3 + draw_GetFontHeight("ZSHUDFont")
 			if pl == MySelf then
-				draw_SimpleTextBlur(translate.Format("you_will_be_x_soon", translate.Get(GAMEMODE.ZombieClasses[GAMEMODE.NextBossZombieClass].TranslationName)), "ZSHUDFont", x, y, Color(255, 50, 50), TEXT_ALIGN_CENTER)
+				draw_SimpleTextBlur(
+					translate.Format(
+						"you_will_be_x_soon",
+						translate.Get(GAMEMODE.ZombieClasses[GAMEMODE.NextBossZombieClass].TranslationName)
+					),
+					"ZSHUDFont",
+					x,
+					y,
+					Color(255, 50, 50),
+					TEXT_ALIGN_CENTER
+				)
 			else
-				draw_SimpleTextBlur(translate.Format("x_will_be_y_soon", pl:Name(), translate.Get(GAMEMODE.ZombieClasses[GAMEMODE.NextBossZombieClass].TranslationName)), "ZSHUDFont", x, y, COLOR_GRAY, TEXT_ALIGN_CENTER)
+				draw_SimpleTextBlur(
+					translate.Format(
+						"x_will_be_y_soon",
+						pl:Name(),
+						translate.Get(GAMEMODE.ZombieClasses[GAMEMODE.NextBossZombieClass].TranslationName)
+					),
+					"ZSHUDFont",
+					x,
+					y,
+					COLOR_GRAY,
+					TEXT_ALIGN_CENTER
+				)
 			end
 		end
 	end
@@ -1049,7 +1304,9 @@ function GM:_PostDrawTranslucentRenderables()
 end
 
 function GM:DrawCrateIndicators()
-	if P_Team(MySelf) ~= TEAM_HUMAN or not MySelf:IsSkillActive(SKILL_INSIGHT) then return end
+	if P_Team(MySelf) ~= TEAM_HUMAN or not MySelf:IsSkillActive(SKILL_INSIGHT) then
+		return
+	end
 
 	local pos, distance, ang, deployable, alpha
 	local eyepos = EyePos()
@@ -1057,7 +1314,9 @@ function GM:DrawCrateIndicators()
 	surface_SetMaterial(matArsenal)
 
 	for i, arsenal in pairs(GAMEMODE.CachedArsenalEntities) do
-		if not arsenal:IsValid() then continue end
+		if not arsenal:IsValid() then
+			continue
+		end
 		deployable = arsenal.GetObjectOwner
 
 		pos = arsenal:GetPos()
@@ -1085,7 +1344,9 @@ function GM:DrawCrateIndicators()
 end
 
 function GM:DrawResupplyIndicators()
-	if P_Team(MySelf) ~= TEAM_HUMAN or not MySelf:IsSkillActive(SKILL_ACUITY) then return end
+	if P_Team(MySelf) ~= TEAM_HUMAN or not MySelf:IsSkillActive(SKILL_ACUITY) then
+		return
+	end
 
 	local pos, distance, ang, deployable, alpha
 	local eyepos = EyePos()
@@ -1093,7 +1354,9 @@ function GM:DrawResupplyIndicators()
 	surface_SetMaterial(matResupply)
 
 	for i, resupply in pairs(GAMEMODE.CachedResupplyEntities) do
-		if not resupply:IsValid() then continue end
+		if not resupply:IsValid() then
+			continue
+		end
 		deployable = resupply.GetObjectOwner
 
 		pos = resupply:GetPos()
@@ -1113,7 +1376,9 @@ function GM:DrawResupplyIndicators()
 			surface_DrawTexturedRect(-128, -128, 256, 256)
 
 			local timeremain = math.ceil(math.max(0, (MySelf.NextUse or 0) - CurTime()))
-			local txt = not MySelf.NextUse and translate.Get("ready") or timeremain > 0 and timeremain or translate.Get("ready")
+			local txt = not MySelf.NextUse and translate.Get("ready")
+				or timeremain > 0 and timeremain
+				or translate.Get("ready")
 			draw_SimpleTextBlurry(txt, "ZS3D2DFont2Big", 0, 128, COLOR_GRAY, TEXT_ALIGN_CENTER)
 
 			cam_End3D2D()
@@ -1123,7 +1388,9 @@ function GM:DrawResupplyIndicators()
 end
 
 function GM:DrawRemantlerIndicators()
-	if P_Team(MySelf) ~= TEAM_HUMAN or not MySelf:IsSkillActive(SKILL_VISION) then return end
+	if P_Team(MySelf) ~= TEAM_HUMAN or not MySelf:IsSkillActive(SKILL_VISION) then
+		return
+	end
 
 	local pos, distance, ang, deployable, alpha
 	local eyepos = EyePos()
@@ -1131,7 +1398,9 @@ function GM:DrawRemantlerIndicators()
 	surface_SetMaterial(matRemantler)
 
 	for i, remantler in pairs(GAMEMODE.CachedRemantlerEntities) do
-		if not remantler:IsValid() then continue end
+		if not remantler:IsValid() then
+			continue
+		end
 		deployable = remantler.GetObjectOwner
 
 		pos = remantler:GetPos()
@@ -1159,7 +1428,9 @@ function GM:DrawRemantlerIndicators()
 end
 
 function GM:DrawNestIndicators()
-	if P_Team(MySelf) ~= TEAM_ZOMBIE then return end
+	if P_Team(MySelf) ~= TEAM_ZOMBIE then
+		return
+	end
 
 	local pos, distance, ang, alpha
 	local eyepos = EyePos()
@@ -1167,7 +1438,9 @@ function GM:DrawNestIndicators()
 	surface_SetMaterial(matNest)
 
 	for i, nest in pairs(GAMEMODE.CachedNests) do
-		if not nest:IsValid() then continue end
+		if not nest:IsValid() then
+			continue
+		end
 
 		pos = nest:GetPos()
 		pos.z = pos.z + 32
@@ -1199,7 +1472,9 @@ function GM:DrawNestIndicators()
 end
 
 function GM:DrawSigilIndicators()
-	if not self:GetUseSigils() then return end
+	if not self:GetUseSigils() then
+		return
+	end
 
 	local health, pos, distance, maxhealth, corrupted, damageflash, missinghealthfrac, ang, alpha
 	local eyepos = EyePos()
@@ -1207,7 +1482,9 @@ function GM:DrawSigilIndicators()
 	surface_SetMaterial(matSigil)
 
 	for i, sigil in pairs(GAMEMODE.CachedSigils) do
-		if not sigil:IsValid() then continue end
+		if not sigil:IsValid() then
+			continue
+		end
 
 		health = sigil:GetSigilHealth()
 		if health > 0 then
@@ -1268,11 +1545,15 @@ function GM:RestartRound()
 end
 
 function GM:_HUDShouldDraw(name)
-	if self.FilmMode and name ~= "CHudWeaponSelection" then return false end
+	if self.FilmMode and name ~= "CHudWeaponSelection" then
+		return false
+	end
 
-	return name ~= "CHudHealth" and name ~= "CHudBattery"
-	and name ~= "CHudAmmo" and name ~= "CHudSecondaryAmmo"
-	and name ~= "CHudDamageIndicator"
+	return name ~= "CHudHealth"
+		and name ~= "CHudBattery"
+		and name ~= "CHudAmmo"
+		and name ~= "CHudSecondaryAmmo"
+		and name ~= "CHudDamageIndicator"
 end
 
 local Current = 0
@@ -1287,7 +1568,16 @@ function GM:_CachedFearPower()
 end
 
 function surface.CreateLegacyFont(font, size, weight, antialias, additive, name, shadow, outline, blursize)
-	surface.CreateFont(name, {font = font, size = size, weight = weight, antialias = antialias, additive = additive, shadow = shadow, outline = outline, blursize = blursize})
+	surface.CreateFont(name, {
+		font = font,
+		size = size,
+		weight = weight,
+		antialias = antialias,
+		additive = additive,
+		shadow = shadow,
+		outline = outline,
+		blursize = blursize,
+	})
 end
 
 local fontfamily = "Ghoulish Fright AOE"
@@ -1300,42 +1590,197 @@ function GM:Create3DFonts()
 	local fontsizeadd3D = 0
 	local fontweight3D = 0
 
-	surface.CreateLegacyFont(fontfamily3d, 28 + fontsizeadd3D, fontweight3D, false, false,  "ZS3D2DFontSmaller", false, true)
-	surface.CreateLegacyFont(fontfamily3d, 48 + fontsizeadd3D, fontweight3D, false, false,  "ZS3D2DFontSmall", false, true)
+	surface.CreateLegacyFont(
+		fontfamily3d,
+		28 + fontsizeadd3D,
+		fontweight3D,
+		false,
+		false,
+		"ZS3D2DFontSmaller",
+		false,
+		true
+	)
+	surface.CreateLegacyFont(
+		fontfamily3d,
+		48 + fontsizeadd3D,
+		fontweight3D,
+		false,
+		false,
+		"ZS3D2DFontSmall",
+		false,
+		true
+	)
 	surface.CreateLegacyFont(fontfamily3d, 72 + fontsizeadd3D, fontweight3D, false, false, "ZS3D2DFont", false, true)
-	surface.CreateLegacyFont(fontfamily3d, 128 + fontsizeadd3D, fontweight3D, false, false, "ZS3D2DFontBig", false, true)
-	surface.CreateLegacyFont(fontfamily3d, 28 + fontsizeadd3D, fontweight3D, false, false,  "ZS3D2DFontSmallerBlur", false, false, 16)
-	surface.CreateLegacyFont(fontfamily3d, 48 + fontsizeadd3D, fontweight3D, false, false,  "ZS3D2DFontSmallBlur", false, false, 16)
-	surface.CreateLegacyFont(fontfamily3d, 72 + fontsizeadd3D, fontweight3D, false, false, "ZS3D2DFontBlur", false, false, 16)
-	surface.CreateLegacyFont(fontfamily3d, 128 + fontsizeadd3D, fontweight3D, false, false, "ZS3D2DFontBigBlur", false, false, 16)
-	surface.CreateLegacyFont(fontfamily, 40 + fontsizeadd3D, fontweight3D, false, false,  "ZS3D2DFont2Smaller", false, true)
-	surface.CreateLegacyFont(fontfamily, 48 + fontsizeadd3D, fontweight3D, false, false,  "ZS3D2DFont2Small", false, true)
+	surface.CreateLegacyFont(
+		fontfamily3d,
+		128 + fontsizeadd3D,
+		fontweight3D,
+		false,
+		false,
+		"ZS3D2DFontBig",
+		false,
+		true
+	)
+	surface.CreateLegacyFont(
+		fontfamily3d,
+		28 + fontsizeadd3D,
+		fontweight3D,
+		false,
+		false,
+		"ZS3D2DFontSmallerBlur",
+		false,
+		false,
+		16
+	)
+	surface.CreateLegacyFont(
+		fontfamily3d,
+		48 + fontsizeadd3D,
+		fontweight3D,
+		false,
+		false,
+		"ZS3D2DFontSmallBlur",
+		false,
+		false,
+		16
+	)
+	surface.CreateLegacyFont(
+		fontfamily3d,
+		72 + fontsizeadd3D,
+		fontweight3D,
+		false,
+		false,
+		"ZS3D2DFontBlur",
+		false,
+		false,
+		16
+	)
+	surface.CreateLegacyFont(
+		fontfamily3d,
+		128 + fontsizeadd3D,
+		fontweight3D,
+		false,
+		false,
+		"ZS3D2DFontBigBlur",
+		false,
+		false,
+		16
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		40 + fontsizeadd3D,
+		fontweight3D,
+		false,
+		false,
+		"ZS3D2DFont2Smaller",
+		false,
+		true
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		48 + fontsizeadd3D,
+		fontweight3D,
+		false,
+		false,
+		"ZS3D2DFont2Small",
+		false,
+		true
+	)
 	surface.CreateLegacyFont(fontfamily, 72 + fontsizeadd3D, fontweight3D, false, false, "ZS3D2DFont2", false, true)
 	surface.CreateLegacyFont(fontfamily, 128 + fontsizeadd3D, fontweight3D, false, false, "ZS3D2DFont2Big", false, true)
-	surface.CreateLegacyFont(fontfamily, 40 + fontsizeadd3D, fontweight3D, false, false,  "ZS3D2DFont2SmallerBlur", false, false, 16)
-	surface.CreateLegacyFont(fontfamily, 48 + fontsizeadd3D, fontweight3D, false, false,  "ZS3D2DFont2SmallBlur", false, false, 16)
-	surface.CreateLegacyFont(fontfamily, 72 + fontsizeadd3D, fontweight3D, false, false, "ZS3D2DFont2Blur", false, false, 16)
-	surface.CreateLegacyFont(fontfamily, 128 + fontsizeadd3D, fontweight3D, false, false, "ZS3D2DFont2BigBlur", false, false, 16)
+	surface.CreateLegacyFont(
+		fontfamily,
+		40 + fontsizeadd3D,
+		fontweight3D,
+		false,
+		false,
+		"ZS3D2DFont2SmallerBlur",
+		false,
+		false,
+		16
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		48 + fontsizeadd3D,
+		fontweight3D,
+		false,
+		false,
+		"ZS3D2DFont2SmallBlur",
+		false,
+		false,
+		16
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		72 + fontsizeadd3D,
+		fontweight3D,
+		false,
+		false,
+		"ZS3D2DFont2Blur",
+		false,
+		false,
+		16
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		128 + fontsizeadd3D,
+		fontweight3D,
+		false,
+		false,
+		"ZS3D2DFont2BigBlur",
+		false,
+		false,
+		16
+	)
 
-	surface.CreateLegacyFont(fontfamilysm, 14 + fontsizeadd3D, fontweight3D, false, false,  "ZS3D2DUnstyleTiny", false, true)
-	surface.CreateLegacyFont(fontfamilysm, 24 + fontsizeadd3D, fontweight3D, false, false,  "ZS3D2DUnstyleSmallest", false, true)
-	surface.CreateLegacyFont(fontfamilysm, 36 + fontsizeadd3D, fontweight3D, false, false,  "ZS3D2DUnstyleSmaller", false, true)
+	surface.CreateLegacyFont(
+		fontfamilysm,
+		14 + fontsizeadd3D,
+		fontweight3D,
+		false,
+		false,
+		"ZS3D2DUnstyleTiny",
+		false,
+		true
+	)
+	surface.CreateLegacyFont(
+		fontfamilysm,
+		24 + fontsizeadd3D,
+		fontweight3D,
+		false,
+		false,
+		"ZS3D2DUnstyleSmallest",
+		false,
+		true
+	)
+	surface.CreateLegacyFont(
+		fontfamilysm,
+		36 + fontsizeadd3D,
+		fontweight3D,
+		false,
+		false,
+		"ZS3D2DUnstyleSmaller",
+		false,
+		true
+	)
 end
 
 function GM:CreateNonScaleFonts()
 	surface.CreateLegacyFont("tahoma", 96, 1000, true, false, "zshintfont", false, true)
 
 	-- Default, DefaultBold, DefaultSmall, etc. were changed when gmod13 hit. These are renamed fonts that have the old values.
-	surface.CreateFont("DefaultFontVerySmall", {font = "tahoma", size = 10, weight = 0, antialias = false})
-	surface.CreateFont("DefaultFontSmall", {font = "tahoma", size = 11, weight = 0, antialias = false})
-	surface.CreateFont("DefaultFontSmallDropShadow", {font = "tahoma", size = 11, weight = 0, shadow = true, antialias = false})
-	surface.CreateFont("DefaultFont", {font = "tahoma", size = 13, weight = 500, antialias = false})
-	surface.CreateFont("DefaultFontAA", {font = "tahoma", size = 13, weight = 500, antialias = true})
-	surface.CreateFont("DefaultFontBold", {font = "tahoma", size = 13, weight = 1000, antialias = false})
-	surface.CreateFont("DefaultFontLarge", {font = "tahoma", size = 16, weight = 0, antialias = false})
-	surface.CreateFont("DefaultFontLargeAA", {font = "tahoma", size = 16, weight = 0, antialias = true})
-	surface.CreateFont("DefaultFontLargest", {font = "tahoma", size = 22, weight = 0, antialias = false})
-	surface.CreateFont("DefaultFontLargestAA", {font = "tahoma", size = 22, weight = 0, antialias = true})
+	surface.CreateFont("DefaultFontVerySmall", { font = "tahoma", size = 10, weight = 0, antialias = false })
+	surface.CreateFont("DefaultFontSmall", { font = "tahoma", size = 11, weight = 0, antialias = false })
+	surface.CreateFont(
+		"DefaultFontSmallDropShadow",
+		{ font = "tahoma", size = 11, weight = 0, shadow = true, antialias = false }
+	)
+	surface.CreateFont("DefaultFont", { font = "tahoma", size = 13, weight = 500, antialias = false })
+	surface.CreateFont("DefaultFontAA", { font = "tahoma", size = 13, weight = 500, antialias = true })
+	surface.CreateFont("DefaultFontBold", { font = "tahoma", size = 13, weight = 1000, antialias = false })
+	surface.CreateFont("DefaultFontLarge", { font = "tahoma", size = 16, weight = 0, antialias = false })
+	surface.CreateFont("DefaultFontLargeAA", { font = "tahoma", size = 16, weight = 0, antialias = true })
+	surface.CreateFont("DefaultFontLargest", { font = "tahoma", size = 22, weight = 0, antialias = false })
+	surface.CreateFont("DefaultFontLargestAA", { font = "tahoma", size = 22, weight = 0, antialias = true })
 end
 
 function GM:CreateScalingFonts()
@@ -1354,46 +1799,296 @@ function GM:CreateScalingFonts()
 	surface.CreateLegacyFont("csd", screenscale * 72, 100, true, false, "zsdeathnoticecspa", false, false)
 	surface.CreateLegacyFont("HL2MP", screenscale * 72, 100, true, false, "zsdeathnoticepa", false, false)
 
-	surface.CreateLegacyFont(fontfamily, screenscale * (16 + fontsizeadd), fontweight, fontaa, false, "ZSHUDFontTiny", fontshadow, fontoutline)
-	surface.CreateLegacyFont(fontfamily, screenscale * (20 + fontsizeadd), fontweight, fontaa, false, "ZSHUDFontSmallest", fontshadow, fontoutline)
-	surface.CreateLegacyFont(fontfamily, screenscale * (22 + fontsizeadd), fontweight, fontaa, false, "ZSHUDFontSmaller", fontshadow, fontoutline)
-	surface.CreateLegacyFont(fontfamily, screenscale * (28 + fontsizeadd), fontweight, fontaa, false, "ZSHUDFontSmall", fontshadow, fontoutline)
-	surface.CreateLegacyFont(fontfamily, screenscale * (42 + fontsizeadd), fontweight, fontaa, false, "ZSHUDFont", fontshadow, fontoutline)
-	surface.CreateLegacyFont(fontfamily, screenscale * (72 + fontsizeadd), fontweight, fontaa, false, "ZSHUDFontBig", fontshadow, fontoutline)
-	surface.CreateLegacyFont(fontfamily, screenscale * (16 + fontsizeadd), fontweight, fontaa, false, "ZSHUDFontTinyBlur", false, false, 8)
-	surface.CreateLegacyFont(fontfamily, screenscale * (22 + fontsizeadd), fontweight, fontaa, false, "ZSHUDFontSmallerBlur", false, false, 8)
-	surface.CreateLegacyFont(fontfamily, screenscale * (28 + fontsizeadd), fontweight, fontaa, false, "ZSHUDFontSmallBlur", false, false, 8)
-	surface.CreateLegacyFont(fontfamily, screenscale * (42 + fontsizeadd), fontweight, fontaa, false, "ZSHUDFontBlur", false, false, 8)
-	surface.CreateLegacyFont(fontfamily, screenscale * (72 + fontsizeadd), fontweight, fontaa, false, "ZSHUDFontBigBlur", false, false, 8)
+	surface.CreateLegacyFont(
+		fontfamily,
+		screenscale * (16 + fontsizeadd),
+		fontweight,
+		fontaa,
+		false,
+		"ZSHUDFontTiny",
+		fontshadow,
+		fontoutline
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		screenscale * (20 + fontsizeadd),
+		fontweight,
+		fontaa,
+		false,
+		"ZSHUDFontSmallest",
+		fontshadow,
+		fontoutline
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		screenscale * (22 + fontsizeadd),
+		fontweight,
+		fontaa,
+		false,
+		"ZSHUDFontSmaller",
+		fontshadow,
+		fontoutline
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		screenscale * (28 + fontsizeadd),
+		fontweight,
+		fontaa,
+		false,
+		"ZSHUDFontSmall",
+		fontshadow,
+		fontoutline
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		screenscale * (42 + fontsizeadd),
+		fontweight,
+		fontaa,
+		false,
+		"ZSHUDFont",
+		fontshadow,
+		fontoutline
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		screenscale * (72 + fontsizeadd),
+		fontweight,
+		fontaa,
+		false,
+		"ZSHUDFontBig",
+		fontshadow,
+		fontoutline
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		screenscale * (16 + fontsizeadd),
+		fontweight,
+		fontaa,
+		false,
+		"ZSHUDFontTinyBlur",
+		false,
+		false,
+		8
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		screenscale * (22 + fontsizeadd),
+		fontweight,
+		fontaa,
+		false,
+		"ZSHUDFontSmallerBlur",
+		false,
+		false,
+		8
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		screenscale * (28 + fontsizeadd),
+		fontweight,
+		fontaa,
+		false,
+		"ZSHUDFontSmallBlur",
+		false,
+		false,
+		8
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		screenscale * (42 + fontsizeadd),
+		fontweight,
+		fontaa,
+		false,
+		"ZSHUDFontBlur",
+		false,
+		false,
+		8
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		screenscale * (72 + fontsizeadd),
+		fontweight,
+		fontaa,
+		false,
+		"ZSHUDFontBigBlur",
+		false,
+		false,
+		8
+	)
 
-	surface.CreateLegacyFont(fontfamily, screenscale * (20 + fontsizeadd/2), 0, fontaa, false, "ZSAmmoName", false, false)
+	surface.CreateLegacyFont(
+		fontfamily,
+		screenscale * (20 + fontsizeadd / 2),
+		0,
+		fontaa,
+		false,
+		"ZSAmmoName",
+		false,
+		false
+	)
 
 	local liscreenscale = math.max(0.95, BetterScreenScale())
 
-	surface.CreateLegacyFont(fontfamily, liscreenscale * (32 + fontsizeadd), fontweight, true, false, "ZSScoreBoardTitle", false, true)
-	surface.CreateLegacyFont(fontfamily, liscreenscale * (22 + fontsizeadd), fontweight, true, false, "ZSScoreBoardSubTitle", false, true)
-	surface.CreateLegacyFont(fontfamily, liscreenscale * (16 + fontsizeadd), fontweight, true, false, "ZSScoreBoardPlayer", false, true)
-	surface.CreateLegacyFont(fontfamily, liscreenscale * (24 + fontsizeadd), fontweight, true, false, "ZSScoreBoardHeading", false, false)
+	surface.CreateLegacyFont(
+		fontfamily,
+		liscreenscale * (32 + fontsizeadd),
+		fontweight,
+		true,
+		false,
+		"ZSScoreBoardTitle",
+		false,
+		true
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		liscreenscale * (22 + fontsizeadd),
+		fontweight,
+		true,
+		false,
+		"ZSScoreBoardSubTitle",
+		false,
+		true
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		liscreenscale * (16 + fontsizeadd),
+		fontweight,
+		true,
+		false,
+		"ZSScoreBoardPlayer",
+		false,
+		true
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		liscreenscale * (24 + fontsizeadd),
+		fontweight,
+		true,
+		false,
+		"ZSScoreBoardHeading",
+		false,
+		false
+	)
 	surface.CreateLegacyFont("arial", 18 * liscreenscale, 0, true, false, "ZSScoreBoardPlayerSmall", false, true)
 	surface.CreateLegacyFont("arial", 15 * liscreenscale, 0, true, false, "ZSScoreBoardPlayerSmaller", false, true)
 	surface.CreateLegacyFont("tahoma", 11 * liscreenscale, 0, true, false, "ZSScoreBoardPing")
 
-	surface.CreateLegacyFont(fontfamily, screenscale * (16 + fontsizeadd), fontweight, fontaa, false, "ZSHUDFontTinyNS", false, false)
-	surface.CreateLegacyFont(fontfamily, screenscale * (20 + fontsizeadd), fontweight, fontaa, false, "ZSHUDFontSmallestNS", false, false)
-	surface.CreateLegacyFont(fontfamily, screenscale * (22 + fontsizeadd), fontweight, fontaa, false, "ZSHUDFontSmallerNS", false, false)
-	surface.CreateLegacyFont(fontfamily, screenscale * (28 + fontsizeadd), fontweight, fontaa, false, "ZSHUDFontSmallNS", false, false)
-	surface.CreateLegacyFont(fontfamily, screenscale * (42 + fontsizeadd), fontweight, fontaa, false, "ZSHUDFontNS", false, false)
-	surface.CreateLegacyFont(fontfamily, screenscale * (72 + fontsizeadd), fontweight, fontaa, false, "ZSHUDFontBigNS", false, false)
+	surface.CreateLegacyFont(
+		fontfamily,
+		screenscale * (16 + fontsizeadd),
+		fontweight,
+		fontaa,
+		false,
+		"ZSHUDFontTinyNS",
+		false,
+		false
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		screenscale * (20 + fontsizeadd),
+		fontweight,
+		fontaa,
+		false,
+		"ZSHUDFontSmallestNS",
+		false,
+		false
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		screenscale * (22 + fontsizeadd),
+		fontweight,
+		fontaa,
+		false,
+		"ZSHUDFontSmallerNS",
+		false,
+		false
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		screenscale * (28 + fontsizeadd),
+		fontweight,
+		fontaa,
+		false,
+		"ZSHUDFontSmallNS",
+		false,
+		false
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		screenscale * (42 + fontsizeadd),
+		fontweight,
+		fontaa,
+		false,
+		"ZSHUDFontNS",
+		false,
+		false
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		screenscale * (72 + fontsizeadd),
+		fontweight,
+		fontaa,
+		false,
+		"ZSHUDFontBigNS",
+		false,
+		false
+	)
 
-	surface.CreateLegacyFont(fontfamilysm, screenscale * 13, fontweight, fontaa, false, "ZSBodyTextFontSmall", fontshadow)
+	surface.CreateLegacyFont(
+		fontfamilysm,
+		screenscale * 13,
+		fontweight,
+		fontaa,
+		false,
+		"ZSBodyTextFontSmall",
+		fontshadow
+	)
 
-	surface.CreateLegacyFont(fontfamilysm, screenscale * 15, fontweight, fontaa, false, "ZSBodyTextFont", fontshadow, fontoutline)
-	surface.CreateLegacyFont(fontfamilysm, screenscale * 20, fontweight, fontaa, false, "ZSBodyTextFontBig", fontshadow, fontoutline)
+	surface.CreateLegacyFont(
+		fontfamilysm,
+		screenscale * 15,
+		fontweight,
+		fontaa,
+		false,
+		"ZSBodyTextFont",
+		fontshadow,
+		fontoutline
+	)
+	surface.CreateLegacyFont(
+		fontfamilysm,
+		screenscale * 20,
+		fontweight,
+		fontaa,
+		false,
+		"ZSBodyTextFontBig",
+		fontshadow,
+		fontoutline
+	)
 
-	surface.CreateLegacyFont(fontfamily, screenscale * (20 + fontsizeadd), 0, true, false, "ZSDamageResistance", false, true)
-	surface.CreateLegacyFont(fontfamily, screenscale * (20 + fontsizeadd), 0, true, false, "ZSDamageResistanceBlur", false, true)
+	surface.CreateLegacyFont(
+		fontfamily,
+		screenscale * (20 + fontsizeadd),
+		0,
+		true,
+		false,
+		"ZSDamageResistance",
+		false,
+		true
+	)
+	surface.CreateLegacyFont(
+		fontfamily,
+		screenscale * (20 + fontsizeadd),
+		0,
+		true,
+		false,
+		"ZSDamageResistanceBlur",
+		false,
+		true
+	)
 
-	surface.CreateFont("ZSXPBar", {font = "tahoma", size = screenscale * 14, weight = 500, antialias = false, shadow = true})
+	surface.CreateFont(
+		"ZSXPBar",
+		{ font = "tahoma", size = screenscale * 14, weight = 500, antialias = false, shadow = true }
+	)
 end
 
 function GM:CreateFonts()
@@ -1497,10 +2192,10 @@ end
 
 -- These can be accessed without pointing to the IMaterial by using ! before the material string.
 function GM:CreateSpriteMaterials()
-	local params = {["$translucent"] = "1", ["$vertexcolor"] = "1", ["$vertexalpha"] = "1"}
-	for i=1, 8 do
-		params["$basetexture"] = "Decals/blood"..i
-		CreateMaterial("sprite_bloodspray"..i, "UnlitGeneric", params)
+	local params = { ["$translucent"] = "1", ["$vertexcolor"] = "1", ["$vertexalpha"] = "1" }
+	for i = 1, 8 do
+		params["$basetexture"] = "Decals/blood" .. i
+		CreateMaterial("sprite_bloodspray" .. i, "UnlitGeneric", params)
 	end
 end
 
@@ -1523,16 +2218,18 @@ end
 function GM:InitializeBeats()
 	local _, dirs = file.Find("sound/zombiesurvival/beats/*", "GAME")
 	for _, dirname in pairs(dirs) do
-		if dirname == "none" or dirname == "default" then continue end
+		if dirname == "none" or dirname == "default" then
+			continue
+		end
 
 		self.Beats[dirname] = {}
 		local highestexist
-		for i=1, 10 do
-			local a, __ = file.Find("sound/zombiesurvival/beats/"..dirname.."/"..i..".*", "GAME")
+		for i = 1, 10 do
+			local a, __ = file.Find("sound/zombiesurvival/beats/" .. dirname .. "/" .. i .. ".*", "GAME")
 			local a1 = FirstOfGoodType(a)
 			if a1 then
-				local filename = "zombiesurvival/beats/"..dirname.."/"..a1
-				if file.Exists("sound/"..filename, "GAME") then
+				local filename = "zombiesurvival/beats/" .. dirname .. "/" .. a1
+				if file.Exists("sound/" .. filename, "GAME") then
 					self.Beats[dirname][i] = Sound(filename)
 					highestexist = filename
 
@@ -1547,37 +2244,61 @@ function GM:InitializeBeats()
 	end
 end
 
-function GM:PlayerDeath(pl, attacker)
-end
+function GM:PlayerDeath(pl, attacker) end
 
-function GM:ScalePlayerDamage(pl, hitgroup, dmginfo)
-end
+function GM:ScalePlayerDamage(pl, hitgroup, dmginfo) end
 
 function GM:LastHuman(pl)
-	if not IsValid(pl) then pl = nil end
+	if not IsValid(pl) then
+		pl = nil
+	end
 
 	self.TheLastHuman = pl
 
 	if not LASTHUMAN then
 		LASTHUMAN = true
-		timer.Simple(0.5, function() GAMEMODE:LastHumanMessage() end)
+		timer.Simple(0.5, function()
+			GAMEMODE:LastHumanMessage()
+		end)
 	end
 end
 
 function GM:LastHumanMessage()
-	if self.RoundEnded or not MySelf:IsValid() then return end
+	if self.RoundEnded or not MySelf:IsValid() then
+		return
+	end
 
 	local icon = self.PantsMode and "weapon_zs_legs" or "default"
 	if P_Team(MySelf) == TEAM_UNDEAD or not MySelf:Alive() then
-		self:CenterNotify({killicon = icon}, {font = "ZSHUDFont"}, " ", COLOR_RED, translate.Get(self.PantsMode and "kick_the_last_human" or "kill_the_last_human"), {killicon = icon})
+		self:CenterNotify(
+			{ killicon = icon },
+			{ font = "ZSHUDFont" },
+			" ",
+			COLOR_RED,
+			translate.Get(self.PantsMode and "kick_the_last_human" or "kill_the_last_human"),
+			{ killicon = icon }
+		)
 	else
-		self:CenterNotify({font = "ZSHUDFont"}, " ", COLOR_RED, translate.Get("you_are_the_last_human"))
-		self:CenterNotify({killicon = icon}, " ", COLOR_RED, translate.Format(self.PantsMode and "x_pants_out_to_get_you" or "x_zombies_out_to_get_you", team.NumPlayers(TEAM_UNDEAD)), {killicon = icon})
+		self:CenterNotify({ font = "ZSHUDFont" }, " ", COLOR_RED, translate.Get("you_are_the_last_human"))
+		self:CenterNotify(
+			{ killicon = icon },
+			" ",
+			COLOR_RED,
+			translate.Format(
+				self.PantsMode and "x_pants_out_to_get_you" or "x_zombies_out_to_get_you",
+				team.NumPlayers(TEAM_UNDEAD)
+			),
+			{ killicon = icon }
+		)
 	end
 end
 
 function GM:PlayerShouldTakeDamage(pl, attacker)
-	return pl == attacker or not attacker:IsPlayer() or P_Team(pl) ~= P_Team(attacker) or pl.AllowTeamDamage or attacker.AllowTeamDamage
+	return pl == attacker
+		or not attacker:IsPlayer()
+		or P_Team(pl) ~= P_Team(attacker)
+		or pl.AllowTeamDamage
+		or attacker.AllowTeamDamage
 end
 
 function GM:SetWave(wave)
@@ -1627,7 +2348,9 @@ end
 
 local function AltSelItemUpd()
 	local activeweapon = MySelf:GetActiveWeapon()
-	if not activeweapon or not activeweapon:IsValid() then return end
+	if not activeweapon or not activeweapon:IsValid() then
+		return
+	end
 
 	local actwclass = activeweapon:GetClass()
 	GAMEMODE.HumanMenuPanel.SelectedItemLabel:SetText(weapons.Get(actwclass).PrintName)
@@ -1642,7 +2365,9 @@ function GM:DoAltSelectedItemUpdate()
 end
 
 function GM:HumanMenu()
-	if self.ZombieEscape then return end
+	if self.ZombieEscape then
+		return
+	end
 
 	local ent = MySelf:MeleeTrace(48, 2, nil, nil, true).Entity
 	if self:ValidMenuLockOnTarget(MySelf, ent) then
@@ -1726,7 +2451,7 @@ function GM:HumanMenu()
 	local dropdown = vgui.Create("DComboBox", panel)
 	dropdown:SetMouseInputEnabled(true)
 	dropdown:AddChoice("Resupply Held Weapon")
-	for k,v in pairs(self.AmmoResupply) do
+	for k, v in pairs(self.AmmoResupply) do
 		dropdown:AddChoice(self.AmmoNames[k])
 	end
 	dropdown.OnSelect = function(me, index, value, data)
@@ -1736,7 +2461,7 @@ function GM:HumanMenu()
 			return
 		end
 
-		for k,v in pairs(self.AmmoNames) do
+		for k, v in pairs(self.AmmoNames) do
 			if value == v then
 				MySelf.ResupplyChoice = k
 				RunConsoleCommand("zs_resupplyammotype", k)
@@ -1754,7 +2479,9 @@ function GM:HumanMenu()
 end
 
 function GM:ZombieSpawnMenu()
-	if self.ZombieEscape then return end
+	if self.ZombieEscape then
+		return
+	end
 
 	if self.ZSpawnMenu and self.ZSpawnMenu:IsValid() then
 		self.ZSpawnMenu:SetVisible(true)
@@ -1773,13 +2500,17 @@ end
 function GM:PlayerBindPress(pl, bind, wasin)
 	if bind == "gmod_undo" or bind == "undo" then
 		RunConsoleCommand("+zoom")
-		timer.Create("ReleaseZoom", 1, 1, function() RunConsoleCommand("-zoom") end)
+		timer.Create("ReleaseZoom", 1, 1, function()
+			RunConsoleCommand("-zoom")
+		end)
+	--[[ This allows players to toggle third and first person
 	elseif bind == "+menu_context" then
 		if P_Team(pl) == TEAM_UNDEAD then
 			self.ZombieThirdPerson = not self.ZombieThirdPerson
 		elseif P_Team(pl) == TEAM_HUMAN then
 			self:ToggleOTSCamera()
 		end
+	--]]
 	elseif bind == "impulse 100" then
 		if P_Team(pl) == TEAM_UNDEAD and pl:Alive() then
 			self:ToggleZombieVision()
@@ -1788,11 +2519,12 @@ function GM:PlayerBindPress(pl, bind, wasin)
 end
 
 function GM:_ShouldDrawLocalPlayer(pl)
-	return FROM_CAMERA or P_Team(pl) == TEAM_UNDEAD and (self.ZombieThirdPerson or pl:CallZombieFunction0("ShouldDrawLocalPlayer"))
-	or P_Team(pl) == TEAM_HUMAN and self:UseOverTheShoulder()
-	or pl:IsPlayingTaunt()
-	or pl.Revive and pl.Revive:IsValid()
-	or pl.KnockedDown and pl.KnockedDown:IsValid()
+	return FROM_CAMERA
+		or P_Team(pl) == TEAM_UNDEAD and (self.ZombieThirdPerson or pl:CallZombieFunction0("ShouldDrawLocalPlayer"))
+		or P_Team(pl) == TEAM_HUMAN and self:UseOverTheShoulder()
+		or pl:IsPlayingTaunt()
+		or pl.Revive and pl.Revive:IsValid()
+		or pl.KnockedDown and pl.KnockedDown:IsValid()
 end
 
 local roll = 0
@@ -1880,7 +2612,14 @@ function GM:_CalcView(pl, origin, angles, fov, znear, zfar)
 end
 
 function GM:CalcViewTaunt(pl, origin, angles, fov, znear, zfar)
-	local tr = util.TraceHull({start = origin, endpos = origin - angles:Forward() * 72, mins = Vector(-2, -2, -2), maxs = Vector(2, 2, 2), mask = MASK_OPAQUE, filter = pl})
+	local tr = util.TraceHull({
+		start = origin,
+		endpos = origin - angles:Forward() * 72,
+		mins = Vector(-2, -2, -2),
+		maxs = Vector(2, 2, 2),
+		mask = MASK_OPAQUE,
+		filter = pl,
+	})
 	origin:Set(tr.HitPos + tr.HitNormal * 2)
 end
 
@@ -1893,11 +2632,12 @@ function GM:PostProcessPermitted(str)
 	return false
 end
 
-function GM:HUDPaintEndRound()
-end
+function GM:HUDPaintEndRound() end
 
 function GM:PreDrawViewModel(vm, pl, wep)
-	if pl and pl:IsValid() and (pl:IsHolding() or GAMEMODE.HideViewModels) then return true end
+	if pl and pl:IsValid() and (pl:IsHolding() or GAMEMODE.HideViewModels) then
+		return true
+	end
 
 	if wep and wep:IsValid() and wep.PreDrawViewModel then
 		return wep:PreDrawViewModel(vm)
@@ -1934,12 +2674,19 @@ function GM:_PrePlayerDraw(pl)
 	local theirteam = P_Team(pl)
 
 	local radius = self.TransparencyRadius
-	if radius > 0 and myteam == theirteam and pl ~= MySelf and not (GAMEMODE.AlwaysDrawFriend and pl:IsFriend()) and not self.MedicalAura then
+	if
+		radius > 0
+		and myteam == theirteam
+		and pl ~= MySelf
+		and not (GAMEMODE.AlwaysDrawFriend and pl:IsFriend())
+		and not self.MedicalAura
+	then
 		local dist = pl:GetPos():DistToSqr(EyePos())
 		if dist < radius then
 			local blend = (dist / radius) ^ 1.4
 			if blend <= 0.1 then
-				pl.ShadowMan = true return true
+				pl.ShadowMan = true
+				return true
 			end
 			render_SetBlend(blend)
 			if myteam == TEAM_HUMAN and blend < 0.5 then
@@ -1953,9 +2700,17 @@ function GM:_PrePlayerDraw(pl)
 
 	pl.ShadowMan = shadowman
 
-	if pl:CallZombieFunction0("PrePlayerDraw") then return true end
+	if pl:CallZombieFunction0("PrePlayerDraw") then
+		return true
+	end
 
-	if pl.SpawnProtection and (not (pl.status_overridemodel and pl.status_overridemodel:IsValid()) or pl:GetZombieClassTable().NoHideMainModel) then
+	if
+		pl.SpawnProtection
+		and (
+			not (pl.status_overridemodel and pl.status_overridemodel:IsValid())
+			or pl:GetZombieClassTable().NoHideMainModel
+		)
+	then
 		undo = true
 		render_ModelMaterialOverride(matWhite)
 		render_SetBlend(0.02 + (CurTime() + pl:EntIndex() * 0.2) % 0.05)
@@ -1999,7 +2754,12 @@ function GM:_PostPlayerDraw(pl)
 	end
 
 	local eyepos, ang, tpos, distance, hpf
-	if MySelf.TargetLocus and self.TraceTargetTeam == pl and pl:IsValidLivingZombie() and not pl:GetZombieClassTable().IgnoreTargetAssist then
+	if
+		MySelf.TargetLocus
+		and self.TraceTargetTeam == pl
+		and pl:IsValidLivingZombie()
+		and not pl:GetZombieClassTable().IgnoreTargetAssist
+	then
 		tpos = pl:GetPos()
 		tpos.z = tpos.z + 80
 
@@ -2012,12 +2772,12 @@ function GM:_PostPlayerDraw(pl)
 
 		cam_IgnoreZ(true)
 		cam_Start3D2D(tpos, ang, math.max(750, math.sqrt(distance)) / 6500)
-			surface_SetMaterial(matTargetTri)
+		surface_SetMaterial(matTargetTri)
 
-			hpf = pl:Health() / pl:GetMaxZombieHealth()
+		hpf = pl:Health() / pl:GetMaxZombieHealth()
 
-			surface_SetDrawColor(255 - (255 * hpf), 255 * hpf, 0, 230)
-			surface_DrawTexturedRect(-96, -96, 96, 96)
+		surface_SetDrawColor(255 - (255 * hpf), 255 * hpf, 0, 230)
+		surface_DrawTexturedRect(-96, -96, 96, 96)
 		cam_End3D2D()
 		cam_IgnoreZ(false)
 	end
@@ -2038,7 +2798,14 @@ function GM:HUDPaintBackgroundEndRound()
 	if timleft <= 0 then
 		draw_SimpleTextBlur(translate.Get("loading"), "ZSHUDFont", x, y, COLOR_WHITE, TEXT_ALIGN_CENTER)
 	else
-		draw_SimpleTextBlur(translate.Format("next_round_in_x", util.ToMinutesSecondsCD(timleft)), "ZSHUDFontSmall", x, y, COLOR_WHITE, TEXT_ALIGN_CENTER)
+		draw_SimpleTextBlur(
+			translate.Format("next_round_in_x", util.ToMinutesSecondsCD(timleft)),
+			"ZSHUDFontSmall",
+			x,
+			y,
+			COLOR_WHITE,
+			TEXT_ALIGN_CENTER
+		)
 	end
 end
 
@@ -2053,8 +2820,15 @@ local function EndRoundCalcView(pl, origin, angles, fov, znear, zfar)
 			local delta = math.Clamp((CurTime() - GAMEMODE.EndTime) * 2, 0, 1)
 
 			local start = endposition * delta + origin * (1 - delta)
-			local tr = util.TraceHull({start = start, endpos = start + delta * 64 * Angle(0, CurTime() * 30, 0):Forward(), mins = Vector(-2, -2, -2), maxs = Vector(2, 2, 2), filter = player.GetAll(), mask = MASK_SOLID})
-			return {origin = tr.HitPos + tr.HitNormal, angles = (start - tr.HitPos):Angle()}
+			local tr = util.TraceHull({
+				start = start,
+				endpos = start + delta * 64 * Angle(0, CurTime() * 30, 0):Forward(),
+				mins = Vector(-2, -2, -2),
+				maxs = Vector(2, 2, 2),
+				filter = player.GetAll(),
+				mask = MASK_SOLID,
+			})
+			return { origin = tr.HitPos + tr.HitNormal, angles = (start - tr.HitPos):Angle() }
 		end
 
 		return
@@ -2072,7 +2846,9 @@ local function EndRoundShouldDrawLocalPlayer(pl)
 end
 
 function GM:EndRound(winner, nextmap)
-	if self.RoundEnded then return end
+	if self.RoundEnded then
+		return
+	end
 	self.RoundEnded = true
 
 	ROUNDWINNER = winner
@@ -2097,7 +2873,9 @@ function GM:EndRound(winner, nextmap)
 		snd = nil
 	end
 	if snd then
-		timer.Simple(0.5, function() surface_PlaySound(snd) end)
+		timer.Simple(0.5, function()
+			surface_PlaySound(snd)
+		end)
 	end
 
 	timer.Simple(5, function()
@@ -2116,10 +2894,16 @@ function GM:LocalPlayerDied(attackername)
 
 	surface_PlaySound(self.DeathSound)
 	if attackername then
-		self:CenterNotify(COLOR_RED, {font = "ZSHUDFont"}, translate.Get("you_have_died"))
-		self:CenterNotify(COLOR_RED, translate.Format(self.PantsMode and "you_were_kicked_by_x" or "you_were_killed_by_x", tostring(attackername)))
+		self:CenterNotify(COLOR_RED, { font = "ZSHUDFont" }, translate.Get("you_have_died"))
+		self:CenterNotify(
+			COLOR_RED,
+			translate.Format(
+				self.PantsMode and "you_were_kicked_by_x" or "you_were_killed_by_x",
+				tostring(attackername)
+			)
+		)
 	else
-		self:CenterNotify(COLOR_RED, {font = "ZSHUDFont"}, translate.Get("you_have_died"))
+		self:CenterNotify(COLOR_RED, { font = "ZSHUDFont" }, translate.Get("you_have_died"))
 	end
 end
 
@@ -2217,7 +3001,9 @@ function GM:SuppressArsenalUpgrades(suppresstime)
 end
 
 function GM:Rewarded(class, amount)
-	if CurTime() < self.SuppressArsenalTime then return end
+	if CurTime() < self.SuppressArsenalTime then
+		return
+	end
 
 	class = class or "0"
 
@@ -2226,12 +3012,12 @@ function GM:Rewarded(class, amount)
 	local wep = weapons.Get(class)
 	if wep and wep.PrintName and #wep.PrintName > 0 then
 		if killicon.Get(class) == killicon.Get("default") then
-			self:CenterNotify(COLOR_PURPLE, toptext..": ", color_white, wep.PrintName)
+			self:CenterNotify(COLOR_PURPLE, toptext .. ": ", color_white, wep.PrintName)
 		else
-			self:CenterNotify({killicon = class}, " ", COLOR_PURPLE, toptext..": ", color_white, wep.PrintName)
+			self:CenterNotify({ killicon = class }, " ", COLOR_PURPLE, toptext .. ": ", color_white, wep.PrintName)
 		end
 	elseif amount then
-		self:CenterNotify(COLOR_PURPLE, toptext..": ", color_white, amount.." "..class)
+		self:CenterNotify(COLOR_PURPLE, toptext .. ": ", color_white, amount .. " " .. class)
 	else
 		self:CenterNotify(COLOR_PURPLE, toptext)
 	end
