@@ -89,9 +89,9 @@ DEFAULT_MASS = 80
 DEFAULT_MODELSCALE = 1
 
 -- Humans can not carry OR drag anything heavier than this (in kg.)
-CARRY_MAXIMUM_MASS = 300
+CARRY_MAXIMUM_MASS = 9999
 -- Humans can not carry anything with a volume more than this (OBBMins():Length() + OBBMaxs():Length()).
-CARRY_MAXIMUM_VOLUME = 150
+CARRY_MAXIMUM_VOLUME = 9999
 -- Objects with more mass than this will be dragged instead of carried.
 CARRY_DRAG_MASS = 145
 -- Anything bigger than this is dragged regardless of mass.
@@ -126,7 +126,7 @@ GM.HeadcrabZombiePointRatio = 30
 GM.NoHeadboxZombiePointRatio = 38
 GM.TorsoZombiePointRatio = 42
 GM.LegsZombiePointRatio = 37.5
-GM.SkeletonPointRatio = GM.HumanoidZombiePointRatio/3
+GM.SkeletonPointRatio = GM.HumanoidZombiePointRatio / 3
 
 SPEED_NORMAL = 225
 SPEED_SLOWEST = SPEED_NORMAL - 20
@@ -155,25 +155,23 @@ GM.BarricadeRepairCapacity = 1.25
 GM.BossZombiePlayersRequired = 8
 
 GM.HumanGibs = {
-Model("models/gibs/HGIBS.mdl"),
-Model("models/gibs/HGIBS_spine.mdl"),
+	Model("models/gibs/HGIBS.mdl"),
+	Model("models/gibs/HGIBS_spine.mdl"),
 
-Model("models/gibs/HGIBS_rib.mdl"),
-Model("models/gibs/HGIBS_scapula.mdl"),
-Model("models/gibs/antlion_gib_medium_2.mdl"),
-Model("models/gibs/Antlion_gib_Large_1.mdl"),
-Model("models/gibs/Strider_Gib4.mdl")
+	Model("models/gibs/HGIBS_rib.mdl"),
+	Model("models/gibs/HGIBS_scapula.mdl"),
+	Model("models/gibs/antlion_gib_medium_2.mdl"),
+	Model("models/gibs/Antlion_gib_Large_1.mdl"),
+	Model("models/gibs/Strider_Gib4.mdl"),
 }
 
-GM.BannedProps = {
-}
+GM.BannedProps = {}
 
-GM.PropHealthMultipliers = {
-}
+GM.PropHealthMultipliers = {}
 
 GM.CleanupFilter = {
 	"zs_hands",
-	"zsbotnb"
+	"zsbotnb",
 }
 
 GM.AmmoNames = {}
@@ -283,20 +281,33 @@ GM.ResistableStatuses = {
 	"enfeeble",
 	"slow",
 	"frightened",
-	"frost"
+	"frost",
 }
 
 GM.ScrapVals = {
 	--6, 16, 32, 58, 92, 138
-	6, 16, 30, 46, 70, 106
+	6,
+	16,
+	30,
+	46,
+	70,
+	106,
 }
 
 GM.ScrapValsTrinkets = {
-	5, 10, 16, 23, 32, 56
+	5,
+	10,
+	16,
+	23,
+	32,
+	56,
 }
 
 GM.DismantleMultipliers = {
-	1, 2, 4, 7
+	1,
+	2,
+	4,
+	7,
 }
 
 -- Handled in languages file.
@@ -325,5 +336,5 @@ GM.ValidBeaconMessages = {
 	"message_beacon_22",
 	"message_beacon_23",
 	"message_beacon_24",
-	"message_beacon_25"
+	"message_beacon_25",
 }
