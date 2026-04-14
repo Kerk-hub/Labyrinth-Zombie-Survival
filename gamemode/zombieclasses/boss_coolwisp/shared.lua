@@ -5,7 +5,8 @@ CLASS.TranslationName = "class_coolwisp"
 CLASS.Description = "description_coolwisp"
 CLASS.Help = "controls_coolwisp"
 
-CLASS.Boss = true
+CLASS.Hidden = true
+CLASS.Disabled = true
 
 CLASS.SWEP = "weapon_zs_coolwisp"
 
@@ -15,7 +16,7 @@ CLASS.Points = 20
 
 CLASS.ResistFrost = true
 
-CLASS.DeathSounds = {Sound("npc/scanner/cbot_energyexplosion1.wav")}
+CLASS.DeathSounds = { Sound("npc/scanner/cbot_energyexplosion1.wav") }
 
 local math_random = math.random
 local string_format = string.format

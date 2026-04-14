@@ -16,7 +16,9 @@ local function CreateHoveredClassWindow(classtable)
 end
 
 function GM:OpenClassSelect()
-	if Window and Window:IsValid() then Window:Remove() end
+	if Window and Window:IsValid() then
+		Window:Remove()
+	end
 
 	Window = vgui.Create("ClassSelect")
 	Window:SetAlpha(0)
@@ -42,7 +44,8 @@ end
 function PANEL:Init()
 	self.ClassButtons = {}
 
-	self.ClassTypeButton = EasyButton(nil, bossmode and "Open Normal Class Selection" or "Open Boss Class Selection", 8, 4)
+	self.ClassTypeButton =
+		EasyButton(nil, bossmode and "Open Normal Class Selection" or "Open Boss Class Selection", 8, 4)
 	self.ClassTypeButton:SetFont("ZSHUDFontSmall")
 	self.ClassTypeButton:SizeToContents()
 	self.ClassTypeButton.DoClick = BossTypeDoClick
@@ -50,7 +53,9 @@ function PANEL:Init()
 	self.CloseButton = EasyButton(nil, "Close", 8, 4)
 	self.CloseButton:SetFont("ZSHUDFontSmall")
 	self.CloseButton:SizeToContents()
-	self.CloseButton.DoClick = function() Window:Remove() end
+	self.CloseButton.DoClick = function()
+		Window:Remove()
+	end
 
 	self.ButtonGrid = vgui.Create("DGrid", self)
 	self.ButtonGrid:SetContentAlignment(5)
@@ -59,7 +64,7 @@ function PANEL:Init()
 	local already_added = {}
 	local use_better_versions = GAMEMODE:ShouldUseBetterVersionSystem()
 
-	for i=1, #GAMEMODE.ZombieClasses do
+	for i = 1, #GAMEMODE.ZombieClasses do
 		local classtab = GAMEMODE.ZombieClasses[GAMEMODE:GetBestAvailableZombieClass(i)]
 
 		if classtab and not classtab.Disabled and not already_added[classtab.Index] then
@@ -67,15 +72,19 @@ function PANEL:Init()
 
 			local ok
 			if bossmode then
-				ok = classtab.Boss
+				ok = classtab.Boss and not classtab.Hidden and not classtab.Disabled
 			else
-				ok = not classtab.Boss and
-					(not classtab.Hidden or classtab.CanUse and classtab:CanUse(MySelf)) and
-					(not GAMEMODE.ObjectiveMap or classtab.Unlocked)
+				ok = not classtab.Boss
+					and (not classtab.Hidden or classtab.CanUse and classtab:CanUse(MySelf))
+					and (not GAMEMODE.ObjectiveMap or classtab.Unlocked)
 			end
 
 			if ok then
-				if not use_better_versions or not classtab.BetterVersionOf or GAMEMODE:IsClassUnlocked(classtab.Index) then
+				if
+					not use_better_versions
+					or not classtab.BetterVersionOf
+					or GAMEMODE:IsClassUnlocked(classtab.Index)
+				then
 					local button = vgui.Create("ClassButton")
 					button:SetClassTable(classtab)
 					button.Wave = classtab.Wave or 1
@@ -93,7 +102,9 @@ function PANEL:Init()
 end
 
 function PANEL:PerformLayout()
-	if #self.ClassButtons < 8 then self.Rows = 1 end
+	if #self.ClassButtons < 8 then
+		self.Rows = 1
+	end
 
 	local cols = math.ceil(#self.ClassButtons / self.Rows)
 	local cell_size = ScrW() / cols
@@ -186,11 +197,16 @@ function PANEL:DoClick()
 	if self.ClassTable then
 		if self.ClassTable.Boss then
 			RunConsoleCommand("zs_bossclass", self.ClassTable.Name)
-			GAMEMODE:CenterNotify(translate.Format("boss_class_select", translate.Get(GAMEMODE.ZombieClasses[self.ClassTable.Name].TranslationName)))
+			GAMEMODE:CenterNotify(
+				translate.Format(
+					"boss_class_select",
+					translate.Get(GAMEMODE.ZombieClasses[self.ClassTable.Name].TranslationName)
+				)
+			)
 		else
 			net.Start("zs_changeclass")
-				net.WriteString(self.ClassTable.Name)
-				net.WriteBool(GAMEMODE.SuicideOnChangeClass)
+			net.WriteString(self.ClassTable.Name)
+			net.WriteBool(GAMEMODE.SuicideOnChangeClass)
 			net.SendToServer()
 		end
 	end
@@ -220,7 +236,9 @@ function PANEL:OnCursorExited()
 end
 
 function PANEL:Think()
-	if not self.ClassTable then return end
+	if not self.ClassTable then
+		return
+	end
 
 	local enabled
 	if MySelf:GetZombieClass() == self.ClassTable.Index then
@@ -288,7 +306,9 @@ function PANEL:CreateDescLabels()
 	self.DescLabels = {}
 
 	local classtable = self.ClassTable
-	if not classtable or not classtable.Description then return end
+	if not classtable or not classtable.Description then
+		return
+	end
 
 	local lines = {}
 
@@ -299,7 +319,10 @@ function PANEL:CreateDescLabels()
 	if classtable.BetterVersion then
 		local betterclasstable = GAMEMODE.ZombieClasses[classtable.BetterVersion]
 		if betterclasstable then
-			table.insert(lines, translate.Format("evolves_in_to_x_on_wave_y", betterclasstable.Name, betterclasstable.Wave))
+			table.insert(
+				lines,
+				translate.Format("evolves_in_to_x_on_wave_y", betterclasstable.Name, betterclasstable.Wave)
+			)
 		end
 	end
 

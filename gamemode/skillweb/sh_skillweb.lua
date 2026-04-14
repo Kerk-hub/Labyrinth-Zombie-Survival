@@ -13,7 +13,9 @@ end
 
 function GM:ProgressForXP(xp)
 	local current_level = self:LevelForXP(xp)
-	if current_level >= self.MaxLevel then return 1 end
+	if current_level >= self.MaxLevel then
+		return 1
+	end
 
 	local current_level_xp = self:XPForLevel(current_level)
 	local next_level_xp = self:XPForLevel(current_level + 1)
@@ -65,7 +67,9 @@ function GM:SkillCanUnlock(pl, skillid, skilllist)
 end
 
 local meta = FindMetaTable("Player")
-if not meta then return end
+if not meta then
+	return
+end
 
 function meta:IsSkillUnlocked(skillid)
 	return table.HasValue(self:GetUnlockedSkills(), skillid)
@@ -80,7 +84,7 @@ function meta:IsSkillDesired(skillid)
 end
 
 function meta:IsSkillActive(skillid)
-	return self:GetActiveSkills()[skillid]-- == true
+	return self:GetActiveSkills()[skillid] -- == true
 end
 
 function meta:HasTrinket(trinket)
@@ -89,7 +93,9 @@ end
 
 function meta:CreateTrinketStatus(status)
 	for _, ent in pairs(ents.FindByClass("status_" .. status)) do
-		if ent:GetOwner() == self then return end
+		if ent:GetOwner() == self then
+			return
+		end
 	end
 
 	local ent = ents.Create("status_" .. status)
@@ -120,7 +126,9 @@ end
 
 -- These are done on human spawn.
 function meta:ApplySkills(override)
-	if GAMEMODE.ZombieEscape or GAMEMODE.ClassicMode then return end -- Skills not used on these modes
+	if GAMEMODE.ZombieEscape or GAMEMODE.ClassicMode then
+		return
+	end -- Skills not used on these modes
 
 	local allskills = GAMEMODE.Skills
 	local desired = override or self:Alive() and self:Team() == TEAM_HUMAN and self:GetDesiredActiveSkills() or {}
@@ -142,7 +150,6 @@ function meta:ApplySkills(override)
 	local funcs
 	local gm_functions = GAMEMODE.SkillFunctions
 	for skillid in pairs(allskills) do
-
 		funcs = gm_functions[skillid]
 		if funcs then
 			if current_active[skillid] and not desired_assoc[skillid] then -- On but we want it off.
@@ -163,14 +170,16 @@ function meta:ApplySkills(override)
 	if SERVER and self.ExtraStartingWorth ~= self.LastSentESW then
 		self.LastSentESW = self.ExtraStartingWorth
 		net.Start("zs_extrastartingworth")
-			net.WriteUInt(self.ExtraStartingWorth, 16)
+		net.WriteUInt(self.ExtraStartingWorth, 16)
 		net.Send(self)
 	end
 end
 
 -- For trinkets, these apply after your skills, and they need to work differently so they can't be used to "update" your skills midgame.
 function meta:ApplyTrinkets(override)
-	if GAMEMODE.ZombieEscape or GAMEMODE.ClassicMode then return end -- Skills not used on these modes
+	if GAMEMODE.ZombieEscape or GAMEMODE.ClassicMode then
+		return
+	end -- Skills not used on these modes
 
 	local allskills = GAMEMODE.Skills
 	local current_active = self:GetActiveSkills()
@@ -184,7 +193,7 @@ function meta:ApplyTrinkets(override)
 
 				if SERVER then
 					if skilltbl.PairedWeapon then
-						local pairedwep = "weapon_zs_t_"..skilltbl.Trinket
+						local pairedwep = "weapon_zs_t_" .. skilltbl.Trinket
 						if hastrinket and not self:HasWeapon(pairedwep) then
 							self:Give(pairedwep)
 						elseif not hastrinket and self:HasWeapon(pairedwep) then
@@ -205,7 +214,6 @@ function meta:ApplyTrinkets(override)
 	local funcs
 	local gm_functions = GAMEMODE.SkillFunctions
 	for skillid in pairs(allskills) do
-
 		funcs = gm_functions[skillid]
 		if funcs then
 			if not real_assoc[skillid] then -- On but we want it off.
@@ -257,7 +265,7 @@ function meta:GetZSSPRemaining()
 end
 
 function meta:GetZSSPTotal()
-	return self:GetZSLevel() + self:GetZSRemortLevel()
+	return 999
 end
 
 function meta:GetDesiredActiveSkills()
@@ -274,7 +282,7 @@ end
 
 function meta:GetTotalAdditiveModifier(...)
 	local totalmod = 1
-	for i, modifier in ipairs({...}) do
+	for i, modifier in ipairs({ ... }) do
 		totalmod = totalmod + (self[modifier] or 1) - 1
 	end
 	return totalmod

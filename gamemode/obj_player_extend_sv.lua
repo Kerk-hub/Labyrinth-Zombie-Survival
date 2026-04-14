@@ -333,7 +333,7 @@ end
 function meta:GetBossZombieIndex()
 	local bossclasses = {}
 	for _, classtable in pairs(GAMEMODE.ZombieClasses) do
-		if classtable.Boss then
+		if classtable.Boss and not classtable.Hidden and not classtable.Disabled then
 			table.insert(bossclasses, classtable.Index)
 		end
 	end
@@ -1607,11 +1607,12 @@ function meta:SetLastAttacker(ent)
 end
 
 if not meta.OldUnSpectate then
-	meta.OldUnSpectate = meta.UnSpectate
+	local oldUnSpectate = meta.UnSpectate
+	meta.OldUnSpectate = oldUnSpectate
 
 	function meta:UnSpectate()
-		if self:GetObserverMode() ~= OBS_MODE_NONE and self.OldUnSpectate then
-			self:OldUnSpectate()
+		if self:GetObserverMode() ~= OBS_MODE_NONE and oldUnSpectate then
+			oldUnSpectate(self)
 		end
 	end
 end
