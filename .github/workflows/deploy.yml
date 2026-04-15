@@ -21,8 +21,8 @@ jobs:
           port: 8822
           # This ensures it uses SFTP (which your server requires)
           protocol: sftp
-          # Set local-dir to '.' to sync everything, or 'garrysmod/' if your code is in a subfolder
+          # local-dir stays as ./ because your GitHub repo starts at the gamemode level
           local-dir: ./
-          # IMPORTANT: server-dir is where the files go on the server. 
-          # Usually leave blank for root, or use 'garrysmod/addons/my_addon/'
-          server-dir: ./
+
+          # server-dir is the specific path where the gamemode lives on GTX
+          server-dir: garrysmod/gamemodes/zombiesurvival/
