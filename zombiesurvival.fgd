@@ -529,7 +529,7 @@
 @PointClass base(Targetname) = logic_worth : "ZS: Allows you to control Worth."
 [
 	// Keys
-	startingworth(integer) : "Starting Worth" : 100 : "The amount of Worth to start with. Use 0 to disable Worth."
+	startingworth(integer) : "Starting Worth" : 150 : "The amount of Worth to start with. Use 0 to disable Worth."
 
 	// Inputs
 	input setstartingworth(integer) : "Sets the amount of worth to start with."

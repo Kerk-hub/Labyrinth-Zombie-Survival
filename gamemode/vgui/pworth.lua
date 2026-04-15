@@ -17,7 +17,7 @@ hook.Add("SetWave", "CloseWorthOnWave1", function(wave)
 	end
 end)
 
-local ExtraStartingWorth = 50
+local ExtraStartingWorth = 0
 local function GetStartingWorth()
 	return GAMEMODE.StartingWorth + ExtraStartingWorth
 end
