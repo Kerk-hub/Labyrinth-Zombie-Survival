@@ -12,16 +12,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Sync files to Server
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: SFTP Deploy
+        uses: pressidium/sftp-deploy@v1
         with:
-          server: ${{ secrets.SERVER_IP }}
+          host: ${{ secrets.SERVER_IP }}
+          port: 8822
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
-          port: 8822
-          protocol: sftp
-          local-dir: ./
-          # No leading slash here—helps avoid permission issues
-          server-dir: garrysmod/gamemodes/zombiesurvival/
-          # Set to false first to test the connection
-          dangerous-clean-slate: false
+          # The source folder in GitHub
+          local_dir: ./
+          # The destination on the server
+          remote_dir: garrysmod/gamemodes/zombiesurvival/
+          # This handles the 'delete' functionality
+          delete_extra: false
+          # This tells the action not to try and run forbidden 'ls' commands
+          sync_mode: 'unison'
