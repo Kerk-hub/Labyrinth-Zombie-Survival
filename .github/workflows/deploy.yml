@@ -26,3 +26,4 @@ jobs:
 
           # server-dir is the specific path where the gamemode lives on GTX
           server-dir: garrysmod/gamemodes/zombiesurvival/
+          delete-destination-extra-files: true
