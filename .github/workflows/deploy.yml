@@ -3,7 +3,7 @@ name: Deploy to GTX Server
 on:
   push:
     branches:
-      - master  # This triggers the sync whenever you push to master
+      - main  # This triggers the sync whenever you push to master
 
 jobs:
   deploy:
