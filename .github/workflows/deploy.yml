@@ -13,22 +13,14 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Clean target folder (force overwrite)
-        uses: Dylan700/sftp-upload-action@latest
+      - name: Upload via SFTP (overwrite enabled)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USER }}
           password: ${{ secrets.SFTP_PASS }}
           port: ${{ secrets.SFTP_PORT }}
-          uploads: |
-            DELETE ${{ secrets.SFTP_PATH }}/*
-
-      - name: Upload fresh files
-        uses: Dylan700/sftp-upload-action@latest
-        with:
-          server: ${{ secrets.SFTP_HOST }}
-          username: ${{ secrets.SFTP_USER }}
-          password: ${{ secrets.SFTP_PASS }}
-          port: ${{ secrets.SFTP_PORT }}
-          uploads: |
-            ./* => ${{ secrets.SFTP_PATH }}
+          protocol: sftp
+          local-dir: ./
+          server-dir: ${{ secrets.SFTP_PATH }}/
+          dangerous-clean-slate: true
