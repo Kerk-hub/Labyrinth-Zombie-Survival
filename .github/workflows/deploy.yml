@@ -13,17 +13,22 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Deploy via SFTP (force overwrite)
-        uses: atmoz/sftp@master
+      - name: Clean target folder (force overwrite)
+        uses: Dylan700/sftp-upload-action@latest
         with:
-          host: ${{ secrets.SFTP_HOST }}
-          user: ${{ secrets.SFTP_USER }}
-          pass: ${{ secrets.SFTP_PASS }}
+          server: ${{ secrets.SFTP_HOST }}
+          username: ${{ secrets.SFTP_USER }}
+          password: ${{ secrets.SFTP_PASS }}
           port: ${{ secrets.SFTP_PORT }}
-          args: |
-            -o StrictHostKeyChecking=no
-          command: |
-            put -r ./gamemode ${{ secrets.SFTP_PATH }}/gamemode
-            put -r ./entities ${{ secrets.SFTP_PATH }}/entities
-            put -r ./backgrounds ${{ secrets.SFTP_PATH }}/backgrounds
-            put ./addon.json ${{ secrets.SFTP_PATH }}/addon.json
+          uploads: |
+            DELETE ${{ secrets.SFTP_PATH }}/*
+
+      - name: Upload fresh files
+        uses: Dylan700/sftp-upload-action@latest
+        with:
+          server: ${{ secrets.SFTP_HOST }}
+          username: ${{ secrets.SFTP_USER }}
+          password: ${{ secrets.SFTP_PASS }}
+          port: ${{ secrets.SFTP_PORT }}
+          uploads: |
+            ./* => ${{ secrets.SFTP_PATH }}
