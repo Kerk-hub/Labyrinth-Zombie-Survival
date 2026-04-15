@@ -3,7 +3,7 @@ name: Deploy to GTX Server
 on:
   push:
     branches:
-      - main  # This triggers the sync whenever you push to master
+      - main
 
 jobs:
   deploy:
@@ -19,11 +19,10 @@ jobs:
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: 8822
-          # This ensures it uses SFTP (which your server requires)
-          protocol: sftp
-          # local-dir stays as ./ because your GitHub repo starts at the gamemode level
+          # Use 'ftp' here - the Action automatically upgrades to SFTP 
+          # when it sees port 8822 and the server supports it.
+          protocol: ftp
           local-dir: ./
-
-          # server-dir is the specific path where the gamemode lives on GTX
           server-dir: garrysmod/gamemodes/zombiesurvival/
-          delete-destination-extra-files: true
+          # The correct parameter name for deleting extra files is 'dangerous-clean-slate'
+          dangerous-clean-slate: true
