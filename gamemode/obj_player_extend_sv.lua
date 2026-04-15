@@ -1434,11 +1434,9 @@ function meta:CheckRedeem(instant)
 	if
 		not self:IsValid()
 		or P_Team(self) ~= TEAM_UNDEAD
-		or GAMEMODE:GetRedeemBrains() <= 0
-		or self:GetBrains() < GAMEMODE:GetRedeemBrains()
+		or self:GetBrains() < 2
 		or GAMEMODE.NoRedeeming
 		or self.NoRedeeming
-		or self:GetZombieClassTable().Boss
 	then
 		return
 	end
