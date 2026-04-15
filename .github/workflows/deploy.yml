@@ -13,12 +13,12 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Upload via SFTP (GTX compatible)
-        uses: atlassian/sftp-deploy@v2.0.0
+      - name: Deploy via SFTP (no shell)
+        uses: Dylan700/sftp-upload-action@latest
         with:
-          username: ${{ secrets.SFTP_USER }}
           server: ${{ secrets.SFTP_HOST }}
-          port: ${{ secrets.SFTP_PORT }}
+          username: ${{ secrets.SFTP_USER }}
           password: ${{ secrets.SFTP_PASS }}
-          local-path: "./"
-          remote-path: ${{ secrets.SFTP_PATH }}
+          port: ${{ secrets.SFTP_PORT }}
+          uploads: |
+            . => ${{ secrets.SFTP_PATH }}
