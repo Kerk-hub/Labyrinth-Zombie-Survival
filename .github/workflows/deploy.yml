@@ -15,10 +15,12 @@ jobs:
       - name: Deploy via Rsync
         uses: Burnett01/rsync-deployments@7.0.1
         with:
-          switches: -avzr
+          switches: -avzr --delete
           path: ./
           remote_path: garrysmod/gamemodes/zombiesurvival/
           remote_host: ${{ secrets.SERVER_IP }}
           remote_port: 8822
           remote_user: ${{ secrets.SFTP_USERNAME }}
-          remote_key: ${{ secrets.SFTP_PASSWORD }} # This action accepts password here too
+          # We use remote_password and the pass: true toggle below
+          remote_password: ${{ secrets.SFTP_PASSWORD }}
+          remote_key_pass: true
