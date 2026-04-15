@@ -12,15 +12,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy via Rsync
-        uses: Burnett01/rsync-deployments@7.0.1
+      - name: Deploy to GTX via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
-          switches: -avzr --delete
-          path: ./
-          remote_path: garrysmod/gamemodes/zombiesurvival/
-          remote_host: ${{ secrets.SERVER_IP }}
-          remote_port: 8822
-          remote_user: ${{ secrets.SFTP_USERNAME }}
-          # We use remote_password and the pass: true toggle below
-          remote_password: ${{ secrets.SFTP_PASSWORD }}
-          remote_key_pass: true
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          server: ${{ secrets.SERVER_IP }}
+          port: 8822
+          local_path: './*'
+          remote_path: '/garrysmod/gamemodes/zombiesurvival'
