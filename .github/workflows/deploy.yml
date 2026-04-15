@@ -3,24 +3,26 @@ name: Deploy to GTX Server
 on:
   push:
     branches:
-      - main
+      - master  # This triggers the sync whenever you push to master
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repo
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Upload via SFTP (overwrite enabled)
+      - name: Sync files to Server
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ${{ secrets.SFTP_HOST }}
-          username: ${{ secrets.SFTP_USER }}
-          password: ${{ secrets.SFTP_PASS }}
-          port: ${{ secrets.SFTP_PORT }}
+          server: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: 8822
+          # This ensures it uses SFTP (which your server requires)
           protocol: sftp
+          # Set local-dir to '.' to sync everything, or 'garrysmod/' if your code is in a subfolder
           local-dir: ./
-          server-dir: ${{ secrets.SFTP_PATH }}/
-          dangerous-clean-slate: true
+          # IMPORTANT: server-dir is where the files go on the server. 
+          # Usually leave blank for root, or use 'garrysmod/addons/my_addon/'
+          server-dir: ./
