@@ -12,17 +12,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Sync files to Server
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: Deploy via Rsync
+        uses: Burnett01/rsync-deployments@7.0.1
         with:
-          server: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SFTP_USERNAME }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          port: 8822
-          # Use 'ftp' here - the Action automatically upgrades to SFTP 
-          # when it sees port 8822 and the server supports it.
-          protocol: ftp
-          local-dir: ./
-          server-dir: garrysmod/gamemodes/zombiesurvival/
-          # The correct parameter name for deleting extra files is 'dangerous-clean-slate'
-          dangerous-clean-slate: true
+          switches: -avzr
+          path: ./
+          remote_path: garrysmod/gamemodes/zombiesurvival/
+          remote_host: ${{ secrets.SERVER_IP }}
+          remote_port: 8822
+          remote_user: ${{ secrets.SFTP_USERNAME }}
+          remote_key: ${{ secrets.SFTP_PASSWORD }} # This action accepts password here too
