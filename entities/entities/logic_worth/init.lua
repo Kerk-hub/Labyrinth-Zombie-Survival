@@ -17,6 +17,6 @@ function ENT:KeyValue(key, value)
 	key = string.lower(key)
 	if key == "startingworth" then
 		GAMEMODE.OverrideStartingWorth = true
-		GAMEMODE.StartingWorth = tonumber(value) or 100
+		GAMEMODE.StartingWorth = tonumber(value) or 150
 	end
 end
