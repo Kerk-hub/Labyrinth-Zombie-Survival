@@ -12,12 +12,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy to GTX via SFTP
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+      - name: Sync files to Server
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
+          server: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
-          server: ${{ secrets.SERVER_IP }}
           port: 8822
-          local_path: './*'
-          remote_path: '/garrysmod/gamemodes/zombiesurvival'
+          protocol: sftp
+          local-dir: ./
+          # No leading slash here—helps avoid permission issues
+          server-dir: garrysmod/gamemodes/zombiesurvival/
+          # Set to false first to test the connection
+          dangerous-clean-slate: false
