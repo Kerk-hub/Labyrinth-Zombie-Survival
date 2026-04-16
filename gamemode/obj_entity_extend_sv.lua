@@ -545,7 +545,23 @@ function meta:DamageNails(attacker, inflictor, damage, dmginfo)
 	end
 
 	if self:GetBarricadeHealth() <= 0 then
-		if self:GetModel() ~= "" and self:GetModel() ~= "models/error.mdl" then
+		if self:GetBarricadeHealth() <= 0 then
+			-- Store nails before removing the prop
+			local storedNails = nails
+
+			-- Remove the prop immediately
+			self:Remove()
+
+			-- Clean up nails after
+			if storedNails then
+				for _, nail in pairs(storedNails) do
+					if nail and nail:IsValid() then
+						nail:Remove()
+					end
+				end
+			end
+		end
+		--[[if self:GetModel() ~= "" and self:GetModel() ~= "models/error.mdl" then
 			if self:GetName() == "" and self:GetVolume() < 100 then
 				self:Fire("break", "", 0.01)
 				self:Fire("kill", "", 0.05)
@@ -560,7 +576,7 @@ function meta:DamageNails(attacker, inflictor, damage, dmginfo)
 
 		for _, nail in pairs(nails) do
 			self:RemoveNail(nail, nil, nil, true)
-		end
+		end--]]
 	end
 
 	return true
