@@ -32,7 +32,7 @@ local colModDimVision = {
 function ENT:RenderScreenspaceEffects()
 	if MySelf ~= self:GetOwner() then return end
 
-	colModDimVision["$pp_colour_addb"] = self:GetPower() * 0.2
+	colModDimVision["$pp_colour_addb"] = self:GetPower() * 0.05
 	colModDimVision["$pp_colour_addg"] = self:GetPower() * -0.05
 	colModDimVision["$pp_colour_addr"] = self:GetPower() * -0.13
 	DrawColorModify(colModDimVision)
