@@ -89,7 +89,7 @@ end
 function SWEP:StopReloading()
 	self:SetDTFloat(3, 0)
 	self:SetDTBool(2, false)
-	self:SetNextPrimaryFire(CurTime() + self.Primary.Delay * 0.75)
+	self:SetNextPrimaryFire(CurTime()) --+ self.Primary.Delay * 0.75
 	self:SendWeaponAnim(self.PumpActivity)
 	
 	-- do the pump stuff if we need to
