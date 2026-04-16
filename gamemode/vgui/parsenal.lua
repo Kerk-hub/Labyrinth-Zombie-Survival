@@ -242,7 +242,7 @@ local function ItemPanelDoClick(self)
 	local sweptable = GAMEMODE.ZSInventoryItemData[shoptbl.SWEP] or weapons.Get(shoptbl.SWEP)
 
 	if not sweptable or GAMEMODE.AlwaysQuickBuy then
-		-- RunConsoleCommand("zs_pointsshopbuy", self.ID, self.NoPoints and "scrap") -- Arsenal purchase disabled in arsenal menu
+		RunConsoleCommand("zs_pointsshopbuy", self.ID, self.NoPoints and "scrap")
 		return
 	end
 
@@ -259,7 +259,7 @@ local function ItemPanelDoClick(self)
 	local purb = viewer.m_PurchaseB
 	purb.ID = self.ID
 	purb.DoClick = function()
-		-- RunConsoleCommand("zs_pointsshopbuy", self.ID, self.NoPoints and "scrap") -- Arsenal purchase disabled in arsenal menu
+		RunConsoleCommand("zs_pointsshopbuy", self.ID, self.NoPoints and "scrap")
 	end
 	purb:SetPos(
 		canammo and viewer:GetWide() / 4 - viewer:GetWide() / 8 - 20 or viewer:GetWide() / 4,
@@ -283,7 +283,7 @@ local function ItemPanelDoClick(self)
 	if canammo then
 		purb.AmmoType = GAMEMODE.AmmoToPurchaseNames[sweptable.Primary.Ammo]
 		purb.DoClick = function()
-			-- RunConsoleCommand("zs_pointsshopbuy", "ps_" .. purb.AmmoType) -- Arsenal purchase disabled in arsenal menu
+			RunConsoleCommand("zs_pointsshopbuy", "ps_" .. purb.AmmoType)
 		end
 	end
 	purb:SetPos(viewer:GetWide() * (3 / 4) - purb:GetWide() / 2, viewer:GetTall() - 64 * screenscale)
@@ -378,7 +378,7 @@ function GM:AddShopItem(list, i, tab, issub, nopointshop)
 	itempan.DoRightClick = function()
 		local menu = DermaMenu(itempan)
 		menu:AddOption("Buy", function()
-			-- RunConsoleCommand("zs_pointsshopbuy", itempan.ID, itempan.NoPoints and "scrap") -- Arsenal purchase disabled in arsenal menu
+			RunConsoleCommand("zs_pointsshopbuy", itempan.ID, itempan.NoPoints and "scrap")
 		end)
 		menu:Open()
 	end
@@ -499,13 +499,17 @@ function PANEL:Init()
 	self:SetKeyboardInputEnabled(false)
 end
 
-local matGradientLeft = CreateMaterial("gradient-l", "UnlitGeneric", {
-	["$basetexture"] = "vgui/gradient-l",
-	["$vertexalpha"] = "1",
-	["$vertexcolor"] = "1",
-	["$ignorez"] = "1",
-	["$nomip"] = "1",
-})
+local matGradientLeft = CreateMaterial(
+	"gradient-l",
+	"UnlitGeneric",
+	{
+		["$basetexture"] = "vgui/gradient-l",
+		["$vertexalpha"] = "1",
+		["$vertexcolor"] = "1",
+		["$ignorez"] = "1",
+		["$nomip"] = "1",
+	}
+)
 function PANEL:Paint(w, h)
 	self.LerpStat = Lerp(FrameTime() * 4, self.LerpStat, self.Stat)
 	local progress = math.Clamp((self.StatMax - self.LerpStat) / (self.StatMax - self.StatMin), 0, 1)

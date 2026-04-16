@@ -637,7 +637,7 @@ function GM:PlayerCanPurchase(pl)
 	if CLIENT and self.CanPurchaseCacheTime and self.CanPurchaseCacheTime >= CurTime() then
 		return self.CanPurchaseCache
 	end
-	local canpurchase = PTeam(pl) == TEAM_HUMAN and self:GetWave() > 0 and pl:Alive() -- Removed arsenal crate proximity check
+	local canpurchase = PTeam(pl) == TEAM_HUMAN and self:GetWave() > 0 and pl:Alive() and pl:NearArsenalCrate()
 
 	if CLIENT then
 		self.CanPurchaseCache = canpurchase

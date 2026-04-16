@@ -42,7 +42,7 @@ local function Checkout(tobuy)
 	if tobuy and #tobuy > 0 then
 		gamemode.Call("SuppressArsenalUpgrades", 1)
 
-		-- RunConsoleCommand("worthcheckout", unpack(tobuy)) -- Arsenal purchase disabled in worth menu
+		RunConsoleCommand("worthcheckout", unpack(tobuy))
 
 		if pWorth and pWorth:IsValid() then
 			pWorth:Close()

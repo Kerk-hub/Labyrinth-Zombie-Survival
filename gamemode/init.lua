@@ -4681,7 +4681,30 @@ function GM:WaveStateChanged(newstate)
 				end
 			end
 
-			-- Removed logic that spawns an arsenal crate if no one has one
+			-- We should spawn a crate in a random spawn point if no one has any.
+			if not self.ZombieEscape and #ents.FindByClass("prop_arsenalcrate") == 0 then
+				local have = false
+				for _, pl in pairs(humans) do
+					if pl:HasWeapon("weapon_zs_arsenalcrate") then
+						have = true
+						break
+					end
+				end
+
+				if not have and #humans >= 1 then
+					local spawn = self:PlayerSelectSpawn(humans[math.random(#humans)])
+					if spawn and spawn:IsValid() then
+						local ent = ents.Create("prop_arsenalcrate")
+						if ent:IsValid() then
+							ent:SetPos(spawn:GetPos() + Vector(0, 0, 8))
+							ent:Spawn()
+							ent:DropToFloor()
+							ent:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER) -- Just so no one gets stuck in it.
+							ent.NoTakeOwnership = true
+						end
+					end
+				end
+			end
 		end
 
 		local prevwave = self:GetWave()
