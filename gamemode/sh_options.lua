@@ -517,7 +517,7 @@ item = GM:AddPointShopItem(
 )
 item.CanMakeFromScrap = true
 item = GM:AddPointShopItem("nail", ITEMCAT_AMMO, 2, nil, "Nail", "It's just one nail.", "ammo_nail", function(pl)
-	pl:GiveAmmo(1, "GaussEnergy", true)
+	pl:GiveAmmo(3, "GaussEnergy", true)
 end)
 item.NoClassicMode = true
 item.CanMakeFromScrap = true
