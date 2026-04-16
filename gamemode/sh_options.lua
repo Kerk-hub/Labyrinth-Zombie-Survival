@@ -242,8 +242,8 @@ GM:AddStartingItem("pipe", ITEMCAT_MELEE, 40, "weapon_zs_pipe")
 GM:AddStartingItem("hook", ITEMCAT_MELEE, 40, "weapon_zs_hook")
 
 local item
-GM:AddStartingItem("medkit", ITEMCAT_TOOLS, 60, "weapon_zs_medicalkit")
-GM:AddStartingItem("medgun", ITEMCAT_TOOLS, 55, "weapon_zs_medicgun")
+GM:AddStartingItem("medkit", ITEMCAT_TOOLS, 45, "weapon_zs_medicalkit")
+GM:AddStartingItem("medgun", ITEMCAT_TOOLS, 40, "weapon_zs_medicgun")
 item = GM:AddStartingItem("strengthshot", ITEMCAT_TOOLS, 40, "weapon_zs_strengthshot")
 item.SkillRequirement = SKILL_U_STRENGTHSHOT
 item = GM:AddStartingItem("antidoteshot", ITEMCAT_TOOLS, 40, "weapon_zs_antidoteshot")
