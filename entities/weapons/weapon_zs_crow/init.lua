@@ -14,6 +14,10 @@ function SWEP:Holster()
 end
 SWEP.OnRemove = SWEP.Holster
 
+function SWEP:Initialize()
+	self:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
+end
+
 function SWEP:Think()
 	local owner = self:GetOwner()
 
