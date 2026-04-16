@@ -215,9 +215,8 @@ concommand.Add("zs_revive", function(sender, command, arguments)
 	end
 
 	local pl = sender
-	if not pl:Alive() then
-		pl:Redeem()
-	end
+    pl:Redeem()
+	
 end)
 
 concommand.Add("zs_dismantle", function(sender, command, arguments)
