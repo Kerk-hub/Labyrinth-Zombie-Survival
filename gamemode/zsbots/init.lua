@@ -212,6 +212,8 @@ function ZSBOTS.PlayerTick(pl, mv)
 		-- "suicide" since we only want to be a zombie
 		pl:Kill()
 	else
+		-- if player is a crow they wont do anything--
+		if pl:GetZombieClass() == "crow" then return end
 		-- We don't update our path every frame because it would be excessive.
 		-- We move directly towards a player if we're very near and visible so that's okay.
 		if CurTime() >= pl.NextPathUpdate then
