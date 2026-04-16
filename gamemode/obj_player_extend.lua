@@ -237,25 +237,26 @@ function meta:MeleeViewPunch(damage)
 end
 
 function meta:NearArsenalCrate()
-	local pos = self:EyePos()
+	--local pos = self:EyePos()
 
-	if self.ArsenalZone and self.ArsenalZone:IsValid() then
-		return true
-	end
+	--if self.ArsenalZone and self.ArsenalZone:IsValid() then
+	--	return true
+	--end
 
-	local arseents = {}
-	table.Add(arseents, ents.FindByClass("prop_arsenalcrate"))
-	table.Add(arseents, ents.FindByClass("status_arsenalpack"))
+	--local arseents = {}
+	--table.Add(arseents, ents.FindByClass("prop_arsenalcrate"))
+	--table.Add(arseents, ents.FindByClass("status_arsenalpack"))
 
-	for _, ent in pairs(arseents) do
-		local nearest = ent:NearestPoint(pos)
-		if pos:DistToSqr(nearest) <= 10000 and (WorldVisible(pos, nearest) or self:TraceLine(100).Entity == ent) then -- 80^2
-			return true
-		end
-	end
+	--for _, ent in pairs(arseents) do
+	--	local nearest = ent:NearestPoint(pos)
+	--	if pos:DistToSqr(nearest) <= 10000 and (WorldVisible(pos, nearest) or self:TraceLine(100).Entity == ent) then -- 80^2
+	--		return true
+	--	end
+	--end
 
-	return false
+	return true
 end
+-- To allow arsenal crate to be used anywhere we can just allow this to return true--
 meta.IsNearArsenalCrate = meta.NearArsenalCrate
 
 function meta:NearRemantler()
