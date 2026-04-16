@@ -209,6 +209,17 @@ concommand.Add("zs_addpoints", function(sender, command, arguments)
 	pl:AddPoints(amount)
 end)
 
+concommand.Add("zs_revive", function(sender, command, arguments)
+	if not sender:IsAdmin() then
+		return
+	end
+
+	local pl = sender
+	if not pl:Alive() then
+		pl:Redeem()
+	end
+end)
+
 concommand.Add("zs_dismantle", function(sender, command, arguments)
 	if not (sender:IsValid() and sender:IsConnected() and sender:IsValidLivingHuman()) then
 		return
