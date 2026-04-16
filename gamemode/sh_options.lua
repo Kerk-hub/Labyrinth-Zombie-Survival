@@ -227,6 +227,12 @@ end)
 GM:AddStartingItem("90mkit", ITEMCAT_AMMO, 25, nil, "90 medical power", nil, "ammo_medpower", function(pl)
 	pl:GiveAmmo(90, "Battery", true)
 end)
+GM:AddStartingItem("3scrap", ITEMCAT_AMMO, 15, nil, "3 scrap", nil, "ammo_scrap", function(pl)
+	pl:GiveAmmo(3, "Scrap", true)
+end)
+GM:AddStartingItem("9scrap", ITEMCAT_AMMO, 25, nil, "9 scrap", nil, "ammo_scrap", function(pl)
+	pl:GiveAmmo(9, "Scrap", true)
+end)
 
 GM:AddStartingItem("brassknuckles", ITEMCAT_MELEE, 20, "weapon_zs_brassknuckles").Model =
 	"models/props_c17/utilityconnecter005.mdl"
