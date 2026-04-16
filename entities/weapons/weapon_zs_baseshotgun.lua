@@ -47,13 +47,24 @@ function SWEP:Reload()
 end
 
 function SWEP:Think()
+	-- auto reload when clip size = 0
+	if self:Clip1() <= 0
+	and self:CanReload()
+	and not self:IsReloading()
+	and not self:GetOwner():KeyDown(IN_ATTACK)
+	then
+		self:StartReloading()
+	end
+
 	if self:ShouldDoReload() then
 		self:DoReload()
 	end
-	if not self.ForceStopReload and self:IsReloading() and self:CanReload() and not self:GetOwner():KeyDown(IN_ATTACK) and not self:GetDTBool(2) then
-		self:SetDTBool(2, true)
-	end
-	if self:IsReloading() and self:CanReload() and not self:GetOwner():KeyDown(IN_ATTACK) and not self:GetDTBool(2) then
+
+	if self:IsReloading()
+	and self:CanReload()
+	and not self:GetOwner():KeyDown(IN_ATTACK)
+	and not self:GetDTBool(2)
+	then
 		self:SetDTBool(2, true)
 	end
 
@@ -78,10 +89,9 @@ end
 function SWEP:StopReloading()
 	self:SetDTFloat(3, 0)
 	self:SetDTBool(2, false)
-	self:SetNextPrimaryFire(CurTime()) -- + self.Primary.Delay * 0.75)
+	self:SetNextPrimaryFire(CurTime() + self.Primary.Delay * 0.75)
 	self:SendWeaponAnim(self.PumpActivity)
-	self:ProcessReloadAnim()
-
+	
 	-- do the pump stuff if we need to
 	--if self:Clip1() > 0 then
 	--	if self.PumpSound then
@@ -112,9 +122,10 @@ function SWEP:DoReload()
 	self:GetOwner():RemoveAmmo(1, self.Primary.Ammo, false)
 	self:SetClip1(self:Clip1() + 1)
 
-	--self:SetDTBool(2, false)
+	self:SetDTBool(2, false)
 	-- We always wanna call the reload function one more time. Forces a pump to take place.
 	self:SetDTFloat(3, CurTime() + delay)
+
 	self:SetNextPrimaryFire(CurTime() + math.max(self.Primary.Delay, delay))
 end
 
@@ -148,6 +159,12 @@ function SWEP:CanPrimaryAttack()
 	if self:Clip1() < self.RequiredClip then
 		self:EmitSound("Weapon_Shotgun.Empty")
 		self:SetNextPrimaryFire(CurTime() + 0.25)
+
+		return false
+	end
+
+	if self:IsReloading() then
+		self:StopReloading()
 		return false
 	end
 
