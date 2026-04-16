@@ -153,7 +153,7 @@ local function SaveSkillLoadout(name)
 		end
 	end
 
-	GAMEMODE.SavedSkillLoadouts[#GAMEMODE.SavedSkillLoadouts + 1] = {name, MySelf:GetDesiredActiveSkills()}
+	GAMEMODE.SavedSkillLoadouts[#GAMEMODE.SavedSkillLoadouts + 1] = { name, MySelf:GetDesiredActiveSkills() }
 	file.Write(GAMEMODE.SkillLoadoutsFile, Serialize(GAMEMODE.SavedSkillLoadouts))
 end
 
@@ -177,12 +177,9 @@ function GM:GenerateFromSkillWebGrid()
 					print(string.format("-- WARNING: Skill ID %d already exists (pixel %d, %d)", id, x, y))
 				end
 
-				prelines[id] = string.format("SKILL_%d = %d",
-					id,
-					id
-				)
-				lines[id] =	string.format(
-					"GM:AddSkill(SKILL_%d, \"\", \"\",\n%s%d,%s%d,%s{})",
+				prelines[id] = string.format("SKILL_%d = %d", id, id)
+				lines[id] = string.format(
+					'GM:AddSkill(SKILL_%d, "", "",\n%s%d,%s%d,%s{})',
 					id,
 					string.rep("\t", 16),
 					lx,
@@ -201,15 +198,18 @@ end
 
 local hoveredskill
 
-local REMORT_SKILL = {Name = "Remort", Description = "Go even further beyond.\nLose all skills, experience, skill points, and levels.\nStart at level 1 but with 1 extra skill point.\nCan remort multiple times for multiple extra skill points."}
+local REMORT_SKILL = {
+	Name = "Remort",
+	Description = "Go even further beyond.\nLose all skills, experience, skill points, and levels.\nStart at level 1 but with 1 extra skill point.\nCan remort multiple times for multiple extra skill points.",
+}
 
 local PANEL = {}
 
-AccessorFunc( PANEL, "vCamPos",			"CamPos" )
-AccessorFunc( PANEL, "fFOV",			"FOV" )
-AccessorFunc( PANEL, "vLookatPos",		"LookAt" )
-AccessorFunc( PANEL, "aLookAngle",		"LookAng" )
-AccessorFunc( PANEL, "colAmbientLight",	"AmbientLight" )
+AccessorFunc(PANEL, "vCamPos", "CamPos")
+AccessorFunc(PANEL, "fFOV", "FOV")
+AccessorFunc(PANEL, "vLookatPos", "LookAt")
+AccessorFunc(PANEL, "aLookAngle", "LookAng")
+AccessorFunc(PANEL, "colAmbientLight", "AmbientLight")
 
 PANEL.CreationTime = 0
 PANEL.DesiredZoom = 5000
@@ -219,12 +219,12 @@ PANEL.ShadeAlpha = 0
 PANEL.ShadeVelocity = 0
 
 local offsets = {
-	[TREE_HEALTHTREE] = {0, 16},
-	[TREE_SPEEDTREE] = {0, -12},
-	[TREE_GUNTREE] = {13, -7},
-	[TREE_MELEETREE] = {13, 8},
-	[TREE_BUILDINGTREE] = {-14, 8},
-	[TREE_SUPPORTTREE] = {-13, -7}
+	[TREE_HEALTHTREE] = { 0, 16 },
+	[TREE_SPEEDTREE] = { 0, -12 },
+	[TREE_GUNTREE] = { 13, -7 },
+	[TREE_MELEETREE] = { 13, 8 },
+	[TREE_BUILDINGTREE] = { -14, 8 },
+	[TREE_SUPPORTTREE] = { -13, -7 },
 }
 
 function PANEL:Init()
@@ -235,14 +235,14 @@ function PANEL:Init()
 	self.DirectionalLight = {}
 	self.FarZ = 32000
 
-	self:SetCamPos( Vector( 15000, 0, 0 ) )
-	self:SetLookAt( Vector( 0, 0, 0 ) )
+	self:SetCamPos(Vector(15000, 0, 0))
+	self:SetLookAt(Vector(0, 0, 0))
 	self:SetFOV(6)
 
-	self:SetAmbientLight( Color( 50, 50, 50 ) )
+	self:SetAmbientLight(Color(50, 50, 50))
 
-	self:SetDirectionalLight( BOX_TOP, color_white )
-	self:SetDirectionalLight( BOX_FRONT, color_white )
+	self:SetDirectionalLight(BOX_TOP, color_white)
+	self:SetDirectionalLight(BOX_FRONT, color_white)
 
 	self.SkillNodes = {}
 	for id, skill in pairs(allskills) do
@@ -287,7 +287,7 @@ function PANEL:Init()
 	skillname:Dock(TOP)
 
 	local desc = {}
-	for i=1, 5 do
+	for i = 1, 5 do
 		local skilldesc = vgui.Create("DLabel", top)
 		skilldesc:SetFont("ZSHUDFontSmall")
 		skilldesc:SetTextColor(COLOR_GRAY)
@@ -307,7 +307,7 @@ function PANEL:Init()
 	bottomleftup:SetSize(190 * screenscale, 120 * screenscale)
 
 	local quickstats = {}
-	for i=1,3 do
+	for i = 1, 3 do
 		local hpstat = vgui.Create("DLabel", bottomleftup)
 		hpstat:SetFont("ZSHUDFontSmaller")
 		hpstat:SetTextColor(COLOR_WHITE)
@@ -340,7 +340,9 @@ function PANEL:Init()
 			end
 		end
 
-		if not delloadout then return end
+		if not delloadout then
+			return
+		end
 
 		table.remove(GAMEMODE.SavedSkillLoadouts, delloadout)
 		file.Write(GAMEMODE.SkillLoadoutsFile, Serialize(GAMEMODE.SavedSkillLoadouts))
@@ -358,15 +360,20 @@ function PANEL:Init()
 	savebtn.DoClick = function(me)
 		surface.PlaySound("zombiesurvival/ui/misc1.ogg")
 
-		local frame = Derma_StringRequest("Save skill loadout", "Enter a name for this skill loadout.", "Name",
-		function(strTextOut)
-			SaveSkillLoadout(strTextOut)
-			UpdateDropDown(dropdown)
+		local frame = Derma_StringRequest(
+			"Save skill loadout",
+			"Enter a name for this skill loadout.",
+			"Name",
+			function(strTextOut)
+				SaveSkillLoadout(strTextOut)
+				UpdateDropDown(dropdown)
 
-			self:DisplayMessage("Skill loadout '" .. strTextOut .."' saved!", COLOR_GREEN)
-		end,
-		function(strTextOut) end,
-		"OK", "Cancel")
+				self:DisplayMessage("Skill loadout '" .. strTextOut .. "' saved!", COLOR_GREEN)
+			end,
+			function(strTextOut) end,
+			"OK",
+			"Cancel"
+		)
 
 		frame:GetChildren()[5]:GetChildren()[2]:SetTextColor(Color(30, 30, 30))
 	end
@@ -391,13 +398,15 @@ function PANEL:Init()
 			end
 		end
 
-		if not newloadout then return end
+		if not newloadout then
+			return
+		end
 
 		net.Start("zs_skill_set_desired")
-			net.WriteTable(newloadout)
+		net.WriteTable(newloadout)
 		net.SendToServer()
 
-		self:DisplayMessage("Skill loadout '" .. nlname .."' loaded!", COLOR_GREEN)
+		self:DisplayMessage("Skill loadout '" .. nlname .. "' loaded!", COLOR_GREEN)
 	end
 
 	local bottomlefttop = vgui.Create("DEXRoundedPanel", self)
@@ -420,7 +429,7 @@ function PANEL:Init()
 		end
 
 		net.Start("zs_skills_all_desired")
-			net.WriteBool(true)
+		net.WriteBool(true)
 		net.SendToServer()
 	end
 
@@ -441,7 +450,7 @@ function PANEL:Init()
 		end
 
 		net.Start("zs_skills_all_desired")
-			net.WriteBool(false)
+		net.WriteBool(false)
 		net.SendToServer()
 	end
 
@@ -457,14 +466,10 @@ function PANEL:Init()
 	reset:DockMargin(0, 5, 0, 0)
 	reset:Dock(TOP)
 	reset.DoClick = function(me)
-		Derma_Query(
-			"Reset all skills and refund SP?\nYou can only do this once per week.",
-			"Warning",
-			"OK",
-			function() net.Start("zs_skills_reset") net.SendToServer() end,
-			"Cancel",
-			function() end
-		)
+		Derma_Query("Reset all skills and refund SP?\nYou can only do this once per week.", "Warning", "OK", function()
+			net.Start("zs_skills_reset")
+			net.SendToServer()
+		end, "Cancel", function() end)
 	end
 
 	local topright = vgui.Create("DEXRoundedPanel", self)
@@ -485,7 +490,7 @@ function PANEL:Init()
 
 	local spremaining = vgui.Create("DEXChangingLabel", bottom)
 	spremaining:SetChangeFunction(function()
-		return "Unused skill points: "..MySelf:GetZSSPRemaining()
+		return "Unused skill points: " .. MySelf:GetZSSPRemaining()
 	end, true)
 	spremaining:SetChangedFunction(function()
 		if MySelf:GetZSSPRemaining() >= 1 then
@@ -521,25 +526,25 @@ function PANEL:Init()
 		local name = allskills[skillid].Name
 		if MySelf:IsSkillDesired(skillid) then
 			net.Start("zs_skill_is_desired")
-				net.WriteUInt(skillid, 16)
-				net.WriteBool(false)
+			net.WriteUInt(skillid, 16)
+			net.WriteBool(false)
 			net.SendToServer()
 
-			self:DisplayMessage(name.." deactivated.")
+			self:DisplayMessage(name .. " deactivated.")
 		elseif MySelf:IsSkillUnlocked(skillid) then
 			net.Start("zs_skill_is_desired")
-				net.WriteUInt(skillid, 16)
-				net.WriteBool(true)
+			net.WriteUInt(skillid, 16)
+			net.WriteBool(true)
 			net.SendToServer()
 
-			self:DisplayMessage(name.." activated.", COLOR_DARKGREEN)
+			self:DisplayMessage(name .. " activated.", COLOR_DARKGREEN)
 		else
 			net.Start("zs_skill_is_unlocked")
-				net.WriteUInt(skillid, 16)
-				net.WriteBool(true)
+			net.WriteUInt(skillid, 16)
+			net.WriteBool(true)
 			net.SendToServer()
 
-			self:DisplayMessage(name.." unlocked and activated!", COLOR_GREEN)
+			self:DisplayMessage(name .. " unlocked and activated!", COLOR_GREEN)
 		end
 
 		contextmenu:SetVisible(false)
@@ -628,7 +633,7 @@ function PANEL:UpdateQuickStats()
 		end
 	end
 
-	for i=1,3 do
+	for i = 1, 3 do
 		local prefix = i == 1 and "Health" or i == 2 and "Speed" or "Worth"
 		local val = i == 2 and SPEED_NORMAL or 100
 		self.QuickStats[i]:SetText(prefix .. " : " .. (val + (skillmodifiers[i] or 0)))
@@ -641,7 +646,11 @@ function PANEL:DisplayMessage(msg, col)
 
 	self.MessageBox:SetVisible(true)
 
-	timer.Create("SKillWebMessageRemove", 4, 1, function() if self:IsValid() then self.MessageBox:SetVisible(false) end end)
+	timer.Create("SKillWebMessageRemove", 4, 1, function()
+		if self:IsValid() then
+			self.MessageBox:SetVisible(false)
+		end
+	end)
 end
 
 PANEL.NextWarningThink = 0
@@ -652,7 +661,9 @@ function PANEL:Think()
 		self.AmbientSound:PlayEx(0.66, 60 + CurTime() % 0.1)
 	end
 
-	if time < self.NextWarningThink then return end
+	if time < self.NextWarningThink then
+		return
+	end
 	self.NextWarningThink = time + 0.1
 
 	local display_warning = false
@@ -680,7 +691,7 @@ end
 function PANEL:GenerateParticles()
 	local particles = {}
 	local particle
-	for i=1, 140 do
+	for i = 1, 140 do
 		-- struct: Position, Roll, Roll rate, Size, Alpha
 		particle = {}
 		particle[1] = Vector(math.Rand(-1524, -32), math.Rand(-610, 610), math.Rand(-610, 610))
@@ -695,7 +706,9 @@ function PANEL:GenerateParticles()
 end
 
 function PANEL:GenerateSplines()
-	if GAMEMODE.SkillsSplined then return end
+	if GAMEMODE.SkillsSplined then
+		return
+	end
 
 	-- for skillid, skill in pairs(GAMEMODE.Skills) do
 	-- 	if skill.Curves then
@@ -761,7 +774,9 @@ end
 
 local camera_velocity = Vector(0, 0, 0)
 function PANEL:DoEdgeScroll(deltatime)
-	if not system.HasFocus() then return end
+	if not system.HasFocus() then
+		return
+	end
 
 	local mx, my = gui.MousePos()
 	local edge = math.min(w, h) * 0.035
@@ -786,7 +801,8 @@ function PANEL:DoEdgeScroll(deltatime)
 		self.ContextMenu:SetVisible(false)
 	end
 
-	camera_velocity = LerpVector(deltatime * (scrolldir.y == 0 and scrolldir.z == 0 and 3 or 1), camera_velocity, scrolldir)
+	camera_velocity =
+		LerpVector(deltatime * (scrolldir.y == 0 and scrolldir.z == 0 and 3 or 1), camera_velocity, scrolldir)
 
 	if camera_velocity.y ~= 0 or camera_velocity.z ~= 0 then
 		campos = campos + deltatime * edge * 12 * camera_velocity
@@ -800,12 +816,12 @@ function PANEL:DoEdgeScroll(deltatime)
 end
 
 local nodecolors = {
-	[TREE_HEALTHTREE] = {1.75, 3, 5},
-	[TREE_SPEEDTREE] = {2, 2, 5},
-	[TREE_SUPPORTTREE] = {3, 1.5, 6},
-	[TREE_BUILDINGTREE] = {2, 6, 3},
-	[TREE_MELEETREE] = {1.5, 7, 7},
-	[TREE_GUNTREE] = {5, 2, 2}
+	[TREE_HEALTHTREE] = { 1.75, 3, 5 },
+	[TREE_SPEEDTREE] = { 2, 2, 5 },
+	[TREE_SUPPORTTREE] = { 3, 1.5, 6 },
+	[TREE_BUILDINGTREE] = { 2, 6, 3 },
+	[TREE_MELEETREE] = { 1.5, 7, 7 },
+	[TREE_GUNTREE] = { 5, 2, 2 },
 }
 
 local matBeam = Material("effects/laser1")
@@ -824,7 +840,9 @@ function PANEL:Paint(w, h)
 	local skillid, skill, nodepos, selected
 	local col, connectskill, othernode, othernodepos
 	local add, pos_a, pos_b, sat
-	local size, desc, --[[curve, desired_curve]] ang
+	local size,
+		desc, --[[curve, desired_curve]]
+		ang
 	--local dir = Vector(0, 0, 0)
 
 	self:DoEdgeScroll(dt)
@@ -848,17 +866,17 @@ function PANEL:Paint(w, h)
 	local aimvector = util.AimVector(ang, self.fFOV, mx, my, w, h)
 	local intersectpos = util.IntersectRayWithPlane(self.vCamPos, aimvector, self:GetLookAt(), Vector(-1, 0, 0))
 
-	cam.Start3D( self.vCamPos, ang, self.fFOV, 0, 0, w, h, 5, self.FarZ )
-	cam.IgnoreZ( true )
+	cam.Start3D(self.vCamPos, ang, self.fFOV, 0, 0, w, h, 5, self.FarZ)
+	cam.IgnoreZ(true)
 
-	render_SuppressEngineLighting( true )
-	render.SetLightingOrigin( vector_origin )
-	render.ResetModelLighting( self.colAmbientLight.r / 255, self.colAmbientLight.g / 255, self.colAmbientLight.b / 255 )
+	render_SuppressEngineLighting(true)
+	render.SetLightingOrigin(vector_origin)
+	render.ResetModelLighting(self.colAmbientLight.r / 255, self.colAmbientLight.g / 255, self.colAmbientLight.b / 255)
 
-	for i=0, 6 do
-		col = self.DirectionalLight[ i ]
+	for i = 0, 6 do
+		col = self.DirectionalLight[i]
 		if col then
-			render.SetModelLighting( i, col.r / 255, col.g / 255, col.b / 255 )
+			render.SetModelLighting(i, col.r / 255, col.g / 255, col.b / 255)
 		end
 	end
 
@@ -990,7 +1008,7 @@ function PANEL:Paint(w, h)
 			elseif skillid < -1 then
 				local tbl = particlecolors[-skillid - 1]
 
-				render_SetColorModulation(tbl.r/255, tbl.g/255, tbl.b/255)
+				render_SetColorModulation(tbl.r / 255, tbl.g / 255, tbl.b / 255)
 			elseif MySelf:IsSkillDesired(skillid) then
 				render_SetColorModulation(sat / 4, sat / 4, sat / 2)
 			elseif MySelf:IsSkillUnlocked(skillid) then
@@ -1013,9 +1031,19 @@ function PANEL:Paint(w, h)
 			render_SetColorModulation(1, 1, 1)
 
 			if self.DesiredZoom < 9500 then
-				local colo = skill.Disabled and COLOR_DARKGRAY or selected and color_white or notunlockable and COLOR_MIDGRAY or COLOR_GRAY
+				local colo = skill.Disabled and COLOR_DARKGRAY
+					or selected and color_white
+					or notunlockable and COLOR_MIDGRAY
+					or COLOR_GRAY
 
-				draw_SimpleText(skill.Name, skillid <= -1 and "ZS3D2DFont2Big" or "ZS3D2DFont2", 0, 0, colo, TEXT_ALIGN_CENTER)
+				draw_SimpleText(
+					skill.Name,
+					skillid <= -1 and "ZS3D2DFont2Big" or "ZS3D2DFont2",
+					0,
+					0,
+					colo,
+					TEXT_ALIGN_CENTER
+				)
 			end
 
 			DisableClipping(false)
@@ -1028,7 +1056,9 @@ function PANEL:Paint(w, h)
 					render.DrawQuadEasy(nodepos, to_camera, 32, 32, color_white, angle)
 				end
 			elseif not skill.Disabled then
-				colGlow.r = sat * 255 colGlow.g = sat * 255 colGlow.b = sat * 255
+				colGlow.r = sat * 255
+				colGlow.g = sat * 255
+				colGlow.b = sat * 255
 				if MySelf:IsSkillDesired(skillid) then
 					colGlow.r = colGlow.r / 4
 					colGlow.g = colGlow.g / 4
@@ -1064,13 +1094,15 @@ function PANEL:Paint(w, h)
 		self.Top:Stop()
 
 		if hoveredskill then
-			skill = hoveredskill < -1 and TREE_SKILLS[-hoveredskill - 1] or hoveredskill == -1 and REMORT_SKILL or GAMEMODE.Skills[hoveredskill]
+			skill = hoveredskill < -1 and TREE_SKILLS[-hoveredskill - 1]
+				or hoveredskill == -1 and REMORT_SKILL
+				or GAMEMODE.Skills[hoveredskill]
 			self.SkillName:SetText(skill.Name)
 			self.SkillName:SizeToContents()
 
 			desc = string.Explode("\n", skill.Description)
 			local txt, colid
-			for i=1, 5 do
+			for i = 1, 5 do
 				txt = desc[i] or " "
 				if txt:sub(1, 1) == "^" then
 					colid = tonumber(txt:sub(2, 2)) or 0
@@ -1117,7 +1149,10 @@ function PANEL:OnMousePressed(mc)
 					"Are you ABSOLUTELY sure you want to remort?\nYou will revert to level 1, lose all skills, but have 1 extra SP.\nThis cannot be undone!",
 					"Warning",
 					"OK",
-					function() net.Start("zs_skills_remort") net.SendToServer() end,
+					function()
+						net.Start("zs_skills_remort")
+						net.SendToServer()
+					end,
 					"Cancel",
 					function() end
 				)
@@ -1177,7 +1212,11 @@ function PANEL:OnRemove()
 
 	local snd = self.AmbientSound
 	snd:FadeOut(1.5)
-	timer.Simple(1.5, function() if snd then snd:Stop() end end)
+	timer.Simple(1.5, function()
+		if snd then
+			snd:Stop()
+		end
+	end)
 end
 
 vgui.Register("ZSSkillWeb", PANEL, "Panel")
@@ -1189,7 +1228,7 @@ function GM:DrawXPBar(x, y, w, h, xpw, barwm, hm, level)
 	local rlevel = MySelf:GetZSRemortLevel()
 	local append = ""
 	if rlevel > 0 then
-		append = " // R.Level "..rlevel
+		append = " // R.Level " .. rlevel
 	end
 
 	surface.SetDrawColor(0, 0, 0, 220)
@@ -1201,7 +1240,15 @@ function GM:DrawXPBar(x, y, w, h, xpw, barwm, hm, level)
 	surface.DrawRect(x, y + 2, barw * progress, 2)
 
 	if level == GAMEMODE.MaxLevel then
-		draw_SimpleText("Level MAX"..append, "ZSXPBar", xpw / 2, h / 2 + y, COLOR_GREEN, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+		draw_SimpleText(
+			"Level MAX" .. append,
+			"ZSXPBar",
+			xpw / 2,
+			h / 2 + y,
+			COLOR_GREEN,
+			TEXT_ALIGN_CENTER,
+			TEXT_ALIGN_CENTER
+		)
 	else
 		if progress > 0 then
 			local lx = x + barw * progress - 1
@@ -1213,8 +1260,24 @@ function GM:DrawXPBar(x, y, w, h, xpw, barwm, hm, level)
 			surface.DrawLine(lx, y - 1, lx, y + 5)
 		end
 
-		draw_SimpleText("Level "..level..append, "ZSXPBar", x, h / 2 + y, COLOR_WHITE, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-		draw_SimpleText(string.CommaSeparate(xp).." / "..string.CommaSeparate(GAMEMODE:XPForLevel(level + 1)).." XP", "ZSXPBar", x + barw, h / 2 + y, COLOR_WHITE, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+		draw_SimpleText(
+			"Level " .. level .. append,
+			"ZSXPBar",
+			x,
+			h / 2 + y,
+			COLOR_WHITE,
+			TEXT_ALIGN_LEFT,
+			TEXT_ALIGN_CENTER
+		)
+		draw_SimpleText(
+			string.CommaSeparate(xp) .. " / " .. string.CommaSeparate(GAMEMODE:XPForLevel(level + 1)) .. " XP",
+			"ZSXPBar",
+			x + barw,
+			h / 2 + y,
+			COLOR_WHITE,
+			TEXT_ALIGN_RIGHT,
+			TEXT_ALIGN_CENTER
+		)
 	end
 end
 
@@ -1245,7 +1308,7 @@ function PANEL:Think()
 	if new_level ~= self.PlayerLevel then
 		if new_level ~= 1 and self.FirstLevelChange then
 			GAMEMODE:CenterNotify(translate.Format("you_ascended_to_level_x", new_level))
-			surface.PlaySound("weapons/physcannon/energy_disintegrate"..math.random(4, 5)..".wav")
+			surface.PlaySound("weapons/physcannon/energy_disintegrate" .. math.random(4, 5) .. ".wav")
 		else
 			self.FirstLevelChange = true
 		end
@@ -1254,7 +1317,17 @@ function PANEL:Think()
 	self.PlayerLevel = new_level
 end
 
-local matGradientLeft = CreateMaterial("gradient-l", "UnlitGeneric", {["$basetexture"] = "vgui/gradient-l", ["$vertexalpha"] = "1", ["$vertexcolor"] = "1", ["$ignorez"] = "1", ["$nomip"] = "1"})
+local matGradientLeft = CreateMaterial(
+	"gradient-l",
+	"UnlitGeneric",
+	{
+		["$basetexture"] = "vgui/gradient-l",
+		["$vertexalpha"] = "1",
+		["$vertexcolor"] = "1",
+		["$ignorez"] = "1",
+		["$nomip"] = "1",
+	}
+)
 local colFlash = Color(255, 255, 255)
 function PANEL:Paint(w, h)
 	surface.SetDrawColor(0, 0, 0, 180)
@@ -1270,24 +1343,21 @@ function PANEL:Paint(w, h)
 	local sp = MySelf:GetZSSPRemaining()
 	if sp > 0 then
 		colFlash.a = 90 + math.abs(math.sin(RealTime() * 2)) * 160
-		draw_SimpleText(sp.." SP", "ZSHUDFontSmallest", w - 2, h / 2, colFlash, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+		draw_SimpleText(sp .. " SP", "ZSHUDFontSmallest", w - 2, h / 2, colFlash, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
 	end
 end
 
 vgui.Register("ZSExperienceHUD", PANEL, "Panel")
 
+-- Skill menu removed: ToggleSkillWeb disabled
 function GM:ToggleSkillWeb()
-	if self.SkillWeb and self.SkillWeb:IsValid() then
-		self.SkillWeb:Remove()
-		self.SkillWeb = nil
-		return
-	end
-
-	self.SkillWeb = vgui.Create("ZSSkillWeb")
+	-- No operation
 end
 
 local meta = FindMetaTable("Player")
-if not meta then return end
+if not meta then
+	return
+end
 
 function meta:SetSkillDesired(skillid, desired)
 	local desiredskills = self:GetDesiredActiveSkills()

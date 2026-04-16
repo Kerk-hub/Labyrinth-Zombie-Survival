@@ -7,12 +7,14 @@ local pPlayerModel
 local function SwitchPlayerModel(self)
 	surface.PlaySound("buttons/button14.wav")
 	RunConsoleCommand("cl_playermodel", self.m_ModelName)
-	chat.AddText(COLOR_LIMEGREEN, "You've changed your desired player model to "..tostring(self.m_ModelName))
+	chat.AddText(COLOR_LIMEGREEN, "You've changed your desired player model to " .. tostring(self.m_ModelName))
 
 	pPlayerModel:Close()
 end
 function MakepPlayerModel()
-	if pPlayerModel and pPlayerModel:IsValid() then pPlayerModel:Remove() end
+	if pPlayerModel and pPlayerModel:IsValid() then
+		pPlayerModel:Remove()
+	end
 
 	PlayMenuOpenSound()
 
@@ -53,7 +55,9 @@ function MakepPlayerModel()
 end
 
 function MakepPlayerColor()
-	if pPlayerColor and pPlayerColor:IsValid() then pPlayerColor:Remove() end
+	if pPlayerColor and pPlayerColor:IsValid() then
+		pPlayerColor:Remove()
+	end
 
 	PlayMenuOpenSound()
 
@@ -77,7 +81,7 @@ function MakepPlayerColor()
 	colpicker:SetPalette(false)
 	colpicker.UpdateConVars = function(me, color)
 		me.NextConVarCheck = SysTime() + 0.2
-		RunConsoleCommand("cl_playercolor", color.r / 100 .." ".. color.g / 100 .." ".. color.b / 100)
+		RunConsoleCommand("cl_playercolor", color.r / 100 .. " " .. color.g / 100 .. " " .. color.b / 100)
 	end
 	local r, g, b = string.match(GetConVar("cl_playercolor"):GetString(), "(%g+) (%g+) (%g+)")
 	if r then
@@ -96,7 +100,7 @@ function MakepPlayerColor()
 	colpicker:SetPalette(false)
 	colpicker.UpdateConVars = function(me, color)
 		me.NextConVarCheck = SysTime() + 0.2
-		RunConsoleCommand("cl_weaponcolor", color.r / 100 .." ".. color.g / 100 .." ".. color.b / 100)
+		RunConsoleCommand("cl_weaponcolor", color.r / 100 .. " " .. color.g / 100 .. " " .. color.b / 100)
 	end
 	r, g, b = string.match(GetConVar("cl_weaponcolor"):GetString(), "(%g+) (%g+) (%g+)")
 	if r then
@@ -139,7 +143,9 @@ function GM:ShowHelp()
 	but:DockMargin(0, 0, 0, 12)
 	but:DockPadding(0, 12, 0, 12)
 	but:Dock(TOP)
-	but.DoClick = function() MakepHelp() end
+	but.DoClick = function()
+		MakepHelp()
+	end
 
 	but = vgui.Create("DButton", menu)
 	but:SetFont("ZSHUDFontSmaller")
@@ -148,7 +154,9 @@ function GM:ShowHelp()
 	but:DockMargin(0, 0, 0, 12)
 	but:DockPadding(0, 12, 0, 12)
 	but:Dock(TOP)
-	but.DoClick = function() MakepPlayerModel() end
+	but.DoClick = function()
+		MakepPlayerModel()
+	end
 
 	but = vgui.Create("DButton", menu)
 	but:SetFont("ZSHUDFontSmaller")
@@ -157,7 +165,9 @@ function GM:ShowHelp()
 	but:DockMargin(0, 0, 0, 12)
 	but:DockPadding(0, 12, 0, 12)
 	but:Dock(TOP)
-	but.DoClick = function() MakepPlayerColor() end
+	but.DoClick = function()
+		MakepPlayerColor()
+	end
 
 	but = vgui.Create("DButton", menu)
 	but:SetFont("ZSHUDFontSmaller")
@@ -166,7 +176,9 @@ function GM:ShowHelp()
 	but:DockMargin(0, 0, 0, 12)
 	but:DockPadding(0, 12, 0, 12)
 	but:Dock(TOP)
-	but.DoClick = function() MakepOptions() end
+	but.DoClick = function()
+		MakepOptions()
+	end
 
 	but = vgui.Create("DButton", menu)
 	but:SetFont("ZSHUDFontSmaller")
@@ -175,16 +187,11 @@ function GM:ShowHelp()
 	but:DockMargin(0, 0, 0, 12)
 	but:DockPadding(0, 12, 0, 12)
 	but:Dock(TOP)
-	but.DoClick = function() MakepWeapons() end
+	but.DoClick = function()
+		MakepWeapons()
+	end
 
-	but = vgui.Create("DButton", menu)
-	but:SetFont("ZSHUDFontSmaller")
-	but:SetText("Skills")
-	but:SetTall(buttonhei)
-	but:DockMargin(0, 0, 0, 12)
-	but:DockPadding(0, 12, 0, 12)
-	but:Dock(TOP)
-	but.DoClick = function() GAMEMODE:ToggleSkillWeb() end
+	-- Removed Skills button and logic
 
 	but = vgui.Create("DButton", menu)
 	but:SetFont("ZSHUDFontSmaller")
@@ -193,7 +200,9 @@ function GM:ShowHelp()
 	but:DockMargin(0, 0, 0, 12)
 	but:DockPadding(0, 12, 0, 12)
 	but:Dock(TOP)
-	but.DoClick = function() MakepCredits() end
+	but.DoClick = function()
+		MakepCredits()
+	end
 
 	but = vgui.Create("DButton", menu)
 	but:SetFont("ZSHUDFontSmaller")
@@ -202,7 +211,9 @@ function GM:ShowHelp()
 	but:DockMargin(0, 24, 0, 0)
 	but:DockPadding(0, 12, 0, 12)
 	but:Dock(TOP)
-	but.DoClick = function() menu:Remove() end
+	but.DoClick = function()
+		menu:Remove()
+	end
 
 	menu:MakePopup()
 end

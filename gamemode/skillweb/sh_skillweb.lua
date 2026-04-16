@@ -84,7 +84,7 @@ function meta:IsSkillDesired(skillid)
 end
 
 function meta:IsSkillActive(skillid)
-	return self:GetActiveSkills()[skillid] -- == true
+	return true -- Skill system removed: always active
 end
 
 function meta:HasTrinket(trinket)

@@ -590,9 +590,8 @@ function GM:ShowSpare1(pl)
 		else
 			pl:SendLua("GAMEMODE:OpenClassSelect()")
 		end
-	elseif pl:Team() == TEAM_HUMAN then
-		pl:SendLua("GAMEMODE:ToggleSkillWeb()")
 	end
+	-- Skill menu removed for humans
 end
 
 function GM:ShowSpare2(pl)
