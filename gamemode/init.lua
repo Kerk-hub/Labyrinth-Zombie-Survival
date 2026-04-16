@@ -3185,7 +3185,7 @@ function GM:EntityTakeDamage(ent, dmginfo)
 		end
 
 		if not ent.Heal then
-			ent.Heal = ent:BoundingRadius() * 35
+			ent.Heal = ent:BoundingRadius() * 7
 			ent.TotalHeal = ent.Heal
 		end
 
