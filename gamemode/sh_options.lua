@@ -506,7 +506,7 @@ end)
 item = GM:AddPointShopItem(
 	"25mkit",
 	ITEMCAT_AMMO,
-	15,
+	5,
 	nil,
 	"25 Medical Kit power",
 	"25 extra power for the Medical Kit.",
