@@ -338,7 +338,7 @@ item = GM:AddStartingItem("ffemitter", ITEMCAT_DEPLOYABLES, 45, "weapon_zs_ffemi
 	pl:GiveAmmo(50, "pulse")
 end)
 item.Countables = "prop_ffemitter"
-GM:AddStartingItem("barricadekit", ITEMCAT_DEPLOYABLES, 80, "weapon_zs_barricadekit")
+GM:AddStartingItem("barricadekit", ITEMCAT_DEPLOYABLES, 50, "weapon_zs_barricadekit")
 GM:AddStartingItem("camera", ITEMCAT_DEPLOYABLES, 15, "weapon_zs_camera").Countables = "prop_camera"
 GM:AddStartingItem("tv", ITEMCAT_DEPLOYABLES, 35, "weapon_zs_tv").Countables = "prop_tv"
 
