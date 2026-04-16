@@ -43,23 +43,6 @@ end
 local remainingworth = 0
 local WorthButtons = {}
 
-local colWorthFrame = Color(30, 39, 52, 245)
-local colWorthPanel = Color(43, 56, 74, 235)
-local colWorthAccent = Color(93, 118, 150, 255)
-local colWorthAccentHover = Color(116, 145, 181, 255)
-local colWorthSelected = Color(63, 83, 107, 255)
-
-local function StyleWorthActionButton(button)
-	button:SetTextColor(COLOR_WHITE)
-	button.Paint = function(self, w, h)
-		local fill = self.Depressed and colWorthSelected or self.Hovered and colWorthAccentHover or colWorthPanel
-		draw.RoundedBox(6, 0, 0, w, h, fill)
-		surface.SetDrawColor(colWorthAccent.r, colWorthAccent.g, colWorthAccent.b, 255)
-		surface.DrawOutlinedRect(0, 0, w, h, 1)
-		return true
-	end
-end
-
 local function Checkout(tobuy)
 	if tobuy and #tobuy > 0 then
 		gamemode.Call("SuppressArsenalUpgrades", 1)
@@ -230,12 +213,6 @@ function MakepWorth()
 	frame:SetKeyboardInputEnabled(false)
 	frame:SetTitle(" ")
 	frame.Think = WorthThink
-	frame.Paint = function(self, w, h)
-		draw.RoundedBox(8, 0, 0, w, h, colWorthFrame)
-		draw.RoundedBox(8, 4, 4, w - 8, h - 8, Color(22, 29, 39, 235))
-		surface.SetDrawColor(colWorthAccent.r, colWorthAccent.g, colWorthAccent.b, 255)
-		surface.DrawOutlinedRect(0, 0, w, h, 1)
-	end
 
 	local topspace = vgui.Create("DPanel", frame)
 	topspace:SetWide(wid * 0.75)
@@ -273,10 +250,7 @@ function MakepWorth()
 	propertysheet:SetSize(wid, boty - topy - 8 - topspace:GetTall())
 	propertysheet:MoveBelow(topspace, 4)
 	propertysheet:SetPadding(1)
-	propertysheet.Paint = function(self, w, h)
-		draw.RoundedBox(6, 0, tabhei + 1, w, h - tabhei - 1, Color(18, 24, 33, 220))
-		return true
-	end
+	propertysheet.Paint = function() end
 
 	local list = vgui.Create("DPanelList", propertysheet)
 	local sheet = propertysheet:AddSheet("Favorites", list, "icon16/heart.png", false, false)
@@ -300,7 +274,6 @@ function MakepWorth()
 		local cartpan = vgui.Create("DEXRoundedPanel")
 		cartpan:SetCursor("pointer")
 		cartpan:SetSize(list:GetWide(), panhei)
-		cartpan:SetColor(Color(46, 60, 79, 185))
 
 		local cartname = savetab[1]
 
@@ -423,10 +396,6 @@ function MakepWorth()
 	clearbutton:MoveAbove(randombutton, 8)
 	clearbutton.DoClick = ClearCartDoClick
 
-	StyleWorthActionButton(checkout)
-	StyleWorthActionButton(randombutton)
-	StyleWorthActionButton(clearbutton)
-
 	frame:Center()
 	frame:SetAlpha(0)
 	frame:AlphaTo(255, 0.15, 0)
@@ -435,15 +404,6 @@ function MakepWorth()
 	local scroller = propertysheet:GetChildren()[1]
 	local dragbase = scroller:GetChildren()[1]
 	local tabs = dragbase:GetChildren()
-
-	for _, tab in pairs(tabs) do
-		tab.Paint = function(me, w, h)
-			draw.RoundedBoxEx(6, 0, 0, w, h, me:IsActive() and colWorthSelected or colWorthPanel, true, true, false, false)
-			surface.SetDrawColor(colWorthAccent.r, colWorthAccent.g, colWorthAccent.b, 255)
-			surface.DrawOutlinedRect(0, 0, w, h, 1)
-			return true
-		end
-	end
 
 	GAMEMODE:CreateItemInfoViewer(frame, propertysheet, topspace, bottomspace, MENU_WORTH)
 	GAMEMODE:ConfigureMenuTabs(tabs, tabhei, function(tabpanel)
@@ -606,20 +566,12 @@ function PANEL:SetWorthID(id)
 	self.NameLabel:SizeToContents()
 end
 
-local colBG = Color(31, 41, 55, 255)
-local colSel = Color(67, 89, 114, 255)
+local colBG = Color(15, 15, 15, 255)
+local colSel = Color(15, 40, 15, 255)
 function PANEL:Paint(w, h)
 	local outline
 	if self.Hovered then
-		if self.Locked or (not self.On and remainingworth < self.Price) then
-			outline = COLOR_RED
-		elseif self.On then
-			outline = colWorthAccentHover
-		elseif self.Depressed then
-			outline = colWorthSelected
-		else
-			outline = colWorthAccent
-		end
+		outline = self.On and COLOR_MIDGRAY or (self.Locked or not self.On and remainingworth < self.Price) and COLOR_RED or self.Depressed and COLOR_GREEN or COLOR_DARKGREEN
 
 		draw.RoundedBox(8, 0, 0, w, h, outline)
 	end
