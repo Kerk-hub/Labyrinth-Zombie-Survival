@@ -1,20 +1,28 @@
 function GM:ConCommandErrorMessage(pl, message)
 	pl:CenterNotify(COLOR_RED, message)
-	pl:SendLua("surface.PlaySound(\"buttons/button10.wav\")")
+	pl:SendLua('surface.PlaySound("buttons/button10.wav")')
 end
 
 concommand.Add("zs_pointsshopbuy", function(sender, command, arguments)
-	if not (sender:IsValid() and sender:IsConnected() and sender:IsValidLivingHuman()) or #arguments == 0 then return end
+	if not (sender:IsValid() and sender:IsConnected() and sender:IsValidLivingHuman()) or #arguments == 0 then
+		return
+	end
 	local usescrap = arguments[2]
 
-	local midwave = GAMEMODE:GetWave() < GAMEMODE:GetNumberOfWaves() / 2 or GAMEMODE:GetWave() == GAMEMODE:GetNumberOfWaves() / 2 and GAMEMODE:GetWaveActive() and CurTime() < GAMEMODE:GetWaveEnd() - (GAMEMODE:GetWaveEnd() - GAMEMODE:GetWaveStart()) / 2
+	local midwave = GAMEMODE:GetWave() < GAMEMODE:GetNumberOfWaves() / 2
+		or GAMEMODE:GetWave() == GAMEMODE:GetNumberOfWaves() / 2
+			and GAMEMODE:GetWaveActive()
+			and CurTime() < GAMEMODE:GetWaveEnd() - (GAMEMODE:GetWaveEnd() - GAMEMODE:GetWaveStart()) / 2
 	if sender:IsSkillActive(SKILL_D_LATEBUYER) and not usescrap and midwave then
 		GAMEMODE:ConCommandErrorMessage(sender, translate.ClientGet(sender, "late_buyer_warning"))
 		return
 	end
 
 	if usescrap and not sender:NearRemantler() or not usescrap and not sender:NearArsenalCrate() then
-		GAMEMODE:ConCommandErrorMessage(sender, translate.ClientGet(sender, usescrap and "need_to_be_near_remantler" or "need_to_be_near_arsenal_crate"))
+		GAMEMODE:ConCommandErrorMessage(
+			sender,
+			translate.ClientGet(sender, usescrap and "need_to_be_near_remantler" or "need_to_be_near_arsenal_crate")
+		)
 		return
 	end
 
@@ -27,9 +35,13 @@ concommand.Add("zs_pointsshopbuy", function(sender, command, arguments)
 	id = tonumber(id) or id
 	local itemtab = FindItem(id)
 
-	if not itemtab or not itemtab.PointShop then return end
+	if not itemtab or not itemtab.PointShop then
+		return
+	end
 	local itemcat = itemtab.Category
-	if usescrap and not (itemcat == ITEMCAT_TRINKETS or itemcat == ITEMCAT_AMMO) and not itemtab.CanMakeFromScrap then return end
+	if usescrap and not (itemcat == ITEMCAT_TRINKETS or itemcat == ITEMCAT_AMMO) and not itemtab.CanMakeFromScrap then
+		return
+	end
 
 	local points = usescrap and sender:GetAmmoCount("scrap") or sender:GetPoints()
 	local cost = itemtab.Price
@@ -40,17 +52,34 @@ concommand.Add("zs_pointsshopbuy", function(sender, command, arguments)
 	end
 
 	if GAMEMODE.ZombieEscape and itemtab.NoZombieEscape then
-		GAMEMODE:ConCommandErrorMessage(sender, translate.ClientFormat(sender, "cant_use_x_in_zombie_escape", itemtab.Name))
+		GAMEMODE:ConCommandErrorMessage(
+			sender,
+			translate.ClientFormat(sender, "cant_use_x_in_zombie_escape", itemtab.Name)
+		)
 		return
 	end
 
 	if itemtab.SkillRequirement and not sender:IsSkillActive(itemtab.SkillRequirement) then
-		GAMEMODE:ConCommandErrorMessage(sender, translate.ClientFormat(sender, "x_requires_a_skill_you_dont_have", itemtab.Name))
+		GAMEMODE:ConCommandErrorMessage(
+			sender,
+			translate.ClientFormat(sender, "x_requires_a_skill_you_dont_have", itemtab.Name)
+		)
 		return
 	end
 
-	if itemtab.Tier and GAMEMODE.LockItemTiers and not GAMEMODE.ObjectiveMap and not GAMEMODE.ZombieEscape and not GAMEMODE:IsClassicMode() and GAMEMODE:GetNumberOfWaves() == GAMEMODE.NumberOfWaves and GAMEMODE:GetWave() + (GAMEMODE:GetWaveActive() and 0 or 1) < itemtab.Tier then
-		GAMEMODE:ConCommandErrorMessage(sender, translate.ClientFormat(sender, "tier_x_items_unlock_at_wave_y", itemtab.Tier, itemtab.Tier))
+	if
+		itemtab.Tier
+		and GAMEMODE.LockItemTiers
+		and not GAMEMODE.ObjectiveMap
+		and not GAMEMODE.ZombieEscape
+		and not GAMEMODE:IsClassicMode()
+		and GAMEMODE:GetNumberOfWaves() == GAMEMODE.NumberOfWaves
+		and GAMEMODE:GetWave() + (GAMEMODE:GetWaveActive() and 0 or 1) < itemtab.Tier
+	then
+		GAMEMODE:ConCommandErrorMessage(
+			sender,
+			translate.ClientFormat(sender, "tier_x_items_unlock_at_wave_y", itemtab.Tier, itemtab.Tier)
+		)
 		return
 	end
 
@@ -62,7 +91,10 @@ concommand.Add("zs_pointsshopbuy", function(sender, command, arguments)
 	cost = usescrap and math.ceil(GAMEMODE:PointsToScrap(cost)) or math.floor(cost * (sender.ArsenalDiscount or 1))
 
 	if points < cost then
-		GAMEMODE:ConCommandErrorMessage(sender, translate.ClientGet(sender, usescrap and "need_to_have_enough_scrap" or "dont_have_enough_points"))
+		GAMEMODE:ConCommandErrorMessage(
+			sender,
+			translate.ClientGet(sender, usescrap and "need_to_have_enough_scrap" or "dont_have_enough_points")
+		)
 		return
 	end
 
@@ -70,7 +102,9 @@ concommand.Add("zs_pointsshopbuy", function(sender, command, arguments)
 		itemtab.Callback(sender)
 	elseif itemtab.SWEP then
 		if string.sub(itemtab.SWEP, 1, 6) ~= "weapon" then
-			if GAMEMODE:GetInventoryItemType(itemtab.SWEP) == INVCAT_TRINKETS and sender:HasInventoryItem(itemtab.SWEP) then
+			if
+				GAMEMODE:GetInventoryItemType(itemtab.SWEP) == INVCAT_TRINKETS and sender:HasInventoryItem(itemtab.SWEP)
+			then
 				local wep = ents.Create("prop_invitem")
 				if wep:IsValid() then
 					wep:SetPos(sender:GetShootPos())
@@ -120,12 +154,17 @@ concommand.Add("zs_pointsshopbuy", function(sender, command, arguments)
 
 	if usescrap then
 		sender:RemoveAmmo(cost, "scrap")
-		sender:SendLua("surface.PlaySound(\"buttons/lever"..math.random(5)..".wav\")")
+		sender:SendLua('surface.PlaySound("buttons/lever' .. math.random(5) .. '.wav")')
 	else
 		sender:TakePoints(cost)
-		sender:SendLua("surface.PlaySound(\"ambient/levels/labs/coinslot1.wav\")")
+		sender:SendLua('surface.PlaySound("ambient/levels/labs/coinslot1.wav")')
 	end
-	sender:PrintTranslatedMessage(HUD_PRINTTALK, usescrap and "created_x_for_y_scrap" or "purchased_x_for_y_points", itemtab.Name, cost)
+	sender:PrintTranslatedMessage(
+		HUD_PRINTTALK,
+		usescrap and "created_x_for_y_scrap" or "purchased_x_for_y_points",
+		itemtab.Name,
+		cost
+	)
 
 	GAMEMODE:AddItemStocks(id, -1)
 
@@ -149,9 +188,9 @@ concommand.Add("zs_pointsshopbuy", function(sender, command, arguments)
 					owner:AddPoints(commission, nil, nil, true)
 
 					net.Start("zs_commission")
-						net.WriteEntity(nearest)
-						net.WriteEntity(sender)
-						net.WriteFloat(commission)
+					net.WriteEntity(nearest)
+					net.WriteEntity(sender)
+					net.WriteFloat(commission)
 					net.Send(owner)
 				end
 			end
@@ -160,14 +199,18 @@ concommand.Add("zs_pointsshopbuy", function(sender, command, arguments)
 end)
 
 concommand.Add("zs_dismantle", function(sender, command, arguments)
-	if not (sender:IsValid() and sender:IsConnected() and sender:IsValidLivingHuman()) then return end
+	if not (sender:IsValid() and sender:IsConnected() and sender:IsValidLivingHuman()) then
+		return
+	end
 
 	local invitem, itypecat, potinv
 	if #arguments > 0 then
 		invitem = arguments[1]
 	end
 
-	if invitem and not sender:HasInventoryItem(invitem) then return end
+	if invitem and not sender:HasInventoryItem(invitem) then
+		return
+	end
 
 	local active = sender:GetActiveWeapon()
 	local contents, wtbl = active:GetClass()
@@ -179,7 +222,7 @@ concommand.Add("zs_dismantle", function(sender, command, arguments)
 		end
 
 		if wtbl.AmmoIfHas and sender:GetAmmoCount(wtbl.Primary.Ammo) == 0 and active:Clip1() == 0 then
-			sender:SendLua("surface.PlaySound(\"buttons/button10.wav\")")
+			sender:SendLua('surface.PlaySound("buttons/button10.wav")')
 			return
 		end
 
@@ -196,8 +239,8 @@ concommand.Add("zs_dismantle", function(sender, command, arguments)
 
 	local scrap = GAMEMODE:GetDismantleScrap(wtbl or GAMEMODE.ZSInventoryItemData[invitem], invitem)
 	net.Start("zs_ammopickup")
-		net.WriteUInt(scrap, 16)
-		net.WriteString("scrap")
+	net.WriteUInt(scrap, 16)
+	net.WriteString("scrap")
 	net.Send(sender)
 	sender:GiveAmmo(scrap, "scrap")
 
@@ -220,13 +263,15 @@ concommand.Add("zs_dismantle", function(sender, command, arguments)
 		sender:AddInventoryItem(potinv.Result)
 
 		net.Start("zs_invitem")
-			net.WriteString(potinv.Result)
+		net.WriteString(potinv.Result)
 		net.Send(sender)
 	end
 end)
 
 concommand.Add("zs_upgrade", function(sender, command, arguments)
-	if not (sender:IsValid() and sender:IsConnected() and sender:IsValidLivingHuman()) then return end
+	if not (sender:IsValid() and sender:IsConnected() and sender:IsValidLivingHuman()) then
+		return
+	end
 
 	if not sender:NearRemantler() then
 		GAMEMODE:ConCommandErrorMessage(sender, translate.ClientGet(sender, "need_to_be_near_remantler"))
@@ -244,13 +289,15 @@ concommand.Add("zs_upgrade", function(sender, command, arguments)
 		branch = tonumber(arguments[1])
 	end
 
-	if not (nearest and nearest:IsValid() and contents) then return end
+	if not (nearest and nearest:IsValid() and contents) then
+		return
+	end
 
 	local wtbl = weapons.Get(contents)
 	local scrapcost = GAMEMODE:GetUpgradeScrap(wtbl, desiredqua)
 
 	if wtbl.AmmoIfHas and sender:GetAmmoCount(wtbl.Primary.Ammo) == 0 then
-		sender:SendLua("surface.PlaySound(\"buttons/button10.wav\")")
+		sender:SendLua('surface.PlaySound("buttons/button10.wav")')
 		return
 	end
 
@@ -259,9 +306,12 @@ concommand.Add("zs_upgrade", function(sender, command, arguments)
 		return
 	end
 
-	local upgclass = GAMEMODE:GetWeaponClassOfQuality(not contentsqua and contents or contentstbl.BaseQuality, desiredqua, branch)
+	local upgclass =
+		GAMEMODE:GetWeaponClassOfQuality(not contentsqua and contents or contentstbl.BaseQuality, desiredqua, branch)
 	local classtbl = weapons.Get(upgclass)
-	if not classtbl then return end
+	if not classtbl then
+		return
+	end
 
 	if sender:HasWeapon(upgclass) then
 		GAMEMODE:ConCommandErrorMessage(sender, translate.ClientGet(sender, "remantle_cannot"))
@@ -269,8 +319,8 @@ concommand.Add("zs_upgrade", function(sender, command, arguments)
 	end
 
 	local upgname = classtbl.PrintName
-	sender:CenterNotify(COLOR_CYAN, translate.ClientGet(sender, "remantle_success"), color_white, " "..upgname)
-	sender:SendLua("surface.PlaySound(\"buttons/lever"..math.random(5)..".wav\")")
+	sender:CenterNotify(COLOR_CYAN, translate.ClientGet(sender, "remantle_success"), color_white, " " .. upgname)
+	sender:SendLua('surface.PlaySound("buttons/lever' .. math.random(5) .. '.wav")')
 	sender:RemoveAmmo(scrapcost, "scrap")
 
 	local wep = sender:GiveEmptyWeapon(upgclass)
@@ -308,7 +358,9 @@ concommand.Add("worthrandom", function(sender, command, arguments)
 end)
 
 concommand.Add("worthcheckout", function(sender, command, arguments)
-	if not (sender:IsValid() and sender:IsConnected()) or #arguments == 0 then return end
+	if not (sender:IsValid() and sender:IsConnected()) or #arguments == 0 then
+		return
+	end
 
 	if not gamemode.Call("PlayerCanCheckout", sender) then
 		sender:CenterNotify(COLOR_RED, translate.ClientGet(sender, "cant_use_worth_anymore"))
@@ -328,7 +380,9 @@ concommand.Add("worthcheckout", function(sender, command, arguments)
 		end
 	end
 
-	if cost > GAMEMODE.StartingWorth + (sender.ExtraStartingWorth or 0) then return end
+	if cost > GAMEMODE.StartingWorth + (sender.ExtraStartingWorth or 0) then
+		return
+	end
 
 	hasalready = {}
 
@@ -338,9 +392,15 @@ concommand.Add("worthcheckout", function(sender, command, arguments)
 		local tab = FindStartingItem(id)
 		if tab and not hasalready[id] then
 			if tab.SkillRequirement and not sender:IsSkillActive(tab.SkillRequirement) then
-				sender:PrintMessage(HUD_PRINTTALK, translate.ClientFormat(sender, "x_requires_a_skill_you_dont_have", tab.Name))
+				sender:PrintMessage(
+					HUD_PRINTTALK,
+					translate.ClientFormat(sender, "x_requires_a_skill_you_dont_have", tab.Name)
+				)
 			elseif tab.NoClassicMode and GAMEMODE:IsClassicMode() then
-				sender:PrintMessage(HUD_PRINTTALK, translate.ClientFormat(sender, "cant_use_x_in_classic_mode", tab.Name))
+				sender:PrintMessage(
+					HUD_PRINTTALK,
+					translate.ClientFormat(sender, "cant_use_x_in_classic_mode", tab.Name)
+				)
 			elseif tab.Callback then
 				tab.Callback(sender)
 				hasalready[id] = true
@@ -378,30 +438,52 @@ concommand.Add("zsdropweapon", function(sender, command, arguments)
 		return
 	end
 
-	if not (sender:IsValid() and sender:Alive() and sender:Team() == TEAM_HUMAN) or CurTime() < (sender.NextWeaponDrop or 0) or GAMEMODE.ZombieEscape then return end
+	if
+		not (sender:IsValid() and sender:Alive() and sender:Team() == TEAM_HUMAN)
+		or CurTime() < (sender.NextWeaponDrop or 0)
+		or GAMEMODE.ZombieEscape
+	then
+		return
+	end
 	sender.NextWeaponDrop = CurTime() + 0.15
 
 	local invitem
 	if #arguments > 0 then
 		invitem = arguments[1]
 	end
-	if invitem and not sender:HasInventoryItem(invitem) then return end
+	if invitem and not sender:HasInventoryItem(invitem) then
+		return
+	end
 
 	if invitem or (currentwep and currentwep:IsValid()) then
-		local ent = invitem and sender:DropInventoryItemByType(invitem) or sender:DropWeaponByType(currentwep:GetClass())
+		local ent = invitem and sender:DropInventoryItemByType(invitem)
+			or sender:DropWeaponByType(currentwep:GetClass())
 		if ent and ent:IsValid() then
 			local shootpos = sender:GetShootPos()
 			local aimvec = sender:GetAimVector()
-			ent:SetPos(util.TraceHull({start = shootpos, endpos = shootpos + aimvec * 32, mask = MASK_SOLID, filter = sender, mins = Vector(-2, -2, -2), maxs = Vector(2, 2, 2)}).HitPos)
+			ent:SetPos(
+				util.TraceHull({
+					start = shootpos,
+					endpos = shootpos + aimvec * 32,
+					mask = MASK_SOLID,
+					filter = sender,
+					mins = Vector(-2, -2, -2),
+					maxs = Vector(2, 2, 2),
+				}).HitPos
+			)
 			ent:SetAngles(sender:GetAngles())
 		end
 	end
 end)
 
 concommand.Add("zsemptyclip", function(sender, command, arguments)
-	if GAMEMODE.ZombieEscape then return end
+	if GAMEMODE.ZombieEscape then
+		return
+	end
 
-	if not (sender:IsValid() and sender:Alive() and sender:Team() == TEAM_HUMAN) then return end
+	if not (sender:IsValid() and sender:Alive() and sender:Team() == TEAM_HUMAN) then
+		return
+	end
 
 	sender.NextEmptyClip = sender.NextEmptyClip or 0
 	if sender.NextEmptyClip <= CurTime() then
@@ -438,12 +520,18 @@ function GM:TryGetLockOnTrace(sender, arguments)
 end
 
 concommand.Add("zsgiveammo", function(sender, command, arguments)
-	if GAMEMODE.ZombieEscape then return end
+	if GAMEMODE.ZombieEscape then
+		return
+	end
 
-	if not sender:IsValid() or not sender:Alive() or sender:Team() ~= TEAM_HUMAN then return end
+	if not sender:IsValid() or not sender:Alive() or sender:Team() ~= TEAM_HUMAN then
+		return
+	end
 
 	local ammotype = arguments[1]
-	if not ammotype or #ammotype == 0 or not GAMEMODE.AmmoCache[ammotype] then return end
+	if not ammotype or #ammotype == 0 or not GAMEMODE.AmmoCache[ammotype] then
+		return
+	end
 
 	local count = sender:GetAmmoCount(ammotype)
 	if count <= 0 then
@@ -466,15 +554,15 @@ concommand.Add("zsgiveammo", function(sender, command, arguments)
 			sender:RestartGesture(ACT_GMOD_GESTURE_ITEM_GIVE)
 
 			net.Start("zs_ammogive")
-				net.WriteUInt(desiredgive, 16)
-				net.WriteString(ammotype)
-				net.WriteEntity(ent)
+			net.WriteUInt(desiredgive, 16)
+			net.WriteString(ammotype)
+			net.WriteEntity(ent)
 			net.Send(sender)
 
 			net.Start("zs_ammogiven")
-				net.WriteUInt(desiredgive, 16)
-				net.WriteString(ammotype)
-				net.WriteEntity(sender)
+			net.WriteUInt(desiredgive, 16)
+			net.WriteString(ammotype)
+			net.WriteEntity(sender)
 			net.Send(ent)
 
 			return
@@ -485,18 +573,26 @@ concommand.Add("zsgiveammo", function(sender, command, arguments)
 end)
 
 concommand.Add("zsgiveweapon", function(sender, command, arguments)
-	if GAMEMODE.ZombieEscape then return end
+	if GAMEMODE.ZombieEscape then
+		return
+	end
 
-	if not (sender:IsValid() and sender:Alive() and sender:Team() == TEAM_HUMAN) then return end
+	if not (sender:IsValid() and sender:Alive() and sender:Team() == TEAM_HUMAN) then
+		return
+	end
 
 	local invitem
 	if #arguments > 0 then
 		invitem = arguments[2]
 	end
-	if invitem and not sender:HasInventoryItem(invitem) then return end
+	if invitem and not sender:HasInventoryItem(invitem) then
+		return
+	end
 
 	local currentwep = sender:GetActiveWeapon()
-	if not invitem and not IsValid(currentwep) then return end
+	if not invitem and not IsValid(currentwep) then
+		return
+	end
 
 	local ent = GAMEMODE:TryGetLockOnTrace(sender, arguments)
 	if ent and ent:IsValidLivingHuman() then
@@ -515,9 +611,13 @@ concommand.Add("zsgiveweapon", function(sender, command, arguments)
 end)
 
 concommand.Add("zsgiveweaponclip", function(sender, command, arguments)
-	if GAMEMODE.ZombieEscape then return end
+	if GAMEMODE.ZombieEscape then
+		return
+	end
 
-	if not (sender:IsValid() and sender:Alive() and sender:Team() == TEAM_HUMAN) then return end
+	if not (sender:IsValid() and sender:Alive() and sender:Team() == TEAM_HUMAN) then
+		return
+	end
 
 	local currentwep = sender:GetActiveWeapon()
 	if currentwep and currentwep:IsValid() then
@@ -535,14 +635,25 @@ concommand.Add("zsgiveweaponclip", function(sender, command, arguments)
 end)
 
 concommand.Add("zsdropammo", function(sender, command, arguments)
-	if GAMEMODE.ZombieEscape then return end
+	if GAMEMODE.ZombieEscape then
+		return
+	end
 
-	if not sender:IsValid() or not sender:Alive() or sender:Team() ~= TEAM_HUMAN or CurTime() < (sender.NextDropClip or 0) then return end
+	if
+		not sender:IsValid()
+		or not sender:Alive()
+		or sender:Team() ~= TEAM_HUMAN
+		or CurTime() < (sender.NextDropClip or 0)
+	then
+		return
+	end
 
 	sender.NextDropClip = CurTime() + 0.2
 
 	local wep = sender:GetActiveWeapon()
-	if not wep:IsValid() then return end
+	if not wep:IsValid() then
+		return
+	end
 
 	local ammotype = arguments[1] or wep:GetPrimaryAmmoTypeString()
 	if GAMEMODE.AmmoNames[ammotype] and GAMEMODE.AmmoCache[ammotype] then
@@ -560,29 +671,65 @@ concommand.Add("zsdropammo", function(sender, command, arguments)
 end)
 
 concommand.Add("zs_resupplyammotype", function(sender, command, arguments)
-	if GAMEMODE.ZombieEscape then return end
+	if GAMEMODE.ZombieEscape then
+		return
+	end
 
-	if not (sender:IsValid() and sender:Alive() and sender:Team() == TEAM_HUMAN) then return end
+	if not (sender:IsValid() and sender:Alive() and sender:Team() == TEAM_HUMAN) then
+		return
+	end
 
 	local ammotype = arguments[1]
-	if not ammotype or #ammotype == 0 or not (ammotype == "default" or GAMEMODE.AmmoResupply[ammotype]) then return end
+	if not ammotype or #ammotype == 0 or not (ammotype == "default" or GAMEMODE.AmmoResupply[ammotype]) then
+		return
+	end
 
 	sender.ResupplyChoice = ammotype ~= "default" and ammotype or nil
 end)
 
+concommand.Add("zs_preventwin", function(sender, command, arguments)
+	if IsValid(sender) and not sender:IsAdmin() then
+		return
+	end
+
+	local value = tonumber(arguments[1])
+	if value == 1 then
+		GAMEMODE.PreventWin = true
+		if IsValid(sender) then
+			sender:PrintMessage(HUD_PRINTTALK, "zs_preventwin enabled")
+		end
+	elseif value == 0 then
+		GAMEMODE.PreventWin = false
+		if IsValid(sender) then
+			sender:PrintMessage(HUD_PRINTTALK, "zs_preventwin disabled")
+		end
+	else
+		if IsValid(sender) then
+			sender:PrintMessage(HUD_PRINTTALK, "Usage: zs_preventwin 0|1")
+		end
+	end
+end)
+
 concommand.Add("zs_shitmap_check", function(sender, command, arguments)
-	if not sender:IsAdmin() then return end
+	if not sender:IsAdmin() then
+		return
+	end
 
 	local teleporters = ents.FindByClass("trigger_teleport")
 	local buttons = ents.FindByClass("func_button")
 	local doors = ents.FindByClass("func_door_rotating")
 	table.Add(doors, ents.FindByClass("func_movelinear"))
 
-	sender:PrintMessage(HUD_PRINTCONSOLE, "Teleports: "..#teleporters.." Buttons: "..#buttons.." Doors: "..#doors)
+	sender:PrintMessage(
+		HUD_PRINTCONSOLE,
+		"Teleports: " .. #teleporters .. " Buttons: " .. #buttons .. " Doors: " .. #doors
+	)
 end)
 
 concommand.Add("zs_shitmap_toteleport", function(sender, command, arguments)
-	if not sender:IsSuperAdmin() then return end
+	if not sender:IsSuperAdmin() then
+		return
+	end
 
 	local ent = ents.FindByClass("trigger_teleport")[tonumber(arguments[1])]
 	if ent then
@@ -591,7 +738,9 @@ concommand.Add("zs_shitmap_toteleport", function(sender, command, arguments)
 end)
 
 concommand.Add("zs_shitmap_teleport_on", function(sender, command, arguments)
-	if not sender:IsSuperAdmin() then return end
+	if not sender:IsSuperAdmin() then
+		return
+	end
 
 	for _, ent in pairs(ents.FindByClass("trigger_teleport")) do
 		ent:Fire("enable", "", 0)
@@ -599,7 +748,9 @@ concommand.Add("zs_shitmap_teleport_on", function(sender, command, arguments)
 end)
 
 concommand.Add("zs_shitmap_teleport_off", function(sender, command, arguments)
-	if not sender:IsSuperAdmin() then return end
+	if not sender:IsSuperAdmin() then
+		return
+	end
 
 	for _, ent in pairs(ents.FindByClass("trigger_teleport")) do
 		ent:Fire("enable", "", 0)
@@ -607,7 +758,9 @@ concommand.Add("zs_shitmap_teleport_off", function(sender, command, arguments)
 end)
 
 concommand.Add("zs_shitmap_tobutton", function(sender, command, arguments)
-	if not sender:IsSuperAdmin() then return end
+	if not sender:IsSuperAdmin() then
+		return
+	end
 
 	local ent = ents.FindByClass("func_button")[tonumber(arguments[1])]
 	if ent then
@@ -616,7 +769,9 @@ concommand.Add("zs_shitmap_tobutton", function(sender, command, arguments)
 end)
 
 concommand.Add("zs_shitmap_tomover", function(sender, command, arguments)
-	if not sender:IsSuperAdmin() then return end
+	if not sender:IsSuperAdmin() then
+		return
+	end
 
 	local entities = ents.FindByClass("func_door_rotating")
 	table.Add(entities, ents.FindByClass("func_movelinear"))

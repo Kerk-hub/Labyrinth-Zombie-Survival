@@ -1,33 +1,33 @@
-GM.Name		=	"Zombie Survival"
-GM.Author	=	"William \"JetBoom\" Moodhe"
-GM.Email	=	"williammoodhe@gmail.com"
-GM.Website	=	"http://www.noxiousnet.com"
+GM.Name = "Zombie Survival"
+GM.Author = 'William "JetBoom" Moodhe'
+GM.Email = "williammoodhe@gmail.com"
+GM.Website = "http://www.noxiousnet.com"
 
 -- No, adding a gun doesn't make your name worth being here.
 GM.Credits = {
-	{"William \"JetBoom\" Moodhe", "williammoodhe@gmail.com (www.noxiousnet.com)", "Creator / Programmer"},
-	{"11k", "tjd113@gmail.com", "Zombie view models"},
-	{"Eisiger", "k2deseve@gmail.com", "Zombie kill icons"},
-	{"Austin \"Little Nemo\" Killey", "austin_odyssey@yahoo.com", "Ambient music"},
-	{"Zombie Panic: Source", "http://www.zombiepanic.org/", "Melee weapon sounds"},
-	{"Samuel", "samuel_games@hotmail.com", "Board Kit models"},
-	{"Typhon", "lukas-tinel@hotmail.com", "Fear-o-meter textures"},
-	{"Benjy, The Darker One, Raox, Scott", "", "Code contributions"},
+	{ 'William "JetBoom" Moodhe', "williammoodhe@gmail.com (www.noxiousnet.com)", "Creator / Programmer" },
+	{ "11k", "tjd113@gmail.com", "Zombie view models" },
+	{ "Eisiger", "k2deseve@gmail.com", "Zombie kill icons" },
+	{ 'Austin "Little Nemo" Killey', "austin_odyssey@yahoo.com", "Ambient music" },
+	{ "Zombie Panic: Source", "http://www.zombiepanic.org/", "Melee weapon sounds" },
+	{ "Samuel", "samuel_games@hotmail.com", "Board Kit models" },
+	{ "Typhon", "lukas-tinel@hotmail.com", "Fear-o-meter textures" },
+	{ "Benjy, The Darker One, Raox, Scott", "", "Code contributions" },
 
-	{"Mr. Darkness", "", "Russian translation"},
-	{"honsal", "", "Korean translation"},
-	{"rui_troia", "", "Portuguese translation"},
-	{"Shinyshark", "", "Dutch translation"},
-	{"Kradar", "", "Italian translation"},
-	{"Raptor", "", "German translation"},
-	{"The Special Duckling", "", "Danish translation"},
-	{"ptown, Dr. Broly", "", "Spanish translation"},
+	{ "Mr. Darkness", "", "Russian translation" },
+	{ "honsal", "", "Korean translation" },
+	{ "rui_troia", "", "Portuguese translation" },
+	{ "Shinyshark", "", "Dutch translation" },
+	{ "Kradar", "", "Italian translation" },
+	{ "Raptor", "", "German translation" },
+	{ "The Special Duckling", "", "Danish translation" },
+	{ "ptown, Dr. Broly", "", "Spanish translation" },
 
-	{"Anyone else on GitHub or who I've forgotten", "", "Various contributions"},
+	{ "Anyone else on GitHub or who I've forgotten", "", "Various contributions" },
 }
 
-if file.Exists(GM.FolderName.."/gamemode/maps/"..game.GetMap()..".lua", "LUA") then
-	include("maps/"..game.GetMap()..".lua")
+if file.Exists(GM.FolderName .. "/gamemode/maps/" .. game.GetMap() .. ".lua", "LUA") then
+	include("maps/" .. game.GetMap() .. ".lua")
 end
 
 function GM:GetNumberOfWaves()
@@ -73,6 +73,7 @@ include_library("ammoexpand")
 ----------------------
 
 GM.EndRound = false
+GM.PreventWin = false
 GM.StartingWorth = 150
 GM.ZombieVolunteers = {}
 
@@ -110,7 +111,7 @@ GM.SoundDuration = {
 	["zombiesurvival/beats/defaultzombiev2/7.ogg"] = 6.038,
 	["zombiesurvival/beats/defaultzombiev2/8.ogg"] = 6.038,
 	["zombiesurvival/beats/defaultzombiev2/9.ogg"] = 6.038,
-	["zombiesurvival/beats/defaultzombiev2/10.ogg"] = 6.038
+	["zombiesurvival/beats/defaultzombiev2/10.ogg"] = 6.038,
 }
 
 local SERVER = SERVER
@@ -125,48 +126,48 @@ local HITGROUP_RIGHTLEG = HITGROUP_RIGHTLEG
 local PTeam = FindMetaTable("Player").Team
 
 function GM:AddCustomAmmo()
-	game.AddAmmoType({name = "dummy"})
-	game.AddAmmoType({name = "pulse"})
-	game.AddAmmoType({name = "impactmine"})
-	game.AddAmmoType({name = "chemical"})
-	game.AddAmmoType({name = "scrap"})
+	game.AddAmmoType({ name = "dummy" })
+	game.AddAmmoType({ name = "pulse" })
+	game.AddAmmoType({ name = "impactmine" })
+	game.AddAmmoType({ name = "chemical" })
+	game.AddAmmoType({ name = "scrap" })
 
-	game.AddAmmoType({name = "stone"})
-	game.AddAmmoType({name = "flashbomb"})
-	game.AddAmmoType({name = "betty"})
-	game.AddAmmoType({name = "molotov"})
-	game.AddAmmoType({name = "corgasgrenade"})
-	game.AddAmmoType({name = "crygasgrenade"})
-	game.AddAmmoType({name = "bloodshot"})
+	game.AddAmmoType({ name = "stone" })
+	game.AddAmmoType({ name = "flashbomb" })
+	game.AddAmmoType({ name = "betty" })
+	game.AddAmmoType({ name = "molotov" })
+	game.AddAmmoType({ name = "corgasgrenade" })
+	game.AddAmmoType({ name = "crygasgrenade" })
+	game.AddAmmoType({ name = "bloodshot" })
 
-	game.AddAmmoType({name = "spotlamp"})
-	game.AddAmmoType({name = "manhack"})
-	game.AddAmmoType({name = "manhack_saw"})
-	game.AddAmmoType({name = "drone"})
-	game.AddAmmoType({name = "pulse_cutter"})
-	game.AddAmmoType({name = "drone_hauler"})
-	game.AddAmmoType({name = "rollermine"})
-	game.AddAmmoType({name = "sigilfragment"})
-	game.AddAmmoType({name = "corruptedfragment"})
-	game.AddAmmoType({name = "mediccloudbomb"})
-	game.AddAmmoType({name = "nanitecloudbomb"})
-	game.AddAmmoType({name = "repairfield"})
-	game.AddAmmoType({name = "zapper"})
-	game.AddAmmoType({name = "zapper_arc"})
-	game.AddAmmoType({name = "remantler"})
-	game.AddAmmoType({name = "turret_buckshot"})
-	game.AddAmmoType({name = "turret_assault"})
-	game.AddAmmoType({name = "turret_rocket"})
-	game.AddAmmoType({name = "camera"})
-	game.AddAmmoType({name = "tv"})
+	game.AddAmmoType({ name = "spotlamp" })
+	game.AddAmmoType({ name = "manhack" })
+	game.AddAmmoType({ name = "manhack_saw" })
+	game.AddAmmoType({ name = "drone" })
+	game.AddAmmoType({ name = "pulse_cutter" })
+	game.AddAmmoType({ name = "drone_hauler" })
+	game.AddAmmoType({ name = "rollermine" })
+	game.AddAmmoType({ name = "sigilfragment" })
+	game.AddAmmoType({ name = "corruptedfragment" })
+	game.AddAmmoType({ name = "mediccloudbomb" })
+	game.AddAmmoType({ name = "nanitecloudbomb" })
+	game.AddAmmoType({ name = "repairfield" })
+	game.AddAmmoType({ name = "zapper" })
+	game.AddAmmoType({ name = "zapper_arc" })
+	game.AddAmmoType({ name = "remantler" })
+	game.AddAmmoType({ name = "turret_buckshot" })
+	game.AddAmmoType({ name = "turret_assault" })
+	game.AddAmmoType({ name = "turret_rocket" })
+	game.AddAmmoType({ name = "camera" })
+	game.AddAmmoType({ name = "tv" })
 
-	game.AddAmmoType({name = "foodwatermelon"})
-	game.AddAmmoType({name = "foodorange"})
-	game.AddAmmoType({name = "foodbanana"})
-	game.AddAmmoType({name = "foodsoda"})
-	game.AddAmmoType({name = "foodmilk"})
-	game.AddAmmoType({name = "foodtakeout"})
-	game.AddAmmoType({name = "foodwater"})
+	game.AddAmmoType({ name = "foodwatermelon" })
+	game.AddAmmoType({ name = "foodorange" })
+	game.AddAmmoType({ name = "foodbanana" })
+	game.AddAmmoType({ name = "foodsoda" })
+	game.AddAmmoType({ name = "foodmilk" })
+	game.AddAmmoType({ name = "foodtakeout" })
+	game.AddAmmoType({ name = "foodwater" })
 end
 
 GM.Food = {}
@@ -230,7 +231,9 @@ function GM:FixWeaponBase()
 
 	base.TakePrimaryAmmo = function(me, num)
 		if me.Weapon:Clip1() <= 0 then
-			if me:Ammo1() <= 0 then return end
+			if me:Ammo1() <= 0 then
+				return
+			end
 
 			me:GetOwner():RemoveAmmo(num, me.Weapon:GetPrimaryAmmoType())
 
@@ -311,13 +314,34 @@ function GM:DynamicSpawnIsValidOld(zombie, humans, allplayers)
 	local hpos, nearest, dist
 
 	-- Optional caching for these.
-	if not humans then humans = team.GetPlayers(TEAM_HUMAN) end
-	if not allplayers then allplayers = player.GetAll() end
+	if not humans then
+		humans = team.GetPlayers(TEAM_HUMAN)
+	end
+	if not allplayers then
+		allplayers = player.GetAll()
+	end
 
 	local pos = zombie:GetPos() + Vector(0, 0, 1)
-	if zombie:Alive() and zombie:GetMoveType() == MOVETYPE_WALK and zombie:OnGround()
-	and not util.TraceHull({start = pos, endpos = pos + playerheight, mins = playermins, maxs = playermaxs, mask = MASK_SOLID, filter = allplayers}).Hit then
-		local vtr = util.TraceHull({start = pos, endpos = pos - playerheight, mins = playermins, maxs = playermaxs, mask = MASK_SOLID_BRUSHONLY})
+	if
+		zombie:Alive()
+		and zombie:GetMoveType() == MOVETYPE_WALK
+		and zombie:OnGround()
+		and not util.TraceHull({
+			start = pos,
+			endpos = pos + playerheight,
+			mins = playermins,
+			maxs = playermaxs,
+			mask = MASK_SOLID,
+			filter = allplayers,
+		}).Hit
+	then
+		local vtr = util.TraceHull({
+			start = pos,
+			endpos = pos - playerheight,
+			mins = playermins,
+			maxs = playermaxs,
+			mask = MASK_SOLID_BRUSHONLY,
+		})
 		if not vtr.HitSky and not vtr.HitNoDraw then
 			local valid = true
 
@@ -325,7 +349,10 @@ function GM:DynamicSpawnIsValidOld(zombie, humans, allplayers)
 				hpos = human:GetPos()
 				nearest = zombie:NearestPoint(hpos)
 				dist = SkewedDistance(hpos, nearest, 2.75) -- We make it so that the Z distance between a human and a zombie is skewed if the zombie is below the human.
-				if dist <= self.DynamicSpawnDistOld or dist <= self.DynamicSpawnDistVisOld and WorldVisible(hpos, nearest) then -- Zombies can't be in radius of any humans. Zombies can't be clearly visible by any humans.
+				if
+					dist <= self.DynamicSpawnDistOld
+					or dist <= self.DynamicSpawnDistVisOld and WorldVisible(hpos, nearest)
+				then -- Zombies can't be in radius of any humans. Zombies can't be clearly visible by any humans.
 					valid = false
 					break
 				end
@@ -340,7 +367,9 @@ end
 
 function GM:GetBestDynamicSpawnOld(pl, pos)
 	local spawns = self:GetDynamicSpawnsOld(pl)
-	if #spawns == 0 then return end
+	if #spawns == 0 then
+		return
+	end
 
 	return self:GetClosestSpawnPoint(spawns, pos or self:GetTeamEpicentre(TEAM_HUMAN)) or table.Random(spawns)
 end
@@ -365,16 +394,20 @@ GM.CreeperNestDist = 150
 GM.CreeperNestDistBuild = 420
 GM.CreeperNestDistBuildNest = 192
 GM.CreeperNestDistBuildZSpawn = 256
-local trace_dynspawn = {mins = playermins, maxs = playermaxs, mask = MASK_SOLID}
-local trace_dynspawn_skybox = {mins = playermins, maxs = playermaxs, mask = MASK_SOLID_BRUSHONLY}
+local trace_dynspawn = { mins = playermins, maxs = playermaxs, mask = MASK_SOLID }
+local trace_dynspawn_skybox = { mins = playermins, maxs = playermaxs, mask = MASK_SOLID_BRUSHONLY }
 function GM:DynamicSpawnIsValid(ent, humans, allplayers)
 	if self:ShouldUseAlternateDynamicSpawn() then
 		return self:DynamicSpawnIsValidOld(ent, humans, allplayers)
 	end
 
 	-- Optional caching for these.
-	if not humans then humans = team.GetPlayers(TEAM_HUMAN) end
-	if not allplayers then allplayers = player.GetAll() end
+	if not humans then
+		humans = team.GetPlayers(TEAM_HUMAN)
+	end
+	if not allplayers then
+		allplayers = player.GetAll()
+	end
 
 	local pos = ent:GetPos() + Vector(0, 0, 1)
 	local is_nest = ent:GetClass() == "prop_creepernest"
@@ -432,7 +465,9 @@ function GM:GetBestDynamicSpawn(pl, pos)
 	end
 
 	local spawns = self:GetDynamicSpawns(pl)
-	if #spawns == 0 then return end
+	if #spawns == 0 then
+		return
+	end
 
 	return self:GetClosestSpawnPoint(spawns, pos or self:GetTeamEpicentre(TEAM_HUMAN)) or table.Random(spawns)
 end
@@ -478,10 +513,14 @@ end
 
 function GM:ShouldCollide(enta, entb)
 	local snca = enta.ShouldNotCollide
-	if snca and snca(enta, entb) then return false end
+	if snca and snca(enta, entb) then
+		return false
+	end
 
 	local sncb = entb.ShouldNotCollide
-	if sncb and sncb(entb, enta) then return false end
+	if sncb and sncb(entb, enta) then
+		return false
+	end
 
 	--[[if enta.ShouldNotCollide and enta:ShouldNotCollide(entb) or entb.ShouldNotCollide and entb:ShouldNotCollide(enta) then
 		return false
@@ -493,19 +532,27 @@ end
 function GM:DoChangeDeploySpeed(wep)
 	if wep:IsValid() and wep.SetDeploySpeed and not wep.NoDeploySpeedChange then
 		local owner = wep:GetOwner()
-		wep:SetDeploySpeed(self.BaseDeploySpeed * (owner:IsValid() and owner.DeploySpeedMultiplier or 1) * (owner:IsValid() and owner:GetStatus("frost") and 0.7 or 1))
+		wep:SetDeploySpeed(
+			self.BaseDeploySpeed
+				* (owner:IsValid() and owner.DeploySpeedMultiplier or 1)
+				* (owner:IsValid() and owner:GetStatus("frost") and 0.7 or 1)
+		)
 	end
 end
 
 function GM:OnPlayerHitGround(pl, inwater, hitfloater, speed)
-	if inwater then return true end
+	if inwater then
+		return true
+	end
 
 	if speed > 64 then
 		pl.LandSlow = true
 	end
 
 	local isundead = PTeam(pl) == TEAM_UNDEAD
-	if isundead and pl:GetZombieClassTable().NoFallDamage then return true end
+	if isundead and pl:GetZombieClassTable().NoFallDamage then
+		return true
+	end
 
 	local threshold_mul
 	local slowdown_mul
@@ -527,11 +574,18 @@ function GM:OnPlayerHitGround(pl, inwater, hitfloater, speed)
 	end
 
 	local damage = (0.1 * (speed - 525 * threshold_mul)) ^ 1.45
-	if hitfloater then damage = damage / 2 end
+	if hitfloater then
+		damage = damage / 2
+	end
 
 	if SERVER then
 		local groundent = pl:GetGroundEntity()
-		if groundent:IsValid() and groundent:IsPlayer() and PTeam(groundent) == TEAM_UNDEAD and pl:HasTrinket("curbstompers") then
+		if
+			groundent:IsValid()
+			and groundent:IsPlayer()
+			and PTeam(groundent) == TEAM_UNDEAD
+			and pl:HasTrinket("curbstompers")
+		then
 			if groundent:IsHeadcrab() then
 				groundent:TakeSpecialDamage(groundent:Health() + 70, DMG_DIRECT, pl, pl, pl:GetPos())
 			elseif groundent:IsTorso() then
@@ -560,8 +614,12 @@ function GM:OnPlayerHitGround(pl, inwater, hitfloater, speed)
 				end
 			end
 
-			pl:EmitSound("player/pl_fallpain"..(math.random(2) == 1 and 3 or 1)..".wav")
-		elseif not self.ZombieEscape and damage >= 5 and (not isundead or not pl:GetZombieClassTable().NoFallSlowdown) then
+			pl:EmitSound("player/pl_fallpain" .. (math.random(2) == 1 and 3 or 1) .. ".wav")
+		elseif
+			not self.ZombieEscape
+			and damage >= 5
+			and (not isundead or not pl:GetZombieClassTable().NoFallSlowdown)
+		then
 			pl:RawCapLegDamage(CurTime() + math.min(2, damage * 0.038 * slowdown_mul))
 		end
 	end
@@ -600,12 +658,13 @@ function GM:PlayerCanHearPlayersVoiceAllTalk(listener, talker)
 end
 
 cvars.AddChangeCallback("sv_alltalk", function(cvar, old, new)
-	GAMEMODE.PlayerCanHearPlayersVoice = new ~= "1" and GAMEMODE.PlayerCanHearPlayersVoiceDefault or  GAMEMODE.PlayerCanHearPlayersVoiceAllTalk
+	GAMEMODE.PlayerCanHearPlayersVoice = new ~= "1" and GAMEMODE.PlayerCanHearPlayersVoiceDefault
+		or GAMEMODE.PlayerCanHearPlayersVoiceAllTalk
 end)
-GM.PlayerCanHearPlayersVoice = GetConVar("sv_alltalk"):GetBool() and GM.PlayerCanHearPlayersVoiceAllTalk or  GM.PlayerCanHearPlayersVoiceDefault
+GM.PlayerCanHearPlayersVoice = GetConVar("sv_alltalk"):GetBool() and GM.PlayerCanHearPlayersVoiceAllTalk
+	or GM.PlayerCanHearPlayersVoiceDefault
 
-function GM:PlayerTraceAttack(pl, dmginfo, dir, trace)
-end
+function GM:PlayerTraceAttack(pl, dmginfo, dir, trace) end
 
 function GM:GetDamageResistance(fearpower)
 	if self.MaxSigils > 0 and self:GetUseSigils() then
@@ -618,7 +677,9 @@ end
 function GM:FindUseEntity(pl, ent)
 	if not ent:IsValid() then
 		local e = pl:TraceLine(90, MASK_SOLID, pl:GetDynamicTraceFilter()).Entity
-		if e:IsValid() then return e end
+		if e:IsValid() then
+			return e
+		end
 	end
 
 	return ent
@@ -629,9 +690,12 @@ function GM:ShouldUseAlternateDynamicSpawn()
 end
 
 function GM:GetZombieDamageScale(pos, ignore)
-	if LASTHUMAN then return self.ZombieDamageMultiplier end
+	if LASTHUMAN then
+		return self.ZombieDamageMultiplier
+	end
 
-	return self.ZombieDamageMultiplier * (1 - self:GetDamageResistance(self:GetFearMeterPower(pos, TEAM_UNDEAD, ignore)))
+	return self.ZombieDamageMultiplier
+		* (1 - self:GetDamageResistance(self:GetFearMeterPower(pos, TEAM_UNDEAD, ignore)))
 end
 
 local temppos
@@ -661,13 +725,15 @@ function GM:GetFurthestSpawnPoint(teamid, pos)
 	return spawnpoints[#spawnpoints]
 end
 
-local FEAR_RANGE = 768^2
+local FEAR_RANGE = 768 ^ 2
 local FEAR_PERINSTANCE = 0.075
 local RALLYPOINT_THRESHOLD = 0.3
 
 local function GetEpicenter(tab)
 	local vec = Vector(0, 0, 0)
-	if #tab == 0 then return vec end
+	if #tab == 0 then
+		return vec
+	end
 
 	for k, v in pairs(tab) do
 		vec = vec + v:GetPos()
@@ -686,10 +752,15 @@ function GM:GetTeamRallyGroups(teamid)
 	for _, pl in pairs(plys) do
 		if not ingroup[pl] and pl:Alive() then
 			plpos = pl:GetPos()
-			group = {pl}
+			group = { pl }
 
 			for __, otherpl in pairs(plys) do
-				if otherpl ~= pl and not ingroup[otherpl] and otherpl:Alive() and otherpl:GetPos():DistToSqr(plpos) <= FEAR_RANGE then
+				if
+					otherpl ~= pl
+					and not ingroup[otherpl]
+					and otherpl:Alive()
+					and otherpl:GetPos():DistToSqr(plpos) <= FEAR_RANGE
+				then
 					group[#group + 1] = otherpl
 				end
 			end
@@ -710,7 +781,10 @@ function GM:GetTeamRallyPoints(teamid)
 	local points = {}
 
 	for _, group in pairs(self:GetTeamRallyGroups(teamid)) do
-		points[#points + 1] = {GetEpicenter(group), math.min(1, (#group * FEAR_PERINSTANCE - RALLYPOINT_THRESHOLD) / (1 - RALLYPOINT_THRESHOLD))}
+		points[#points + 1] = {
+			GetEpicenter(group),
+			math.min(1, (#group * FEAR_PERINSTANCE - RALLYPOINT_THRESHOLD) / (1 - RALLYPOINT_THRESHOLD)),
+		}
 	end
 
 	return points
@@ -767,7 +841,9 @@ function GM:GetCurrentEquipmentCount(id)
 end
 
 function GM:GetFearMeterPower(pos, teamid, ignore)
-	if LASTHUMAN then return 1 end
+	if LASTHUMAN then
+		return 1
+	end
 
 	local dist
 
@@ -787,7 +863,9 @@ end
 
 function GM:GetRagdollEyes(pl)
 	local Ragdoll = pl:GetRagdollEntity()
-	if not Ragdoll then return end
+	if not Ragdoll then
+		return
+	end
 
 	local att = Ragdoll:GetAttachment(Ragdoll:LookupAttachment("eyes"))
 	if att then
@@ -801,7 +879,10 @@ end
 function GM:PlayerNoClip(pl, on)
 	if pl:IsAdmin() then
 		if SERVER then
-			PrintMessage(HUD_PRINTCONSOLE, translate.Format(on and "x_turned_on_noclip" or "x_turned_off_noclip", pl:Name()))
+			PrintMessage(
+				HUD_PRINTCONSOLE,
+				translate.Format(on and "x_turned_on_noclip" or "x_turned_off_noclip", pl:Name())
+			)
 		end
 
 		if SERVER then
@@ -870,7 +951,9 @@ function GM:GetWaveActive()
 end
 
 function GM:SetWaveActive(active)
-	if self.RoundEnded then return end
+	if self.RoundEnded then
+		return
+	end
 
 	if self:GetWaveActive() ~= active then
 		SetGlobalBool("waveactive", active)
@@ -882,22 +965,21 @@ function GM:SetWaveActive(active)
 end
 
 if not FixedSoundDuration then
-FixedSoundDuration = true
-local OldSoundDuration = SoundDuration
-function SoundDuration(snd)
-	if snd then
-		local ft = string.sub(snd, -4)
-		if ft == ".mp3" then
-			return OldSoundDuration(snd) * 2.25
+	FixedSoundDuration = true
+	local OldSoundDuration = SoundDuration
+	function SoundDuration(snd)
+		if snd then
+			local ft = string.sub(snd, -4)
+			if ft == ".mp3" then
+				return OldSoundDuration(snd) * 2.25
+			end
+			if ft == ".ogg" then
+				return OldSoundDuration(snd) * 3
+			end
 		end
-		if ft == ".ogg" then
-			return OldSoundDuration(snd) * 3
-		end
+
+		return OldSoundDuration(snd)
 	end
-
-	return OldSoundDuration(snd)
-end
 end
 
-function GM:VehicleMove()
-end
+function GM:VehicleMove() end

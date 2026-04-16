@@ -893,9 +893,11 @@ function meta:DropAll()
 	self:DropAllInventoryItems()
 end
 
+local OldPlayerCreateRagdoll = meta.CreateRagdoll
+
 local function CreateRagdoll(pl)
 	if pl:IsValid() then
-		pl:OldCreateRagdoll()
+		OldPlayerCreateRagdoll(pl)
 	end
 end
 local function SetModel(pl, mdl)
@@ -907,7 +909,6 @@ local function SetModel(pl, mdl)
 	end
 end
 
-meta.OldCreateRagdoll = meta.CreateRagdoll
 function meta:CreateRagdoll()
 	local status = self.status_overridemodel
 	if status and status:IsValid() then
@@ -917,7 +918,7 @@ function meta:CreateRagdoll()
 		end)
 		status:SetRenderMode(RENDERMODE_NONE)
 	else
-		self:OldCreateRagdoll()
+		OldPlayerCreateRagdoll(self)
 	end
 end
 
