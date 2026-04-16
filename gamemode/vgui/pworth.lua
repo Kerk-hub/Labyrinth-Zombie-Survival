@@ -102,7 +102,9 @@ end
 local function ClickWorthButton(id)
 	local result = true
 	for _, btn in pairs(WorthButtons) do
-		if not btn then continue end
+		if not btn then
+			continue
+		end
 
 		if btn.ID == id or btn.Signature == id then
 			result = btn:DoClick(true, true)
@@ -113,7 +115,9 @@ local function ClickWorthButton(id)
 end
 
 local function LoadCart(cartid, silent)
-	if not GAMEMODE.SavedCarts[cartid] then return end
+	if not GAMEMODE.SavedCarts[cartid] then
+		return
+	end
 
 	MakepWorth()
 
@@ -149,26 +153,25 @@ local function SaveCurrentCart(name)
 			cart[2] = tobuy
 
 			file.Write(GAMEMODE.CartFile, Serialize(GAMEMODE.SavedCarts))
-			print("Saved cart "..tostring(name))
+			print("Saved cart " .. tostring(name))
 
 			LoadCart(i, true)
 			return
 		end
 	end
 
-	GAMEMODE.SavedCarts[#GAMEMODE.SavedCarts + 1] = {name, tobuy}
+	GAMEMODE.SavedCarts[#GAMEMODE.SavedCarts + 1] = { name, tobuy }
 
 	file.Write(GAMEMODE.CartFile, Serialize(GAMEMODE.SavedCarts))
-	print("Saved cart "..tostring(name))
+	print("Saved cart " .. tostring(name))
 
 	LoadCart(#GAMEMODE.SavedCarts, true)
 end
 
 local function SaveDoClick(self)
-	local frame = Derma_StringRequest("Save cart", "Enter a name for this cart.", "Name",
-	function(strTextOut) SaveCurrentCart(strTextOut) end,
-	function(strTextOut) end,
-	"OK", "Cancel")
+	local frame = Derma_StringRequest("Save cart", "Enter a name for this cart.", "Name", function(strTextOut)
+		SaveCurrentCart(strTextOut)
+	end, function(strTextOut) end, "OK", "Cancel")
 
 	frame:GetChildren()[5]:GetChildren()[2]:SetTextColor(Color(30, 30, 30))
 end
@@ -213,6 +216,10 @@ function MakepWorth()
 	frame:SetKeyboardInputEnabled(false)
 	frame:SetTitle(" ")
 	frame.Think = WorthThink
+	-- Set blue-gray background color for the main panel (similar to arsenal menu)
+	frame.Paint = function(self, w, h)
+		draw.RoundedBox(8, 0, 0, w, h, Color(40, 60, 90, 245))
+	end
 
 	local topspace = vgui.Create("DPanel", frame)
 	topspace:SetWide(wid * 0.75)
@@ -220,7 +227,8 @@ function MakepWorth()
 
 	local title = EasyLabel(topspace, "The Worth Menu", "ZSHUDFontSmall", COLOR_WHITE)
 	title:CenterHorizontal()
-	local subtitle = EasyLabel(topspace, "Select the items you're going to start with this round.", "ZSHUDFontTiny", COLOR_WHITE)
+	local subtitle =
+		EasyLabel(topspace, "Select the items you're going to start with this round.", "ZSHUDFontTiny", COLOR_WHITE)
 	subtitle:CenterHorizontal()
 	subtitle:MoveBelow(title, 4)
 
@@ -286,7 +294,9 @@ function MakepWorth()
 			defimage:SizeToContents()
 			defimage:SetSize(16 * limitedscale, 16 * limitedscale)
 			defimage:SetMouseInputEnabled(true)
-			defimage:SetTooltip("This is your default cart.\nIf you join the game late then you'll spawn with this cart.")
+			defimage:SetTooltip(
+				"This is your default cart.\nIf you join the game late then you'll spawn with this cart."
+			)
 			defimage:SetPos(x, cartpan:GetTall() * 0.5 - defimage:GetTall() * 0.5)
 			x = x + defimage:GetWide() + 4
 		end
@@ -367,7 +377,7 @@ function MakepWorth()
 		end
 	end
 
-	local worthlab = EasyLabel(frame, "Worth: "..tostring(remainingworth), "ZSHUDFontSmall", COLOR_LIMEGREEN)
+	local worthlab = EasyLabel(frame, "Worth: " .. tostring(remainingworth), "ZSHUDFontSmall", COLOR_LIMEGREEN)
 	worthlab:SetPos(8, frame:GetTall() - worthlab:GetTall() - 8)
 	frame.WorthLab = worthlab
 
@@ -448,8 +458,12 @@ function PANEL:RefreshWorth()
 	self:SizeToContents()
 end
 
-function PANEL:SetItemID(id) self.m_ItemID = id end
-function PANEL:GetItemID() return self.m_ItemID end
+function PANEL:SetItemID(id)
+	self.m_ItemID = id
+end
+function PANEL:GetItemID()
+	return self.m_ItemID
+end
 
 vgui.Register("ItemAmountCounter", PANEL, "DLabel")
 
@@ -466,8 +480,8 @@ function PANEL:Init()
 	self:SetTall(100 * screenscale)
 
 	self.ModelFrame = vgui.Create("DPanel", self)
-	self.ModelFrame:SetSize(wid/2 * screenscale, 100/2 * screenscale)
-	self.ModelFrame:SetPos(wid/4 * screenscale, 100/5 * screenscale)
+	self.ModelFrame:SetSize(wid / 2 * screenscale, 100 / 2 * screenscale)
+	self.ModelFrame:SetPos(wid / 4 * screenscale, 100 / 5 * screenscale)
 	self.ModelFrame:SetVisible(false)
 	self.ModelFrame:SetMouseInputEnabled(false)
 	self.ModelFrame.Paint = function() end
@@ -512,7 +526,8 @@ function PANEL:SetWorthID(id)
 
 	if nottrinkets then
 		self.ModelFrame:SetVisible(true)
-		local kitbl = killicon.Get(GAMEMODE.ZSInventoryItemData[tab.SWEP] and "weapon_zs_craftables" or tab.SWEP or tab.Model)
+		local kitbl =
+			killicon.Get(GAMEMODE.ZSInventoryItemData[tab.SWEP] and "weapon_zs_craftables" or tab.SWEP or tab.Model)
 		if kitbl then
 			GAMEMODE:AttachKillicon(kitbl, self, self.ModelFrame, tab.Category == ITEMCAT_AMMO, missing_skill)
 		elseif tab.Model then
@@ -536,7 +551,7 @@ function PANEL:SetWorthID(id)
 		self.PriceLabel:SetTextColor(COLOR_RED)
 		self.PriceLabel:SetText(GAMEMODE.Skills[tab.SkillRequirement].Name)
 	elseif tab.Price then
-		self.PriceLabel:SetText(tostring(tab.Price).." Worth")
+		self.PriceLabel:SetText(tostring(tab.Price) .. " Worth")
 	else
 		self.PriceLabel:SetText("")
 	end
@@ -548,7 +563,11 @@ function PANEL:SetWorthID(id)
 
 	self:SetTooltip(tab.Description)
 
-	if missing_skill or tab.NoClassicMode and GAMEMODE:IsClassicMode() or tab.NoZombieEscape and GAMEMODE.ZombieEscape then
+	if
+		missing_skill
+		or tab.NoClassicMode and GAMEMODE:IsClassicMode()
+		or tab.NoZombieEscape and GAMEMODE.ZombieEscape
+	then
 		self:SetAlpha(120)
 		self.Locked = true
 	else
@@ -562,7 +581,10 @@ function PANEL:SetWorthID(id)
 	end
 
 	self.NameLabel:SetText(tab.Name or "")
-	self.NameLabel:SetPos(12 * screenscale, self:GetTall() * (nottrinkets and 0.8 or 0.7) - self.NameLabel:GetTall() * 0.5)
+	self.NameLabel:SetPos(
+		12 * screenscale,
+		self:GetTall() * (nottrinkets and 0.8 or 0.7) - self.NameLabel:GetTall() * 0.5
+	)
 	self.NameLabel:SizeToContents()
 end
 
@@ -571,7 +593,10 @@ local colSel = Color(15, 40, 15, 255)
 function PANEL:Paint(w, h)
 	local outline
 	if self.Hovered then
-		outline = self.On and COLOR_MIDGRAY or (self.Locked or not self.On and remainingworth < self.Price) and COLOR_RED or self.Depressed and COLOR_GREEN or COLOR_DARKGREEN
+		outline = self.On and COLOR_MIDGRAY
+			or (self.Locked or not self.On and remainingworth < self.Price) and COLOR_RED
+			or self.Depressed and COLOR_GREEN
+			or COLOR_DARKGREEN
 
 		draw.RoundedBox(8, 0, 0, w, h, outline)
 	end
@@ -583,10 +608,14 @@ end
 
 function PANEL:OnCursorEntered()
 	local shoptbl = FindStartingItem(self.ID)
-	if not shoptbl then return end
+	if not shoptbl then
+		return
+	end
 
 	local sweptable = GAMEMODE.ZSInventoryItemData[shoptbl.SWEP] or weapons.Get(shoptbl.SWEP)
-	if sweptable --[[and not GAMEMODE.AlwaysQuickBuy]] then
+	if
+		sweptable --[[and not GAMEMODE.AlwaysQuickBuy]]
+	then
 		GAMEMODE:SupplyItemViewerDetail(pWorth.Viewer, sweptable, shoptbl)
 	end
 end
@@ -599,7 +628,9 @@ function PANEL:DoClick(silent, force)
 	local tab = FindStartingItem(id)
 	local goodcart = true
 
-	if not tab then return end
+	if not tab then
+		return
+	end
 
 	if self.On then
 		self.On = nil
@@ -626,7 +657,7 @@ function PANEL:DoClick(silent, force)
 		remainingworth = remainingworth - tab.Price
 	end
 
-	pWorth.WorthLab:SetText("Worth: ".. remainingworth)
+	pWorth.WorthLab:SetText("Worth: " .. remainingworth)
 	if remainingworth <= 0 then
 		pWorth.WorthLab:SetTextColor(COLOR_RED)
 		pWorth.WorthLab:InvalidateLayout()
