@@ -49,7 +49,7 @@ function SWEP:Reload()
 end
 
 function SWEP:CanPrimaryAttack()
-	if self:GetOwner():IsHolding() or self:GetOwner():GetBarricadeGhosting() then return false end
+	if self:GetOwner():IsHolding() then return false end --or owner:GetBarricadeGhosting()--
 
 	if self:GetPrimaryAmmoCount() <= 0 then
 		self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)

@@ -103,7 +103,7 @@ function SWEP:Reload()
 end
 
 function SWEP:CanPrimaryAttack()
-	if self:GetOwner():IsHolding() or self:GetOwner():GetBarricadeGhosting() then return false end
+	if self:GetOwner():IsHolding() then return false end --or owner:GetBarricadeGhosting()--
 
 	if math.abs(self:GetOwner():GetVelocity().z) >= 256 then return false end
 
