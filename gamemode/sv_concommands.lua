@@ -103,7 +103,8 @@ concommand.Add("zs_pointsshopbuy", function(sender, command, arguments)
 	elseif itemtab.SWEP then
 		if string.sub(itemtab.SWEP, 1, 6) ~= "weapon" then
 			if
-				GAMEMODE:GetInventoryItemType(itemtab.SWEP) == INVCAT_TRINKETS and sender:HasInventoryItem(itemtab.SWEP)
+				GAMEMODE:GetInventoryItemType(itemtab.SWEP) == INVCAT_TRINKETS
+				and sender:HasInventoryItem(itemtab.SWEP)
 			then
 				local wep = ents.Create("prop_invitem")
 				if wep:IsValid() then
@@ -461,16 +462,14 @@ concommand.Add("zsdropweapon", function(sender, command, arguments)
 		if ent and ent:IsValid() then
 			local shootpos = sender:GetShootPos()
 			local aimvec = sender:GetAimVector()
-			ent:SetPos(
-				util.TraceHull({
-					start = shootpos,
-					endpos = shootpos + aimvec * 32,
-					mask = MASK_SOLID,
-					filter = sender,
-					mins = Vector(-2, -2, -2),
-					maxs = Vector(2, 2, 2),
-				}).HitPos
-			)
+			ent:SetPos(util.TraceHull({
+				start = shootpos,
+				endpos = shootpos + aimvec * 32,
+				mask = MASK_SOLID,
+				filter = sender,
+				mins = Vector(-2, -2, -2),
+				maxs = Vector(2, 2, 2),
+			}).HitPos)
 			ent:SetAngles(sender:GetAngles())
 		end
 	end
@@ -706,6 +705,39 @@ concommand.Add("zs_preventwin", function(sender, command, arguments)
 	else
 		if IsValid(sender) then
 			sender:PrintMessage(HUD_PRINTTALK, "Usage: zs_preventwin 0|1")
+		end
+	end
+end)
+
+concommand.Add("zs_nextwave", function(sender, command, arguments)
+	if IsValid(sender) and not sender:IsAdmin() then
+		return
+	end
+	local curwave = GAMEMODE:GetWave()
+	if curwave <= 0 then
+		gamemode.Call("SetWaveStart", CurTime())
+		gamemode.Call("SetWaveEnd", GAMEMODE:GetWaveStart() + GAMEMODE:GetWaveOneLength())
+		net.Start("zs_wavestart")
+		net.WriteInt(1, 16)
+		net.WriteFloat(GAMEMODE:GetWaveEnd())
+		net.Broadcast()
+		if IsValid(sender) then
+			sender:PrintMessage(HUD_PRINTTALK, "Wave 1 started.")
+		end
+	else
+		gamemode.Call("SetWave", curwave + 1)
+		gamemode.Call("SetWaveStart", CurTime())
+		local nextEnd = GAMEMODE:GetWaveStart()
+			+ GAMEMODE:GetWaveOneLength()
+			+ (GAMEMODE:GetWave() - 1)
+				* (GetGlobalBool("classicmode") and GAMEMODE.TimeAddedPerWaveClassic or GAMEMODE.TimeAddedPerWave)
+		gamemode.Call("SetWaveEnd", nextEnd)
+		net.Start("zs_wavestart")
+		net.WriteInt(GAMEMODE:GetWave(), 16)
+		net.WriteFloat(GAMEMODE:GetWaveEnd())
+		net.Broadcast()
+		if IsValid(sender) then
+			sender:PrintMessage(HUD_PRINTTALK, "Advanced to wave " .. GAMEMODE:GetWave() .. ".")
 		end
 	end
 end)
