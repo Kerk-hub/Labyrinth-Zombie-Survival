@@ -13,7 +13,7 @@ if CLIENT then
 	SWEP.BobScale = 2
 end
 
-SWEP.MeleeReach = 90
+SWEP.MeleeReach = 80
 SWEP.MeleeDamage = 32
 SWEP.MeleeForceScale = 2
 SWEP.MeleeSize = 5 --3
@@ -140,7 +140,7 @@ function SWEP:CheckCry()
 		util.ScreenShake(worldspace, 5, 5, 2, 400)
 		owner:EmitSound("physics/concrete/concrete_break2.wav", 77, 50)
 
-		for k, ent in pairs(ents.FindInSphere(worldspace, 150)) do
+		for k, ent in pairs(ents.FindInSphere(worldspace, 115)) do
 			if ent:IsValid() and ent:IsValidLivingHuman() and WorldVisible(ent:GetPos(), worldspace) then
 				if CurTime() >= (ent.NextKnockdown or 0) then
 					ent:KnockDown()
