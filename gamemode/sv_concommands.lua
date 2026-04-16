@@ -199,6 +199,16 @@ concommand.Add("zs_pointsshopbuy", function(sender, command, arguments)
 	end
 end)
 
+concommand.Add("zs_addpoints", function(sender, command, arguments)
+	if not sender:IsAdmin() then
+		return
+	end
+
+	local pl = sender
+	local amount = tonumber(arguments[1]) or 0
+	pl:AddPoints(amount)
+end)
+
 concommand.Add("zs_dismantle", function(sender, command, arguments)
 	if not (sender:IsValid() and sender:IsConnected() and sender:IsValidLivingHuman()) then
 		return
