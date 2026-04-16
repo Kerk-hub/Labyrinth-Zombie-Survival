@@ -248,7 +248,7 @@ item = GM:AddStartingItem("strengthshot", ITEMCAT_TOOLS, 40, "weapon_zs_strength
 item.SkillRequirement = SKILL_U_STRENGTHSHOT
 item = GM:AddStartingItem("antidoteshot", ITEMCAT_TOOLS, 40, "weapon_zs_antidoteshot")
 item.SkillRequirement = SKILL_U_ANTITODESHOT
-GM:AddStartingItem("arscrate", ITEMCAT_DEPLOYABLES, 50, "weapon_zs_arsenalcrate").Countables = "prop_arsenalcrate"
+-- GM:AddStartingItem("arscrate", ITEMCAT_DEPLOYABLES, 50, "weapon_zs_arsenalcrate").Countables = "prop_arsenalcrate" -- Removed from worth menu
 GM:AddStartingItem("resupplybox", ITEMCAT_DEPLOYABLES, 50, "weapon_zs_resupplybox").Countables = "prop_resupplybox"
 GM:AddStartingItem("remantler", ITEMCAT_DEPLOYABLES, 50, "weapon_zs_remantler").Countables = "prop_remantler"
 item = GM:AddStartingItem("infturret", ITEMCAT_DEPLOYABLES, 75, "weapon_zs_gunturret", nil, nil, nil, function(pl)
@@ -558,7 +558,7 @@ GM:AddPointShopItem("crphmr", ITEMCAT_TOOLS, 25, "weapon_zs_hammer", nil, nil, n
 	pl:GiveAmmo(5, "GaussEnergy")
 end)
 GM:AddPointShopItem("wrench", ITEMCAT_TOOLS, 20, "weapon_zs_wrench").NoClassicMode = true
-GM:AddPointShopItem("arsenalcrate", ITEMCAT_DEPLOYABLES, 40, "weapon_zs_arsenalcrate").Countables = "prop_arsenalcrate"
+-- GM:AddPointShopItem("arsenalcrate", ITEMCAT_DEPLOYABLES, 40, "weapon_zs_arsenalcrate").Countables = "prop_arsenalcrate" -- Removed from arsenal menu
 GM:AddPointShopItem("resupplybox", ITEMCAT_DEPLOYABLES, 40, "weapon_zs_resupplybox").Countables = "prop_resupplybox"
 GM:AddPointShopItem("remantler", ITEMCAT_DEPLOYABLES, 40, "weapon_zs_remantler").Countables = "prop_remantler"
 GM:AddPointShopItem("msgbeacon", ITEMCAT_DEPLOYABLES, 10, "weapon_zs_messagebeacon").Countables = "prop_messagebeacon"
