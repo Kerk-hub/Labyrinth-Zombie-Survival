@@ -1,16 +1,15 @@
 GM.VaultFolder = "zombiesurvival_vault"
+GM.SkillTreeVersion = 1
 
 function GM:ShouldSaveVault(pl)
 	-- Always push accumulated points in to the vault if we have any.
-	if pl:IsBot() then
-		return false
-	end
+	if pl:IsBot() then return false end
 
 	if self.PointSaving > 0 and pl.PointsVault ~= nil then
 		return true
 	end
 
-	if pl:GetZSXP() > 0 or pl:GetZSSPUsed() > 0 then
+	if pl:GetZSXP() > 0 or pl:GetZSSPUsed() > 0 or pl:GetZSRemortLevel() > 0 then
 		return true
 	end
 
@@ -28,7 +27,7 @@ end]]
 function GM:GetVaultFile(pl)
 	local steamid = pl:SteamID64() or "invalid"
 
-	return self.VaultFolder .. "/" .. steamid:sub(-2) .. "/" .. steamid .. ".txt"
+	return self.VaultFolder.."/"..steamid:sub(-2).."/"..steamid..".txt"
 end
 
 function GM:SaveAllVaults()
@@ -43,9 +42,7 @@ function GM:InitializeVault(pl)
 end
 
 function GM:LoadVault(pl)
-	if not self:ShouldLoadVault(pl) then
-		return
-	end
+	if not self:ShouldLoadVault(pl) then return end
 
 	local filename = self:GetVaultFile(pl)
 	if file.Exists(filename, "DATA") then
@@ -55,9 +52,27 @@ function GM:LoadVault(pl)
 			if contents then
 				pl.PointsVault = contents.Points
 
+				if contents.RemortLevel then
+					pl:SetZSRemortLevel(contents.RemortLevel)
+				end
 				if contents.XP then
 					pl:SetZSXP(contents.XP)
 				end
+				if contents.UnlockedSkills then
+					pl:SetUnlockedSkills(util.DecompressBitTable(contents.UnlockedSkills), true)
+				end
+				if contents.DesiredActiveSkills then
+					pl:SetDesiredActiveSkills(util.DecompressBitTable(contents.DesiredActiveSkills), true)
+				end
+				if contents.NextSkillReset then
+					pl.NextSkillReset = contents.NextSkillReset
+				end
+				if not contents.Version or contents.Version < self.SkillTreeVersion then
+					pl:SkillsReset()
+					pl.SkillsRefunded = true
+				end
+
+				pl.SkillVersion = self.SkillTreeVersion
 			end
 		end
 	end
@@ -66,18 +81,51 @@ function GM:LoadVault(pl)
 end
 
 function GM:PlayerReadyVault(pl)
-	-- Skill system removed: no skill sync needed
+	local unlocked = pl:GetUnlockedSkills()
+	local desired = pl:GetDesiredActiveSkills()
+	local active = pl:GetActiveSkills()
+
+	net.Start("zs_skills_init")
+	self:WriteSkillBits(unlocked)
+	self:WriteSkillBits(desired)
+
+	-- Send this if any key exists.
+	for k in pairs(active) do
+		net.WriteBool(true)
+		self:WriteSkillBits(active)
+		net.Send(pl)
+
+		return
+	end
+
+	net.WriteBool(false)
+	net.Send(pl)
+
+	if pl.NextSkillReset then
+		local time = os.time()
+		if time < pl.NextSkillReset then
+			net.Start("zs_skills_nextreset")
+			net.WriteUInt(pl.NextSkillReset - time, 32)
+			net.Send(pl)
+		end
+	end
 end
 
 function GM:SaveVault(pl)
-	if not self:ShouldSaveVault(pl) then
-		return
-	end
+	if not self:ShouldSaveVault(pl) then return end
 
 	local tosave = {
 		Points = math.floor(pl.PointsVault),
 		XP = pl:GetZSXP(),
+		RemortLevel = pl:GetZSRemortLevel(),
+		DesiredActiveSkills = util.CompressBitTable(pl:GetDesiredActiveSkills()),
+		UnlockedSkills = util.CompressBitTable(pl:GetUnlockedSkills()),
+		Version = pl.SkillVersion or self.SkillTreeVersion
 	}
+
+	if pl.NextSkillReset and os.time() < pl.NextSkillReset then
+		tosave.NextSkillReset = pl.NextSkillReset
+	end
 
 	if tosave.Points and self.PointSavingLimit > 0 and tosave.Points > self.PointSavingLimit then
 		tosave.Points = self.PointSavingLimit
