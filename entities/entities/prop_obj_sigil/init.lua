@@ -15,9 +15,11 @@ function ENT:Initialize()
 	local phys = self:GetPhysicsObject()
 	if phys:IsValid() then
 		phys:EnableMotion(false)
+		phys:EnableCollisions(false)
 		phys:Wake()
 	end
 
+	self:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
 	self:SetSigilHealthBase(self.MaxHealth)
 	self:SetSigilHealthRegen(self.HealthRegen)
 	self:SetSigilLastDamaged(0)

@@ -21,8 +21,10 @@ function ENT:Initialize()
 	local phys = self:GetPhysicsObject()
 	if phys:IsValid() then
 		phys:EnableMotion(false)
+		phys:EnableCollisions(false)
 	end
 
+	self:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
 	self:SetMaxObjectHealth(400)
 	self:SetObjectHealth(self:GetMaxObjectHealth())
 end
