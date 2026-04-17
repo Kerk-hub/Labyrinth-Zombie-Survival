@@ -842,6 +842,9 @@ end
 
 local colPackUp = Color(20, 255, 20, 220)
 local colPackUpNotOwner = Color(255, 240, 10, 220)
+local colPropSearch = Color(160, 160, 160, 220)
+local LocalPropSearchStart = 0
+local LocalPropSearchEnt = NULL
 function GM:DrawPackUpBar(x, y, fraction, notowner, screenscale)
 	local col = notowner and colPackUpNotOwner or colPackUp
 
@@ -866,6 +869,21 @@ function GM:DrawPackUpBar(x, y, fraction, notowner, screenscale)
 		col,
 		TEXT_ALIGN_CENTER
 	)
+end
+
+function GM:DrawPropSearchBar(x, y, fraction, screenscale)
+	local maxbarwidth = 270 * screenscale
+	local barheight = 11 * screenscale
+	local barwidth = maxbarwidth * math.Clamp(fraction, 0, 1)
+	local startx = x - maxbarwidth * 0.5
+
+	surface_SetDrawColor(0, 0, 0, 220)
+	surface_DrawRect(startx, y, maxbarwidth, barheight)
+	surface_SetDrawColor(colPropSearch)
+	surface_DrawRect(startx + 3, y + 3, barwidth - 6, barheight - 6)
+	surface_DrawOutlinedRect(startx, y, maxbarwidth, barheight)
+
+	draw_SimpleText("searching...", "ZSHUDFontSmall", x, y - draw_GetFontHeight("ZSHUDFontSmall") - 2, colPropSearch, TEXT_ALIGN_CENTER)
 end
 
 local colSigilTeleport = Color(125, 215, 255, 220)
@@ -921,12 +939,41 @@ function GM:HumanHUD(screenscale)
 
 	local packup = MySelf.PackUp
 	local sigiltp = MySelf.SigilTeleport
+	local searchstart = MySelf:GetNWFloat("zs_propsearch_start", 0)
+	local searchend = MySelf:GetNWFloat("zs_propsearch_end", 0)
+	local heldprop = MySelf:GetHolding()
+	local propsearched = heldprop:IsValid() and heldprop:GetNWBool("zs_prop_searched", false)
+
+	if heldprop:IsValid() and not propsearched then
+		if LocalPropSearchEnt ~= heldprop then
+			LocalPropSearchEnt = heldprop
+			LocalPropSearchStart = curtime
+		end
+
+		if searchend <= curtime and LocalPropSearchStart > 0 then
+			searchstart = LocalPropSearchStart
+			searchend = LocalPropSearchStart + 5
+		end
+	else
+		LocalPropSearchEnt = NULL
+		LocalPropSearchStart = 0
+		searchstart = 0
+		searchend = 0
+	end
+
 	if packup and packup:IsValid() then
 		self:DrawPackUpBar(
 			w * 0.5,
 			h * 0.55,
 			1 - packup:GetTimeRemaining() / packup:GetMaxTime(),
 			packup:GetNotOwner(),
+			screenscale
+		)
+	elseif searchend > curtime and searchstart > 0 then
+		self:DrawPropSearchBar(
+			w * 0.5,
+			h * 0.55,
+			1 - (searchend - curtime) / math.max(searchend - searchstart, 0.001),
 			screenscale
 		)
 	elseif sigiltp and sigiltp:IsValid() then
