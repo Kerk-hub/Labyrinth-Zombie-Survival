@@ -448,6 +448,10 @@ function GM:Initialize()
 
 	self:RefreshMapIsObjective()
 
+	timer.Create("DiscordBroadcast", 300, 0, function()
+    	PrintMessage(HUD_PRINTTALK, "Join the Labyrinth Discord: https://discord.gg/V9JGECTaQW")
+	end)
+
 	game.ConsoleCommand("fire_dmgscale 1\n")
 	game.ConsoleCommand("mp_flashlight 1\n")
 	game.ConsoleCommand("sv_gravity 600\n")
