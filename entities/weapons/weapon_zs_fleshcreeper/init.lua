@@ -120,14 +120,14 @@ function SWEP:BuildingThink()
 	for _, sigil in pairs(ents.FindByClass("prop_obj_sigil")) do
 		if sigil:GetSigilCorrupted() then continue end
 
-		if util.SkewedDistance(sigil:GetPos(), hitpos, 1.5) <= GAMEMODE.CreeperNestDistBuildNest then
+		if math.abs(sigil:GetPos().z - hitpos.z) < 64 and util.SkewedDistance(sigil:GetPos(), hitpos, 1.5) <= GAMEMODE.CreeperNestDistBuildNest then
 			self:SendMessage("too_close_to_uncorrupt")
 			return
 		end
 	end
 
 	for _, human in pairs(team.GetPlayers(TEAM_HUMAN)) do
-		if util.SkewedDistance(human:GetPos(), hitpos, 1.5) <= GAMEMODE.CreeperNestDistBuild then
+		if math.abs(human:GetPos().z - hitpos.z) < 64 and util.SkewedDistance(human:GetPos(), hitpos, 1.5) <= GAMEMODE.CreeperNestDistBuild then
 			self:SendMessage("too_close_to_a_human")
 			return
 		end
