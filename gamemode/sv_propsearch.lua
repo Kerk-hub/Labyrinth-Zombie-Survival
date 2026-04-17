@@ -1,4 +1,4 @@
-local SEARCH_DURATION = 5
+local SEARCH_DURATION = 3
 local PROPSEARCH_SCRAP_REWARD = {
 	Name = "1 scrap",
 	Callback = function(pl)

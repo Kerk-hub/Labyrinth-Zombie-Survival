@@ -1011,7 +1011,7 @@ function GM:HumanHUD(screenscale)
 
 		if searchend <= curtime and LocalPropSearchStart > 0 then
 			searchstart = LocalPropSearchStart
-			searchend = LocalPropSearchStart + 5
+			searchend = LocalPropSearchStart + 3
 		end
 	else
 		LocalPropSearchEnt = NULL
