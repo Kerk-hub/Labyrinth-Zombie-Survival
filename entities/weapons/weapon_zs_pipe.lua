@@ -26,6 +26,8 @@ SWEP.ViewModel = "models/weapons/c_stunstick.mdl"
 SWEP.WorldModel = "models/props_canal/mattpipe.mdl"
 SWEP.UseHands = true
 
+SWEP.WalkSpeed = SPEED_NORMAL
+
 SWEP.MeleeDamage = 45
 SWEP.MeleeRange = 53
 SWEP.MeleeSize = 1.15
