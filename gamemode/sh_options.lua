@@ -321,7 +321,7 @@ item.SkillRequirement = SKILL_U_ROLLERMINE
 
 GM:WorthAdd("wrench", ITEMS_TOOLS, 20, "weapon_zs_wrench").NoClassicMode = true
 GM:WorthAdd("crphmr", ITEMS_TOOLS, 40, "weapon_zs_hammer").NoClassicMode = true
-GM:WorthAdd("junkpack", ITEMS_DEPLOYABLES, 30, "weapon_zs_boardpack")
+-- GM:WorthAdd("junkpack", ITEMS_DEPLOYABLES, 30, "weapon_zs_boardpack") -- Disabled: no longer purchasable.
 GM:WorthAdd("propanetank", ITEMS_TOOLS, 30, "comp_propanecan")
 GM:WorthAdd("busthead", ITEMS_TOOLS, 35, "comp_busthead")
 GM:WorthAdd("sawblade", ITEMS_TOOLS, 35, "comp_sawblade").SkillRequirement = SKILL_U_CRAFTINGPACK
