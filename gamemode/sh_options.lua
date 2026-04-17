@@ -367,7 +367,7 @@ GM:WorthAdd("biocleanser", ITEMS_TRINKETS, 20, "trinket_biocleanser").SubCategor
 GM:WorthAdd("reactiveflasher", ITEMS_TRINKETS, 25, "trinket_reactiveflasher").SubCategory =
 	TRINKETS_SPECIAL
 GM:WorthAdd("magnet", ITEMS_TRINKETS, 25, "trinket_magnet").SubCategory = TRINKETS_SPECIAL
---GM:WorthAdd("arsenalpack", ITEMS_TRINKETS, 55, "trinket_arsenalpack").SubCategory = TRINKETS_SUPPORT
+GM:WorthAdd("arsenalpack", ITEMS_TRINKETS, 55, "trinket_arsenalpack").SubCategory = TRINKETS_SUPPORT
 GM:WorthAdd("resupplypack", ITEMS_TRINKETS, 55, "trinket_resupplypack").SubCategory =
 	TRINKETS_SUPPORT
 
@@ -773,7 +773,7 @@ GM:ShopAdd("targetingvisiii", ITEMS_TRINKETS, 50, "trinket_targetingvisoriii").S
 	TRINKETS_OFFENSIVE
 GM:ShopAdd("eodvest", ITEMS_TRINKETS, 50, "trinket_eodvest").SubCategory = TRINKETS_DEFENSIVE
 GM:ShopAdd("composite", ITEMS_TRINKETS, 50, "trinket_composite").SubCategory = TRINKETS_DEFENSIVE
---GM:ShopAdd("arsenalpack", ITEMS_TRINKETS, 50, "trinket_arsenalpack").SubCategory =
+GM:ShopAdd("arsenalpack", ITEMS_TRINKETS, 50, "trinket_arsenalpack").SubCategory =
 	TRINKETS_SUPPORT
 GM:ShopAdd("resupplypack", ITEMS_TRINKETS, 50, "trinket_resupplypack").SubCategory =
 	TRINKETS_SUPPORT
