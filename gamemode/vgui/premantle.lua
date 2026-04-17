@@ -657,7 +657,7 @@ function GM:OpenRemantlerMenu(remantler)
 
 			for j, tab in ipairs(GAMEMODE.Items) do
 				if tab.PointShop and tab.Category == ITEMS_TRINKETS then
-					self:AddShopItem(tabpane.Grids[tab.SubCategory], j, tab, false, true)
+					self:ShopAdd(tabpane.Grids[tab.SubCategory], j, tab, false, true)
 				end
 			end
 		else
@@ -674,7 +674,7 @@ function GM:OpenRemantlerMenu(remantler)
 
 			for j, tab in ipairs(GAMEMODE.Items) do
 				if tab.PointShop and tab.Category == ITEMS_AMMO or tab.CanMakeFromScrap then
-					self:AddShopItem(list, j, tab, false, true)
+					self:ShopAdd(list, j, tab, false, true)
 				end
 			end
 		end
