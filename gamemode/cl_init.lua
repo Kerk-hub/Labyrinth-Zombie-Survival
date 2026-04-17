@@ -2547,6 +2547,10 @@ function GM:ZombieSpawnMenu()
 	panel:OpenMenu()
 end
 
+function GM:OpenWorthOrArsenalMenu()
+	RunConsoleCommand("gm_showteam")
+end
+
 function GM:PlayerBindPress(pl, bind, wasin)
 	if bind == "gmod_undo" or bind == "undo" then
 		RunConsoleCommand("+zoom")
@@ -2566,6 +2570,14 @@ function GM:PlayerBindPress(pl, bind, wasin)
 			self:ToggleZombieVision()
 		end
 	end
+end
+
+function GM:PlayerButtonDown(pl, button)
+	if pl ~= MySelf or button ~= KEY_B or gui.IsGameUIVisible() or gui.IsConsoleVisible() or vgui.GetKeyboardFocus() then
+		return
+	end
+
+	self:OpenWorthOrArsenalMenu()
 end
 
 function GM:_ShouldDrawLocalPlayer(pl)
