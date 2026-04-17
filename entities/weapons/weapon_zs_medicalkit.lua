@@ -19,7 +19,7 @@ SWEP.WorldModel = "models/weapons/w_medkit.mdl"
 SWEP.ViewModel = "models/weapons/c_medkit.mdl"
 SWEP.UseHands = true
 
-SWEP.Heal = 15
+SWEP.Heal = 20
 SWEP.Primary.Delay = 10
 
 SWEP.Primary.ClipSize = 30
@@ -56,6 +56,14 @@ function SWEP:Initialize()
 end
 
 function SWEP:Think()
+	local owner = self:GetOwner()
+
+	if owner:KeyDown(IN_ATTACK) then
+		self:PrimaryAttack()
+	elseif owner:KeyDown(IN_ATTACK2) then
+		self:SecondaryAttack()
+	end
+
 	if self.IdleAnimation and self.IdleAnimation <= CurTime() then
 		self.IdleAnimation = nil
 		self:SendWeaponAnim(ACT_VM_IDLE)
