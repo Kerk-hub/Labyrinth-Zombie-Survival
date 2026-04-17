@@ -1,4 +1,10 @@
 local SEARCH_DURATION = 5
+local PROPSEARCH_SCRAP_REWARD = {
+	Name = "1 scrap",
+	Callback = function(pl)
+		pl:GiveAmmo(1, "Scrap", true)
+	end
+}
 
 local function GetZSGameMode()
 	return GAMEMODE or GM
@@ -8,12 +14,12 @@ local function GetPropSearchItemPools()
 	local gm = GetZSGameMode()
 	if not gm then
 		return {
-			{"3scrap"}
+			{PROPSEARCH_SCRAP_REWARD}
 		}
 	end
 
 	gm.PropSearchItemPools = gm.PropSearchItemPools or {
-		{"3scrap"}
+		{PROPSEARCH_SCRAP_REWARD}
 	}
 
 	return gm.PropSearchItemPools
@@ -108,12 +114,13 @@ local function GiveRandomPropSearchReward(pl)
 	local pool = pools[math.random(#pools)]
 	if not pool or #pool == 0 then return end
 
-	local itemid = pool[math.random(#pool)]
-	local itemtab = gm.Items and gm.Items[itemid]
+	local reward = pool[math.random(#pool)]
+	local itemtab = isstring(reward) and gm.Items and gm.Items[reward] or reward
 	if not itemtab then return end
 
 	if not GiveSearchItem(pl, itemtab) then return end
 
+	pl:SendLua('surface.PlaySound("items/ammo_pickup.wav")')
 	pl:CenterNotify(COLOR_PURPLE, translate.ClientGet(pl, "arsenal_upgraded") .. ": ", color_white, itemtab.Name or "Reward")
 end
 
