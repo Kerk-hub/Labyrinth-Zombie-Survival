@@ -1273,7 +1273,10 @@ function GM:ZombieHUD()
 end
 
 function GM:RequestedDefaultCart()
-	local defaultcart = GetConVar("labyrinth_zs_defaultcart"):GetString()
+	local defaultcartcvar = GetConVar("labyrinth_zs_defaultcart") or GetConVar("zs_defaultcart")
+	if not defaultcartcvar or not istable(self.SavedCarts) then return end
+
+	local defaultcart = defaultcartcvar:GetString()
 	if #defaultcart > 0 then
 		defaultcart = string.lower(defaultcart)
 
