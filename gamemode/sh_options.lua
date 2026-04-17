@@ -277,6 +277,7 @@ item = GM:WorthAdd(
 item.Countables = "prop_gunturret_buckshot"
 item.NoClassicMode = true
 item.SkillRequirement = SKILL_U_BLASTTURRET
+--[[
 item = GM:WorthAdd("repairfield", ITEMS_DEPLOYABLES, 60, "weapon_zs_repairfield", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_repairfield")
 	pl:GiveAmmo(1, "repairfield")
@@ -284,6 +285,7 @@ item = GM:WorthAdd("repairfield", ITEMS_DEPLOYABLES, 60, "weapon_zs_repairfield"
 end)
 item.Countables = "prop_repairfield"
 item.NoClassicMode = true
+]]
 item = GM:WorthAdd("zapper", ITEMS_DEPLOYABLES, 75, "weapon_zs_zapper", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_zapper")
 	pl:GiveAmmo(1, "zapper")
@@ -386,8 +388,10 @@ item.NoClassicMode = true
 item.SkillRequirement = SKILL_U_CORRUPTEDFRAGMENT
 item = GM:WorthAdd("medcloud", ITEMS_OTHER, 25, "weapon_zs_mediccloudbomb")
 item.SkillRequirement = SKILL_U_MEDICCLOUD
+--[[
 item = GM:WorthAdd("nanitecloud", ITEMS_OTHER, 25, "weapon_zs_nanitecloudbomb")
 item.SkillRequirement = SKILL_U_NANITECLOUD
+]]
 GM:WorthAdd("bloodshot", ITEMS_OTHER, 35, "weapon_zs_bloodshotbomb")
 
 ------------
@@ -631,6 +635,7 @@ item = GM:ShopAdd("rollermine", ITEMS_DEPLOYABLES, 35, "weapon_zs_rollermine")
 item.Countables = "prop_rollermine"
 item.SkillRequirement = SKILL_U_ROLLERMINE
 
+--[[
 item = GM:ShopAdd("repairfield", ITEMS_DEPLOYABLES, 55, "weapon_zs_repairfield", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_repairfield")
 	pl:GiveAmmo(1, "repairfield")
@@ -638,6 +643,7 @@ item = GM:ShopAdd("repairfield", ITEMS_DEPLOYABLES, 55, "weapon_zs_repairfield",
 end)
 item.Countables = "prop_repairfield"
 item.NoClassicMode = true
+]]
 item = GM:ShopAdd("zapper", ITEMS_DEPLOYABLES, 50, "weapon_zs_zapper", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_zapper")
 	pl:GiveAmmo(1, "zapper")
@@ -799,8 +805,10 @@ item.NoClassicMode = true
 item.SkillRequirement = SKILL_U_CORRUPTEDFRAGMENT
 item = GM:ShopAdd("medcloud", ITEMS_OTHER, 40, "weapon_zs_mediccloudbomb")
 item.SkillRequirement = SKILL_U_MEDICCLOUD
+--[[
 item = GM:ShopAdd("nanitecloud", ITEMS_OTHER, 40, "weapon_zs_nanitecloudbomb")
 item.SkillRequirement = SKILL_U_NANITECLOUD
+]]
 
 -- These are the honorable mentions that come at the end of the round.
 
