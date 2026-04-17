@@ -1329,6 +1329,8 @@ function meta:DoHulls(classid, teamid)
 		end
 	end
 
+	self:SetCollisionGroup(self.NoCollideAll and COLLISION_GROUP_DEBRIS_TRIGGER or COLLISION_GROUP_PLAYER)
+
 	net.Start("zs_dohulls")
 	net.WriteEntity(self)
 	net.WriteUInt(classid, 8)
@@ -1624,13 +1626,18 @@ local function nocollidetimer(self, timername)
 			end
 		end
 
-		self:SetCollisionGroup(COLLISION_GROUP_PLAYER)
+		self:SetCollisionGroup(self.NoCollideAll and COLLISION_GROUP_DEBRIS_TRIGGER or COLLISION_GROUP_PLAYER)
 	end
 
 	timer.Remove(timername)
 end
 
 function meta:TemporaryNoCollide(force)
+	if self.NoCollideAll then
+		self:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
+		return
+	end
+
 	if self:GetCollisionGroup() ~= COLLISION_GROUP_PLAYER and not force then
 		return
 	end
@@ -1648,7 +1655,7 @@ function meta:TemporaryNoCollide(force)
 		end
 	end
 
-	self:SetCollisionGroup(COLLISION_GROUP_PLAYER)
+	self:SetCollisionGroup(self.NoCollideAll and COLLISION_GROUP_DEBRIS_TRIGGER or COLLISION_GROUP_PLAYER)
 end
 
 function meta:PlayEyePainSound()
