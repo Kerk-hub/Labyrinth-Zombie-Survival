@@ -86,6 +86,12 @@ function SWEP:Reload()
 end
 
 function SWEP:Think()
+
+	owner = self:GetOwner()
+	if owner:KeyDown(IN_ATTACK) then
+		self:PrimaryAttack()
+	end
+	
 	self.BaseClass.Think(self)
 
 	self:CheckHealRay()
