@@ -38,7 +38,7 @@ SWEP.Primary.NumShots = 3
 SWEP.Primary.Delay = 0.3
 
 SWEP.Primary.ClipSize = 9
-SWEP.Primary.Automatic = false
+SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "pistol"
 SWEP.Primary.Sound = ")weapons/usp/usp_unsil-1.wav"
 GAMEMODE:SetupDefaultClip(SWEP.Primary)

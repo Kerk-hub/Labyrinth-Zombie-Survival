@@ -54,7 +54,7 @@ SWEP.Primary.NumShots = 7
 SWEP.Primary.Delay = 0.9
 
 SWEP.Primary.ClipSize = 6
-SWEP.Primary.Automatic = false
+SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "buckshot"
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
 
