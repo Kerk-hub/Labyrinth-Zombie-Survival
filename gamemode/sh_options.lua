@@ -505,15 +505,15 @@ GM:ShopAdd("chemical", ITEMS_AMMO, 5, nil, "20 chemical vials", nil, "ammo_chemi
 	pl:GiveAmmo(20, "chemical", true)
 end)
 item = GM:ShopAdd(
-	"25mkit",
+	"40mkit",
 	ITEMS_AMMO,
 	5,
 	nil,
-	"25 Medical Kit power",
-	"25 extra power for the Medical Kit.",
+	"40 Medical Kit power",
+	"40 extra power for the Medical Kit.",
 	"ammo_medpower",
 	function(pl)
-		pl:GiveAmmo(25, "Battery", true)
+		pl:GiveAmmo(40, "Battery", true)
 	end
 )
 item.CanMakeFromScrap = true
