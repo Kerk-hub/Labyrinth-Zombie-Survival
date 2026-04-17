@@ -7,8 +7,11 @@ function ENT:Initialize()
 	self:SetRenderFX(kRenderFxDistort)
 
 	self:SetModel("models/props_wasteland/medbridge_post01.mdl")
-	self:PhysicsInitBox(Vector(-16.285, -16.285, -0.29) * self.ModelScale, Vector(16.285, 16.285, 104.29) * self.ModelScale)
-	self:SetCollisionGroup(COLLISION_GROUP_PLAYER)
+
+	self:SetSolid(SOLID_NONE)
+	self:SetMoveType(MOVETYPE_NONE)
+	self:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
+
 	self:SetUseType(SIMPLE_USE)
 
 	self:CollisionRulesChanged()
@@ -29,7 +32,7 @@ function ENT:Initialize()
 		ent:SetAngles(self:GetAngles())
 		ent:Spawn()
 		ent:SetOwner(self)
-		--ent:SetParent(self) -- Prevents collisions
+
 		self:DeleteOnRemove(ent)
 	end
 end
