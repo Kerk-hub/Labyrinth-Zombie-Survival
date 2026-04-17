@@ -220,9 +220,6 @@ function ENT:Use(activator, caller)
 		else
 			self:SetObjectOwner(activator)
 			self:GetObjectOwner():SendDeployableClaimedMessage(self)
-			if not activator:HasWeapon("weapon_zs_gunturretcontrol") then
-				activator:Give("weapon_zs_gunturretcontrol")
-			end
 		end
 	end
 end

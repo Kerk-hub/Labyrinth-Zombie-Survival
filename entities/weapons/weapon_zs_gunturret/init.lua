@@ -85,11 +85,6 @@ function SWEP:PrimaryAttack()
 		ent.Spread = self.TurretSpread
 		ent.SWEP = self:GetClass()
 
-		if not owner:HasWeapon("weapon_zs_gunturretcontrol") then
-			owner:Give("weapon_zs_gunturretcontrol")
-		end
-		owner:SelectWeapon("weapon_zs_gunturretcontrol")
-
 		if self:GetPrimaryAmmoCount() <= 0 then
 			owner:StripWeapon(self:GetClass())
 		end
