@@ -773,7 +773,8 @@ GM:ShopAdd("targetingvisiii", ITEMS_TRINKETS, 50, "trinket_targetingvisoriii").S
 	TRINKETS_OFFENSIVE
 GM:ShopAdd("eodvest", ITEMS_TRINKETS, 50, "trinket_eodvest").SubCategory = TRINKETS_DEFENSIVE
 GM:ShopAdd("composite", ITEMS_TRINKETS, 50, "trinket_composite").SubCategory = TRINKETS_DEFENSIVE
--- GM:ShopAdd("arsenalpack", ITEMS_TRINKETS, 50, "trinket_arsenalpack").SubCategory = TRINKETS_SUPPORT
+--GM:ShopAdd("arsenalpack", ITEMS_TRINKETS, 50, "trinket_arsenalpack").SubCategory =
+	TRINKETS_SUPPORT
 GM:ShopAdd("resupplypack", ITEMS_TRINKETS, 50, "trinket_resupplypack").SubCategory =
 	TRINKETS_SUPPORT
 GM:ShopAdd("promanifest", ITEMS_TRINKETS, 50, "trinket_promanifest").SubCategory =
