@@ -19,7 +19,7 @@ SWEP.Primary.Damage = 46
 SWEP.Primary.NumShots = 1
 
 SWEP.Primary.ClipSize = 27
-SWEP.Primary.Automatic = false
+SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "pulse"
 SWEP.Primary.DefaultClip = 27
 
