@@ -894,7 +894,7 @@ GM.HonorableMentions[HM_USEFULTOOPPOSITE] = {
 	Color = COLOR_RED,
 }
 GM.HonorableMentions[HM_STUPID] = {
-	Name = "Natural Selection",
+	Name = "Certified Kliener",
 	String = "%s got killed %d feet from a zombie spawn",
 	Callback = genericcallback,
 	Color = COLOR_RED,
