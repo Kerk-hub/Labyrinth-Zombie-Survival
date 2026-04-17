@@ -8,6 +8,7 @@ function ENT:Initialize()
 
 	self:SetModel("models/props_wasteland/medbridge_post01.mdl")
 	self:PhysicsInitBox(Vector(-16.285, -16.285, -0.29) * self.ModelScale, Vector(16.285, 16.285, 104.29) * self.ModelScale)
+	self:SetCollisionGroup(COLLISION_GROUP_PLAYER)
 	self:SetUseType(SIMPLE_USE)
 
 	self:CollisionRulesChanged()
@@ -15,11 +16,9 @@ function ENT:Initialize()
 	local phys = self:GetPhysicsObject()
 	if phys:IsValid() then
 		phys:EnableMotion(false)
-		phys:EnableCollisions(false)
 		phys:Wake()
 	end
 
-	self:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
 	self:SetSigilHealthBase(self.MaxHealth)
 	self:SetSigilHealthRegen(self.HealthRegen)
 	self:SetSigilLastDamaged(0)

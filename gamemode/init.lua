@@ -4976,3 +4976,27 @@ net.Receive("zs_nestspec", function(len, sender)
 		sender:SpectateEntity(nest)
 	end
 end)
+
+
+hook.Add("ShouldCollide", "ZS_SigilBlockZombiesOnly", function(ent1, ent2)
+
+	if not IsValid(ent1) or not IsValid(ent2) then return end
+
+	local sigil = nil
+	local other = nil
+
+	if ent1:GetClass() == "prop_obj_sigil" then
+		sigil = ent1
+		other = ent2
+	elseif ent2:GetClass() == "prop_obj_sigil" then
+		sigil = ent2
+		other = ent1
+	else
+		return
+	end
+
+	if other:IsPlayer() then
+		return other:Team() == TEAM_UNDEAD
+	end
+
+end)
