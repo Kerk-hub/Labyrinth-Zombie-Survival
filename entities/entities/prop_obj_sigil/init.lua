@@ -8,9 +8,10 @@ function ENT:Initialize()
 
 	self:SetModel("models/props_wasteland/medbridge_post01.mdl")
 
-	self:SetSolid(SOLID_NONE)
+	self:SetSolid(SOLID_BBOX)  
 	self:SetMoveType(MOVETYPE_NONE)
 	self:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
+	self:CollisionRulesChanged()
 
 	self:SetUseType(SIMPLE_USE)
 
