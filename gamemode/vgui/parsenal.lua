@@ -362,7 +362,7 @@ function GM:AttachKillicon(kitbl, itempan, mdlframe, ammo, missing_skill)
 	end
 end
 
-function GM:AddShopItem(list, i, tab, issub, nopointshop)
+function GM:ShopAdd(list, i, tab, issub, nopointshop)
 	local screenscale = BetterScreenScale()
 
 	local nottrinkets = tab.Category ~= ITEMS_TRINKETS
@@ -842,7 +842,7 @@ function GM:OpenArsenalMenu()
 
 			for i, tab in ipairs(GAMEMODE.Items) do
 				if tab.PointShop and tab.Category == catid then
-					self:AddShopItem(
+					self:ShopAdd(
 						trinkets and tabpane.Grids[tab.SubCategory] or tabpane.Grid or tabpane.Grids[tab.Tier or 1],
 						i,
 						tab
