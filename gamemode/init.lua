@@ -4591,6 +4591,8 @@ function GM:PlayerSpawn(pl)
 				else
 					pl:Give("weapon_zs_redeemers")
 					pl:Give("weapon_zs_swissarmyknife")
+					pl:Give("weapon_zs_hammer")
+					pl:Give("weapon_zs_medicalkit")
 				end
 			end
 		end
