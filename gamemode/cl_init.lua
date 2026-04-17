@@ -65,9 +65,18 @@ include("cl_zombieescape.lua")
 
 w, h = ScrW(), ScrH()
 
+local PhasePropPromptConsumed = false
+local PhasePropPromptNextCheck = 0
+local PhasePropPromptTouching = false
+local WorthArsenalPromptConsumed = false
+
 MySelf = MySelf or NULL
 hook.Add("InitPostEntity", "GetLocal", function()
 	MySelf = LocalPlayer()
+	PhasePropPromptConsumed = false
+	PhasePropPromptNextCheck = 0
+	PhasePropPromptTouching = false
+	WorthArsenalPromptConsumed = false
 
 	GAMEMODE.HookGetLocal = GAMEMODE.HookGetLocal or function(g) end
 	gamemode.Call("HookGetLocal", MySelf)
@@ -125,7 +134,57 @@ local TEXT_ALIGN_BOTTOM_REAL = TEXT_ALIGN_BOTTOM_REAL
 
 local TEAM_HUMAN = TEAM_HUMAN
 local TEAM_UNDEAD = TEAM_UNDEAD
+local IN_ZOOM = IN_ZOOM
 local translate = translate
+
+local function GetPhasePropBind()
+	local bind = input.LookupBinding("+zoom")
+	if bind and bind ~= "" then
+		return string.upper(bind)
+	end
+
+	return "ZOOM"
+end
+
+local function ShouldShowPhasePropPrompt()
+	if PhasePropPromptConsumed then
+		return false
+	end
+
+	if not MySelf:IsValid() then
+		return false
+	end
+
+	if MySelf:KeyDown(IN_ZOOM) then
+		PhasePropPromptConsumed = true
+		return false
+	end
+
+	if not MySelf:Alive() or MySelf:Team() ~= TEAM_HUMAN or GAMEMODE.ZombieEscape then
+		return false
+	end
+
+	local ct = CurTime()
+	if ct >= PhasePropPromptNextCheck then
+		PhasePropPromptNextCheck = ct + 0.15
+		PhasePropPromptTouching = false
+
+		local mins, maxs = MySelf:WorldSpaceAABB()
+		mins.x = mins.x + 1
+		mins.y = mins.y + 1
+		maxs.x = maxs.x - 1
+		maxs.y = maxs.y - 1
+
+		for _, ent in pairs(ents.FindInBox(mins, maxs)) do
+			if ent:IsValid() and ent ~= MySelf and ent:IsNailed() then
+				PhasePropPromptTouching = true
+				break
+			end
+		end
+	end
+
+	return PhasePropPromptTouching
+end
 
 local COLOR_PURPLE = COLOR_PURPLE
 local COLOR_GRAY = COLOR_GRAY
@@ -1087,12 +1146,26 @@ function GM:HumanHUD(screenscale)
 		)
 	end
 
-	if gamemode.Call("PlayerCanPurchase", MySelf) then
+	local hinty = screenscale * 135
+
+	if ShouldShowPhasePropPrompt() then
+		draw_SimpleTextBlurry(
+			translate.Format("press_x_to_phase_through_prop", GetPhasePropBind()),
+			"ZSHUDFontSmall",
+			w * 0.5,
+			hinty,
+			COLOR_GRAY,
+			TEXT_ALIGN_CENTER
+		)
+		hinty = hinty + draw_GetFontHeight("ZSHUDFontSmall")
+	end
+
+	if gamemode.Call("PlayerCanPurchase", MySelf) and not WorthArsenalPromptConsumed then
 		draw_SimpleTextBlurry(
 			translate.Get("press_f2_for_the_points_shop"),
 			"ZSHUDFontSmall",
 			w * 0.5,
-			screenscale * 135,
+			hinty,
 			COLOR_GRAY,
 			TEXT_ALIGN_CENTER
 		)
@@ -2548,6 +2621,7 @@ function GM:ZombieSpawnMenu()
 end
 
 function GM:OpenWorthOrArsenalMenu()
+	WorthArsenalPromptConsumed = true
 	RunConsoleCommand("gm_showteam")
 end
 
@@ -3046,6 +3120,7 @@ function GM:PlayerCanCheckout(pl)
 end
 
 function GM:OpenWorth()
+	WorthArsenalPromptConsumed = true
 	if gamemode.Call("PlayerCanCheckout", MySelf) then
 		MakepWorth()
 	end
