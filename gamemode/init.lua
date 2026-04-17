@@ -1482,7 +1482,7 @@ function GM:Think()
 					pl.OldWeaponToReload = nil
 				end
 
-				if pl:IsSkillActive(SKILL_STOWAGE) and self:GetWave() > 0 and time > (pl.NextResupplyUse or 0) then
+				if self:GetWave() > 0 and time > (pl.NextResupplyUse or 0) then
 					local stockpiling = pl:IsSkillActive(SKILL_STOCKPILE)
 
 					pl.NextResupplyUse = time
