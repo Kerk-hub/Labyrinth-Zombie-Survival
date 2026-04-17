@@ -3022,6 +3022,19 @@ function GM:EntityTakeDamage(ent, dmginfo)
 	local dispatchdamagedisplay = false
 	local entclass = ent:GetClass()
 
+	if
+		string.sub(entclass, 1, 12) == "prop_physics"
+		and ent:GetName() == ""
+		and not ent:IsNailed()
+		and attacker:IsPlayer()
+		and (inflictor.IsMelee or dmginfo:IsDamageType(DMG_CLUB) or dmginfo:IsDamageType(DMG_SLASH))
+	then
+		dmginfo:SetDamage(0)
+		dmginfo:ScaleDamage(0)
+		dmginfo:SetDamageForce(vector_origin)
+		return
+	end
+
 	if ent:IsPlayer() then
 		dispatchdamagedisplay = true
 
@@ -3091,6 +3104,12 @@ function GM:EntityTakeDamage(ent, dmginfo)
 			end
 		end
 	elseif ent.PropHealth then -- A prop that was invulnerable and converted to vulnerable.
+		if not ent:IsNailed() then
+			dmginfo:SetDamage(0)
+			dmginfo:ScaleDamage(0)
+			return
+		end
+
 		if
 			ent._PROPBROKEN
 			or self.NoPropDamageFromHumanMelee
