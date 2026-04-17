@@ -2,6 +2,16 @@ local meta = FindMetaTable("Player")
 local P_Team = meta.Team
 
 local DMG_TAKE_BLEED = DMG_SLASH + DMG_CLUB + DMG_BULLET + DMG_BUCKSHOT + DMG_CRUSH
+local NON_ZOMBIE_DAMAGE_CAP = 50
+
+local function ClampNonZombieDamage(attacker, dmginfo)
+	if dmginfo:GetDamage() <= NON_ZOMBIE_DAMAGE_CAP or attacker:IsValidLivingZombie() then
+		return
+	end
+
+	dmginfo:SetDamage(NON_ZOMBIE_DAMAGE_CAP)
+end
+
 function meta:ProcessDamage(dmginfo)
 	if not self:IsValidLivingPlayer() then
 		return
@@ -111,13 +121,18 @@ function meta:ProcessDamage(dmginfo)
 			end
 		end
 
-		return not dmgbypass and self:CallZombieFunction1("ProcessDamage", dmginfo)
+		local handled = not dmgbypass and self:CallZombieFunction1("ProcessDamage", dmginfo)
+		ClampNonZombieDamage(attacker, dmginfo)
+		return handled
 	end
 
-	-- Opted for multiplicative.
-	if attacker == self and dmgtype ~= DMG_CRUSH and dmgtype ~= DMG_FALL and self.SelfDamageMul then
-		dmginfo:SetDamage(dmginfo:GetDamage() * self.SelfDamageMul)
+	if attacker == self and dmgtype ~= DMG_CRUSH and dmgtype ~= DMG_FALL then
+		dmginfo:SetDamage(0)
+		dmginfo:ScaleDamage(0)
+		dmginfo:SetDamageForce(vector_origin)
+		return
 	end
+
 	if bit.band(dmgtype, DMG_ALWAYSGIB) ~= 0 and self.ExplosiveDamageTakenMul then
 		dmginfo:SetDamage(dmginfo:GetDamage() * self.ExplosiveDamageTakenMul)
 	end
@@ -292,6 +307,8 @@ function meta:ProcessDamage(dmginfo)
 	then
 		self:SetPhantomHealth(math.min(self:GetPhantomHealth() + dmginfo:GetDamage() / 2, self:GetMaxHealth()))
 	end
+
+	ClampNonZombieDamage(attacker, dmginfo)
 
 	if dmginfo:GetDamage() > 0 and not self:HasGodMode() then
 		self.NextRegenTrinket = CurTime() + 12
@@ -1029,7 +1046,7 @@ function meta:Resupply(owner, obj)
 	end
 
 	local stockpiling = self:IsSkillActive(SKILL_STOCKPILE)
-	local stowage = self:IsSkillActive(SKILL_STOWAGE)
+	local stowage = true
 
 	if (stowage and (self.StowageCaches or 0) <= 0) or (not stowage and CurTime() < (self.NextResupplyUse or 0)) then
 		self:CenterNotify(COLOR_RED, translate.ClientGet(self, "no_ammo_here"))
@@ -1329,6 +1346,8 @@ function meta:DoHulls(classid, teamid)
 		end
 	end
 
+	self:SetCollisionGroup(self.NoCollideAll and COLLISION_GROUP_DEBRIS_TRIGGER or COLLISION_GROUP_PLAYER)
+
 	net.Start("zs_dohulls")
 	net.WriteEntity(self)
 	net.WriteUInt(classid, 8)
@@ -1624,13 +1643,18 @@ local function nocollidetimer(self, timername)
 			end
 		end
 
-		self:SetCollisionGroup(COLLISION_GROUP_PLAYER)
+		self:SetCollisionGroup(self.NoCollideAll and COLLISION_GROUP_DEBRIS_TRIGGER or COLLISION_GROUP_PLAYER)
 	end
 
 	timer.Remove(timername)
 end
 
 function meta:TemporaryNoCollide(force)
+	if self.NoCollideAll then
+		self:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
+		return
+	end
+
 	if self:GetCollisionGroup() ~= COLLISION_GROUP_PLAYER and not force then
 		return
 	end
@@ -1648,7 +1672,7 @@ function meta:TemporaryNoCollide(force)
 		end
 	end
 
-	self:SetCollisionGroup(COLLISION_GROUP_PLAYER)
+	self:SetCollisionGroup(self.NoCollideAll and COLLISION_GROUP_DEBRIS_TRIGGER or COLLISION_GROUP_PLAYER)
 end
 
 function meta:PlayEyePainSound()

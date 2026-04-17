@@ -366,7 +366,6 @@ function GM:ShopAdd(list, i, tab, issub, nopointshop)
 	local screenscale = BetterScreenScale()
 
 	local nottrinkets = tab.Category ~= ITEMS_TRINKETS
-	local missing_skill = tab.SkillRequirement and not MySelf:IsSkillActive(tab.SkillRequirement)
 	local wid = 280
 
 	local itempan = vgui.Create("DButton")
@@ -415,7 +414,7 @@ function GM:ShopAdd(list, i, tab, issub, nopointshop)
 		local kitbl =
 			killicon.Get(GAMEMODE.ZSInventoryItemData[tab.SWEP] and "weapon_zs_craftables" or tab.SWEP or tab.Model)
 		if kitbl then
-			self:AttachKillicon(kitbl, itempan, mdlframe, tab.Category == ITEMS_AMMO, missing_skill)
+			self:AttachKillicon(kitbl, itempan, mdlframe, tab.Category == ITEMS_AMMO)
 		elseif tab.Model then
 			if tab.Model then
 				local mdlpanel = vgui.Create("DModelPanel", mdlframe)
@@ -436,25 +435,17 @@ function GM:ShopAdd(list, i, tab, issub, nopointshop)
 	local name = tab.Name or ""
 	local namelab = EasyLabel(itempan, name, "ZSHUDFontSmaller", COLOR_WHITE)
 	namelab:SetPos(12 * screenscale, itempan:GetTall() * (nottrinkets and 0.8 or 0.7) - namelab:GetTall() * 0.5)
-	if missing_skill then
-		namelab:SetAlpha(30)
-	end
 	itempan.NameLabel = namelab
 
 	local alignri = (issub and (320 + 32) or (nopointshop and 32 or 20)) * screenscale
 
 	local pricelabel = EasyLabel(itempan, "", "ZSHUDFontTiny")
-	if missing_skill then
-		pricelabel:SetTextColor(COLOR_RED)
-		pricelabel:SetText(GAMEMODE.Skills[tab.SkillRequirement].Name)
-	else
-		local points = math.floor(tab.Price * (MySelf.ArsenalDiscount or 1))
-		local price = tostring(points)
-		if nopointshop then
-			price = tostring(math.ceil(self:PointsToScrap(tab.Price)))
-		end
-		pricelabel:SetText(price .. (nopointshop and " Scrap" or " Points"))
+	local points = math.floor(tab.Price * (MySelf.ArsenalDiscount or 1))
+	local price = tostring(points)
+	if nopointshop then
+		price = tostring(math.ceil(self:PointsToScrap(tab.Price)))
 	end
+	pricelabel:SetText(price .. (nopointshop and " Scrap" or " Points"))
 	pricelabel:SizeToContents()
 	pricelabel:AlignRight(alignri)
 
@@ -473,7 +464,7 @@ function GM:ShopAdd(list, i, tab, issub, nopointshop)
 		itempan:GetTall() * (nottrinkets and 0.15 or 0.3) - pricelabel:GetTall() * 0.5
 	)
 
-	if missing_skill or tab.NoClassicMode and isclassic or tab.NoZombieEscape and GAMEMODE.ZombieEscape then
+	if tab.NoClassicMode and isclassic or tab.NoZombieEscape and GAMEMODE.ZombieEscape then
 		itempan:SetAlpha(160)
 	end
 

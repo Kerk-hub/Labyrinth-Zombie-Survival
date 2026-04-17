@@ -162,27 +162,13 @@ function ENT:DrawTranslucent()
 				)
 			end
 
-			if self:GetMaxRepairs() > 0 or self:GetMaxNailHealth() > 0 then
-				local repairs = self:GetRepairs()
-				local mrps = self:GetMaxRepairs()
-
-				surface.SetDrawColor(0, 0, 0, 210 * vis)
-				surface.DrawRect(x - 1, y, mrps/5 + mrps/50 + 1, hei)
-
-				for i = 0, repairs, 200 do
-					local val = math.Clamp(repairs - i, 0, 200)
-
-					surface.SetDrawColor(100, 170, 215, 240 * vis)
-					surface.DrawRect(x + 1 + i/5 + i/50, y + 1, val/5, hei - 2)
-				end
-
+			if self:GetMaxNailHealth() > 0 then
 				local mu = math.Clamp(nhp / mnhp, 0, 1)
 				local green = mu * 200
 				colNail.r = 200 - green
 				colNail.g = green
 				colNail.a = 240 * vis
 
-				y = y + hei + 3
 				hei = 8
 				x = wid * -0.5 + 2
 

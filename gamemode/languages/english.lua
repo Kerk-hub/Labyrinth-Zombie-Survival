@@ -121,7 +121,8 @@ LANGUAGE.wave_x_of_y = "Wave %d of %d"
 LANGUAGE.round_x_of_y = "Round %d of %d"
 LANGUAGE.zombie_invasion_in_x = "Zombie invasion in %s"
 LANGUAGE.intermission = "Intermission"
-LANGUAGE.press_f2_for_the_points_shop = "Press F2 for the Points Shop!"
+LANGUAGE.press_f2_for_the_points_shop = "Press F2 or B for the Points Shop!"
+LANGUAGE.press_x_to_phase_through_prop = "Press %s to phase through prop!"
 LANGUAGE.breath = "Breath"
 LANGUAGE.zombie_volunteers = "Zombie Volunteers"
 LANGUAGE.x_will_be_y_soon = "%s will become %s soon!"
@@ -568,7 +569,7 @@ LANGUAGE.help_cont_barricading =
 
 <p>There are a couple of tools that give you the ability to set this up. The one most useful tool is the hammer and nails. This allows you to nail down props which then must have the nails destroyed in order for the zombies to get to you.
 Position the prop you want to nail by pressing USE on it to pick it up. You can hold SPRINT while holding it to lock it in place. Then take your hammer and right click where you want the nail to go. It's a good idea to nail the prop to a sturdy object such as a wall instead of other props.
-Remember, when a prop is nailed it will forward the damage it takes to the nails themselves. You can repair nails by hitting them with the hammer but eventually they'll become too damaged to repair anymore. You can hold SHIFT with the hammer out to get a view of every single nail deployed on your screen as well as the owner.
+Remember, when a prop is nailed it will forward the damage it takes to the nails themselves. You can hold SHIFT with the hammer out to get a view of every single nail deployed on your screen as well as the owner.
 If you think a nail is in a bad place or you'd like to reposition a prop, you can remove nails by pointing at it and pressing RELOAD. Be warned, if you take a nail that doesn't belong to you then you will be given a point penalty.
 One more thing to remember: nails take less damage when they're nailed to bigger props. The bigger the size of the prop, the less damage its nails take and the other way around.</p>
 

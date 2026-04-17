@@ -98,6 +98,7 @@ include("sv_playerspawnentities.lua")
 include("sv_profiling.lua")
 include("sv_sigils.lua")
 include("sv_concommands.lua")
+include("sv_propsearch.lua")
 
 include("itemstocks/sv_stock.lua")
 
@@ -1481,7 +1482,7 @@ function GM:Think()
 					pl.OldWeaponToReload = nil
 				end
 
-				if pl:IsSkillActive(SKILL_STOWAGE) and self:GetWave() > 0 and time > (pl.NextResupplyUse or 0) then
+				if self:GetWave() > 0 and time > (pl.NextResupplyUse or 0) then
 					local stockpiling = pl:IsSkillActive(SKILL_STOCKPILE)
 
 					pl.NextResupplyUse = time
@@ -3021,6 +3022,19 @@ function GM:EntityTakeDamage(ent, dmginfo)
 	local dispatchdamagedisplay = false
 	local entclass = ent:GetClass()
 
+	if
+		string.sub(entclass, 1, 12) == "prop_physics"
+		and ent:GetName() == ""
+		and not ent:IsNailed()
+		and attacker:IsPlayer()
+		and (inflictor.IsMelee or dmginfo:IsDamageType(DMG_CLUB) or dmginfo:IsDamageType(DMG_SLASH))
+	then
+		dmginfo:SetDamage(0)
+		dmginfo:ScaleDamage(0)
+		dmginfo:SetDamageForce(vector_origin)
+		return
+	end
+
 	if ent:IsPlayer() then
 		dispatchdamagedisplay = true
 
@@ -3090,6 +3104,12 @@ function GM:EntityTakeDamage(ent, dmginfo)
 			end
 		end
 	elseif ent.PropHealth then -- A prop that was invulnerable and converted to vulnerable.
+		if not ent:IsNailed() then
+			dmginfo:SetDamage(0)
+			dmginfo:ScaleDamage(0)
+			return
+		end
+
 		if
 			ent._PROPBROKEN
 			or self.NoPropDamageFromHumanMelee

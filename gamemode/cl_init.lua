@@ -65,9 +65,18 @@ include("cl_zombieescape.lua")
 
 w, h = ScrW(), ScrH()
 
+local PhasePropPromptConsumed = false
+local PhasePropPromptNextCheck = 0
+local PhasePropPromptTouching = false
+local WorthArsenalPromptConsumed = false
+
 MySelf = MySelf or NULL
 hook.Add("InitPostEntity", "GetLocal", function()
 	MySelf = LocalPlayer()
+	PhasePropPromptConsumed = false
+	PhasePropPromptNextCheck = 0
+	PhasePropPromptTouching = false
+	WorthArsenalPromptConsumed = false
 
 	GAMEMODE.HookGetLocal = GAMEMODE.HookGetLocal or function(g) end
 	gamemode.Call("HookGetLocal", MySelf)
@@ -125,7 +134,57 @@ local TEXT_ALIGN_BOTTOM_REAL = TEXT_ALIGN_BOTTOM_REAL
 
 local TEAM_HUMAN = TEAM_HUMAN
 local TEAM_UNDEAD = TEAM_UNDEAD
+local IN_ZOOM = IN_ZOOM
 local translate = translate
+
+local function GetPhasePropBind()
+	local bind = input.LookupBinding("+zoom")
+	if bind and bind ~= "" then
+		return string.upper(bind)
+	end
+
+	return "ZOOM"
+end
+
+local function ShouldShowPhasePropPrompt()
+	if PhasePropPromptConsumed then
+		return false
+	end
+
+	if not MySelf:IsValid() then
+		return false
+	end
+
+	if MySelf:KeyDown(IN_ZOOM) then
+		PhasePropPromptConsumed = true
+		return false
+	end
+
+	if not MySelf:Alive() or MySelf:Team() ~= TEAM_HUMAN or GAMEMODE.ZombieEscape then
+		return false
+	end
+
+	local ct = CurTime()
+	if ct >= PhasePropPromptNextCheck then
+		PhasePropPromptNextCheck = ct + 0.15
+		PhasePropPromptTouching = false
+
+		local mins, maxs = MySelf:WorldSpaceAABB()
+		mins.x = mins.x + 1
+		mins.y = mins.y + 1
+		maxs.x = maxs.x - 1
+		maxs.y = maxs.y - 1
+
+		for _, ent in pairs(ents.FindInBox(mins, maxs)) do
+			if ent:IsValid() and ent ~= MySelf and ent:IsNailed() then
+				PhasePropPromptTouching = true
+				break
+			end
+		end
+	end
+
+	return PhasePropPromptTouching
+end
 
 local COLOR_PURPLE = COLOR_PURPLE
 local COLOR_GRAY = COLOR_GRAY
@@ -842,6 +901,9 @@ end
 
 local colPackUp = Color(20, 255, 20, 220)
 local colPackUpNotOwner = Color(255, 240, 10, 220)
+local colPropSearch = Color(160, 160, 160, 220)
+local LocalPropSearchStart = 0
+local LocalPropSearchEnt = NULL
 function GM:DrawPackUpBar(x, y, fraction, notowner, screenscale)
 	local col = notowner and colPackUpNotOwner or colPackUp
 
@@ -866,6 +928,21 @@ function GM:DrawPackUpBar(x, y, fraction, notowner, screenscale)
 		col,
 		TEXT_ALIGN_CENTER
 	)
+end
+
+function GM:DrawPropSearchBar(x, y, fraction, screenscale)
+	local maxbarwidth = 270 * screenscale
+	local barheight = 11 * screenscale
+	local barwidth = maxbarwidth * math.Clamp(fraction, 0, 1)
+	local startx = x - maxbarwidth * 0.5
+
+	surface_SetDrawColor(0, 0, 0, 220)
+	surface_DrawRect(startx, y, maxbarwidth, barheight)
+	surface_SetDrawColor(colPropSearch)
+	surface_DrawRect(startx + 3, y + 3, barwidth - 6, barheight - 6)
+	surface_DrawOutlinedRect(startx, y, maxbarwidth, barheight)
+
+	draw_SimpleText("searching...", "ZSHUDFontSmall", x, y - draw_GetFontHeight("ZSHUDFontSmall") - 2, colPropSearch, TEXT_ALIGN_CENTER)
 end
 
 local colSigilTeleport = Color(125, 215, 255, 220)
@@ -921,12 +998,41 @@ function GM:HumanHUD(screenscale)
 
 	local packup = MySelf.PackUp
 	local sigiltp = MySelf.SigilTeleport
+	local searchstart = MySelf:GetNWFloat("zs_propsearch_start", 0)
+	local searchend = MySelf:GetNWFloat("zs_propsearch_end", 0)
+	local heldprop = MySelf:GetHolding()
+	local propsearched = heldprop:IsValid() and heldprop:GetNWBool("zs_prop_searched", false)
+
+	if heldprop:IsValid() and not propsearched then
+		if LocalPropSearchEnt ~= heldprop then
+			LocalPropSearchEnt = heldprop
+			LocalPropSearchStart = curtime
+		end
+
+		if searchend <= curtime and LocalPropSearchStart > 0 then
+			searchstart = LocalPropSearchStart
+			searchend = LocalPropSearchStart + 3
+		end
+	else
+		LocalPropSearchEnt = NULL
+		LocalPropSearchStart = 0
+		searchstart = 0
+		searchend = 0
+	end
+
 	if packup and packup:IsValid() then
 		self:DrawPackUpBar(
 			w * 0.5,
 			h * 0.55,
 			1 - packup:GetTimeRemaining() / packup:GetMaxTime(),
 			packup:GetNotOwner(),
+			screenscale
+		)
+	elseif searchend > curtime and searchstart > 0 then
+		self:DrawPropSearchBar(
+			w * 0.5,
+			h * 0.55,
+			1 - (searchend - curtime) / math.max(searchend - searchstart, 0.001),
 			screenscale
 		)
 	elseif sigiltp and sigiltp:IsValid() then
@@ -1040,12 +1146,26 @@ function GM:HumanHUD(screenscale)
 		)
 	end
 
-	if gamemode.Call("PlayerCanPurchase", MySelf) then
+	local hinty = screenscale * 135
+
+	if ShouldShowPhasePropPrompt() then
+		draw_SimpleTextBlurry(
+			translate.Format("press_x_to_phase_through_prop", GetPhasePropBind()),
+			"ZSHUDFontSmall",
+			w * 0.5,
+			hinty,
+			COLOR_GRAY,
+			TEXT_ALIGN_CENTER
+		)
+		hinty = hinty + draw_GetFontHeight("ZSHUDFontSmall")
+	end
+
+	if gamemode.Call("PlayerCanPurchase", MySelf) and not WorthArsenalPromptConsumed then
 		draw_SimpleTextBlurry(
 			translate.Get("press_f2_for_the_points_shop"),
 			"ZSHUDFontSmall",
 			w * 0.5,
-			screenscale * 135,
+			hinty,
 			COLOR_GRAY,
 			TEXT_ALIGN_CENTER
 		)
@@ -2500,6 +2620,11 @@ function GM:ZombieSpawnMenu()
 	panel:OpenMenu()
 end
 
+function GM:OpenWorthOrArsenalMenu()
+	WorthArsenalPromptConsumed = true
+	RunConsoleCommand("gm_showteam")
+end
+
 function GM:PlayerBindPress(pl, bind, wasin)
 	if bind == "gmod_undo" or bind == "undo" then
 		RunConsoleCommand("+zoom")
@@ -2519,6 +2644,14 @@ function GM:PlayerBindPress(pl, bind, wasin)
 			self:ToggleZombieVision()
 		end
 	end
+end
+
+function GM:PlayerButtonDown(pl, button)
+	if pl ~= MySelf or button ~= KEY_B or gui.IsGameUIVisible() or gui.IsConsoleVisible() or vgui.GetKeyboardFocus() then
+		return
+	end
+
+	self:OpenWorthOrArsenalMenu()
 end
 
 function GM:_ShouldDrawLocalPlayer(pl)
@@ -2987,6 +3120,7 @@ function GM:PlayerCanCheckout(pl)
 end
 
 function GM:OpenWorth()
+	WorthArsenalPromptConsumed = true
 	if gamemode.Call("PlayerCanCheckout", MySelf) then
 		MakepWorth()
 	end

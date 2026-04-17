@@ -161,7 +161,7 @@ GM:WorthAdd("stbbr", ITEMS_GUNS, 45, "weapon_zs_stubber")
 GM:WorthAdd("crklr", ITEMS_GUNS, 45, "weapon_zs_crackler")
 GM:WorthAdd("sling", ITEMS_GUNS, 45, "weapon_zs_slinger")
 GM:WorthAdd("z9000", ITEMS_GUNS, 45, "weapon_zs_z9000")
-GM:WorthAdd("minelayer", ITEMS_GUNS, 60, "weapon_zs_minelayer")
+GM:WorthAdd("minelayer", ITEMS_GUNS, 45, "weapon_zs_minelayer")
 
 GM:WorthAdd("2pcp", ITEMS_AMMO, 15, nil, "28 pistol ammo", nil, "ammo_pistol", function(pl)
 	pl:GiveAmmo(28, "pistol", true)
@@ -277,6 +277,7 @@ item = GM:WorthAdd(
 item.Countables = "prop_gunturret_buckshot"
 item.NoClassicMode = true
 item.SkillRequirement = SKILL_U_BLASTTURRET
+--[[
 item = GM:WorthAdd("repairfield", ITEMS_DEPLOYABLES, 60, "weapon_zs_repairfield", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_repairfield")
 	pl:GiveAmmo(1, "repairfield")
@@ -284,6 +285,7 @@ item = GM:WorthAdd("repairfield", ITEMS_DEPLOYABLES, 60, "weapon_zs_repairfield"
 end)
 item.Countables = "prop_repairfield"
 item.NoClassicMode = true
+]]
 item = GM:WorthAdd("zapper", ITEMS_DEPLOYABLES, 75, "weapon_zs_zapper", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_zapper")
 	pl:GiveAmmo(1, "zapper")
@@ -386,8 +388,10 @@ item.NoClassicMode = true
 item.SkillRequirement = SKILL_U_CORRUPTEDFRAGMENT
 item = GM:WorthAdd("medcloud", ITEMS_OTHER, 25, "weapon_zs_mediccloudbomb")
 item.SkillRequirement = SKILL_U_MEDICCLOUD
+--[[
 item = GM:WorthAdd("nanitecloud", ITEMS_OTHER, 25, "weapon_zs_nanitecloudbomb")
 item.SkillRequirement = SKILL_U_NANITECLOUD
+]]
 GM:WorthAdd("bloodshot", ITEMS_OTHER, 35, "weapon_zs_bloodshotbomb")
 
 ------------
@@ -421,7 +425,7 @@ end)
 GM:ShopAdd("z9000", ITEMS_GUNS, 15, "weapon_zs_z9000", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_z9000")
 end)
-GM:ShopAdd("minelayer", ITEMS_GUNS, 20, "weapon_zs_minelayer", nil, nil, nil, function(pl)
+GM:ShopAdd("minelayer", ITEMS_GUNS, 15, "weapon_zs_minelayer", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_minelayer")
 end)
 -- Tier 2
@@ -505,20 +509,20 @@ GM:ShopAdd("chemical", ITEMS_AMMO, 5, nil, "20 chemical vials", nil, "ammo_chemi
 	pl:GiveAmmo(20, "chemical", true)
 end)
 item = GM:ShopAdd(
-	"25mkit",
+	"40mkit",
 	ITEMS_AMMO,
 	5,
 	nil,
-	"25 Medical Kit power",
-	"25 extra power for the Medical Kit.",
+	"40 Medical Kit power",
+	"40 extra power for the Medical Kit.",
 	"ammo_medpower",
 	function(pl)
-		pl:GiveAmmo(25, "Battery", true)
+		pl:GiveAmmo(40, "Battery", true)
 	end
 )
 item.CanMakeFromScrap = true
-item = GM:ShopAdd("nail", ITEMS_AMMO, 2, nil, "Nail", "It's just one nail.", "ammo_nail", function(pl)
-	pl:GiveAmmo(3, "GaussEnergy", true)
+item = GM:ShopAdd("nail", ITEMS_AMMO, 5, nil, "Nail", "It's just one nail.", "ammo_nail", function(pl)
+	pl:GiveAmmo(16, "GaussEnergy", true)
 end)
 item.NoClassicMode = true
 item.CanMakeFromScrap = true
@@ -631,6 +635,7 @@ item = GM:ShopAdd("rollermine", ITEMS_DEPLOYABLES, 35, "weapon_zs_rollermine")
 item.Countables = "prop_rollermine"
 item.SkillRequirement = SKILL_U_ROLLERMINE
 
+--[[
 item = GM:ShopAdd("repairfield", ITEMS_DEPLOYABLES, 55, "weapon_zs_repairfield", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_repairfield")
 	pl:GiveAmmo(1, "repairfield")
@@ -638,6 +643,7 @@ item = GM:ShopAdd("repairfield", ITEMS_DEPLOYABLES, 55, "weapon_zs_repairfield",
 end)
 item.Countables = "prop_repairfield"
 item.NoClassicMode = true
+]]
 item = GM:ShopAdd("zapper", ITEMS_DEPLOYABLES, 50, "weapon_zs_zapper", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_zapper")
 	pl:GiveAmmo(1, "zapper")
@@ -799,8 +805,10 @@ item.NoClassicMode = true
 item.SkillRequirement = SKILL_U_CORRUPTEDFRAGMENT
 item = GM:ShopAdd("medcloud", ITEMS_OTHER, 40, "weapon_zs_mediccloudbomb")
 item.SkillRequirement = SKILL_U_MEDICCLOUD
+--[[
 item = GM:ShopAdd("nanitecloud", ITEMS_OTHER, 40, "weapon_zs_nanitecloudbomb")
 item.SkillRequirement = SKILL_U_NANITECLOUD
+]]
 
 -- These are the honorable mentions that come at the end of the round.
 
