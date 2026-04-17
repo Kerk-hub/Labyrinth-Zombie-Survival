@@ -29,7 +29,7 @@ SWEP.UseHands = true
 SWEP.WalkSpeed = SPEED_NORMAL
 
 SWEP.MeleeDamage = 45
-SWEP.MeleeRange = 53
+SWEP.MeleeRange = 58
 SWEP.MeleeSize = 1.15
 
 SWEP.Primary.Delay = 1.2
