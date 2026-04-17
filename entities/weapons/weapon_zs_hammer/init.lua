@@ -203,7 +203,7 @@ function SWEP:SecondaryAttack()
 
 		owner:DoAnimationEvent(ACT_HL2MP_GESTURE_RANGE_ATTACK_MELEE)
 
-		self:SetNextPrimaryFire(CurTime() + 1)
+		self:SetNextPrimaryFire(CurTime() + 0.5)
 		self:TakePrimaryAmmo(1)
 
 		local nail = ents.Create("prop_nail")
