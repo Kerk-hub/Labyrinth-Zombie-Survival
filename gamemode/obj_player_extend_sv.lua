@@ -126,10 +126,13 @@ function meta:ProcessDamage(dmginfo)
 		return handled
 	end
 
-	-- Opted for multiplicative.
-	if attacker == self and dmgtype ~= DMG_CRUSH and dmgtype ~= DMG_FALL and self.SelfDamageMul then
-		dmginfo:SetDamage(dmginfo:GetDamage() * self.SelfDamageMul)
+	if attacker == self and dmgtype ~= DMG_CRUSH and dmgtype ~= DMG_FALL then
+		dmginfo:SetDamage(0)
+		dmginfo:ScaleDamage(0)
+		dmginfo:SetDamageForce(vector_origin)
+		return
 	end
+
 	if bit.band(dmgtype, DMG_ALWAYSGIB) ~= 0 and self.ExplosiveDamageTakenMul then
 		dmginfo:SetDamage(dmginfo:GetDamage() * self.ExplosiveDamageTakenMul)
 	end
