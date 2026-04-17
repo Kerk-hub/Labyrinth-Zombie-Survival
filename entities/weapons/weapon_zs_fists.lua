@@ -10,7 +10,7 @@ SWEP.UseHands = true
 
 SWEP.HoldType = "fist"
 
-SWEP.WalkSpeed = SPEED_NORMAL
+SWEP.WalkSpeed = SPEED_FASTEST
 SWEP.OldWalkSpeed = 0
 
 SWEP.MeleeDamage = 15
