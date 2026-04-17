@@ -1,4 +1,5 @@
 AddCSLuaFile()
+DEFINE_BASECLASS("weapon_zs_basemelee")
 
 SWEP.PrintName = "Knife"
 SWEP.Description = "A small bladed weapon that deals double damage to the back."
@@ -23,6 +24,7 @@ SWEP.MeleeSize = 0.875
 SWEP.WalkSpeed = SPEED_FASTEST
 
 SWEP.Primary.Delay = 0.85
+SWEP.Secondary.Automatic = false
 
 SWEP.HitDecal = "Manhackcut"
 
@@ -37,6 +39,10 @@ SWEP.NoHitSoundFlesh = true
 SWEP.AllowQualityWeapons = true
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.085)
+GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Spring' Knife", "Right click while in the air to keep yourself in the air longer 5 second cooldown. Deals less damage.", function(wept)
+	wept.SwissAltRightClick = true
+	wept.MeleeDamage = wept.MeleeDamage * 0.8
+end)
 
 function SWEP:PlaySwingSound()
 	self:EmitSound("weapons/knife/knife_slash"..math.random(2)..".wav")
@@ -48,6 +54,31 @@ end
 
 function SWEP:PlayHitFleshSound()
 	self:EmitSound("weapons/knife/knife_hit"..math.random(4)..".wav")
+end
+
+function SWEP:SecondaryAttack()
+	if self.Branch ~= 1 then return end
+
+	local owner = self:GetOwner()
+	if not owner:IsValid() then return end
+	if self:GetNextSecondaryFire() > CurTime() then return end
+
+	if SERVER then
+		owner:SetVelocity(owner:GetForward() * 50 + Vector(0, 0, 200))
+		self:EmitSound("Weapon_Flashbang.Bounce")
+	end
+
+	self:SetNextSecondaryFire(CurTime() + 5)
+	self.SwissAltBeeped = false
+end
+
+function SWEP:Think()
+	if self.Branch == 1 and self:GetNextSecondaryFire() > 0 and self:GetNextSecondaryFire() <= CurTime() and not self.SwissAltBeeped then
+		self.SwissAltBeeped = true
+		self:EmitSound("buttons/button1.wav", 75, 100)
+	end
+
+	BaseClass.Think(self)
 end
 
 function SWEP:OnMeleeHit(hitent, hitflesh, tr)
