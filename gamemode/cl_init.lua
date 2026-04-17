@@ -1781,6 +1781,22 @@ function GM:CreateNonScaleFonts()
 	surface.CreateFont("DefaultFontLargeAA", { font = "tahoma", size = 16, weight = 0, antialias = true })
 	surface.CreateFont("DefaultFontLargest", { font = "tahoma", size = 22, weight = 0, antialias = false })
 	surface.CreateFont("DefaultFontLargestAA", { font = "tahoma", size = 22, weight = 0, antialias = true })
+
+	-- Fixed-size menu header fonts so HUD scale does not resize menu typography.
+	surface.CreateFont("ZSMenuHeaderFontFixed", {
+		font = "Shelten",
+		size = 46,
+		weight = 0,
+		antialias = true,
+		outline = true
+	})
+	surface.CreateFont("ZSMenuHeaderFontSmallFixed", {
+		font = "Shelten",
+		size = 32,
+		weight = 0,
+		antialias = true,
+		outline = true
+	})
 end
 
 function GM:CreateScalingFonts()
@@ -1789,6 +1805,28 @@ function GM:CreateScalingFonts()
 	local fontoutline = true
 
 	local screenscale = BetterScreenScale()
+	local fontfamily = GAMEMODE.UseSheltenHUDFont and "Shelten" or fontfamily
+
+	surface.CreateLegacyFont(
+		"Shelten",
+		screenscale * (38 + fontsizeadd),
+		fontweight,
+		fontaa,
+		false,
+		"ZSMenuHeaderFont",
+		fontshadow,
+		fontoutline
+	)
+	surface.CreateLegacyFont(
+		"Shelten",
+		screenscale * (24 + fontsizeadd),
+		fontweight,
+		fontaa,
+		false,
+		"ZSMenuHeaderFontSmall",
+		fontshadow,
+		fontoutline
+	)
 
 	surface.CreateLegacyFont("csd", screenscale * 42, 100, true, false, "zsdeathnoticecs", false, false)
 	surface.CreateLegacyFont("HL2MP", screenscale * 42, 100, true, false, "zsdeathnotice", false, false)

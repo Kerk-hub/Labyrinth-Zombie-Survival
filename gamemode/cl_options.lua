@@ -304,6 +304,44 @@ cvars.AddChangeCallback("labyrinth_zs_fonteffects", function(cvar, oldvalue, new
 	GAMEMODE.FontEffects = tonumber(newvalue) == 1
 end)
 
+GM.UseSheltenHUDFont = CreateClientConVar("labyrinth_zs_hudfontshelten", "0", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_hudfontshelten", function(cvar, oldvalue, newvalue)
+	GAMEMODE.UseSheltenHUDFont = tonumber(newvalue) == 1
+
+	if not GAMEMODE.CreateScalingFonts then
+		return
+	end
+
+	GAMEMODE:CreateScalingFonts()
+
+	if GAMEMODE.EmptyCachedFontHeights then
+		GAMEMODE:EmptyCachedFontHeights()
+	end
+
+	if GAMEMODE.HealthHUD and GAMEMODE.HealthHUD:IsValid() then
+		GAMEMODE.HealthHUD:InvalidateLayout()
+	end
+	if GAMEMODE.GameStatePanel and GAMEMODE.GameStatePanel:IsValid() then
+		GAMEMODE.GameStatePanel:InvalidateLayout()
+	end
+	if GAMEMODE.TopNotificationHUD and GAMEMODE.TopNotificationHUD:IsValid() then
+		GAMEMODE.TopNotificationHUD:InvalidateLayout()
+	end
+	if GAMEMODE.CenterNotificationHUD and GAMEMODE.CenterNotificationHUD:IsValid() then
+		GAMEMODE.CenterNotificationHUD:InvalidateLayout()
+	end
+	if GAMEMODE.XPHUD and GAMEMODE.XPHUD:IsValid() then
+		GAMEMODE.XPHUD:InvalidateLayout()
+	end
+	if GAMEMODE.StatusHUD and GAMEMODE.StatusHUD:IsValid() then
+		GAMEMODE.StatusHUD:InvalidateLayout()
+	end
+
+	if GAMEMODE.ScoreboardRebuild then
+		GAMEMODE:ScoreboardRebuild()
+	end
+end)
+
 GM.HidePacks = CreateClientConVar("labyrinth_zs_hidepacks", "0", true, false):GetBool()
 cvars.AddChangeCallback("labyrinth_zs_hidepacks", function(cvar, oldvalue, newvalue)
 	GAMEMODE.HidePacks = tonumber(newvalue) == 1

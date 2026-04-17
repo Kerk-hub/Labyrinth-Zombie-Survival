@@ -1,7 +1,104 @@
+local colorOptionFrame = Color(12, 14, 18, 245)
+local colorOptionPanel = Color(22, 24, 30, 235)
+local colorOptionPanelAlt = Color(28, 20, 20, 230)
+local colorOptionOutline = Color(76, 40, 40, 210)
+local colorOptionAccent = Color(181, 72, 72)
+local colorOptionText = Color(230, 234, 240)
+local colorOptionSubtext = Color(188, 194, 202)
+
+local function StyleOptionsScrollbar(vbar)
+	if not vbar or not vbar:IsValid() then
+		return
+	end
+
+	vbar:SetHideButtons(true)
+	vbar.Paint = function(self, w, h)
+		draw.RoundedBox(6, 2, 0, w - 4, h, Color(10, 12, 16, 200))
+	end
+	vbar.btnGrip.Paint = function(self, w, h)
+		draw.RoundedBox(6, 1, 0, w - 2, h, Color(165, 76, 76, 235))
+	end
+end
+
+local function StyleOptionsItem(item)
+	if not item or not item:IsValid() then
+		return
+	end
+
+	local classname = item.GetClassName and item:GetClassName() or ""
+
+	if classname == "DCheckBoxLabel" then
+		item:SetTextColor(colorOptionText)
+		item:SetFont("DefaultFontLargeAA")
+		item:SizeToContents()
+		item:SetTall(math.max(item:GetTall(), 30))
+
+		if item.Button and item.Button:IsValid() then
+			item.Button.Paint = function(self, w, h)
+				draw.RoundedBox(4, 0, 0, w, h, Color(14, 16, 20, 255))
+				if self:GetChecked() then
+					draw.RoundedBox(3, 4, 4, w - 8, h - 8, colorOptionAccent)
+				end
+				surface.SetDrawColor(colorOptionOutline)
+				surface.DrawOutlinedRect(0, 0, w, h, 1)
+			end
+		end
+	elseif classname == "DComboBox" then
+		item:SetTall(36)
+		item:SetTextColor(color_black)
+		item:SetFont("DefaultFontLargeAA")
+		item.Paint = function(self, w, h)
+			draw.RoundedBox(6, 0, 0, w, h, Color(236, 239, 244, 245))
+			surface.SetDrawColor(colorOptionAccent)
+			surface.DrawOutlinedRect(0, 0, w, h, 1)
+		end
+	elseif classname == "DNumSlider" then
+		if item.Label and item.Label:IsValid() then
+			item.Label:SetTextColor(colorOptionText)
+			item.Label:SetFont("DefaultFontLargeAA")
+		end
+
+		if item.TextArea and item.TextArea:IsValid() then
+			item.TextArea:SetTextColor(color_black)
+			item.TextArea.Paint = function(self, w, h)
+				draw.RoundedBox(4, 0, 0, w, h, Color(236, 239, 244, 245))
+				surface.SetDrawColor(colorOptionAccent)
+				surface.DrawOutlinedRect(0, 0, w, h, 1)
+				self:DrawTextEntryText(color_black, colorOptionAccent, color_black)
+			end
+		end
+
+		if item.Slider and item.Slider:IsValid() then
+			if item.Slider.Knob then
+				item.Slider.Knob.Paint = function(self, w, h)
+					draw.RoundedBox(6, 0, 0, w, h, colorOptionAccent)
+				end
+			end
+
+			if item.Slider.Paint then
+				item.Slider.Paint = function(self, w, h)
+					draw.RoundedBox(4, 0, h * 0.5 - 3, w, 6, Color(57, 61, 70, 255))
+				end
+			end
+		end
+	elseif classname == "DColorMixer" then
+		item:SetTall(math.max(item:GetTall(), 96))
+		item.Paint = function(self, w, h)
+			draw.RoundedBox(8, 0, 0, w, h, Color(18, 20, 24, 240))
+			surface.SetDrawColor(colorOptionOutline)
+			surface.DrawOutlinedRect(0, 0, w, h, 1)
+		end
+	elseif classname == "DLabel" then
+		item:SetTextColor(colorOptionText)
+		item:SetFont("DefaultFontLargeAA")
+		item:SizeToContents()
+	end
+end
+
 function MakepOptions()
 	PlayMenuOpenSound()
 
-	if pOptions then
+	if pOptions and pOptions:IsValid() then
 		pOptions:SetAlpha(0)
 		pOptions:AlphaTo(255, 0.15, 0)
 		pOptions:SetVisible(true)
@@ -9,28 +106,88 @@ function MakepOptions()
 		return
 	end
 
-	local Window = vgui.Create("DFrame")
-	local wide = math.min(ScrW(), 500)
-	local tall = math.min(ScrH(), 800)
+	pOptions = nil
+
+	local Window = vgui.Create("DEXRoundedFrame")
+	local wide = math.min(ScrW() - 48, math.max(760, BetterScreenScale() * 900))
+	local tall = math.min(ScrH() - 48, math.max(720, BetterScreenScale() * 820))
 	Window:SetSize(wide, tall)
 	Window:Center()
-	Window:SetTitle(" ")
+	Window:SetTitle("Options")
+	Window:SetColor(colorOptionFrame)
+	Window.lblTitle:SetFont("ZSMenuHeaderFontSmallFixed")
+	local oldlayout = Window.PerformLayout
+	Window.PerformLayout = function(me, ...)
+		oldlayout(me, ...)
+		if me.lblTitle and me.lblTitle:IsValid() then
+			me.lblTitle:SetPos(8, 6)
+		end
+	end
+	Window:InvalidateLayout(true)
 	Window:SetDeleteOnClose(false)
 	pOptions = Window
+	Window.OnClose = function()
+		Window:SetVisible(false)
+	end
 
-	local y = 8
+	local shell = vgui.Create("DPanel", Window)
+	shell:Dock(FILL)
+	shell:DockMargin(14, 34, 14, 14)
+	shell.Paint = nil
 
-	local label = EasyLabel(Window, "Options", "ZSScoreBoardTitle", color_white)
-	label:SetPos(wide * 0.5 - label:GetWide() * 0.5, y)
-	y = y + label:GetTall() + 8
+	local sidebar = vgui.Create("DPanel", shell)
+	sidebar:Dock(LEFT)
+	sidebar:SetWide(math.min(235, wide * 0.24))
+	sidebar:DockMargin(0, 28, 0, 28)
+	sidebar.Paint = function(self, w, h)
+		draw.RoundedBox(8, 0, 0, w, h, colorOptionPanelAlt)
+		surface.SetDrawColor(colorOptionAccent)
+		surface.DrawRect(0, 0, w, 6)
+	end
 
-	local list = vgui.Create("DPanelList", pOptions)
+	local title = EasyLabel(sidebar, "Client Settings", "ZSMenuHeaderFontSmallFixed", color_white)
+	title:Dock(TOP)
+	title:DockMargin(12, 18, 12, 0)
+	title:SetWrap(true)
+	title:SetAutoStretchVertical(true)
+
+	local content = vgui.Create("DPanel", shell)
+	content:Dock(FILL)
+	content:DockMargin(14, 0, 0, 0)
+	content.Paint = function(self, w, h)
+		draw.RoundedBox(8, 0, 0, w, h, colorOptionPanel)
+		surface.SetDrawColor(colorOptionOutline)
+		surface.DrawOutlinedRect(0, 0, w, h, 1)
+	end
+
+	local header = vgui.Create("DPanel", content)
+	header:Dock(TOP)
+	header:SetTall(58)
+	header:DockMargin(14, 14, 14, 0)
+	header.Paint = function(self, w, h)
+		draw.RoundedBox(8, 0, 0, w, h, Color(30, 22, 22, 235))
+		surface.SetDrawColor(colorOptionAccent)
+		surface.DrawRect(0, h - 4, w, 4)
+		draw.SimpleText("Preference Matrix", "ZSMenuHeaderFontFixed", 16, 12, colorOptionText, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+	end
+
+	local list = vgui.Create("DPanelList", content)
 	list:EnableVerticalScrollbar()
 	list:EnableHorizontal(false)
-	list:SetSize(wide - 24, tall - y - 12)
-	list:SetPos(12, y)
-	list:SetPadding(8)
-	list:SetSpacing(4)
+	list:Dock(FILL)
+	list:DockMargin(14, 12, 14, 14)
+	list:SetPadding(10)
+	list:SetSpacing(8)
+	list.Paint = function(self, w, h)
+		draw.RoundedBox(8, 0, 0, w, h, Color(16, 18, 22, 220))
+	end
+	StyleOptionsScrollbar(list.VBar)
+
+	local baseAddItem = list.AddItem
+	function list:AddItem(item)
+		StyleOptionsItem(item)
+		baseAddItem(self, item)
+	end
 
 	gamemode.Call("AddExtraOptions", list, Window)
 
@@ -169,6 +326,12 @@ function MakepOptions()
 	check = vgui.Create("DCheckBoxLabel", Window)
 	check:SetText("Enable font effects")
 	check:SetConVar("labyrinth_zs_fonteffects")
+	check:SizeToContents()
+	list:AddItem(check)
+
+	check = vgui.Create("DCheckBoxLabel", Window)
+	check:SetText("Use Shelten for standard ZS HUD font")
+	check:SetConVar("labyrinth_zs_hudfontshelten")
 	check:SizeToContents()
 	list:AddItem(check)
 
