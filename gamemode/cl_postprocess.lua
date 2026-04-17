@@ -1,5 +1,4 @@
-function GM:RenderScreenspaceEffects()
-end
+function GM:RenderScreenspaceEffects() end
 
 GM.PostProcessingEnabled = CreateClientConVar("zs_postprocessing", 1, true, false):GetBool()
 cvars.AddChangeCallback("zs_postprocessing", function(cvar, oldvalue, newvalue)
@@ -26,8 +25,18 @@ cvars.AddChangeCallback("zs_auras", function(cvar, oldvalue, newvalue)
 	GAMEMODE.Auras = tonumber(newvalue) == 1
 end)
 
-GM.AuraColorEmpty = Color(CreateClientConVar("zs_auracolor_empty_r", 255, true, false):GetInt(), CreateClientConVar("zs_auracolor_empty_g", 0, true, false):GetInt(), CreateClientConVar("zs_auracolor_empty_b", 0, true, false):GetInt(), 255)
-GM.AuraColorFull = Color(CreateClientConVar("zs_auracolor_full_r", 20, true, false):GetInt(), CreateClientConVar("zs_auracolor_full_g", 255, true, false):GetInt(), CreateClientConVar("zs_auracolor_full_b", 20, true, false):GetInt(), 255)
+GM.AuraColorEmpty = Color(
+	CreateClientConVar("zs_auracolor_empty_r", 255, true, false):GetInt(),
+	CreateClientConVar("zs_auracolor_empty_g", 0, true, false):GetInt(),
+	CreateClientConVar("zs_auracolor_empty_b", 0, true, false):GetInt(),
+	255
+)
+GM.AuraColorFull = Color(
+	CreateClientConVar("zs_auracolor_full_r", 20, true, false):GetInt(),
+	CreateClientConVar("zs_auracolor_full_g", 255, true, false):GetInt(),
+	CreateClientConVar("zs_auracolor_full_b", 20, true, false):GetInt(),
+	255
+)
 
 cvars.AddChangeCallback("zs_auracolor_empty_r", function(cvar, oldvalue, newvalue)
 	GAMEMODE.AuraColorEmpty.r = math.Clamp(math.ceil(tonumber(newvalue) or 0), 0, 255)
@@ -52,7 +61,6 @@ end)
 cvars.AddChangeCallback("zs_auracolor_full_b", function(cvar, oldvalue, newvalue)
 	GAMEMODE.AuraColorFull.b = math.Clamp(math.ceil(tonumber(newvalue) or 0), 0, 255)
 end)
-
 
 local DrawColorModify = DrawColorModify
 local DrawSharpen = DrawSharpen
@@ -82,7 +90,7 @@ local tColorModDead = {
 	["$pp_colour_brightness"] = -0.02,
 	["$pp_colour_mulr"] = 0,
 	["$pp_colour_mulg"] = 0,
-	["$pp_colour_mulb"] = 0
+	["$pp_colour_mulb"] = 0,
 }
 
 local tColorModHuman = {
@@ -94,7 +102,7 @@ local tColorModHuman = {
 	["$pp_colour_colour"] = 1,
 	["$pp_colour_mulr"] = 0,
 	["$pp_colour_mulg"] = 0,
-	["$pp_colour_mulb"] = 0
+	["$pp_colour_mulb"] = 0,
 }
 
 local tColorModZombie = {
@@ -106,19 +114,19 @@ local tColorModZombie = {
 	["$pp_colour_addb"] = 0,
 	["$pp_colour_mulr"] = 0,
 	["$pp_colour_mulg"] = 0,
-	["$pp_colour_mulb"] = 0
+	["$pp_colour_mulb"] = 0,
 }
 
 local tColorModZombieVision = {
 	["$pp_colour_colour"] = 3,
 	["$pp_colour_brightness"] = -0.1,
 	["$pp_colour_contrast"] = 1,
-	["$pp_colour_mulr"]	= 0,
+	["$pp_colour_mulr"] = 0,
 	["$pp_colour_mulg"] = 0,
 	["$pp_colour_mulb"] = 0,
 	["$pp_colour_addr"] = 0,
 	["$pp_colour_addg"] = 0.1,
-	["$pp_colour_addb"] = 0
+	["$pp_colour_addb"] = 0,
 }
 
 local tColorModNightVision = {
@@ -130,7 +138,7 @@ local tColorModNightVision = {
 	["$pp_colour_mulb"] = 0,
 	["$pp_colour_addr"] = 0,
 	["$pp_colour_addg"] = 0.2,
-	["$pp_colour_addb"] = 0
+	["$pp_colour_addb"] = 0,
 }
 
 local redview = 0
@@ -142,7 +150,9 @@ function GM:_RenderScreenspaceEffects()
 
 	fear = math_Approach(fear, self:CachedFearPower(), FrameTime())
 
-	if not self.PostProcessingEnabled then return end
+	if not self.PostProcessingEnabled then
+		return
+	end
 
 	if self.DrawPainFlash and self.HurtEffect > 0 then
 		DrawSharpen(1, math_min(6, self.HurtEffect * 3))
@@ -158,7 +168,8 @@ function GM:_RenderScreenspaceEffects()
 			if self.m_ZombieVision then
 				DrawColorModify(tColorModZombieVision)
 			else
-				tColorModZombie["$pp_colour_colour"] = math_min(1, 0.25 + math_min(1, (CurTime() - self.LastTimeDead) * 0.5) * 1.75 * fear)
+				tColorModZombie["$pp_colour_colour"] =
+					math_min(1, 0.25 + math_min(1, (CurTime() - self.LastTimeDead) * 0.5) * 1.75 * fear)
 
 				DrawColorModify(tColorModZombie)
 			end
@@ -187,7 +198,10 @@ function GM:_RenderScreenspaceEffects()
 end
 
 function GM:_RenderScene()
-	if (self.m_ZombieVision and MySelf:Team() == TEAM_UNDEAD) or (self.m_NightVision and MySelf:Team() == TEAM_HUMAN and not MySelf:GetStatus("dimvision")) then
+	if
+		(self.m_ZombieVision and MySelf:Team() == TEAM_UNDEAD)
+		or (self.m_NightVision and MySelf:Team() == TEAM_HUMAN and not MySelf:GetStatus("dimvision"))
+	then
 		render_SetLightingMode(1)
 		FullBright = true
 	else
@@ -218,7 +232,9 @@ local colHealthEmpty = GM.AuraColorEmpty
 local colHealthFull = GM.AuraColorFull
 local colHealth = Color(255, 255, 255)
 function GM:DrawHumanIndicators()
-	if MySelf:Team() ~= TEAM_UNDEAD or not self.Auras or self.m_ZombieVision then return end
+	if MySelf:Team() ~= TEAM_UNDEAD or not self.Auras or self.m_ZombieVision then
+		return
+	end
 
 	local eyepos = EyePos()
 	local range, dist, healthfrac, pos, size
@@ -227,9 +243,21 @@ function GM:DrawHumanIndicators()
 		dist = pl:GetPos():DistToSqr(eyepos)
 		if pl:Alive() and dist <= range and (not pl:GetDTBool(DT_PLAYER_BOOL_NECRO) or dist >= 27500) then
 			healthfrac = math_max(pl:Health(), 0) / pl:GetMaxHealth()
-			colHealth.r = math_Approach(colHealthEmpty.r, colHealthFull.r, math_abs(colHealthEmpty.r - colHealthFull.r) * healthfrac)
-			colHealth.g = math_Approach(colHealthEmpty.g, colHealthFull.g, math_abs(colHealthEmpty.g - colHealthFull.g) * healthfrac)
-			colHealth.b = math_Approach(colHealthEmpty.b, colHealthFull.b, math_abs(colHealthEmpty.b - colHealthFull.b) * healthfrac)
+			colHealth.r = math_Approach(
+				colHealthEmpty.r,
+				colHealthFull.r,
+				math_abs(colHealthEmpty.r - colHealthFull.r) * healthfrac
+			)
+			colHealth.g = math_Approach(
+				colHealthEmpty.g,
+				colHealthFull.g,
+				math_abs(colHealthEmpty.g - colHealthFull.g) * healthfrac
+			)
+			colHealth.b = math_Approach(
+				colHealthEmpty.b,
+				colHealthFull.b,
+				math_abs(colHealthEmpty.b - colHealthFull.b) * healthfrac
+			)
 
 			pos = pl:WorldSpaceCenter()
 
@@ -269,7 +297,7 @@ local CModWhiteOut = {
 	["$pp_colour_colour"] = 1,
 	["$pp_colour_mulr"] = 0,
 	["$pp_colour_mulg"] = 0,
-	["$pp_colour_mulb"] = 0
+	["$pp_colour_mulb"] = 0,
 }
 local WhiteOutEnd
 local WhiteOutFadeTime

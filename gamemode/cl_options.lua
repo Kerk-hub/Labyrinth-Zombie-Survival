@@ -9,7 +9,7 @@ GM.ItemCategoryIcons = {
 	[ITEMCAT_DEPLOYABLES] = "icon16/package.png",
 	[ITEMCAT_OTHER] = "icon16/world.png",
 	[ITEMCAT_TRINKETS] = "icon16/ruby.png" --[[,
-	[ITEMCAT_RETURNS] = "icon16/user_delete.png"]]
+	[ITEMCAT_RETURNS] = "icon16/user_delete.png"]],
 }
 
 GM.RemortColors = {
@@ -21,7 +21,7 @@ GM.RemortColors = {
 	[4] = COLOR_GREEN,
 	[3] = COLOR_YELLOW,
 	[2] = COLOR_RORANGE,
-	[1] = COLOR_RED
+	[1] = COLOR_RED,
 }
 
 GM.SpeedToText = {
@@ -44,21 +44,21 @@ GM.AmmoToPurchaseNames = {
 	["pulse"] = "pulseammo",
 	["XBowBolt"] = "crossbowammo",
 	["impactmine"] = "impactmine",
-	["chemical"] = "chemical"
+	["chemical"] = "chemical",
 }
 
 GM.WeaponStatBarVals = {
-	{"MeleeDamage", "Damage", 2, 140, false},
-	{"MeleeRange", "Range", 30, 100, false},
-	{"MeleeSize", "Size", 0.2, 3, false},
+	{ "MeleeDamage", "Damage", 2, 140, false },
+	{ "MeleeRange", "Range", 30, 100, false },
+	{ "MeleeSize", "Size", 0.2, 3, false },
 
-	{"Damage", "Damage", 1, 105, false, "Primary"},
-	{"Delay", "Attack Delay", 0.05, 2, true, "Primary"},
-	{"ClipSize", "Clip Size", 1, 35, false, "Primary"},
+	{ "Damage", "Damage", 1, 105, false, "Primary" },
+	{ "Delay", "Attack Delay", 0.05, 2, true, "Primary" },
+	{ "ClipSize", "Clip Size", 1, 35, false, "Primary" },
 
-	{"ConeMin", "Min Spread", 0, 5, true},
-	{"ConeMax", "Max Spread", 1.5, 7, true},
-	{"WalkSpeed", "Move Speed", 200, 250, false}
+	{ "ConeMin", "Min Spread", 0, 5, true },
+	{ "ConeMax", "Max Spread", 1.5, 7, true },
+	{ "WalkSpeed", "Move Speed", 200, 250, false },
 }
 
 GM.LifeStatsLifeTime = 5
@@ -66,108 +66,139 @@ GM.LifeStatsLifeTime = 5
 GM.RewardIcons = {}
 GM.RewardIcons["weapon_zs_barricadekit"] = "models/props_debris/wood_board05a.mdl"
 
-GM.CrosshairColor = Color(CreateClientConVar("zs_crosshair_colr", "255", true, false):GetInt(), CreateClientConVar("zs_crosshair_colg", "255", true, false):GetInt(), CreateClientConVar("zs_crosshair_colb", "255", true, false):GetInt(), CreateClientConVar("zs_crosshair_cola", "220", true, false):GetInt())
-GM.CrosshairColor2 = Color(CreateClientConVar("zs_crosshair_colr2", "220", true, false):GetInt(), CreateClientConVar("zs_crosshair_colg2", "0", true, false):GetInt(), CreateClientConVar("zs_crosshair_colb2", "0", true, false):GetInt(), CreateClientConVar("zs_crosshair_cola2", "220", true, false):GetInt())
-cvars.AddChangeCallback("zs_crosshair_colr", function(cvar, oldvalue, newvalue) GAMEMODE.CrosshairColor.r = tonumber(newvalue) or 255 end)
-cvars.AddChangeCallback("zs_crosshair_colg", function(cvar, oldvalue, newvalue) GAMEMODE.CrosshairColor.g = tonumber(newvalue) or 255 end)
-cvars.AddChangeCallback("zs_crosshair_colb", function(cvar, oldvalue, newvalue) GAMEMODE.CrosshairColor.b = tonumber(newvalue) or 255 end)
-cvars.AddChangeCallback("zs_crosshair_cola", function(cvar, oldvalue, newvalue) GAMEMODE.CrosshairColor.a = tonumber(newvalue) or 255 end)
-cvars.AddChangeCallback("zs_crosshair_colr2", function(cvar, oldvalue, newvalue) GAMEMODE.CrosshairColor2.r = tonumber(newvalue) or 255 end)
-cvars.AddChangeCallback("zs_crosshair_colg2", function(cvar, oldvalue, newvalue) GAMEMODE.CrosshairColor2.g = tonumber(newvalue) or 255 end)
-cvars.AddChangeCallback("zs_crosshair_colb2", function(cvar, oldvalue, newvalue) GAMEMODE.CrosshairColor2.b = tonumber(newvalue) or 255 end)
-cvars.AddChangeCallback("zs_crosshair_cola2", function(cvar, oldvalue, newvalue) GAMEMODE.CrosshairColor2.a = tonumber(newvalue) or 255 end)
+GM.CrosshairColor = Color(
+	CreateClientConVar("labyrinth_zs_crosshair_colr", "255", true, false):GetInt(),
+	CreateClientConVar("labyrinth_zs_crosshair_colg", "255", true, false):GetInt(),
+	CreateClientConVar("labyrinth_zs_crosshair_colb", "255", true, false):GetInt(),
+	CreateClientConVar("labyrinth_zs_crosshair_cola", "220", true, false):GetInt()
+)
+GM.CrosshairColor2 = Color(
+	CreateClientConVar("labyrinth_zs_crosshair_colr2", "220", true, false):GetInt(),
+	CreateClientConVar("labyrinth_zs_crosshair_colg2", "0", true, false):GetInt(),
+	CreateClientConVar("labyrinth_zs_crosshair_colb2", "0", true, false):GetInt(),
+	CreateClientConVar("labyrinth_zs_crosshair_cola2", "220", true, false):GetInt()
+)
+cvars.AddChangeCallback("labyrinth_zs_crosshair_colr", function(cvar, oldvalue, newvalue)
+	GAMEMODE.CrosshairColor.r = tonumber(newvalue) or 255
+end)
+cvars.AddChangeCallback("labyrinth_zs_crosshair_colg", function(cvar, oldvalue, newvalue)
+	GAMEMODE.CrosshairColor.g = tonumber(newvalue) or 255
+end)
+cvars.AddChangeCallback("labyrinth_zs_crosshair_colb", function(cvar, oldvalue, newvalue)
+	GAMEMODE.CrosshairColor.b = tonumber(newvalue) or 255
+end)
+cvars.AddChangeCallback("labyrinth_zs_crosshair_cola", function(cvar, oldvalue, newvalue)
+	GAMEMODE.CrosshairColor.a = tonumber(newvalue) or 255
+end)
+cvars.AddChangeCallback("labyrinth_zs_crosshair_colr2", function(cvar, oldvalue, newvalue)
+	GAMEMODE.CrosshairColor2.r = tonumber(newvalue) or 255
+end)
+cvars.AddChangeCallback("labyrinth_zs_crosshair_colg2", function(cvar, oldvalue, newvalue)
+	GAMEMODE.CrosshairColor2.g = tonumber(newvalue) or 255
+end)
+cvars.AddChangeCallback("labyrinth_zs_crosshair_colb2", function(cvar, oldvalue, newvalue)
+	GAMEMODE.CrosshairColor2.b = tonumber(newvalue) or 255
+end)
+cvars.AddChangeCallback("labyrinth_zs_crosshair_cola2", function(cvar, oldvalue, newvalue)
+	GAMEMODE.CrosshairColor2.a = tonumber(newvalue) or 255
+end)
 
-GM.FilmMode = CreateClientConVar("zs_filmmode", "0", true, false):GetBool()
-cvars.AddChangeCallback("zs_filmmode", function(cvar, oldvalue, newvalue)
+GM.FilmMode = CreateClientConVar("labyrinth_zs_filmmode", "0", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_filmmode", function(cvar, oldvalue, newvalue)
 	GAMEMODE.FilmMode = tonumber(newvalue) == 1
 
 	gamemode.Call("EvaluateFilmMode")
 end)
 
-CreateClientConVar("zs_noredeem", "0", true, true)
-CreateClientConVar("zs_alwaysvolunteer", "0", true, true)
-CreateClientConVar("zs_nobosspick", "0", true, true)
-CreateClientConVar("zs_nousetodeposit", "0", true, true)
-CreateClientConVar("zs_nopickupprops", "0", true, true)
+CreateClientConVar("labyrinth_zs_noredeem", "0", true, true)
+CreateClientConVar("labyrinth_zs_alwaysvolunteer", "0", true, true)
+CreateClientConVar("labyrinth_zs_nobosspick", "0", true, true)
+CreateClientConVar("labyrinth_zs_nousetodeposit", "0", true, true)
+CreateClientConVar("labyrinth_zs_nopickupprops", "0", true, true)
 
-GM.DisableScopes = CreateClientConVar("zs_disablescopes", "0", true, false):GetBool()
-cvars.AddChangeCallback("zs_disablescopes", function(cvar, oldvalue, newvalue)
+GM.DisableScopes = CreateClientConVar("labyrinth_zs_disablescopes", "0", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_disablescopes", function(cvar, oldvalue, newvalue)
 	GAMEMODE.DisableScopes = tonumber(newvalue) == 1
 end)
 
-GM.IronsightZoomScale = math.Clamp(CreateClientConVar("zs_ironsightzoom", 1, true, false):GetFloat(), 0, 1)
-cvars.AddChangeCallback("zs_ironsightzoom", function(cvar, oldvalue, newvalue)
+GM.IronsightZoomScale = math.Clamp(CreateClientConVar("labyrinth_zs_ironsightzoom", 1, true, false):GetFloat(), 0, 1)
+cvars.AddChangeCallback("labyrinth_zs_ironsightzoom", function(cvar, oldvalue, newvalue)
 	GAMEMODE.IronsightZoomScale = math.Clamp(tonumber(newvalue) or 1, 0, 1)
 end)
 
-GM.ThirdPersonKnockdown = CreateClientConVar("zs_thirdpersonknockdown", "1", true, false):GetBool()
-cvars.AddChangeCallback("zs_thirdpersonknockdown", function(cvar, oldvalue, newvalue)
+GM.ThirdPersonKnockdown = CreateClientConVar("labyrinth_zs_thirdpersonknockdown", "1", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_thirdpersonknockdown", function(cvar, oldvalue, newvalue)
 	GAMEMODE.ThirdPersonKnockdown = tonumber(newvalue) == 1
 end)
 
-GM.SuicideOnChangeClass = CreateClientConVar("zs_suicideonchange", "1", true, false):GetBool()
-cvars.AddChangeCallback("zs_suicideonchange", function(cvar, oldvalue, newvalue)
+GM.SuicideOnChangeClass = CreateClientConVar("labyrinth_zs_suicideonchange", "1", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_suicideonchange", function(cvar, oldvalue, newvalue)
 	GAMEMODE.SuicideOnChangeClass = tonumber(newvalue) == 1
 end)
 
-GM.BeatsEnabled = CreateClientConVar("zs_beats", "1", true, false):GetBool()
-cvars.AddChangeCallback("zs_beats", function(cvar, oldvalue, newvalue)
+GM.BeatsEnabled = CreateClientConVar("labyrinth_zs_beats", "1", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_beats", function(cvar, oldvalue, newvalue)
 	GAMEMODE.BeatsEnabled = tonumber(newvalue) == 1
 end)
 
-GM.DamageNumberThroughWalls = CreateClientConVar("zs_damagefloaterswalls", "0", true, false):GetBool()
-cvars.AddChangeCallback("zs_damagefloaterswalls", function(cvar, oldvalue, newvalue)
+GM.DamageNumberThroughWalls = CreateClientConVar("labyrinth_zs_damagefloaterswalls", "0", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_damagefloaterswalls", function(cvar, oldvalue, newvalue)
 	GAMEMODE.DamageNumberThroughWalls = tonumber(newvalue) == 1
 end)
 
-GM.BeatsVolume = math.Clamp(CreateClientConVar("zs_beatsvolume", 80, true, false):GetInt(), 0, 100) / 100
-cvars.AddChangeCallback("zs_beatsvolume", function(cvar, oldvalue, newvalue)
+GM.BeatsVolume = math.Clamp(CreateClientConVar("labyrinth_zs_beatsvolume", 80, true, false):GetInt(), 0, 100) / 100
+cvars.AddChangeCallback("labyrinth_zs_beatsvolume", function(cvar, oldvalue, newvalue)
 	GAMEMODE.BeatsVolume = math.Clamp(tonumber(newvalue) or 0, 0, 100) / 100
 end)
 
-GM.CrosshairLines = math.Clamp(CreateClientConVar("zs_crosshairlines", 4, true, false):GetInt(), 2, 8)
-cvars.AddChangeCallback("zs_crosshairlines", function(cvar, oldvalue, newvalue)
+GM.CrosshairLines = math.Clamp(CreateClientConVar("labyrinth_zs_crosshairlines", 4, true, false):GetInt(), 2, 8)
+cvars.AddChangeCallback("labyrinth_zs_crosshairlines", function(cvar, oldvalue, newvalue)
 	GAMEMODE.CrosshairLines = math.Clamp(tonumber(newvalue) or 4, 2, 8)
 end)
 
-GM.CrosshairOffset = math.Clamp(CreateClientConVar("zs_crosshairoffset", 0, true, false):GetInt(), 0, 90)
-cvars.AddChangeCallback("zs_crosshairoffset", function(cvar, oldvalue, newvalue)
+GM.CrosshairOffset = math.Clamp(CreateClientConVar("labyrinth_zs_crosshairoffset", 0, true, false):GetInt(), 0, 90)
+cvars.AddChangeCallback("labyrinth_zs_crosshairoffset", function(cvar, oldvalue, newvalue)
 	GAMEMODE.CrosshairOffset = math.Clamp(tonumber(newvalue) or 0, 0, 90)
 end)
 
-GM.CrosshairThickness = math.Clamp(CreateClientConVar("zs_crosshairthickness", 1, true, false):GetFloat(), 0.5, 2)
-cvars.AddChangeCallback("zs_crosshairthickness", function(cvar, oldvalue, newvalue)
+GM.CrosshairThickness =
+	math.Clamp(CreateClientConVar("labyrinth_zs_crosshairthickness", 1, true, false):GetFloat(), 0.5, 2)
+cvars.AddChangeCallback("labyrinth_zs_crosshairthickness", function(cvar, oldvalue, newvalue)
 	GAMEMODE.CrosshairThickness = math.Clamp(tonumber(newvalue) or 1, 0.5, 2)
 end)
 
-GM.PropRotationSensitivity = math.Clamp(CreateClientConVar("zs_proprotationsens", 1, true, false):GetFloat(), 0.1, 4)
-cvars.AddChangeCallback("zs_proprotationsens", function(cvar, oldvalue, newvalue)
+GM.PropRotationSensitivity =
+	math.Clamp(CreateClientConVar("labyrinth_zs_proprotationsens", 1, true, false):GetFloat(), 0.1, 4)
+cvars.AddChangeCallback("labyrinth_zs_proprotationsens", function(cvar, oldvalue, newvalue)
 	GAMEMODE.PropRotationSensitivity = math.Clamp(tonumber(newvalue) or 1, 0.1, 4)
 end)
 
-GM.PropRotationSnap = math.Clamp(CreateClientConVar("zs_proprotationsnap", 0, true, false):GetInt(), 0, 45)
-cvars.AddChangeCallback("zs_proprotationsnap", function(cvar, oldvalue, newvalue)
+GM.PropRotationSnap = math.Clamp(CreateClientConVar("labyrinth_zs_proprotationsnap", 0, true, false):GetInt(), 0, 45)
+cvars.AddChangeCallback("labyrinth_zs_proprotationsnap", function(cvar, oldvalue, newvalue)
 	GAMEMODE.PropRotationSnap = math.Clamp(tonumber(newvalue) or 0, 0, 45)
 end)
 
-GM.DamageNumberScale = math.Clamp(CreateClientConVar("zs_dmgnumberscale", 1, true, false):GetFloat(), 0.5, 2)
-cvars.AddChangeCallback("zs_dmgnumberscale", function(cvar, oldvalue, newvalue)
+GM.DamageNumberScale = math.Clamp(CreateClientConVar("labyrinth_zs_dmgnumberscale", 1, true, false):GetFloat(), 0.5, 2)
+cvars.AddChangeCallback("labyrinth_zs_dmgnumberscale", function(cvar, oldvalue, newvalue)
 	GAMEMODE.DamageNumberScale = math.Clamp(tonumber(newvalue) or 1, 0.5, 2)
 end)
 
-GM.DamageNumberSpeed = math.Clamp(CreateClientConVar("zs_dmgnumberspeed", 1, true, false):GetFloat(), 0, 1)
-cvars.AddChangeCallback("zs_dmgnumberspeed", function(cvar, oldvalue, newvalue)
+GM.DamageNumberSpeed = math.Clamp(CreateClientConVar("labyrinth_zs_dmgnumberspeed", 1, true, false):GetFloat(), 0, 1)
+cvars.AddChangeCallback("labyrinth_zs_dmgnumberspeed", function(cvar, oldvalue, newvalue)
 	GAMEMODE.DamageNumberSpeed = math.Clamp(tonumber(newvalue) or 1, 0, 1)
 end)
 
-GM.DamageNumberLifetime = math.Clamp(CreateClientConVar("zs_dmgnumberlife", 1, true, false):GetFloat(), 0.2, 1.5)
-cvars.AddChangeCallback("zs_dmgnumberlife", function(cvar, oldvalue, newvalue)
+GM.DamageNumberLifetime =
+	math.Clamp(CreateClientConVar("labyrinth_zs_dmgnumberlife", 1, true, false):GetFloat(), 0.2, 1.5)
+cvars.AddChangeCallback("labyrinth_zs_dmgnumberlife", function(cvar, oldvalue, newvalue)
 	GAMEMODE.DamageNumberLifetime = math.Clamp(tonumber(newvalue) or 1, 0.2, 1.5)
 end)
 
-GM.InterfaceSize = math.Clamp(CreateClientConVar("zs_interfacesize", 1, true, false):GetFloat(), 0.7, 1.5)
-cvars.AddChangeCallback("zs_interfacesize", function(cvar, oldvalue, newvalue)
-	if not GAMEMODE.EmptyCachedFontHeights then return end --???
+GM.InterfaceSize = math.Clamp(CreateClientConVar("labyrinth_zs_interfacesize", 1, true, false):GetFloat(), 0.7, 1.5)
+cvars.AddChangeCallback("labyrinth_zs_interfacesize", function(cvar, oldvalue, newvalue)
+	if not GAMEMODE.EmptyCachedFontHeights then
+		return
+	end --???
 
 	GAMEMODE.InterfaceSize = math.Clamp(tonumber(newvalue) or 1, 0.7, 1.5)
 
@@ -191,95 +222,113 @@ cvars.AddChangeCallback("zs_interfacesize", function(cvar, oldvalue, newvalue)
 	GAMEMODE:ScoreboardRebuild()
 end)
 
-GM.AlwaysShowNails = CreateClientConVar("zs_alwaysshownails", "0", true, false):GetBool()
-cvars.AddChangeCallback("zs_alwaysshownails", function(cvar, oldvalue, newvalue)
+GM.AlwaysShowNails = CreateClientConVar("labyrinth_zs_alwaysshownails", "0", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_alwaysshownails", function(cvar, oldvalue, newvalue)
 	GAMEMODE.AlwaysShowNails = tonumber(newvalue) == 1
 end)
 
-GM.AlwaysQuickBuy = CreateClientConVar("zs_alwaysquickbuy", "0", true, false):GetBool()
-cvars.AddChangeCallback("zs_alwaysquickbuy", function(cvar, oldvalue, newvalue)
+GM.AlwaysQuickBuy = CreateClientConVar("labyrinth_zs_alwaysquickbuy", "0", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_alwaysquickbuy", function(cvar, oldvalue, newvalue)
 	GAMEMODE.AlwaysQuickBuy = tonumber(newvalue) == 1
 end)
 
-GM.NoIronsights = CreateClientConVar("zs_noironsights", "0", true, false):GetBool()
-cvars.AddChangeCallback("zs_noironsights", function(cvar, oldvalue, newvalue)
+GM.NoIronsights = CreateClientConVar("labyrinth_zs_noironsights", "0", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_noironsights", function(cvar, oldvalue, newvalue)
 	GAMEMODE.NoIronsights = tonumber(newvalue) == 1
 end)
 
-GM.NoCrosshairRotate = CreateClientConVar("zs_nocrosshairrotate", "1", true, false):GetBool()
-cvars.AddChangeCallback("zs_nocrosshairrotate", function(cvar, oldvalue, newvalue)
+GM.NoCrosshairRotate = CreateClientConVar("labyrinth_zs_nocrosshairrotate", "1", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_nocrosshairrotate", function(cvar, oldvalue, newvalue)
 	GAMEMODE.NoCrosshairRotate = tonumber(newvalue) == 1
 end)
 
-GM.HideViewModels = CreateClientConVar("zs_hideviewmodels", "0", true, false):GetBool()
-cvars.AddChangeCallback("zs_hideviewmodels", function(cvar, oldvalue, newvalue)
+GM.HideViewModels = CreateClientConVar("labyrinth_zs_hideviewmodels", "0", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_hideviewmodels", function(cvar, oldvalue, newvalue)
 	GAMEMODE.HideViewModels = tonumber(newvalue) == 1
 end)
 
 GM.TransparencyRadiusMax = 2048
 GM.TransparencyRadius = 0
 
-GM.TransparencyRadius1p = math.Clamp(CreateClientConVar("zs_transparencyradius", 140, true, false):GetInt(), 0, GM.TransparencyRadiusMax) ^ 2
-cvars.AddChangeCallback("zs_transparencyradius", function(cvar, oldvalue, newvalue)
+GM.TransparencyRadius1p = math.Clamp(
+	CreateClientConVar("labyrinth_zs_transparencyradius", 140, true, false):GetInt(),
+	0,
+	GM.TransparencyRadiusMax
+) ^ 2
+cvars.AddChangeCallback("labyrinth_zs_transparencyradius", function(cvar, oldvalue, newvalue)
 	GAMEMODE.TransparencyRadius1p = math.Clamp(tonumber(newvalue) or 0, 0, GAMEMODE.TransparencyRadiusMax) ^ 2
 end)
 
-GM.TransparencyRadius3p = math.Clamp(CreateClientConVar("zs_transparencyradius3p", 140, true, false):GetInt(), 0, GM.TransparencyRadiusMax) ^ 2
-cvars.AddChangeCallback("zs_transparencyradius3p", function(cvar, oldvalue, newvalue)
+GM.TransparencyRadius3p = math.Clamp(
+	CreateClientConVar("labyrinth_zs_transparencyradius3p", 140, true, false):GetInt(),
+	0,
+	GM.TransparencyRadiusMax
+) ^ 2
+cvars.AddChangeCallback("labyrinth_zs_transparencyradius3p", function(cvar, oldvalue, newvalue)
 	GAMEMODE.TransparencyRadius3p = math.Clamp(tonumber(newvalue) or 0, 0, GAMEMODE.TransparencyRadiusMax) ^ 2
 end)
 
-GM.MovementViewRoll = CreateClientConVar("zs_movementviewroll", "0", true, false):GetBool()
-cvars.AddChangeCallback("zs_movementviewroll", function(cvar, oldvalue, newvalue)
+GM.MovementViewRoll = CreateClientConVar("labyrinth_zs_movementviewroll", "0", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_movementviewroll", function(cvar, oldvalue, newvalue)
 	GAMEMODE.MovementViewRoll = tonumber(newvalue) == 1
 end)
 
-GM.MessageBeaconShow = CreateClientConVar("zs_messagebeaconshow", "1", true, false):GetBool()
-cvars.AddChangeCallback("zs_messagebeaconshow", function(cvar, oldvalue, newvalue)
+GM.MessageBeaconShow = CreateClientConVar("labyrinth_zs_messagebeaconshow", "1", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_messagebeaconshow", function(cvar, oldvalue, newvalue)
 	GAMEMODE.MessageBeaconShow = tonumber(newvalue) == 1
 end)
 
-GM.WeaponHUDMode = CreateClientConVar("zs_weaponhudmode", "0", true, false):GetInt()
-cvars.AddChangeCallback("zs_weaponhudmode", function(cvar, oldvalue, newvalue)
+GM.WeaponHUDMode = CreateClientConVar("labyrinth_zs_weaponhudmode", "0", true, false):GetInt()
+cvars.AddChangeCallback("labyrinth_zs_weaponhudmode", function(cvar, oldvalue, newvalue)
 	GAMEMODE.WeaponHUDMode = tonumber(newvalue) or 0
 end)
 
-GM.HealthTargetDisplay = CreateClientConVar("zs_healthtargetdisplay", "0", true, false):GetInt()
-cvars.AddChangeCallback("zs_healthtargetdisplay", function(cvar, oldvalue, newvalue)
+GM.HealthTargetDisplay = CreateClientConVar("labyrinth_zs_healthtargetdisplay", "0", true, false):GetInt()
+cvars.AddChangeCallback("labyrinth_zs_healthtargetdisplay", function(cvar, oldvalue, newvalue)
 	GAMEMODE.HealthTargetDisplay = tonumber(newvalue) or 0
 end)
 
-GM.DrawPainFlash = CreateClientConVar("zs_drawpainflash", "1", true, false):GetBool()
-cvars.AddChangeCallback("zs_drawpainflash", function(cvar, oldvalue, newvalue)
+GM.DrawPainFlash = CreateClientConVar("labyrinth_zs_drawpainflash", "1", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_drawpainflash", function(cvar, oldvalue, newvalue)
 	GAMEMODE.DrawPainFlash = tonumber(newvalue) == 1
 end)
 
-GM.DisplayXPHUD = CreateClientConVar("zs_drawxp", "1", true, false):GetBool()
-cvars.AddChangeCallback("zs_drawxp", function(cvar, oldvalue, newvalue)
+GM.DisplayXPHUD = CreateClientConVar("labyrinth_zs_drawxp", "1", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_drawxp", function(cvar, oldvalue, newvalue)
 	GAMEMODE.DisplayXPHUD = tonumber(newvalue) == 1
 	gamemode.Call("EvaluateFilmMode")
 end)
 
-GM.FontEffects = CreateClientConVar("zs_fonteffects", "0", true, false):GetBool()
-cvars.AddChangeCallback("zs_fonteffects", function(cvar, oldvalue, newvalue)
+GM.FontEffects = CreateClientConVar("labyrinth_zs_fonteffects", "0", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_fonteffects", function(cvar, oldvalue, newvalue)
 	GAMEMODE.FontEffects = tonumber(newvalue) == 1
 end)
 
-GM.HidePacks = CreateClientConVar("zs_hidepacks", "0", true, false):GetBool()
-cvars.AddChangeCallback("zs_hidepacks", function(cvar, oldvalue, newvalue)
+GM.HidePacks = CreateClientConVar("labyrinth_zs_hidepacks", "0", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_hidepacks", function(cvar, oldvalue, newvalue)
 	GAMEMODE.HidePacks = tonumber(newvalue) == 1
 end)
 
-GM.AlwaysDrawFriend = CreateClientConVar("zs_showfriends", "0", true, false):GetBool()
-cvars.AddChangeCallback("zs_showfriends", function(cvar, oldvalue, newvalue)
+GM.AlwaysDrawFriend = CreateClientConVar("labyrinth_zs_showfriends", "0", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_showfriends", function(cvar, oldvalue, newvalue)
 	GAMEMODE.AlwaysDrawFriend = tonumber(newvalue) == 1
 end)
 
-CreateConVar( "cl_playercolor", "0.24 0.34 0.41", { FCVAR_ARCHIVE, FCVAR_USERINFO }, "The value is a Vector - so between 0-1 - not between 0-255" )
-CreateConVar( "cl_weaponcolor", "0.30 1.80 2.10", { FCVAR_ARCHIVE, FCVAR_USERINFO }, "The value is a Vector - so between 0-1 - not between 0-255" )
+CreateConVar(
+	"cl_playercolor",
+	"0.24 0.34 0.41",
+	{ FCVAR_ARCHIVE, FCVAR_USERINFO },
+	"The value is a Vector - so between 0-1 - not between 0-255"
+)
+CreateConVar(
+	"cl_weaponcolor",
+	"0.30 1.80 2.10",
+	{ FCVAR_ARCHIVE, FCVAR_USERINFO },
+	"The value is a Vector - so between 0-1 - not between 0-255"
+)
 
-GM.BeatSetHuman = CreateClientConVar("zs_beatset_human", "default", true, false):GetString()
-cvars.AddChangeCallback("zs_beatset_human", function(cvar, oldvalue, newvalue)
+GM.BeatSetHuman = CreateClientConVar("labyrinth_zs_beatset_human", "default", true, false):GetString()
+cvars.AddChangeCallback("labyrinth_zs_beatset_human", function(cvar, oldvalue, newvalue)
 	newvalue = tostring(newvalue)
 	if newvalue == "default" then
 		GAMEMODE.BeatSetHuman = GAMEMODE.BeatSetHumanDefault
@@ -291,8 +340,8 @@ if GM.BeatSetHuman == "default" then
 	GM.BeatSetHuman = GM.BeatSetHumanDefault
 end
 
-GM.BeatSetZombie = CreateClientConVar("zs_beatset_zombie", "default", true, false):GetString()
-cvars.AddChangeCallback("zs_beatset_zombie", function(cvar, oldvalue, newvalue)
+GM.BeatSetZombie = CreateClientConVar("labyrinth_zs_beatset_zombie", "default", true, false):GetString()
+cvars.AddChangeCallback("labyrinth_zs_beatset_zombie", function(cvar, oldvalue, newvalue)
 	newvalue = tostring(newvalue)
 	if newvalue == "default" then
 		GAMEMODE.BeatSetZombie = GAMEMODE.BeatSetZombieDefault

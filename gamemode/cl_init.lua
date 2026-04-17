@@ -1,5 +1,5 @@
 -- Sometimes persistent ones don't get created.
-local dummy = CreateClientConVar("_zs_dummyconvar", 1, false, false)
+local dummy = CreateClientConVar("labyrinth__zs_dummyconvar", 1, false, false)
 local oldCreateClientConVar = CreateClientConVar
 function CreateClientConVar(...)
 	return oldCreateClientConVar(...) or dummy
@@ -807,7 +807,7 @@ function GM:ShouldPlayBeats(teamid, fear)
 	return not self.RoundEnded and not self.ZombieEscape and not GetGlobalBool("beatsdisabled", false)
 end
 
-local cv_ShouldPlayMusic = CreateClientConVar("zs_playmusic", 1, true, false)
+local cv_ShouldPlayMusic = CreateClientConVar("labyrinth_zs_playmusic", 1, true, false)
 local NextBeat = 0
 local LastBeatLevel = 0
 function GM:PlayBeats(teamid, fear)
@@ -1273,7 +1273,7 @@ function GM:ZombieHUD()
 end
 
 function GM:RequestedDefaultCart()
-	local defaultcart = GetConVar("zs_defaultcart"):GetString()
+	local defaultcart = GetConVar("labyrinth_zs_defaultcart"):GetString()
 	if #defaultcart > 0 then
 		defaultcart = string.lower(defaultcart)
 
