@@ -43,7 +43,7 @@ SWEP.ReloadGesture = ACT_HL2MP_GESTURE_RELOAD_SMG1
 SWEP.ReloadSpeed = 0.78
 SWEP.FireAnimSpeed = 0.55
 
-SWEP.ConeMax = 4.5
+SWEP.ConeMax = 4
 SWEP.ConeMin = 2.5
 
 SWEP.IronSightsPos = Vector(-6.425, 5, 1.02)

@@ -69,7 +69,7 @@ SWEP.ReloadGesture = ACT_HL2MP_GESTURE_RELOAD_SMG1
 
 SWEP.ReloadSpeed = 0.9
 
-SWEP.ConeMax = 4.3
+SWEP.ConeMax = 4.1
 SWEP.ConeMin = 2.5
 
 SWEP.WalkSpeed = SPEED_NORMAL

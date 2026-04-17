@@ -40,7 +40,7 @@ SWEP.FireAnimSpeed = 3
 SWEP.Primary.Gesture = ACT_HL2MP_GESTURE_RANGE_ATTACK_SMG1
 SWEP.ReloadGesture = ACT_HL2MP_GESTURE_RELOAD_SMG1
 
-SWEP.ConeMax = 6.5
+SWEP.ConeMax = 5.3
 SWEP.ConeMin = 3.6
 
 SWEP.WalkSpeed = SPEED_NORMAL
