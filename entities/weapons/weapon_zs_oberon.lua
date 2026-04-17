@@ -100,10 +100,10 @@ function SWEP.BulletCallback(attacker, tr, dmginfo)
 	local ent = tr.Entity
 	if ent:IsValidLivingZombie() then
 		ent:AddLegDamageExt(dmginfo:GetInflictor().LegDamage, attacker, attacker:GetActiveWeapon(), SLOWTYPE_PULSE)
-	end
 
-	if IsFirstTimePredicted() then
-		util.CreatePulseImpactEffect(tr.HitPos, tr.HitNormal)
+		if IsFirstTimePredicted() then
+			util.CreatePulseImpactEffect(tr.HitPos, tr.HitNormal)
+		end
 	end
 end
 
