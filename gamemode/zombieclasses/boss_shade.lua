@@ -188,13 +188,16 @@ local nodraw = false
 local matWhite = Material("models/debug/debugwhite")
 local matRefract = Material("models/spawn_effect")
 function CLASS:PreRenderEffects(pl)
-	if render.SupportsVertexShaders_2_0() then
+	pl._ShadeClipPushed = nil
+
+	if nodraw then return end
+
+	if pl:IsPlayer() and render.SupportsVertexShaders_2_0() then
 		local normal = pl:GetUp()
 		render.EnableClipping(true)
 		render.PushCustomClipPlane(normal, normal:Dot(pl:GetPos() + normal * 16))
+		pl._ShadeClipPushed = true
 	end
-
-	if nodraw then return end
 
 	local red = 0
 	local status = pl.status_shadeambience
@@ -209,19 +212,20 @@ function CLASS:PreRenderEffects(pl)
 end
 
 function CLASS:PostRenderEffects(pl)
-	if render.SupportsVertexShaders_2_0() then
+	if pl._ShadeClipPushed then
 		render.PopCustomClipPlane()
 		render.EnableClipping(false)
+		pl._ShadeClipPushed = nil
 	end
-
-	if nodraw then return end
 
 	render.SetColorModulation(1, 1, 1)
 	render.SetBlend(1)
 	render.SuppressEngineLighting(false)
 	render.ModelMaterialOverride()
 
-	if render.SupportsPixelShaders_2_0() then
+	if nodraw then return end
+
+	if pl:IsPlayer() and render.SupportsPixelShaders_2_0() then
 		render.UpdateRefractTexture()
 
 		matRefract:SetFloat("$refractamount", 0.01)
@@ -230,7 +234,10 @@ function CLASS:PostRenderEffects(pl)
 		nodraw = true
 		pl:DrawModel()
 		nodraw = false
-		render.ModelMaterialOverride(0)
+		render.ModelMaterialOverride()
+		render.SetColorModulation(1, 1, 1)
+		render.SetBlend(1)
+		render.SuppressEngineLighting(false)
 	end
 end
 
