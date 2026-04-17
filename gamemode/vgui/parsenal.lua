@@ -213,7 +213,7 @@ function GM:SupplyItemViewerDetail(viewer, sweptable, shoptbl)
 	end
 	viewer.m_Desc:SetText(desctext)
 
-	self:ViewerStatBarUpdate(viewer, shoptbl.Category ~= ITEMCAT_GUNS and shoptbl.Category ~= ITEMCAT_MELEE, sweptable)
+	self:ViewerStatBarUpdate(viewer, shoptbl.Category ~= ITEMS_GUNS and shoptbl.Category ~= ITEMS_MELEE, sweptable)
 
 	if self:HasPurchaseableAmmo(sweptable) and self.AmmoNames[string.lower(sweptable.Primary.Ammo)] then
 		local lower = string.lower(sweptable.Primary.Ammo)
@@ -365,7 +365,7 @@ end
 function GM:AddShopItem(list, i, tab, issub, nopointshop)
 	local screenscale = BetterScreenScale()
 
-	local nottrinkets = tab.Category ~= ITEMCAT_TRINKETS
+	local nottrinkets = tab.Category ~= ITEMS_TRINKETS
 	local missing_skill = tab.SkillRequirement and not MySelf:IsSkillActive(tab.SkillRequirement)
 	local wid = 280
 
@@ -415,7 +415,7 @@ function GM:AddShopItem(list, i, tab, issub, nopointshop)
 		local kitbl =
 			killicon.Get(GAMEMODE.ZSInventoryItemData[tab.SWEP] and "weapon_zs_craftables" or tab.SWEP or tab.Model)
 		if kitbl then
-			self:AttachKillicon(kitbl, itempan, mdlframe, tab.Category == ITEMCAT_AMMO, missing_skill)
+			self:AttachKillicon(kitbl, itempan, mdlframe, tab.Category == ITEMS_AMMO, missing_skill)
 		elseif tab.Model then
 			if tab.Model then
 				local mdlpanel = vgui.Create("DModelPanel", mdlframe)
@@ -786,8 +786,8 @@ function GM:OpenArsenalMenu()
 			tabpane.Grids = {}
 			tabpane.Buttons = {}
 
-			local usecats = catid == ITEMCAT_GUNS or catid == ITEMCAT_MELEE or catid == ITEMCAT_TRINKETS
-			local trinkets = catid == ITEMCAT_TRINKETS
+			local usecats = catid == ITEMS_GUNS or catid == ITEMS_MELEE or catid == ITEMS_TRINKETS
+			local trinkets = catid == ITEMS_TRINKETS
 			local offset = 64 * screenscale
 
 			local itemframe = vgui.Create("DScrollPanel", tabpane)
@@ -810,7 +810,7 @@ function GM:OpenArsenalMenu()
 				local ind, tbn = 1
 				for i = ind, (trinkets and #subcats or 5) do
 					local ispacer = trinkets and ((i - 1) % 3) + 1 or i
-					local start = i == (catid == ITEMCAT_GUNS and 2 or ind)
+					local start = i == (catid == ITEMS_GUNS and 2 or ind)
 
 					tbn = EasyButton(tabpane, trinkets and subcats[i] or ("Tier " .. i), 2, 8)
 					tbn:SetFont(trinkets and "ZSHUDFontSmallest" or "ZSHUDFontSmall")

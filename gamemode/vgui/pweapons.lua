@@ -47,7 +47,7 @@ local function SetWeaponViewerSWEP(self, swep, category, comps)
 	viewer.m_Desc:SetFont("ZSBodyTextFont")
 	viewer.m_Desc:SetText(desctext)
 
-	GAMEMODE:ViewerStatBarUpdate(viewer, category ~= ITEMCAT_GUNS and category ~= ITEMCAT_MELEE, sweptable)
+	GAMEMODE:ViewerStatBarUpdate(viewer, category ~= ITEMS_GUNS and category ~= ITEMS_MELEE, sweptable)
 	if GAMEMODE:HasPurchaseableAmmo(sweptable) and GAMEMODE.AmmoNames[string.lower(sweptable.Primary.Ammo)] then
 		local lower = string.lower(sweptable.Primary.Ammo)
 
@@ -184,7 +184,7 @@ function MakepWeapons(silent)
 		end
 		wepnode.SWEP = wep
 		wepnode.DoClick = WeaponButtonDoClick
-		wepnode.Category = addedcat[wep] or ITEMCAT_GUNS
+		wepnode.Category = addedcat[wep] or ITEMS_GUNS
 	end
 
 	for _, wep in pairs(crafts) do
@@ -197,7 +197,7 @@ function MakepWeapons(silent)
 		end
 		wepnode.SWEP = wep
 		wepnode.DoClick = WeaponButtonDoClick
-		wepnode.Category = enttab.RequiredClip and ITEMCAT_GUNS or (enttab.Primary.Ammo == "none" and enttab.MeleeRange) and ITEMCAT_MELEE or ITEMCAT_TOOLS
+		wepnode.Category = enttab.RequiredClip and ITEMS_GUNS or (enttab.Primary.Ammo == "none" and enttab.MeleeRange) and ITEMS_MELEE or ITEMS_TOOLS
 		wepnode.Comps = GAMEMODE.Assemblies[wep]
 	end
 

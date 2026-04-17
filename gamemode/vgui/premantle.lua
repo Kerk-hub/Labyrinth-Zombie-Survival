@@ -592,14 +592,14 @@ function GM:OpenRemantlerMenu(remantler)
 	remantleframe:SetSize(wid - 8, boty - topy - 8 - topspace:GetTall())
 
 	local trinketsframe = vgui.Create("DPanel")
-	sheet = remprop:AddSheet("Trinkets", trinketsframe, GAMEMODE.ItemCategoryIcons[ITEMCAT_TRINKETS], false, false)
+	sheet = remprop:AddSheet("Trinkets", trinketsframe, GAMEMODE.ItemCategoryIcons[ITEMS_TRINKETS], false, false)
 	sheet.Panel:SetPos(0, tabhei + 2)
 	trinketsframe:SetSize(wid - 8, boty - topy - 8 - topspace:GetTall())
 	trinketsframe:SetPaintBackground(false)
 	frame.TrinketsFrame = trinketsframe
 
 	local ammoframe = vgui.Create("DPanel")
-	sheet = remprop:AddSheet("Ammunition", ammoframe, GAMEMODE.ItemCategoryIcons[ITEMCAT_AMMO], false, false)
+	sheet = remprop:AddSheet("Ammunition", ammoframe, GAMEMODE.ItemCategoryIcons[ITEMS_AMMO], false, false)
 	sheet.Panel:SetPos(0, tabhei + 2)
 	ammoframe:SetSize(wid - 8, boty - topy - 8 - topspace:GetTall())
 	ammoframe:SetPaintBackground(true)
@@ -656,7 +656,7 @@ function GM:OpenRemantlerMenu(remantler)
 			end
 
 			for j, tab in ipairs(GAMEMODE.Items) do
-				if tab.PointShop and tab.Category == ITEMCAT_TRINKETS then
+				if tab.PointShop and tab.Category == ITEMS_TRINKETS then
 					self:AddShopItem(tabpane.Grids[tab.SubCategory], j, tab, false, true)
 				end
 			end
@@ -673,7 +673,7 @@ function GM:OpenRemantlerMenu(remantler)
 			list:SetTall(ammoframe:GetTall() - 32)
 
 			for j, tab in ipairs(GAMEMODE.Items) do
-				if tab.PointShop and tab.Category == ITEMCAT_AMMO or tab.CanMakeFromScrap then
+				if tab.PointShop and tab.Category == ITEMS_AMMO or tab.CanMakeFromScrap then
 					self:AddShopItem(list, j, tab, false, true)
 				end
 			end

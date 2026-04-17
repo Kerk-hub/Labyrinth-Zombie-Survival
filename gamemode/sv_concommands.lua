@@ -39,7 +39,7 @@ concommand.Add("zs_pointsshopbuy", function(sender, command, arguments)
 		return
 	end
 	local itemcat = itemtab.Category
-	if usescrap and not (itemcat == ITEMCAT_TRINKETS or itemcat == ITEMCAT_AMMO) and not itemtab.CanMakeFromScrap then
+	if usescrap and not (itemcat == ITEMS_TRINKETS or itemcat == ITEMS_AMMO) and not itemtab.CanMakeFromScrap then
 		return
 	end
 
