@@ -13,7 +13,7 @@ function ENT:Initialize()
 		phys:Wake()
 	end
 
-	self:SetCollisionGroup(COLLISION_GROUP_WORLD)
+	self:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
 	self:SetMaxObjectHealth(self.MaxHealth)
 	self:SetObjectHealth(self:GetMaxObjectHealth())
 

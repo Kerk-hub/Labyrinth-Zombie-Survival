@@ -26,7 +26,7 @@ function ENT:Initialize()
 		phys:EnableCollisions(false)
 	end
 
-	self:SetCollisionGroup(COLLISION_GROUP_WORLD)
+	self:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
 	self:SetMaxObjectHealth(200)
 	self:SetObjectHealth(self:GetMaxObjectHealth())
 end
