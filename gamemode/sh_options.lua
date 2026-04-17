@@ -810,92 +810,92 @@ local function genericcallback(pl, magnitude)
 end
 GM.HonorableMentions = {}
 GM.HonorableMentions[HM_MOSTZOMBIESKILLED] = {
-	Name = "Most zombies killed",
-	String = "by %s, with %d killed zombies.",
+	Name = "Grim Reaper",
+	String = "%s killed %d zombies",
 	Callback = genericcallback,
 	Color = COLOR_CYAN,
 }
 GM.HonorableMentions[HM_MOSTDAMAGETOUNDEAD] = {
-	Name = "Most damage to undead",
-	String = "goes to %s, with a total of %d damage dealt to the undead.",
+	Name = "Pain Maker",
+	String = "%s dealt %d damage to zombies",
 	Callback = genericcallback,
 	Color = COLOR_CYAN,
 }
 GM.HonorableMentions[HM_MOSTHEADSHOTS] = {
-	Name = "Most headshot kills",
-	String = "goes to %s, with a total of %s headshot kills.",
+	Name = "Head Hunter",
+	String = "%s killed %s zombies with headshots",
 	Callback = genericcallback,
 	Color = COLOR_CYAN,
 }
 GM.HonorableMentions[HM_PACIFIST] = {
-	Name = "Pacifist",
-	String = "goes to %s for not killing a single zombie and still surviving!",
+	Name = "Science Team",
+	String = "%s survived without killing any zombies",
 	Callback = genericcallback,
 	Color = COLOR_CYAN,
 }
 GM.HonorableMentions[HM_MOSTHELPFUL] = {
-	Name = "Most helpful",
-	String = "goes to %s for assisting in the disposal of %d zombies.",
+	Name = "Sidekick",
+	String = "%s assisted with %d kills",
 	Callback = genericcallback,
 	Color = COLOR_CYAN,
 }
 GM.HonorableMentions[HM_LASTHUMAN] = {
 	Name = "Last Human",
-	String = "goes to %s for being the last person alive.",
+	String = "%s was the last human alive",
 	Callback = genericcallback,
 	Color = COLOR_CYAN,
 }
 GM.HonorableMentions[HM_OUTLANDER] = {
 	Name = "Outlander",
-	String = "goes to %s for getting killed %d feet away from a zombie spawn.",
+	String = "%s was killed %d feet from a zombie spawn",
 	Callback = genericcallback,
 	Color = COLOR_CYAN,
 }
 GM.HonorableMentions[HM_GOODDOCTOR] = {
-	Name = "Good Doctor",
-	String = "goes to %s for healing their team for %d points of health.",
+	Name = "Least Shit Medic",
+	String = "%s healed %d points of health",
 	Callback = genericcallback,
 	Color = COLOR_CYAN,
 }
 GM.HonorableMentions[HM_HANDYMAN] = {
-	Name = "Handy Man",
-	String = "goes to %s for getting %d barricade assistance points.",
+	Name = "God Cader",
+	String = "%s made %d repair points",
 	Callback = genericcallback,
 	Color = COLOR_CYAN,
 }
 GM.HonorableMentions[HM_SCARECROW] = {
 	Name = "Scarecrow",
-	String = "goes to %s for killing %d poor crows.",
+	String = "%s killed %d poor crows",
 	Callback = genericcallback,
 	Color = COLOR_WHITE,
 }
 GM.HonorableMentions[HM_MOSTBRAINSEATEN] = {
-	Name = "Most brains eaten",
-	String = "by %s, with %d brains eaten.",
+	Name = "BRRAAIINNSS!...",
+	String = "%s ate %d humans",
 	Callback = genericcallback,
-	Color = COLOR_LIMEGREEN,
+	Color = COLOR_RED,
 }
 GM.HonorableMentions[HM_MOSTDAMAGETOHUMANS] = {
-	Name = "Most damage to humans",
-	String = "goes to %s, with a total of %d damage given to living players.",
+	Name = "HUNGER!...",
+	String = "%s dealt %d damage to humans",
 	Callback = genericcallback,
-	Color = COLOR_LIMEGREEN,
+	Color = COLOR_RED,
 }
 GM.HonorableMentions[HM_LASTBITE] = {
 	Name = "Last Bite",
-	String = "goes to %s for ending the round.",
+	String = "%s ate the last human",
 	Callback = genericcallback,
-	Color = COLOR_LIMEGREEN,
+	Color = COLOR_RED,
 }
 GM.HonorableMentions[HM_USEFULTOOPPOSITE] = {
-	Name = "Most useful to opposite team",
-	String = "goes to %s for giving up a whopping %d kills!",
+	Name = "Stupid Damn Zombie",
+	String = "%s died %d times as a zombie",
 	Callback = genericcallback,
 	Color = COLOR_RED,
 }
 GM.HonorableMentions[HM_STUPID] = {
-	Name = "Stupid",
-	String = "is what %s is for getting killed %d feet away from a zombie spawn.",
+	Name = "Natural Selection",
+	String = "%s got killed %d feet from a zombie spawn",
 	Callback = genericcallback,
 	Color = COLOR_RED,
 }
@@ -906,40 +906,40 @@ GM.HonorableMentions[HM_SALESMAN] = {
 	Color = COLOR_CYAN,
 }
 GM.HonorableMentions[HM_WAREHOUSE] = {
-	Name = "Warehouse",
-	String = "describes %s well since they had their resupply boxes used %d times.",
+	Name = "Take Some Ammo!",
+	String = "%s had their resupply boxes used %d times",
 	Callback = genericcallback,
 	Color = COLOR_CYAN,
 }
 GM.HonorableMentions[HM_DEFENCEDMG] = {
-	Name = "Defender",
-	String = "goes to %s for protecting humans from %d damage with defence boosts.",
+	Name = "Defence Buff Master",
+	String = "%s protected humans from %d damage with defence boosts",
 	Callback = genericcallback,
-	Color = COLOR_WHITE,
+	Color = COLOR_BLUE,
 }
 GM.HonorableMentions[HM_STRENGTHDMG] = {
-	Name = "Alchemist",
-	String = "is what %s is for boosting players with an additional %d damage.",
+	Name = "Buff Master",
+	String = "%s boosted humans with an additional %d damage",
 	Callback = genericcallback,
 	Color = COLOR_CYAN,
 }
 GM.HonorableMentions[HM_BARRICADEDESTROYER] = {
-	Name = "Barricade Destroyer",
-	String = "goes to %s for doing %d damage to barricades.",
+	Name = "Prop Muncher",
+	String = "%s dealt %d damage to barricades",
 	Callback = genericcallback,
-	Color = COLOR_LIMEGREEN,
+	Color = COLOR_RED,
 }
 GM.HonorableMentions[HM_NESTDESTROYER] = {
 	Name = "Nest Destroyer",
 	String = "goes to %s for destroying %d nests.",
 	Callback = genericcallback,
-	Color = COLOR_LIMEGREEN,
+	Color = COLOR_RED,
 }
 GM.HonorableMentions[HM_NESTMASTER] = {
 	Name = "Nest Master",
 	String = "goes to %s for having %d zombies spawn through their nest.",
 	Callback = genericcallback,
-	Color = COLOR_LIMEGREEN,
+	Color = COLOR_RED,
 }
 
 -- Don't let humans use these models because they look like undead models. Must be lower case.
