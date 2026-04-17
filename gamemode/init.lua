@@ -98,6 +98,7 @@ include("sv_playerspawnentities.lua")
 include("sv_profiling.lua")
 include("sv_sigils.lua")
 include("sv_concommands.lua")
+include("sv_propsearch.lua")
 
 include("itemstocks/sv_stock.lua")
 
