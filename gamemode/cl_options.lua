@@ -2,14 +2,14 @@ GM.BeatSetHumanDefault = "defaulthuman"
 GM.BeatSetZombieDefault = "defaultzombiev2"
 
 GM.ItemCategoryIcons = {
-	[ITEMCAT_GUNS] = "icon16/gun.png",
-	[ITEMCAT_AMMO] = "icon16/box.png",
-	[ITEMCAT_MELEE] = "icon16/cog.png",
-	[ITEMCAT_TOOLS] = "icon16/wrench.png",
-	[ITEMCAT_DEPLOYABLES] = "icon16/package.png",
-	[ITEMCAT_OTHER] = "icon16/world.png",
-	[ITEMCAT_TRINKETS] = "icon16/ruby.png" --[[,
-	[ITEMCAT_RETURNS] = "icon16/user_delete.png"]],
+	[ITEMS_GUNS] = "icon16/gun.png",
+	[ITEMS_AMMO] = "icon16/box.png",
+	[ITEMS_MELEE] = "icon16/cog.png",
+	[ITEMS_TOOLS] = "icon16/wrench.png",
+	[ITEMS_DEPLOYABLES] = "icon16/package.png",
+	[ITEMS_OTHER] = "icon16/world.png",
+	[ITEMS_TRINKETS] = "icon16/ruby.png" --[[,
+	[ITEMS_RETURNS] = "icon16/user_delete.png"]],
 }
 
 GM.RemortColors = {

@@ -355,7 +355,7 @@ function MakepWorth()
 
 	for catid, catname in ipairs(GAMEMODE.ItemCategories) do
 		local itemframe = vgui.Create("DScrollPanel", propertysheet)
-		local trinkets = catid == ITEMCAT_TRINKETS
+		local trinkets = catid == ITEMS_TRINKETS
 
 		--list = vgui.Create("DPanelList", itemframe)
 		list = vgui.Create("DGrid", itemframe)
@@ -521,7 +521,7 @@ function PANEL:SetWorthID(id)
 
 	local missing_skill = tab.SkillRequirement and not MySelf:IsSkillActive(tab.SkillRequirement)
 
-	local nottrinkets = tab.Category ~= ITEMCAT_TRINKETS
+	local nottrinkets = tab.Category ~= ITEMS_TRINKETS
 	self:SetTall((nottrinkets and 100 or 60) * screenscale)
 
 	if nottrinkets then
@@ -529,7 +529,7 @@ function PANEL:SetWorthID(id)
 		local kitbl =
 			killicon.Get(GAMEMODE.ZSInventoryItemData[tab.SWEP] and "weapon_zs_craftables" or tab.SWEP or tab.Model)
 		if kitbl then
-			GAMEMODE:AttachKillicon(kitbl, self, self.ModelFrame, tab.Category == ITEMCAT_AMMO, missing_skill)
+			GAMEMODE:AttachKillicon(kitbl, self, self.ModelFrame, tab.Category == ITEMS_AMMO, missing_skill)
 		elseif tab.Model then
 			local mdlpanel = vgui.Create("DModelPanel", self.ModelFrame)
 			mdlpanel:SetSize(self.ModelFrame:GetSize())
