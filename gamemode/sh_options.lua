@@ -1,3 +1,4 @@
+-- zombie escape primary weapons
 GM.ZombieEscapeWeaponsPrimary = {
 	"weapon_zs_zeakbar",
 	"weapon_zs_zesweeper",
@@ -11,6 +12,7 @@ GM.ZombieEscapeWeaponsPrimary = {
 	"weapon_zs_zem4",
 }
 
+-- zombie escape secondary weapons
 GM.ZombieEscapeWeaponsSecondary = {
 	"weapon_zs_zedeagle",
 	"weapon_zs_zebattleaxe",
@@ -24,6 +26,7 @@ GM.ZombieEscapeWeaponsSecondary = {
 GM.CartFile = "zscarts.txt"
 GM.SkillLoadoutsFile = "zsskloadouts.txt"
 
+-- item category constants
 ITEMCAT_GUNS = 1
 ITEMCAT_AMMO = 2
 ITEMCAT_MELEE = 3
@@ -31,13 +34,6 @@ ITEMCAT_TOOLS = 4
 ITEMCAT_DEPLOYABLES = 5
 ITEMCAT_TRINKETS = 6
 ITEMCAT_OTHER = 7
-
-ITEMSUBCAT_TRINKETS_DEFENSIVE = 1
-ITEMSUBCAT_TRINKETS_OFFENSIVE = 2
-ITEMSUBCAT_TRINKETS_MELEE = 3
-ITEMSUBCAT_TRINKETS_PERFORMANCE = 4
-ITEMSUBCAT_TRINKETS_SUPPORT = 5
-ITEMSUBCAT_TRINKETS_SPECIAL = 6
 
 GM.ItemCategories = {
 	[ITEMCAT_GUNS] = "Guns",
@@ -48,6 +44,14 @@ GM.ItemCategories = {
 	[ITEMCAT_TRINKETS] = "Trinkets",
 	[ITEMCAT_OTHER] = "Other",
 }
+
+-- trinket item subcategories
+ITEMSUBCAT_TRINKETS_DEFENSIVE = 1
+ITEMSUBCAT_TRINKETS_OFFENSIVE = 2
+ITEMSUBCAT_TRINKETS_MELEE = 3
+ITEMSUBCAT_TRINKETS_PERFORMANCE = 4
+ITEMSUBCAT_TRINKETS_SUPPORT = 5
+ITEMSUBCAT_TRINKETS_SPECIAL = 6
 
 GM.ItemSubCategories = {
 	[ITEMSUBCAT_TRINKETS_DEFENSIVE] = "Defensive",
@@ -87,6 +91,7 @@ function GM:AddItem(signature, category, price, swep, name, desc, model, callbac
 	return tab
 end
 
+-- function for adding a new worth menu item
 function GM:AddStartingItem(signature, category, price, swep, name, desc, model, callback)
 	local item = self:AddItem(signature, category, price, swep, name, desc, model, callback)
 	item.WorthShop = true
@@ -94,6 +99,7 @@ function GM:AddStartingItem(signature, category, price, swep, name, desc, model,
 	return item
 end
 
+-- function for adding a new arsenal crate item
 function GM:AddPointShopItem(signature, category, price, swep, name, desc, model, callback)
 	local item = self:AddItem("ps_" .. signature, category, price, swep, name, desc, model, callback)
 	item.PointShop = true
@@ -155,7 +161,6 @@ GM.AmmoResupply = table.ToAssoc({
 -----------
 -- Worth --
 -----------
-
 GM:AddStartingItem("pshtr", ITEMCAT_GUNS, 45, "weapon_zs_peashooter")
 GM:AddStartingItem("btlax", ITEMCAT_GUNS, 45, "weapon_zs_battleaxe")
 GM:AddStartingItem("owens", ITEMCAT_GUNS, 45, "weapon_zs_owens")
