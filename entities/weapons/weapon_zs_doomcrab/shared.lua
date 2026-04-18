@@ -20,7 +20,7 @@ SWEP.NoHitRecovery = 0.75
 SWEP.HitRecovery = 1
 
 SWEP.AttackTime = 1.875
-SWEP.AttackProcessTime = 1.35
+SWEP.AttackProcessTime = 3.5
 --[[SWEP.AttackDamage = 40
 SWEP.AttackDamageType = DMG_BLUNT
 

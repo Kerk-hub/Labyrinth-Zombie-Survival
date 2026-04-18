@@ -59,12 +59,12 @@ function ENT:Hit(vHitPos, vHitNormal, eHitEntity)
 
 	for _, ent in pairs(util.BlastAlloc(self, owner, vHitPos, 128)) do
 		if ent:IsValidLivingPlayer() and gamemode.Call("PlayerShouldTakeDamage", ent, owner) and ent ~= owner then
-			ent:GiveStatus("dimvision", 10)
-			local gt = ent:GiveStatus("enfeeble", 5)
+			ent:GiveStatus("dimvision", 2)
+			local gt = ent:GiveStatus("enfeeble", 3)
 			if gt and gt:IsValid() then
 				gt.Applier = owner
 			end
-			ent:GiveStatus("slow", 5)
+			ent:GiveStatus("slow", 3)
 		end
 	end
 end
