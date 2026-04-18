@@ -152,16 +152,16 @@ GM.AmmoResupply = table.ToAssoc({
 -----------
 -- Worth --
 -----------
-GM:WorthAdd("pshtr", ITEMS_GUNS, 45, "weapon_zs_peashooter")
-GM:WorthAdd("btlax", ITEMS_GUNS, 45, "weapon_zs_battleaxe")
-GM:WorthAdd("owens", ITEMS_GUNS, 45, "weapon_zs_owens")
-GM:WorthAdd("blstr", ITEMS_GUNS, 45, "weapon_zs_blaster")
-GM:WorthAdd("tossr", ITEMS_GUNS, 45, "weapon_zs_tosser")
-GM:WorthAdd("stbbr", ITEMS_GUNS, 45, "weapon_zs_stubber")
-GM:WorthAdd("crklr", ITEMS_GUNS, 45, "weapon_zs_crackler")
-GM:WorthAdd("sling", ITEMS_GUNS, 45, "weapon_zs_slinger")
-GM:WorthAdd("z9000", ITEMS_GUNS, 45, "weapon_zs_z9000")
-GM:WorthAdd("minelayer", ITEMS_GUNS, 45, "weapon_zs_minelayer")
+GM:WorthAdd("pshtr", ITEMS_GUNS, 30, "weapon_zs_peashooter")
+GM:WorthAdd("btlax", ITEMS_GUNS, 30, "weapon_zs_battleaxe")
+GM:WorthAdd("owens", ITEMS_GUNS, 30, "weapon_zs_owens")
+GM:WorthAdd("blstr", ITEMS_GUNS, 30, "weapon_zs_blaster")
+GM:WorthAdd("tossr", ITEMS_GUNS, 30, "weapon_zs_tosser")
+GM:WorthAdd("stbbr", ITEMS_GUNS, 30, "weapon_zs_stubber")
+GM:WorthAdd("crklr", ITEMS_GUNS, 30, "weapon_zs_crackler")
+GM:WorthAdd("sling", ITEMS_GUNS, 30, "weapon_zs_slinger")
+GM:WorthAdd("z9000", ITEMS_GUNS, 30, "weapon_zs_z9000")
+GM:WorthAdd("minelayer", ITEMS_GUNS, 30, "weapon_zs_minelayer")
 
 GM:WorthAdd("2pcp", ITEMS_AMMO, 15, nil, "28 pistol ammo", nil, "ammo_pistol", function(pl)
 	pl:GiveAmmo(28, "pistol", true)
@@ -220,7 +220,7 @@ end)
 GM:WorthAdd("60mkit", ITEMS_AMMO, 15, nil, "60 medical power", nil, "ammo_medpower", function(pl)
 	pl:GiveAmmo(60, "Battery", true)
 end)
-GM:WorthAdd("90mkit", ITEMS_AMMO, 25, nil, "90 medical power", nil, "ammo_medpower", function(pl)
+GM:WorthAdd("90mkit", ITEMS_AMMO, 20, nil, "90 medical power", nil, "ammo_medpower", function(pl)
 	pl:GiveAmmo(90, "Battery", true)
 end)
 GM:WorthAdd("3scrap", ITEMS_AMMO, 15, nil, "3 scrap", nil, "ammo_scrap", function(pl)
@@ -230,30 +230,31 @@ GM:WorthAdd("9scrap", ITEMS_AMMO, 25, nil, "9 scrap", nil, "ammo_scrap", functio
 	pl:GiveAmmo(9, "Scrap", true)
 end)
 
-GM:WorthAdd("brassknuckles", ITEMS_MELEE, 20, "weapon_zs_brassknuckles").Model =
+GM:WorthAdd("brassknuckles", ITEMS_MELEE, 15, "weapon_zs_brassknuckles").Model =
 	"models/props_c17/utilityconnecter005.mdl"
-GM:WorthAdd("zpaxe", ITEMS_MELEE, 40, "weapon_zs_axe")
-GM:WorthAdd("crwbar", ITEMS_MELEE, 40, "weapon_zs_crowbar")
-GM:WorthAdd("stnbtn", ITEMS_MELEE, 40, "weapon_zs_stunbaton")
-GM:WorthAdd("csknf", ITEMS_MELEE, 20, "weapon_zs_swissarmyknife")
-GM:WorthAdd("zpplnk", ITEMS_MELEE, 20, "weapon_zs_plank")
+GM:WorthAdd("csknf", ITEMS_MELEE, 15, "weapon_zs_swissarmyknife")
+GM:WorthAdd("zpplnk", ITEMS_MELEE, 15, "weapon_zs_plank")
+GM:WorthAdd("hook", ITEMS_MELEE, 30, "weapon_zs_hook")
 GM:WorthAdd("zpfryp", ITEMS_MELEE, 30, "weapon_zs_fryingpan")
 GM:WorthAdd("zpcpot", ITEMS_MELEE, 30, "weapon_zs_pot")
 GM:WorthAdd("ladel", ITEMS_MELEE, 30, "weapon_zs_ladel")
+GM:WorthAdd("zpaxe", ITEMS_MELEE, 40, "weapon_zs_axe")
+GM:WorthAdd("crwbar", ITEMS_MELEE, 40, "weapon_zs_crowbar")
+GM:WorthAdd("stnbtn", ITEMS_MELEE, 40, "weapon_zs_stunbaton")
 GM:WorthAdd("pipe", ITEMS_MELEE, 40, "weapon_zs_pipe")
-GM:WorthAdd("hook", ITEMS_MELEE, 40, "weapon_zs_hook")
+
 
 local item
-GM:WorthAdd("medkit", ITEMS_TOOLS, 45, "weapon_zs_medicalkit")
-GM:WorthAdd("medgun", ITEMS_TOOLS, 40, "weapon_zs_medicgun")
-item = GM:WorthAdd("strengthshot", ITEMS_TOOLS, 40, "weapon_zs_strengthshot")
+GM:WorthAdd("medkit", ITEMS_TOOLS, 30, "weapon_zs_medicalkit")
+GM:WorthAdd("medgun", ITEMS_TOOLS, 30, "weapon_zs_medicgun")
+item = GM:WorthAdd("strengthshot", ITEMS_TOOLS, 20, "weapon_zs_strengthshot")
 item.SkillRequirement = SKILL_U_STRENGTHSHOT
-item = GM:WorthAdd("antidoteshot", ITEMS_TOOLS, 40, "weapon_zs_antidoteshot")
+item = GM:WorthAdd("antidoteshot", ITEMS_TOOLS, 20, "weapon_zs_antidoteshot")
 item.SkillRequirement = SKILL_U_ANTITODESHOT
 -- GM:WorthAdd("arscrate", ITEMS_DEPLOYABLES, 50, "weapon_zs_arsenalcrate").Countables = "prop_arsenalcrate" --
-GM:WorthAdd("resupplybox", ITEMS_DEPLOYABLES, 50, "weapon_zs_resupplybox").Countables = "prop_resupplybox"
-GM:WorthAdd("remantler", ITEMS_DEPLOYABLES, 50, "weapon_zs_remantler").Countables = "prop_remantler"
-item = GM:WorthAdd("infturret", ITEMS_DEPLOYABLES, 75, "weapon_zs_gunturret", nil, nil, nil, function(pl)
+GM:WorthAdd("resupplybox", ITEMS_DEPLOYABLES, 20, "weapon_zs_resupplybox").Countables = "prop_resupplybox"
+GM:WorthAdd("remantler", ITEMS_DEPLOYABLES, 20, "weapon_zs_remantler").Countables = "prop_remantler"
+item = GM:WorthAdd("infturret", ITEMS_DEPLOYABLES, 30, "weapon_zs_gunturret", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_gunturret")
 	pl:GiveAmmo(1, "thumper")
 	pl:GiveAmmo(125, "smg1")
@@ -263,7 +264,7 @@ item.NoClassicMode = true
 item = GM:WorthAdd(
 	"blastturret",
 	ITEMS_DEPLOYABLES,
-	75,
+	30,
 	"weapon_zs_gunturret_buckshot",
 	nil,
 	nil,
@@ -286,7 +287,7 @@ end)
 item.Countables = "prop_repairfield"
 item.NoClassicMode = true
 ]]
-item = GM:WorthAdd("zapper", ITEMS_DEPLOYABLES, 75, "weapon_zs_zapper", nil, nil, nil, function(pl)
+item = GM:WorthAdd("zapper", ITEMS_DEPLOYABLES, 20, "weapon_zs_zapper", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_zapper")
 	pl:GiveAmmo(1, "zapper")
 	pl:GiveAmmo(50, "pulse")
@@ -294,105 +295,106 @@ end)
 item.Countables = "prop_zapper"
 item.NoClassicMode = true
 
-GM:WorthAdd("manhack", ITEMS_DEPLOYABLES, 50, "weapon_zs_manhack").Countables = "prop_manhack"
-item = GM:WorthAdd("drone", ITEMS_DEPLOYABLES, 55, "weapon_zs_drone", nil, nil, nil, function(pl)
+GM:WorthAdd("manhack", ITEMS_DEPLOYABLES, 20, "weapon_zs_manhack").Countables = "prop_manhack"
+item = GM:WorthAdd("drone", ITEMS_DEPLOYABLES, 30, "weapon_zs_drone", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_drone")
 	pl:GiveAmmo(1, "drone")
 	pl:GiveAmmo(60, "smg1")
 end)
 item.Countables = "prop_drone"
-item = GM:WorthAdd("pulsedrone", ITEMS_DEPLOYABLES, 55, "weapon_zs_drone_pulse", nil, nil, nil, function(pl)
+item = GM:WorthAdd("pulsedrone", ITEMS_DEPLOYABLES, 30, "weapon_zs_drone_pulse", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_drone_pulse")
 	pl:GiveAmmo(1, "pulse_cutter")
 	pl:GiveAmmo(60, "pulse")
 end)
 item.Countables = "prop_drone_pulse"
 item.SkillRequirement = SKILL_U_DRONE
-item = GM:WorthAdd("hauldrone", ITEMS_DEPLOYABLES, 25, "weapon_zs_drone_hauler", nil, nil, nil, function(pl)
+item = GM:WorthAdd("hauldrone", ITEMS_DEPLOYABLES, 20, "weapon_zs_drone_hauler", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_drone_hauler")
 	pl:GiveAmmo(1, "drone_hauler")
 end)
 item.Countables = "prop_drone_hauler"
 item.SkillRequirement = SKILL_HAULMODULE
-item = GM:WorthAdd("rollermine", ITEMS_DEPLOYABLES, 65, "weapon_zs_rollermine", nil, nil, nil, function(pl)
+item = GM:WorthAdd("rollermine", ITEMS_DEPLOYABLES, 20, "weapon_zs_rollermine", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_rollermine")
 	pl:GiveAmmo(1, "rollermine")
 end)
 item.Countables = "prop_rollermine"
 item.SkillRequirement = SKILL_U_ROLLERMINE
 
-GM:WorthAdd("wrench", ITEMS_TOOLS, 20, "weapon_zs_wrench").NoClassicMode = true
-GM:WorthAdd("crphmr", ITEMS_TOOLS, 40, "weapon_zs_hammer").NoClassicMode = true
+GM:WorthAdd("wrench", ITEMS_TOOLS, 15, "weapon_zs_wrench").NoClassicMode = true
+GM:WorthAdd("crphmr", ITEMS_TOOLS, 20, "weapon_zs_hammer").NoClassicMode = true
 -- GM:WorthAdd("junkpack", ITEMS_DEPLOYABLES, 30, "weapon_zs_boardpack") -- Disabled: no longer purchasable.
-GM:WorthAdd("propanetank", ITEMS_TOOLS, 30, "comp_propanecan")
-GM:WorthAdd("busthead", ITEMS_TOOLS, 35, "comp_busthead")
-GM:WorthAdd("sawblade", ITEMS_TOOLS, 35, "comp_sawblade").SkillRequirement = SKILL_U_CRAFTINGPACK
-GM:WorthAdd("cpuparts", ITEMS_TOOLS, 35, "comp_cpuparts").SkillRequirement = SKILL_U_CRAFTINGPACK
-GM:WorthAdd("electrobattery", ITEMS_TOOLS, 45, "comp_electrobattery").SkillRequirement = SKILL_U_CRAFTINGPACK
+GM:WorthAdd("propanetank", ITEMS_TOOLS, 10, "comp_propanecan")
+GM:WorthAdd("busthead", ITEMS_TOOLS, 10, "comp_busthead")
+GM:WorthAdd("sawblade", ITEMS_TOOLS, 10, "comp_sawblade").SkillRequirement = SKILL_U_CRAFTINGPACK
+GM:WorthAdd("cpuparts", ITEMS_TOOLS, 10, "comp_cpuparts").SkillRequirement = SKILL_U_CRAFTINGPACK
+GM:WorthAdd("electrobattery", ITEMS_TOOLS, 10, "comp_electrobattery").SkillRequirement = SKILL_U_CRAFTINGPACK
 GM:WorthAdd("msgbeacon", ITEMS_DEPLOYABLES, 10, "weapon_zs_messagebeacon").Countables = "prop_messagebeacon"
-item = GM:WorthAdd("ffemitter", ITEMS_DEPLOYABLES, 45, "weapon_zs_ffemitter", nil, nil, nil, function(pl)
+item = GM:WorthAdd("ffemitter", ITEMS_DEPLOYABLES, 20, "weapon_zs_ffemitter", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_ffemitter")
 	pl:GiveAmmo(1, "slam")
 	pl:GiveAmmo(50, "pulse")
 end)
 item.Countables = "prop_ffemitter"
-GM:WorthAdd("barricadekit", ITEMS_DEPLOYABLES, 50, "weapon_zs_barricadekit")
-GM:WorthAdd("camera", ITEMS_DEPLOYABLES, 15, "weapon_zs_camera").Countables = "prop_camera"
-GM:WorthAdd("tv", ITEMS_DEPLOYABLES, 35, "weapon_zs_tv").Countables = "prop_tv"
+GM:WorthAdd("barricadekit", ITEMS_DEPLOYABLES, 30, "weapon_zs_barricadekit")
+GM:WorthAdd("camera", ITEMS_DEPLOYABLES, 5, "weapon_zs_camera").Countables = "prop_camera"
+GM:WorthAdd("tv", ITEMS_DEPLOYABLES, 10, "weapon_zs_tv").Countables = "prop_tv"
 
 GM:WorthAdd("oxtank", ITEMS_TRINKETS, 5, "trinket_oxygentank").SubCategory = TRINKETS_PERFORMANCE
+GM:WorthAdd("cutlery", ITEMS_TRINKETS, 5, "trinket_cutlery").SubCategory = TRINKETS_DEFENSIVE
+GM:WorthAdd("magnet", ITEMS_TRINKETS, 5, "trinket_magnet").SubCategory = TRINKETS_SPECIAL
+GM:WorthAdd("loadingframe", ITEMS_TRINKETS, 5, "trinket_loadingex").SubCategory =
+	TRINKETS_PERFORMANCE
 GM:WorthAdd("boxingtraining", ITEMS_TRINKETS, 10, "trinket_boxingtraining").SubCategory =
 	TRINKETS_MELEE
-GM:WorthAdd("cutlery", ITEMS_TRINKETS, 10, "trinket_cutlery").SubCategory = TRINKETS_DEFENSIVE
 GM:WorthAdd("portablehole", ITEMS_TRINKETS, 10, "trinket_portablehole").SubCategory =
 	TRINKETS_PERFORMANCE
-GM:WorthAdd("acrobatframe", ITEMS_TRINKETS, 15, "trinket_acrobatframe").SubCategory =
+GM:WorthAdd("acrobatframe", ITEMS_TRINKETS, 10, "trinket_acrobatframe").SubCategory =
 	TRINKETS_PERFORMANCE
-GM:WorthAdd("nightvision", ITEMS_TRINKETS, 15, "trinket_nightvision").SubCategory = TRINKETS_SPECIAL
-GM:WorthAdd("targetingvisi", ITEMS_TRINKETS, 15, "trinket_targetingvisori").SubCategory =
+GM:WorthAdd("nightvision", ITEMS_TRINKETS, 10, "trinket_nightvision").SubCategory = TRINKETS_SPECIAL
+GM:WorthAdd("targetingvisi", ITEMS_TRINKETS, 10, "trinket_targetingvisori").SubCategory =
 	TRINKETS_OFFENSIVE
-GM:WorthAdd("pulseampi", ITEMS_TRINKETS, 15, "trinket_pulseampi").SubCategory = TRINKETS_OFFENSIVE
-GM:WorthAdd("blueprintsi", ITEMS_TRINKETS, 15, "trinket_blueprintsi").SubCategory = TRINKETS_SUPPORT
-GM:WorthAdd("loadingframe", ITEMS_TRINKETS, 15, "trinket_loadingex").SubCategory =
-	TRINKETS_PERFORMANCE
+GM:WorthAdd("pulseampi", ITEMS_TRINKETS, 10, "trinket_pulseampi").SubCategory = TRINKETS_OFFENSIVE
+--GM:WorthAdd("blueprintsi", ITEMS_TRINKETS, 15, "trinket_blueprintsi").SubCategory = TRINKETS_SUPPORT
 GM:WorthAdd("kevlar", ITEMS_TRINKETS, 15, "trinket_kevlar").SubCategory = TRINKETS_DEFENSIVE
 GM:WorthAdd("momentumsupsysii", ITEMS_TRINKETS, 15, "trinket_momentumsupsysii").SubCategory =
 	TRINKETS_MELEE
 GM:WorthAdd("hemoadrenali", ITEMS_TRINKETS, 15, "trinket_hemoadrenali").SubCategory = TRINKETS_MELEE
+GM:WorthAdd("processor", ITEMS_TRINKETS, 15, "trinket_processor").SubCategory = TRINKETS_SUPPORT
+GM:WorthAdd("bloodpack", ITEMS_TRINKETS, 15, "trinket_bloodpack").SubCategory = TRINKETS_DEFENSIVE
 GM:WorthAdd("vitpackagei", ITEMS_TRINKETS, 20, "trinket_vitpackagei").SubCategory =
 	TRINKETS_DEFENSIVE
-GM:WorthAdd("processor", ITEMS_TRINKETS, 20, "trinket_processor").SubCategory = TRINKETS_SUPPORT
 GM:WorthAdd("cardpackagei", ITEMS_TRINKETS, 20, "trinket_cardpackagei").SubCategory =
 	TRINKETS_DEFENSIVE
-GM:WorthAdd("bloodpack", ITEMS_TRINKETS, 20, "trinket_bloodpack").SubCategory = TRINKETS_DEFENSIVE
 GM:WorthAdd("biocleanser", ITEMS_TRINKETS, 20, "trinket_biocleanser").SubCategory = TRINKETS_SPECIAL
 GM:WorthAdd("reactiveflasher", ITEMS_TRINKETS, 25, "trinket_reactiveflasher").SubCategory =
 	TRINKETS_SPECIAL
-GM:WorthAdd("magnet", ITEMS_TRINKETS, 25, "trinket_magnet").SubCategory = TRINKETS_SPECIAL
 --GM:WorthAdd("arsenalpack", ITEMS_TRINKETS, 55, "trinket_arsenalpack").SubCategory = TRINKETS_SUPPORT
-GM:WorthAdd("resupplypack", ITEMS_TRINKETS, 55, "trinket_resupplypack").SubCategory =
+GM:WorthAdd("resupplypack", ITEMS_TRINKETS, 25, "trinket_resupplypack").SubCategory =
 	TRINKETS_SUPPORT
 
-GM:WorthAdd("stone", ITEMS_OTHER, 10, "weapon_zs_stone")
-GM:WorthAdd("grenade", ITEMS_OTHER, 30, "weapon_zs_grenade")
-GM:WorthAdd("flashbomb", ITEMS_OTHER, 15, "weapon_zs_flashbomb")
-GM:WorthAdd("molotov", ITEMS_OTHER, 30, "weapon_zs_molotov")
-GM:WorthAdd("betty", ITEMS_OTHER, 30, "weapon_zs_proxymine")
-GM:WorthAdd("corgasgrenade", ITEMS_OTHER, 40, "weapon_zs_corgasgrenade")
-GM:WorthAdd("crygasgrenade", ITEMS_OTHER, 35, "weapon_zs_crygasgrenade").SkillRequirement = SKILL_U_CRYGASGREN
-GM:WorthAdd("detpck", ITEMS_OTHER, 35, "weapon_zs_detpack").Countables = "prop_detpack"
-item = GM:WorthAdd("sigfragment", ITEMS_OTHER, 25, "weapon_zs_sigilfragment")
-item.NoClassicMode = true
-item = GM:WorthAdd("corfragment", ITEMS_OTHER, 35, "weapon_zs_corruptedfragment")
-item.NoClassicMode = true
+GM:WorthAdd("stone", ITEMS_OTHER, 5, "weapon_zs_stone")
+GM:WorthAdd("grenade", ITEMS_OTHER, 10, "weapon_zs_grenade")
+GM:WorthAdd("flashbomb", ITEMS_OTHER, 10, "weapon_zs_flashbomb")
+GM:WorthAdd("molotov", ITEMS_OTHER, 10, "weapon_zs_molotov")
+GM:WorthAdd("betty", ITEMS_OTHER, 10, "weapon_zs_proxymine")
+GM:WorthAdd("corgasgrenade", ITEMS_OTHER, 15, "weapon_zs_corgasgrenade")
+GM:WorthAdd("crygasgrenade", ITEMS_OTHER, 15, "weapon_zs_crygasgrenade").SkillRequirement = SKILL_U_CRYGASGREN
+GM:WorthAdd("detpck", ITEMS_OTHER, 15, "weapon_zs_detpack").Countables = "prop_detpack"
+
 item.SkillRequirement = SKILL_U_CORRUPTEDFRAGMENT
-item = GM:WorthAdd("medcloud", ITEMS_OTHER, 25, "weapon_zs_mediccloudbomb")
+item = GM:WorthAdd("medcloud", ITEMS_OTHER, 15, "weapon_zs_mediccloudbomb")
 item.SkillRequirement = SKILL_U_MEDICCLOUD
 --[[
 item = GM:WorthAdd("nanitecloud", ITEMS_OTHER, 25, "weapon_zs_nanitecloudbomb")
 item.SkillRequirement = SKILL_U_NANITECLOUD
 ]]
-GM:WorthAdd("bloodshot", ITEMS_OTHER, 35, "weapon_zs_bloodshotbomb")
+GM:WorthAdd("bloodshot", ITEMS_OTHER, 15, "weapon_zs_bloodshotbomb")
+item = GM:WorthAdd("sigfragment", ITEMS_OTHER, 15, "weapon_zs_sigilfragment")
+item.NoClassicMode = true
+item = GM:WorthAdd("corfragment", ITEMS_OTHER, 20, "weapon_zs_corruptedfragment")
+item.NoClassicMode = true
 
 ------------
 -- Point Shop --
