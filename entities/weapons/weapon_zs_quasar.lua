@@ -139,10 +139,6 @@ function SWEP.BulletCallback(attacker, tr, dmginfo)
 	local ent = tr.Entity
 	if ent:IsValid() and ent:IsPlayer() and ent:Team() == TEAM_UNDEAD then
 		ent:AddLegDamageExt(8, attacker, attacker:GetActiveWeapon(), SLOWTYPE_PULSE)
-
-		if IsFirstTimePredicted() then
-			util.CreatePulseImpactEffect(tr.HitPos, tr.HitNormal)
-		end
 	end
 end
 
