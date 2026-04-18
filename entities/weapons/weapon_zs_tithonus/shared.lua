@@ -21,7 +21,7 @@ SWEP.Primary.NumShots = 4
 SWEP.Primary.Delay = 0.85
 
 SWEP.Primary.ClipSize = 18
-SWEP.Primary.Automatic = false
+SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "pulse"
 SWEP.Primary.DefaultClip = 18
 

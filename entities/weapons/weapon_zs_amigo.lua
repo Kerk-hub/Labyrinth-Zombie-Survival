@@ -27,18 +27,18 @@ SWEP.UseHands = true
 
 SWEP.ReloadSound = Sound("Weapon_SG552.Clipout")
 SWEP.Primary.Sound = Sound("Weapon_SG552.Single")
-SWEP.Primary.Damage = 18.5
+SWEP.Primary.Damage = 18
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Delay = 0.15
+SWEP.Primary.Delay = 0.135
 
 SWEP.Primary.ClipSize = 25
 SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "ar2"
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
 
-SWEP.ConeMax = 2
-SWEP.ConeMin = 0.8
-SWEP.HeadshotMulti = 2.1
+SWEP.ConeMax = 1.5
+SWEP.ConeMin = 0.7
+SWEP.HeadshotMulti = 1.9
 
 SWEP.ReloadSpeed = 0.9
 
