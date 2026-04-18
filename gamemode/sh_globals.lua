@@ -152,7 +152,8 @@ GM.BarricadeHealthMassFactor = 3 * 0.85
 GM.BarricadeHealthVolumeFactor = 4 * 0.85
 GM.BarricadeRepairCapacity = 1.25
 
-GM.BossZombiePlayersRequired = 4
+-- No minimum player count is required for boss zombie selection.
+GM.BossZombiePlayersRequired = 0
 
 GM.HumanGibs = {
 	Model("models/gibs/HGIBS.mdl"),

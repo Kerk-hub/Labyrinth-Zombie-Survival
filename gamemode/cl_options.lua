@@ -112,7 +112,7 @@ end)
 
 CreateClientConVar("labyrinth_zs_noredeem", "1", true, true)
 CreateClientConVar("labyrinth_zs_alwaysvolunteer", "1", true, true)
-CreateClientConVar("labyrinth_zs_nobosspick", "1", true, true)
+CreateClientConVar("labyrinth_zs_nobosspick", "0", true, true)
 CreateClientConVar("labyrinth_zs_nousetodeposit", "1", true, true)
 CreateClientConVar("labyrinth_zs_nopickupprops", "1", true, true)
 

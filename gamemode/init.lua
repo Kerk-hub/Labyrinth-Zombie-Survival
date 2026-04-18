@@ -1304,7 +1304,6 @@ function GM:Think()
 				and self.LastBossZombieSpawned ~= wave
 				and wave > 0
 				and not self.RoundEnded
-				and (self.BossZombiePlayersRequired <= 0 or #player.GetAll() >= self.BossZombiePlayersRequired)
 			then
 				if self:GetWaveStart() - 5 <= time then
 					self:SpawnBossZombie()
