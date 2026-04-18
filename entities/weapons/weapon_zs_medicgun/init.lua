@@ -37,7 +37,8 @@ function SWEP:ShootBullets(damage, numshots, cone)
 			end
 		elseif not (owner:IsSkillActive(SKILL_RECLAIMSOL) and ehithp >= ehitmaxhp) then
 			hitent:GiveStatus("healdartboost", self.BuffDuration or 10)
-			owner:HealPlayer(hitent, self.Heal * (owner.MedDartEffMul or 1))
+			local distmul = 1 - (tr.Fraction * 0.75) -- at max range heals 25% of base
+			owner:HealPlayer(hitent, self.Heal * (owner.MedDartEffMul or 1) * distmul)
 		end
 
 		local effectdata = EffectData()
