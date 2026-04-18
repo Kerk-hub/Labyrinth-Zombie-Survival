@@ -144,8 +144,15 @@ function SWEP:SecondaryAttack()
 	if trtwo.HitSky then return end
 
 	local ent = trtwo.Entity
-	if trtwo.HitWorld
-	or ent:IsValid() and util.IsValidPhysicsObject(ent, trtwo.PhysicsBone) and (ent:GetMoveType() == MOVETYPE_VPHYSICS or ent:GetNailFrozen()) and not ent.NoNails and not (not ent:IsNailed() and not ent:GetPhysicsObject():IsMoveable()) and not (ent:GetMaxHealth() == 1 and ent:Health() == 0 and not ent.TotalHealth) then
+	local cannailtoent = ent:IsValid() and util.IsValidPhysicsObject(ent, trtwo.PhysicsBone)
+		and (ent:GetMoveType() == MOVETYPE_VPHYSICS or ent:GetNailFrozen())
+		and not ent.NoNails
+		and not (not ent:IsNailed() and not ent:GetPhysicsObject():IsMoveable())
+		and not (ent:GetMaxHealth() == 1 and ent:Health() == 0 and not ent.TotalHealth)
+
+	if cannailtoent and not ent:IsNailed() then return end
+
+	if trtwo.HitWorld or cannailtoent then
 		--if trtwo.MatType == MAT_GRATE or trtwo.MatType == MAT_CLIP then
 		--	owner:PrintTranslatedMessage(HUD_PRINTCENTER, "impossible")
 		--	return
