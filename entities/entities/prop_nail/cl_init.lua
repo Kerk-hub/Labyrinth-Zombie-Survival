@@ -37,17 +37,48 @@ end
 
 local matExpert = Material("zombiesurvival/padlock.png")
 local matHeart = Material("icon16/heart.png")
+local matNailWireframe = Material("models/wireframe")
+local matNailOverlay = Material("models/debug/debugwhite")
 local colNail = Color(0, 0, 5, 220)
 local colText = Color(240, 240, 240, 105)
 local colDead = Color(230, 80, 80, 95)
+
+local function IsHammerWeapon(wep)
+	return wep:IsValid() and (wep:GetClass() == "weapon_zs_hammer" or wep.Base == "weapon_zs_hammer")
+end
+
+function ENT:DrawNailOverlay(nhp, mnhp)
+	local healthfrac = mnhp > 0 and math.Clamp(nhp / mnhp, 0, 1) or 1
+
+	cam.IgnoreZ(true)
+	render.SuppressEngineLighting(true)
+	render.SetColorModulation(1, 0.65 + healthfrac * 0.35, 0.2 + healthfrac * 0.2)
+
+	render.SetBlend(0.15)
+	render.ModelMaterialOverride(matNailOverlay)
+	self:DrawModel()
+
+	render.SetBlend(1)
+	render.ModelMaterialOverride(matNailWireframe)
+	self:DrawModel()
+
+	render.ModelMaterialOverride(0)
+	render.SetBlend(1)
+	render.SetColorModulation(1, 1, 1)
+	render.SuppressEngineLighting(false)
+	cam.IgnoreZ(false)
+end
+
 function ENT:DrawTranslucent()
 	local parent = self:GetParent()
-	if not parent:IsValid() or RealTime() == parent.LastNailInfoDraw then
+	if not parent:IsValid() then
 		self:DrawModel()
 		return
 	end
 
+	local skipdrawinfo = RealTime() == parent.LastNailInfoDraw
 	local drawinfo
+	local drawoutline
 	local myteam
 	local pos
 	local eyepos
@@ -56,9 +87,11 @@ function ENT:DrawTranslucent()
 		pos = self:GetPos()
 		eyepos = EyePos()
 		if myteam == TEAM_HUMAN or myteam == TEAM_SPECTATOR then
-			drawinfo = (GAMEMODE.AlwaysShowNails or MySelf:KeyDown(IN_SPEED) or GAMEMODE.TraceTargetNoPlayers == self:GetParent()) and eyepos:DistToSqr(pos) <= 262144 and WorldVisible(eyepos, pos)
+			local activeweapon = MySelf:GetActiveWeapon()
+			drawinfo = (GAMEMODE.AlwaysShowNails or MySelf:KeyDown(IN_SPEED) or GAMEMODE.TraceTargetNoPlayers == parent) and eyepos:DistToSqr(pos) <= 262144 and WorldVisible(eyepos, pos)
+			drawoutline = myteam == TEAM_HUMAN and IsHammerWeapon(activeweapon) and GAMEMODE.TraceTargetNoPlayers == parent and eyepos:DistToSqr(pos) <= 262144
 		elseif myteam == TEAM_UNDEAD then
-			drawinfo = GAMEMODE.TraceTargetNoPlayers == self:GetParent()
+			drawinfo = GAMEMODE.TraceTargetNoPlayers == parent
 		end
 	end
 
@@ -66,6 +99,10 @@ function ENT:DrawTranslucent()
 
 	local nhp = self:GetNailHealth()
 	local mnhp = self:GetMaxNailHealth()
+
+	if drawoutline then
+		self:DrawNailOverlay(nhp, mnhp)
+	end
 
 	if nhp/mnhp < 0.35 and CurTime() > self.NextEmit then
 		local normal = self:GetForward() * -1
@@ -95,7 +132,7 @@ function ENT:DrawTranslucent()
 		self.NextEmit = CurTime() + math.Rand(4.2, 5.8)
 	end
 
-	if drawinfo then
+	if drawinfo and not skipdrawinfo then
 		parent.LastNailInfoDraw = RealTime()
 
 		local displayowner = self:GetDTString(0)
