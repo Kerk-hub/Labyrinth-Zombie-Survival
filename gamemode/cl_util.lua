@@ -84,7 +84,8 @@ function EasyButton(parent, text, xpadding, ypadding)
 end
 
 local lastautobuytime = 0
-hook.Add("PlayerButtonDown", "AutoBuyAmmo", function(ply, button)
+
+local function TryAutoBuyAmmo(ply, reloadcheck)
     if ply ~= LocalPlayer() then return end
     if not GAMEMODE.AutoBuyAmmo then return end
 
@@ -100,13 +101,46 @@ hook.Add("PlayerButtonDown", "AutoBuyAmmo", function(ply, button)
     local clip = wep:Clip1()
     local reserve = ply:GetAmmoCount(ammotype)
 
-    if clip + reserve > 0 then return end
-    if ply:GetPoints() < 5 then return end
+    if reloadcheck then
+        local magsize = wep.GetMaxClip1 and wep:GetMaxClip1() or -1
+        if magsize <= 0 and wep.Primary then
+            magsize = wep.Primary.ClipSize or -1
+        end
 
+        if magsize <= 0 or clip + reserve >= magsize then return end
+    else
+        if clip + reserve > 0 then return end
+    end
+
+    if ply:GetPoints() < 5 then return end
     if CurTime() - lastautobuytime < 1 then return end
 
-    if button == MOUSE_LEFT or button == MOUSE_RIGHT or button == MOUSE_MIDDLE then
-        RunConsoleCommand("zs_quickbuyammo")
-        lastautobuytime = CurTime()
+    RunConsoleCommand("zs_quickbuyammo")
+    lastautobuytime = CurTime()
+end
+
+hook.Add("PlayerButtonDown", "AutoBuyAmmo", function(ply, button)
+    if button == KEY_R then
+        TryAutoBuyAmmo(ply, true)
+    elseif button == MOUSE_LEFT or button == MOUSE_RIGHT or button == MOUSE_MIDDLE then
+        TryAutoBuyAmmo(ply, false)
+    end
+end)
+
+hook.Add("Think", "AutoBuyAmmoHoldAttack", function()
+    local ply = LocalPlayer()
+    if not IsValid(ply) then return end
+
+    if ply:KeyDown(IN_ATTACK) then
+        TryAutoBuyAmmo(ply, false)
+    end
+end)
+
+hook.Add("PlayerBindPress", "AutoBuyAmmoReloadBind", function(ply, bind, pressed)
+    if not pressed then return end
+
+    bind = string.lower(bind)
+    if string.find(bind, "+reload", 1, true) then
+        TryAutoBuyAmmo(ply, true)
     end
 end)
