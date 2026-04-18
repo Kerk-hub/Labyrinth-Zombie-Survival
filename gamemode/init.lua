@@ -99,6 +99,7 @@ include("sv_profiling.lua")
 include("sv_sigils.lua")
 include("sv_concommands.lua")
 include("sv_propsearch.lua")
+include("cl_chatcommands.lua")
 
 include("itemstocks/sv_stock.lua")
 
@@ -449,8 +450,8 @@ function GM:Initialize()
 
 	self:RefreshMapIsObjective()
 
-	timer.Create("DiscordBroadcast", 300, 0, function()
-    	PrintMessage(HUD_PRINTTALK, "Join the Labyrinth Discord: https://discord.gg/V9JGECTaQW")
+	timer.Create("MessageoftheDay", 300, 0, function()
+    	PrintMessage(HUD_PRINTTALK, "New to the game? Type !guide to learn how to play. Type !discord to join the community Discord server!")
 	end)
 
 	game.ConsoleCommand("fire_dmgscale 1\n")
@@ -4996,18 +4997,5 @@ net.Receive("zs_nestspec", function(len, sender)
 	if nest:IsValid() then
 		sender:Spectate(OBS_MODE_CHASE)
 		sender:SpectateEntity(nest)
-	end
-end)
-
-
-local SIGIL_CLASS = "prop_obj_sigil"
-
-hook.Add("ShouldCollide", "ZS_SigilHumanPass", function(ent1, ent2)
-	if ent1:GetClass() == SIGIL_CLASS and ent2:IsPlayer() then
-		return ent2:Team() ~= TEAM_HUMAN
-	end
-
-	if ent2:GetClass() == SIGIL_CLASS and ent1:IsPlayer() then
-		return ent1:Team() ~= TEAM_HUMAN
 	end
 end)
