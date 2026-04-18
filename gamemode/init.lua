@@ -99,6 +99,7 @@ include("sv_profiling.lua")
 include("sv_sigils.lua")
 include("sv_concommands.lua")
 include("sv_propsearch.lua")
+include("cl_chatcommands.lua")
 
 include("itemstocks/sv_stock.lua")
 
