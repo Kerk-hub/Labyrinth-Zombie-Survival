@@ -1,12 +1,51 @@
 INC_SERVER()
 
-SWEP.Primary.Projectile = "projectile_medicrifle"
-SWEP.Primary.ProjVelocity = 3500
-
-function SWEP:EntModify(ent)
+function SWEP:ShootBullets(damage, numshots, cone)
 	local owner = self:GetOwner()
+	self:SendWeaponAnimation()
+	owner:DoAttackEvent()
 
-	ent:SetSeeked(self:GetSeekedPlayer() or nil)
-	ent.Heal = self.Heal * (owner.MedDartEffMul or 1)
-	ent.BuffDuration = self.BuffDuration
+	local shootpos = owner:GetShootPos()
+	local endpos = shootpos + owner:GetAimVector() * 2048
+	local filter = {owner}
+
+	for i = 1, player.GetCount() do
+		local tr = util.TraceLine({
+			start = shootpos,
+			endpos = endpos,
+			filter = filter,
+			mask = MASK_SHOT
+		})
+
+		local hitent = tr.Entity
+		if not hitent:IsValid() then break end
+		if not hitent:IsPlayer() then break end
+		if hitent:Team() == TEAM_UNDEAD then break end
+
+		local ehithp, ehitmaxhp = hitent:Health(), hitent:GetMaxHealth()
+
+		if ehithp >= ehitmaxhp then
+			table.insert(filter, hitent)
+		end
+
+		if hitent:IsSkillActive(SKILL_D_FRAIL) and ehithp >= ehitmaxhp * 0.25 then
+			owner:CenterNotify(COLOR_RED, translate.Format("frail_healdart_warning", hitent:GetName()))
+			hitent:EmitSound("buttons/button8.wav", 70, math.random(115, 128))
+			if not self.Refunded and owner:IsSkillActive(SKILL_RECLAIMSOL) then
+				self.Refunded = true
+				owner:GiveAmmo(3, "Battery")
+			end
+		elseif not (owner:IsSkillActive(SKILL_RECLAIMSOL) and ehithp >= ehitmaxhp) then
+			hitent:GiveStatus("healdartboost", self.BuffDuration or 10)
+			owner:HealPlayer(hitent, self.Heal * (owner.MedDartEffMul or 1))
+		end
+
+		local effectdata = EffectData()
+			effectdata:SetOrigin(tr.HitPos)
+			effectdata:SetNormal(tr.HitNormal)
+			effectdata:SetEntity(hitent)
+		util.Effect("hit_healdart", effectdata)
+
+		break
+	end
 end
