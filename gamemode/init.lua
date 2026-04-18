@@ -836,6 +836,8 @@ local ammoreplacements = {
 	["item_ammo_smg1_large"] = "smg1",
 	["item_box_buckshot"] = "buckshot",
 }
+
+-- replace map ammo items function...
 function GM:ReplaceMapAmmo()
 	local prefix = game.GetMap():lower():sub(1, 3)
 	if prefix == "dm_" or prefix == "pb_" then

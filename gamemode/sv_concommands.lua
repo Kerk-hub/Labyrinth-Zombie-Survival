@@ -536,6 +536,8 @@ concommand.Add("zsgiveammo", function(sender, command, arguments)
 	end
 
 	local ammotype = arguments[1]
+
+	-- exit early if ammo is an error...
 	if not ammotype or #ammotype == 0 or not GAMEMODE.AmmoCache[ammotype] then
 		return
 	end
@@ -558,6 +560,7 @@ concommand.Add("zsgiveammo", function(sender, command, arguments)
 				sender:PlayGiveAmmoSound()
 			end
 
+			-- gesture, does this actually work???
 			sender:RestartGesture(ACT_GMOD_GESTURE_ITEM_GIVE)
 
 			net.Start("zs_ammogive")
