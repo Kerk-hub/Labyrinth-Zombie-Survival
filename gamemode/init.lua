@@ -654,35 +654,36 @@ end
 
 function GM:PlayerPointsAdded(pl, amount) end
 
-local weaponmodelstoweapon = {}
-weaponmodelstoweapon["models/props/cs_office/computer_keyboard.mdl"] = "weapon_zs_keyboard"
-weaponmodelstoweapon["models/props_c17/computer01_keyboard.mdl"] = "weapon_zs_keyboard"
-weaponmodelstoweapon["models/props_c17/metalpot001a.mdl"] = "weapon_zs_pot"
-weaponmodelstoweapon["models/props_interiors/pot02a.mdl"] = "weapon_zs_fryingpan"
-weaponmodelstoweapon["models/props_c17/metalpot002a.mdl"] = "weapon_zs_fryingpan"
-weaponmodelstoweapon["models/props_junk/shovel01a.mdl"] = "weapon_zs_shovel"
-weaponmodelstoweapon["models/props/cs_militia/axe.mdl"] = "weapon_zs_axe"
-weaponmodelstoweapon["models/props_c17/tools_wrench01a.mdl"] = "weapon_zs_hammer"
-weaponmodelstoweapon["models/weapons/w_knife_t.mdl"] = "weapon_zs_swissarmyknife"
-weaponmodelstoweapon["models/weapons/w_knife_ct.mdl"] = "weapon_zs_swissarmyknife"
-weaponmodelstoweapon["models/weapons/w_crowbar.mdl"] = "weapon_zs_crowbar"
-weaponmodelstoweapon["models/weapons/w_stunbaton.mdl"] = "weapon_zs_stunbaton"
-weaponmodelstoweapon["models/props_interiors/furniture_lamp01a.mdl"] = "weapon_zs_lamp"
-weaponmodelstoweapon["models/props_junk/rock001a.mdl"] = "weapon_zs_stone"
---weaponmodelstoweapon["models/props_c17/canister01a.mdl"] = "weapon_zs_oxygentank"
-weaponmodelstoweapon["models/props_canal/mattpipe.mdl"] = "weapon_zs_pipe"
-weaponmodelstoweapon["models/props_junk/meathook001a.mdl"] = "weapon_zs_hook"
-weaponmodelstoweapon["models/props_junk/glassbottle01a.mdl"] = "weapon_zs_glassbottle"
-weaponmodelstoweapon["models/props_lab/ladel.mdl"] = "weapon_zs_ladel"
-weaponmodelstoweapon["models/props_junk/watermelon01.mdl"] = "weapon_zs_f_watermelon"
-weaponmodelstoweapon["models/props/cs_italy/bananna_bunch.mdl"] = "weapon_zs_f_banana"
-weaponmodelstoweapon["models/props/cs_italy/bananna.mdl"] = "weapon_zs_f_banana"
-weaponmodelstoweapon["models/props/cs_italy/orange.mdl"] = "weapon_zs_f_orange"
-weaponmodelstoweapon["models/props_junk/popcan01a.mdl"] = "weapon_zs_f_soda"
-weaponmodelstoweapon["models/props_junk/garbage_milkcarton002a.mdl"] = "weapon_zs_f_milk"
-weaponmodelstoweapon["models/props/cs_office/water_bottle.mdl"] = "weapon_zs_f_water"
-weaponmodelstoweapon["models/props_junk/garbage_takeoutcarton001a.mdl"] = "weapon_zs_f_takeout"
-weaponmodelstoweapon["models/props_c17/pushbroom.mdl"] = "weapon_zs_pushbroom"
+local mdl2weapon = {}
+mdl2weapon["models/props/cs_office/computer_keyboard.mdl"] = "weapon_zs_keyboard"
+mdl2weapon["models/props_c17/computer01_keyboard.mdl"] = "weapon_zs_keyboard"
+mdl2weapon["models/props_c17/metalpot001a.mdl"] = "weapon_zs_pot"
+mdl2weapon["models/props_interiors/pot02a.mdl"] = "weapon_zs_fryingpan"
+mdl2weapon["models/props_c17/metalpot002a.mdl"] = "weapon_zs_fryingpan"
+mdl2weapon["models/props_junk/shovel01a.mdl"] = "weapon_zs_shovel"
+mdl2weapon["models/props/cs_militia/axe.mdl"] = "weapon_zs_axe"
+mdl2weapon["models/props_c17/tools_wrench01a.mdl"] = "weapon_zs_hammer"
+mdl2weapon["models/weapons/w_knife_t.mdl"] = "weapon_zs_swissarmyknife"
+mdl2weapon["models/weapons/w_knife_ct.mdl"] = "weapon_zs_swissarmyknife"
+mdl2weapon["models/weapons/w_crowbar.mdl"] = "weapon_zs_crowbar"
+mdl2weapon["models/weapons/w_stunbaton.mdl"] = "weapon_zs_stunbaton"
+mdl2weapon["models/props_interiors/furniture_lamp01a.mdl"] = "weapon_zs_lamp"
+mdl2weapon["models/props_junk/rock001a.mdl"] = "weapon_zs_stone"
+--mdl2weapon["models/props_c17/canister01a.mdl"] = "weapon_zs_oxygentank"
+mdl2weapon["models/props_canal/mattpipe.mdl"] = "weapon_zs_pipe"
+mdl2weapon["models/props_junk/meathook001a.mdl"] = "weapon_zs_hook"
+mdl2weapon["models/props_junk/glassbottle01a.mdl"] = "weapon_zs_glassbottle"
+mdl2weapon["models/props_lab/ladel.mdl"] = "weapon_zs_ladel"
+mdl2weapon["models/props_junk/watermelon01.mdl"] = "weapon_zs_f_watermelon"
+mdl2weapon["models/props/cs_italy/bananna_bunch.mdl"] = "weapon_zs_f_banana"
+mdl2weapon["models/props/cs_italy/bananna.mdl"] = "weapon_zs_f_banana"
+mdl2weapon["models/props/cs_italy/orange.mdl"] = "weapon_zs_f_orange"
+mdl2weapon["models/props_junk/popcan01a.mdl"] = "weapon_zs_f_soda"
+mdl2weapon["models/props_junk/garbage_milkcarton002a.mdl"] = "weapon_zs_f_milk"
+mdl2weapon["models/props/cs_office/water_bottle.mdl"] = "weapon_zs_f_water"
+mdl2weapon["models/props_junk/garbage_takeoutcarton001a.mdl"] = "weapon_zs_f_takeout"
+mdl2weapon["models/props_c17/pushbroom.mdl"] = "weapon_zs_pushbroom"
+
 function GM:InitPostEntity()
 	self.DidInitPostEntity = true
 
@@ -718,12 +719,12 @@ function GM:SetupProps()
 			end
 			if table.HasValue(self.BannedProps, mdl) then
 				ent:Remove()
-			elseif weaponmodelstoweapon[mdl] then
+			elseif mdl2weapon[mdl] then
 				local wep = ents.Create("prop_weapon")
 				if wep:IsValid() then
 					wep:SetPos(ent:GetPos())
 					wep:SetAngles(ent:GetAngles())
-					wep:SetWeaponType(weaponmodelstoweapon[mdl])
+					wep:SetWeaponType(mdl2weapon[mdl])
 					wep:SetShouldRemoveAmmo(false)
 					wep:Spawn()
 
