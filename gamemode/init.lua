@@ -1,32 +1,27 @@
 --[[
-
 Zombie Survival
 by William "JetBoom" Moodhe
 williammoodhe@gmail.com -or- jetboom@noxiousnet.com
 http://www.noxiousnet.com/
-
 Further credits displayed by pressing F1 in-game.
 This was my first ever gamemode. A lot of stuff is from years ago and some stuff is very recent.
-
 ]]
 
+-- send lua files to connecting clients...
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
-
 AddCSLuaFile("sh_translate.lua")
 AddCSLuaFile("sh_colors.lua")
 AddCSLuaFile("sh_serialization.lua")
 AddCSLuaFile("sh_globals.lua")
 AddCSLuaFile("sh_util.lua")
-AddCSLuaFile("sh_options.lua")
+AddCSLuaFile("sh_options.lua")			-- worth menu, point shop, other options...
 AddCSLuaFile("sh_zombieclasses.lua")
 AddCSLuaFile("sh_animations.lua")
 AddCSLuaFile("sh_sigils.lua")
 AddCSLuaFile("sh_channel.lua")
 AddCSLuaFile("sh_weaponquality.lua")
-
 AddCSLuaFile("vault/shared.lua")
-
 AddCSLuaFile("cl_draw.lua")
 AddCSLuaFile("cl_net.lua")
 AddCSLuaFile("cl_util.lua")
@@ -40,11 +35,9 @@ AddCSLuaFile("cl_dermaskin.lua")
 AddCSLuaFile("cl_hint.lua")
 AddCSLuaFile("cl_thirdperson.lua")
 AddCSLuaFile("cl_voicesets.lua")
-
 AddCSLuaFile("skillweb/sh_skillweb.lua")
 AddCSLuaFile("skillweb/cl_skillweb.lua")
 AddCSLuaFile("skillweb/registry.lua")
-
 AddCSLuaFile("obj_vector_extend.lua")
 AddCSLuaFile("obj_entity_extend.lua")
 AddCSLuaFile("obj_entity_extend_cl.lua")
@@ -52,7 +45,6 @@ AddCSLuaFile("obj_player_extend.lua")
 AddCSLuaFile("obj_player_extend_cl.lua")
 AddCSLuaFile("obj_weapon_extend.lua")
 AddCSLuaFile("obj_weapon_extend_cl.lua")
-
 AddCSLuaFile("vgui/dteamcounter.lua")
 AddCSLuaFile("vgui/dmodelpanelex.lua")
 AddCSLuaFile("vgui/dammocounter.lua")
@@ -61,13 +53,11 @@ AddCSLuaFile("vgui/dteamheading.lua")
 AddCSLuaFile("vgui/dsidemenu.lua")
 AddCSLuaFile("vgui/dspawnmenu.lua")
 AddCSLuaFile("vgui/dmodelkillicon.lua")
-
 AddCSLuaFile("vgui/dexroundedpanel.lua")
 AddCSLuaFile("vgui/dexroundedframe.lua")
 AddCSLuaFile("vgui/dexrotatedimage.lua")
 AddCSLuaFile("vgui/dexnotificationslist.lua")
 AddCSLuaFile("vgui/dexchanginglabel.lua")
-
 AddCSLuaFile("vgui/mainmenu.lua")
 AddCSLuaFile("vgui/pmainmenu.lua")
 AddCSLuaFile("vgui/poptions.lua")
@@ -81,16 +71,14 @@ AddCSLuaFile("vgui/premantle.lua")
 AddCSLuaFile("vgui/zshealtharea.lua")
 AddCSLuaFile("vgui/zsstatusarea.lua")
 AddCSLuaFile("vgui/zsgamestate.lua")
+AddCSLuaFile("loader.lua")
 
+-- include/execute these lua files right now on the server:
 include("sh_globals.lua")
-
 include("obj_entity_extend_sv.lua")
 include("obj_player_extend_sv.lua")
 include("obj_weapon_extend_sv.lua")
-
-AddCSLuaFile("loader.lua")
 include("loader.lua")
-
 include("shared.lua")
 include("sv_options.lua")
 include("mapeditor.lua")
@@ -100,20 +88,17 @@ include("sv_sigils.lua")
 include("sv_concommands.lua")
 include("sv_propsearch.lua")
 include("cl_chatcommands.lua")
-
 include("itemstocks/sv_stock.lua")
-
 include("vault/server.lua")
-
 include("skillweb/sv_registry.lua")
 include("skillweb/sv_skillweb.lua")
-
 include("sv_zombieescape.lua")
-
 include("zsbots/init.lua")
 
+-- include this library and run it or something...
 include_library("statistics")
 
+-- local overloads for vars, funcs and constants...
 local pairs = pairs
 local ipairs = ipairs
 local IN_WALK = IN_WALK
@@ -246,190 +231,193 @@ function GM:TryHumanPickup(pl, entity)
 	end
 end
 
-function GM:AddResources()
-	resource.AddFile("resource/fonts/typenoksidi.ttf")
-	resource.AddFile("resource/fonts/hidden.ttf")
-	resource.AddFile("resource/fonts/ghoulfriaoe.ttf")
-	resource.AddFile("resource/fonts/remingtonnoiseless.ttf")
+-- alias global resource table, go against what god intended
+local FILES = resource
 
-	resource.AddFile("particles/vman_explosion.pcf")
+function GM:AddResources()
+	FILES.AddFile("resource/fonts/typenoksidi.ttf")
+	FILES.AddFile("resource/fonts/hidden.ttf")
+	FILES.AddFile("resource/fonts/ghoulfriaoe.ttf")
+	FILES.AddFile("resource/fonts/remingtonnoiseless.ttf")
+
+	FILES.AddFile("particles/vman_explosion.pcf")
 
 	for _, filename in pairs(file.Find("materials/zombiesurvival/*.vmt", "GAME")) do
-		resource.AddFile("materials/zombiesurvival/" .. filename)
+		FILES.AddFile("materials/zombiesurvival/" .. filename)
 	end
 
 	for _, filename in pairs(file.Find("materials/zombiesurvival/*.png", "GAME")) do
-		resource.AddFile("materials/zombiesurvival/" .. filename)
+		FILES.AddFile("materials/zombiesurvival/" .. filename)
 	end
 
 	for _, filename in pairs(file.Find("materials/zombiesurvival/killicons/*.vmt", "GAME")) do
-		resource.AddFile("materials/zombiesurvival/killicons/" .. filename)
+		FILES.AddFile("materials/zombiesurvival/killicons/" .. filename)
 	end
 
 	for _, filename in pairs(file.Find("materials/zombiesurvival/killicons/*.png", "GAME")) do
-		resource.AddFile("materials/zombiesurvival/killicons/" .. filename)
+		FILES.AddFile("materials/zombiesurvival/killicons/" .. filename)
 	end
 
-	resource.AddFile("materials/zombiesurvival/filmgrain/filmgrain.vmt")
-	resource.AddFile("materials/zombiesurvival/filmgrain/filmgrain.vtf")
+	FILES.AddFile("materials/zombiesurvival/filmgrain/filmgrain.vmt")
+	FILES.AddFile("materials/zombiesurvival/filmgrain/filmgrain.vtf")
 
 	for _, filename in pairs(file.Find("sound/zombiesurvival/*.ogg", "GAME")) do
-		resource.AddFile("sound/zombiesurvival/" .. filename)
+		FILES.AddFile("sound/zombiesurvival/" .. filename)
 	end
 	for _, filename in pairs(file.Find("sound/zombiesurvival/ui/*.ogg", "GAME")) do
-		resource.AddFile("sound/zombiesurvival/ui/" .. filename)
+		FILES.AddFile("sound/zombiesurvival/ui/" .. filename)
 	end
 	for _, filename in pairs(file.Find("sound/zombiesurvival/*.wav", "GAME")) do
-		resource.AddFile("sound/zombiesurvival/" .. filename)
+		FILES.AddFile("sound/zombiesurvival/" .. filename)
 	end
 	for _, filename in pairs(file.Find("sound/zombiesurvival/*.mp3", "GAME")) do
-		resource.AddFile("sound/zombiesurvival/" .. filename)
+		FILES.AddFile("sound/zombiesurvival/" .. filename)
 	end
 
 	local _____, dirs = file.Find("sound/zombiesurvival/beats/*", "GAME")
 	for _, dirname in pairs(dirs) do
 		for __, filename in pairs(file.Find("sound/zombiesurvival/beats/" .. dirname .. "/*.ogg", "GAME")) do
-			resource.AddFile("sound/zombiesurvival/beats/" .. dirname .. "/" .. filename)
+			FILES.AddFile("sound/zombiesurvival/beats/" .. dirname .. "/" .. filename)
 		end
 		for __, filename in pairs(file.Find("sound/zombiesurvival/beats/" .. dirname .. "/*.wav", "GAME")) do
-			resource.AddFile("sound/zombiesurvival/beats/" .. dirname .. "/" .. filename)
+			FILES.AddFile("sound/zombiesurvival/beats/" .. dirname .. "/" .. filename)
 		end
 		for __, filename in pairs(file.Find("sound/zombiesurvival/beats/" .. dirname .. "/*.mp3", "GAME")) do
-			resource.AddFile("sound/zombiesurvival/beats/" .. dirname .. "/" .. filename)
+			FILES.AddFile("sound/zombiesurvival/beats/" .. dirname .. "/" .. filename)
 		end
 	end
 
-	resource.AddFile("materials/refract_ring.vmt")
-	resource.AddFile("materials/killicon/redeem_v2.vtf")
-	resource.AddFile("materials/killicon/redeem_v2.vmt")
-	resource.AddFile("models/weapons/v_zombiearms.mdl")
-	resource.AddFile("materials/models/weapons/v_zombiearms/zombie_classic_sheet.vmt")
-	resource.AddFile("materials/models/weapons/v_zombiearms/zombie_classic_sheet.vtf")
-	resource.AddFile("materials/models/weapons/v_zombiearms/zombie_classic_sheet_normal.vtf")
-	resource.AddFile("materials/models/weapons/v_zombiearms/ghoulsheet.vmt")
-	resource.AddFile("materials/models/weapons/v_zombiearms/ghoulsheet.vtf")
-	resource.AddFile("models/weapons/v_fza.mdl")
-	resource.AddFile("models/weapons/v_pza.mdl")
-	resource.AddFile("materials/models/weapons/v_fza/fast_zombie_sheet.vmt")
-	resource.AddFile("materials/models/weapons/v_fza/fast_zombie_sheet.vtf")
-	resource.AddFile("materials/models/weapons/v_fza/fast_zombie_sheet_normal.vtf")
-	resource.AddFile("models/weapons/c_annabelle.mdl")
-	resource.AddFile("materials/models/weapons/w_annabelle/gun.vtf")
-	resource.AddFile("materials/models/weapons/sledge.vtf")
-	resource.AddFile("materials/models/weapons/sledge.vmt")
-	resource.AddFile("materials/models/weapons/temptexture/handsmesh1.vtf")
-	resource.AddFile("materials/models/weapons/temptexture/handsmesh1.vmt")
-	resource.AddFile("materials/models/weapons/hammer2.vtf")
-	resource.AddFile("materials/models/weapons/hammer2.vmt")
-	resource.AddFile("materials/models/weapons/hammer.vtf")
-	resource.AddFile("materials/models/weapons/hammer.vmt")
-	resource.AddFile("models/weapons/w_sledgehammer.mdl")
-	resource.AddFile("models/weapons/v_sledgehammer/c_sledgehammer.mdl")
-	resource.AddFile("models/weapons/w_hammer.mdl")
-	resource.AddFile("models/weapons/v_hammer/c_hammer.mdl")
+	FILES.AddFile("materials/refract_ring.vmt")
+	FILES.AddFile("materials/killicon/redeem_v2.vtf")
+	FILES.AddFile("materials/killicon/redeem_v2.vmt")
+	FILES.AddFile("models/weapons/v_zombiearms.mdl")
+	FILES.AddFile("materials/models/weapons/v_zombiearms/zombie_classic_sheet.vmt")
+	FILES.AddFile("materials/models/weapons/v_zombiearms/zombie_classic_sheet.vtf")
+	FILES.AddFile("materials/models/weapons/v_zombiearms/zombie_classic_sheet_normal.vtf")
+	FILES.AddFile("materials/models/weapons/v_zombiearms/ghoulsheet.vmt")
+	FILES.AddFile("materials/models/weapons/v_zombiearms/ghoulsheet.vtf")
+	FILES.AddFile("models/weapons/v_fza.mdl")
+	FILES.AddFile("models/weapons/v_pza.mdl")
+	FILES.AddFile("materials/models/weapons/v_fza/fast_zombie_sheet.vmt")
+	FILES.AddFile("materials/models/weapons/v_fza/fast_zombie_sheet.vtf")
+	FILES.AddFile("materials/models/weapons/v_fza/fast_zombie_sheet_normal.vtf")
+	FILES.AddFile("models/weapons/c_annabelle.mdl")
+	FILES.AddFile("materials/models/weapons/w_annabelle/gun.vtf")
+	FILES.AddFile("materials/models/weapons/sledge.vtf")
+	FILES.AddFile("materials/models/weapons/sledge.vmt")
+	FILES.AddFile("materials/models/weapons/temptexture/handsmesh1.vtf")
+	FILES.AddFile("materials/models/weapons/temptexture/handsmesh1.vmt")
+	FILES.AddFile("materials/models/weapons/hammer2.vtf")
+	FILES.AddFile("materials/models/weapons/hammer2.vmt")
+	FILES.AddFile("materials/models/weapons/hammer.vtf")
+	FILES.AddFile("materials/models/weapons/hammer.vmt")
+	FILES.AddFile("models/weapons/w_sledgehammer.mdl")
+	FILES.AddFile("models/weapons/v_sledgehammer/c_sledgehammer.mdl")
+	FILES.AddFile("models/weapons/w_hammer.mdl")
+	FILES.AddFile("models/weapons/v_hammer/c_hammer.mdl")
 
-	resource.AddFile("models/weapons/c_aegiskit.mdl")
+	FILES.AddFile("models/weapons/c_aegiskit.mdl")
 
-	resource.AddFile("materials/models/weapons/v_hand/armtexture.vmt")
+	FILES.AddFile("materials/models/weapons/v_hand/armtexture.vmt")
 
-	resource.AddFile("models/weapons/v_supershorty/v_supershorty.mdl")
-	resource.AddFile("models/weapons/w_supershorty.mdl")
+	FILES.AddFile("models/weapons/v_supershorty/v_supershorty.mdl")
+	FILES.AddFile("models/weapons/w_supershorty.mdl")
 	for _, filename in pairs(file.Find("materials/weapons/v_supershorty/*.vmt", "GAME")) do
-		resource.AddFile("materials/weapons/v_supershorty/" .. filename)
+		FILES.AddFile("materials/weapons/v_supershorty/" .. filename)
 	end
 	for _, filename in pairs(file.Find("materials/weapons/v_supershorty/*.vtf", "GAME")) do
-		resource.AddFile("materials/weapons/v_supershorty/" .. filename)
+		FILES.AddFile("materials/weapons/v_supershorty/" .. filename)
 	end
 	for _, filename in pairs(file.Find("materials/weapons/w_supershorty/*.vmt", "GAME")) do
-		resource.AddFile("materials/weapons/w_supershorty/" .. filename)
+		FILES.AddFile("materials/weapons/w_supershorty/" .. filename)
 	end
 	for _, filename in pairs(file.Find("materials/weapons/w_supershorty/*.vtf", "GAME")) do
-		resource.AddFile("materials/weapons/w_supershorty/" .. filename)
+		FILES.AddFile("materials/weapons/w_supershorty/" .. filename)
 	end
 	for _, filename in pairs(file.Find("materials/weapons/survivor01_hands/*.vmt", "GAME")) do
-		resource.AddFile("materials/weapons/survivor01_hands/" .. filename)
+		FILES.AddFile("materials/weapons/survivor01_hands/" .. filename)
 	end
 	for _, filename in pairs(file.Find("materials/weapons/survivor01_hands/*.vtf", "GAME")) do
-		resource.AddFile("materials/weapons/survivor01_hands/" .. filename)
+		FILES.AddFile("materials/weapons/survivor01_hands/" .. filename)
 	end
 
 	for _, filename in pairs(file.Find("materials/models/weapons/v_pza/*.*", "GAME")) do
-		resource.AddFile("materials/models/weapons/v_pza/" .. string.lower(filename))
+		FILES.AddFile("materials/models/weapons/v_pza/" .. string.lower(filename))
 	end
 
-	resource.AddFile("models/player/fatty/fatty.mdl")
-	resource.AddFile("materials/models/player/elis/fty/001.vmt")
-	resource.AddFile("materials/models/player/elis/fty/001.vtf")
-	resource.AddFile("materials/models/player/elis/fty/001_normal.vtf")
+	FILES.AddFile("models/player/fatty/fatty.mdl")
+	FILES.AddFile("materials/models/player/elis/fty/001.vmt")
+	FILES.AddFile("materials/models/player/elis/fty/001.vtf")
+	FILES.AddFile("materials/models/player/elis/fty/001_normal.vtf")
 
-	resource.AddFile("models/player/zelpa/stalker.mdl")
+	FILES.AddFile("models/player/zelpa/stalker.mdl")
 
-	resource.AddFile("models/vinrax/player/doll_player.mdl")
+	FILES.AddFile("models/vinrax/player/doll_player.mdl")
 
-	resource.AddFile("models/player/zombie_classic_hbfix.mdl")
-	resource.AddFile("models/player/zombie_lacerator2.mdl")
+	FILES.AddFile("models/player/zombie_classic_hbfix.mdl")
+	FILES.AddFile("models/player/zombie_lacerator2.mdl")
 
-	resource.AddFile("sound/weapons/melee/golf club/golf_hit-01.ogg")
-	resource.AddFile("sound/weapons/melee/golf club/golf_hit-02.ogg")
-	resource.AddFile("sound/weapons/melee/golf club/golf_hit-03.ogg")
-	resource.AddFile("sound/weapons/melee/golf club/golf_hit-04.ogg")
-	resource.AddFile("sound/weapons/melee/crowbar/crowbar_hit-1.ogg")
-	resource.AddFile("sound/weapons/melee/crowbar/crowbar_hit-2.ogg")
-	resource.AddFile("sound/weapons/melee/crowbar/crowbar_hit-3.ogg")
-	resource.AddFile("sound/weapons/melee/crowbar/crowbar_hit-4.ogg")
-	resource.AddFile("sound/weapons/melee/shovel/shovel_hit-01.ogg")
-	resource.AddFile("sound/weapons/melee/shovel/shovel_hit-02.ogg")
-	resource.AddFile("sound/weapons/melee/shovel/shovel_hit-03.ogg")
-	resource.AddFile("sound/weapons/melee/shovel/shovel_hit-04.ogg")
-	resource.AddFile("sound/weapons/melee/frying_pan/pan_hit-01.ogg")
-	resource.AddFile("sound/weapons/melee/frying_pan/pan_hit-02.ogg")
-	resource.AddFile("sound/weapons/melee/frying_pan/pan_hit-03.ogg")
-	resource.AddFile("sound/weapons/melee/frying_pan/pan_hit-04.ogg")
-	resource.AddFile("sound/weapons/melee/keyboard/keyboard_hit-01.ogg")
-	resource.AddFile("sound/weapons/melee/keyboard/keyboard_hit-02.ogg")
-	resource.AddFile("sound/weapons/melee/keyboard/keyboard_hit-03.ogg")
-	resource.AddFile("sound/weapons/melee/keyboard/keyboard_hit-04.ogg")
+	FILES.AddFile("sound/weapons/melee/golf club/golf_hit-01.ogg")
+	FILES.AddFile("sound/weapons/melee/golf club/golf_hit-02.ogg")
+	FILES.AddFile("sound/weapons/melee/golf club/golf_hit-03.ogg")
+	FILES.AddFile("sound/weapons/melee/golf club/golf_hit-04.ogg")
+	FILES.AddFile("sound/weapons/melee/crowbar/crowbar_hit-1.ogg")
+	FILES.AddFile("sound/weapons/melee/crowbar/crowbar_hit-2.ogg")
+	FILES.AddFile("sound/weapons/melee/crowbar/crowbar_hit-3.ogg")
+	FILES.AddFile("sound/weapons/melee/crowbar/crowbar_hit-4.ogg")
+	FILES.AddFile("sound/weapons/melee/shovel/shovel_hit-01.ogg")
+	FILES.AddFile("sound/weapons/melee/shovel/shovel_hit-02.ogg")
+	FILES.AddFile("sound/weapons/melee/shovel/shovel_hit-03.ogg")
+	FILES.AddFile("sound/weapons/melee/shovel/shovel_hit-04.ogg")
+	FILES.AddFile("sound/weapons/melee/frying_pan/pan_hit-01.ogg")
+	FILES.AddFile("sound/weapons/melee/frying_pan/pan_hit-02.ogg")
+	FILES.AddFile("sound/weapons/melee/frying_pan/pan_hit-03.ogg")
+	FILES.AddFile("sound/weapons/melee/frying_pan/pan_hit-04.ogg")
+	FILES.AddFile("sound/weapons/melee/keyboard/keyboard_hit-01.ogg")
+	FILES.AddFile("sound/weapons/melee/keyboard/keyboard_hit-02.ogg")
+	FILES.AddFile("sound/weapons/melee/keyboard/keyboard_hit-03.ogg")
+	FILES.AddFile("sound/weapons/melee/keyboard/keyboard_hit-04.ogg")
 
-	resource.AddFile("sound/weapons/zs_sawnoff/sawnoff_fire1.ogg")
-	resource.AddFile("sound/weapons/zs_sawnoff/barrelup.ogg")
-	resource.AddFile("sound/weapons/zs_sawnoff/barreldown.ogg")
+	FILES.AddFile("sound/weapons/zs_sawnoff/sawnoff_fire1.ogg")
+	FILES.AddFile("sound/weapons/zs_sawnoff/barrelup.ogg")
+	FILES.AddFile("sound/weapons/zs_sawnoff/barreldown.ogg")
 
-	resource.AddFile("sound/weapons/zs_longarm/longarm_fire.ogg")
+	FILES.AddFile("sound/weapons/zs_longarm/longarm_fire.ogg")
 
-	resource.AddFile("sound/weapons/zs_scar/scar_fire1.ogg")
+	FILES.AddFile("sound/weapons/zs_scar/scar_fire1.ogg")
 
-	resource.AddFile("sound/nox/sword_hit.ogg")
-	resource.AddFile("sound/nox/sword_miss.ogg")
-	resource.AddFile("sound/nox/frotchet_test1.ogg")
-	resource.AddFile("sound/nox/scatterfrost.ogg")
+	FILES.AddFile("sound/nox/sword_hit.ogg")
+	FILES.AddFile("sound/nox/sword_miss.ogg")
+	FILES.AddFile("sound/nox/frotchet_test1.ogg")
+	FILES.AddFile("sound/nox/scatterfrost.ogg")
 
-	resource.AddFile("sound/weapons/zs_gluon/egon_off1.wav")
+	FILES.AddFile("sound/weapons/zs_gluon/egon_off1.wav")
 
-	resource.AddFile("sound/weapons/zs_heph/electro4.wav")
-	resource.AddFile("sound/weapons/zs_heph/electro5.wav")
-	resource.AddFile("sound/weapons/zs_heph/electro6.wav")
+	FILES.AddFile("sound/weapons/zs_heph/electro4.wav")
+	FILES.AddFile("sound/weapons/zs_heph/electro5.wav")
+	FILES.AddFile("sound/weapons/zs_heph/electro6.wav")
 
-	resource.AddFile("sound/weapons/zs_inner/innershot.ogg")
+	FILES.AddFile("sound/weapons/zs_inner/innershot.ogg")
 
-	resource.AddFile("sound/weapons/zs_glad/gladshot4.wav")
+	FILES.AddFile("sound/weapons/zs_glad/gladshot4.wav")
 
-	resource.AddFile("sound/weapons/zs_flak/load1.wav")
-	resource.AddFile("sound/weapons/zs_flak/shot1.wav")
+	FILES.AddFile("sound/weapons/zs_flak/load1.wav")
+	FILES.AddFile("sound/weapons/zs_flak/shot1.wav")
 
-	resource.AddFile("sound/weapons/zs_rail/rail.wav")
+	FILES.AddFile("sound/weapons/zs_rail/rail.wav")
 
-	resource.AddFile("sound/weapons/zs_asmd/secondary2.wav")
-	resource.AddFile("sound/weapons/zs_asmd/main3.wav")
+	FILES.AddFile("sound/weapons/zs_asmd/secondary2.wav")
+	FILES.AddFile("sound/weapons/zs_asmd/main3.wav")
 
-	resource.AddFile("sound/weapons/zs_power/power1.ogg")
-	resource.AddFile("sound/weapons/zs_power/power4.wav")
+	FILES.AddFile("sound/weapons/zs_power/power1.ogg")
+	FILES.AddFile("sound/weapons/zs_power/power4.wav")
 
-	resource.AddFile("materials/zombiesurvival/arsenalcrate.png")
+	FILES.AddFile("materials/zombiesurvival/arsenalcrate.png")
 
-	resource.AddFile("sound/" .. tostring(self.LastHumanSound))
-	resource.AddFile("sound/" .. tostring(self.AllLoseSound))
-	resource.AddFile("sound/" .. tostring(self.HumanWinSound))
-	resource.AddFile("sound/" .. tostring(self.DeathSound))
+	FILES.AddFile("sound/" .. tostring(self.LastHumanSound))
+	FILES.AddFile("sound/" .. tostring(self.AllLoseSound))
+	FILES.AddFile("sound/" .. tostring(self.HumanWinSound))
+	FILES.AddFile("sound/" .. tostring(self.DeathSound))
 end
 
 function GM:Initialize()
