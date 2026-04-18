@@ -18,11 +18,8 @@ concommand.Add("zs_pointsshopbuy", function(sender, command, arguments)
 		return
 	end
 
-	if usescrap and not sender:NearRemantler() or not usescrap and not sender:NearArsenalCrate() then
-		GAMEMODE:ConCommandErrorMessage(
-			sender,
-			translate.ClientGet(sender, usescrap and "need_to_be_near_remantler" or "need_to_be_near_arsenal_crate")
-		)
+	if not usescrap and not sender:NearArsenalCrate() then
+		GAMEMODE:ConCommandErrorMessage(sender, translate.ClientGet(sender, "need_to_be_near_arsenal_crate"))
 		return
 	end
 
@@ -272,11 +269,6 @@ concommand.Add("zs_upgrade", function(sender, command, arguments)
 		return
 	end
 
-	if not sender:NearRemantler() then
-		GAMEMODE:ConCommandErrorMessage(sender, translate.ClientGet(sender, "need_to_be_near_remantler"))
-		return
-	end
-
 	local nearest = sender:NearestRemantler()
 	local contents = sender:GetActiveWeapon():GetClass()
 	local contentstbl = weapons.Get(contents)
@@ -288,7 +280,7 @@ concommand.Add("zs_upgrade", function(sender, command, arguments)
 		branch = tonumber(arguments[1])
 	end
 
-	if not (nearest and nearest:IsValid() and contents) then
+	if not contents then
 		return
 	end
 
@@ -342,11 +334,13 @@ concommand.Add("zs_upgrade", function(sender, command, arguments)
 		GAMEMODE.StatTracking:IncreaseElementKV(STATTRACK_TYPE_WEAPON, upgclass, "Upgrades", 1)
 	end
 
-	local owner = nearest.GetObjectOwner and nearest:GetObjectOwner() or nearest:GetOwner()
-	if owner:IsValid() and owner ~= sender then
-		local scrapcom = math.ceil(scrapcost * 0.08)
-		nearest:SetScraps(nearest:GetScraps() + scrapcom)
-		nearest:GetObjectOwner():CenterNotify(COLOR_GREEN, translate.Format("remantle_used", scrapcom))
+	if nearest and nearest:IsValid() then
+		local owner = nearest.GetObjectOwner and nearest:GetObjectOwner() or nearest:GetOwner()
+		if owner:IsValid() and owner ~= sender then
+			local scrapcom = math.ceil(scrapcost * 0.08)
+			nearest:SetScraps(nearest:GetScraps() + scrapcom)
+			nearest:GetObjectOwner():CenterNotify(COLOR_GREEN, translate.Format("remantle_used", scrapcom))
+		end
 	end
 end)
 
