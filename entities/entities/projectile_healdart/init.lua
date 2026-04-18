@@ -134,11 +134,6 @@ function ENT:Hit(vHitPos, vHitNormal, eHitEntity, vOldVelocity)
 end
 
 function ENT:PhysicsCollide(data, phys)
-	local hitent = data.HitEntity
-	if hitent:IsValid() and hitent:IsPlayer() and hitent:Team() ~= TEAM_UNDEAD then
-		if hitent:Health() >= hitent:GetMaxHealth() then return end
-	end
-
 	if not self:HitFence(data, phys) then
 		self.PhysicsData = data
 	end
