@@ -4687,7 +4687,7 @@ GM.NextEscapeDamage = 0
 function GM:WaveStateChanged(newstate)
 	if newstate then
 		if self:GetWave() == 0 then
-			gamemode.Call("CreateSigils", true) -- Try creating sigils again. Only really matters if nobody seeded the map yet.
+			gamemode.Call("CreateSigils", true) -- Retry setup in case map sigil nodes were initialized late.
 
 			self:SetClosestsToZombie()
 
