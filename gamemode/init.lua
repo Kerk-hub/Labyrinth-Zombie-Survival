@@ -315,13 +315,11 @@ function GM:AddResources()
 	FILES.AddFile("models/weapons/v_sledgehammer/c_sledgehammer.mdl")
 	FILES.AddFile("models/weapons/w_hammer.mdl")
 	FILES.AddFile("models/weapons/v_hammer/c_hammer.mdl")
-
 	FILES.AddFile("models/weapons/c_aegiskit.mdl")
-
 	FILES.AddFile("materials/models/weapons/v_hand/armtexture.vmt")
-
 	FILES.AddFile("models/weapons/v_supershorty/v_supershorty.mdl")
 	FILES.AddFile("models/weapons/w_supershorty.mdl")
+
 	for _, filename in pairs(file.Find("materials/weapons/v_supershorty/*.vmt", "GAME")) do
 		FILES.AddFile("materials/weapons/v_supershorty/" .. filename)
 	end
@@ -349,14 +347,10 @@ function GM:AddResources()
 	FILES.AddFile("materials/models/player/elis/fty/001.vmt")
 	FILES.AddFile("materials/models/player/elis/fty/001.vtf")
 	FILES.AddFile("materials/models/player/elis/fty/001_normal.vtf")
-
 	FILES.AddFile("models/player/zelpa/stalker.mdl")
-
 	FILES.AddFile("models/vinrax/player/doll_player.mdl")
-
 	FILES.AddFile("models/player/zombie_classic_hbfix.mdl")
 	FILES.AddFile("models/player/zombie_lacerator2.mdl")
-
 	FILES.AddFile("sound/weapons/melee/golf club/golf_hit-01.ogg")
 	FILES.AddFile("sound/weapons/melee/golf club/golf_hit-02.ogg")
 	FILES.AddFile("sound/weapons/melee/golf club/golf_hit-03.ogg")
@@ -377,43 +371,29 @@ function GM:AddResources()
 	FILES.AddFile("sound/weapons/melee/keyboard/keyboard_hit-02.ogg")
 	FILES.AddFile("sound/weapons/melee/keyboard/keyboard_hit-03.ogg")
 	FILES.AddFile("sound/weapons/melee/keyboard/keyboard_hit-04.ogg")
-
 	FILES.AddFile("sound/weapons/zs_sawnoff/sawnoff_fire1.ogg")
 	FILES.AddFile("sound/weapons/zs_sawnoff/barrelup.ogg")
 	FILES.AddFile("sound/weapons/zs_sawnoff/barreldown.ogg")
-
 	FILES.AddFile("sound/weapons/zs_longarm/longarm_fire.ogg")
-
 	FILES.AddFile("sound/weapons/zs_scar/scar_fire1.ogg")
-
 	FILES.AddFile("sound/nox/sword_hit.ogg")
 	FILES.AddFile("sound/nox/sword_miss.ogg")
 	FILES.AddFile("sound/nox/frotchet_test1.ogg")
 	FILES.AddFile("sound/nox/scatterfrost.ogg")
-
 	FILES.AddFile("sound/weapons/zs_gluon/egon_off1.wav")
-
 	FILES.AddFile("sound/weapons/zs_heph/electro4.wav")
 	FILES.AddFile("sound/weapons/zs_heph/electro5.wav")
 	FILES.AddFile("sound/weapons/zs_heph/electro6.wav")
-
 	FILES.AddFile("sound/weapons/zs_inner/innershot.ogg")
-
 	FILES.AddFile("sound/weapons/zs_glad/gladshot4.wav")
-
 	FILES.AddFile("sound/weapons/zs_flak/load1.wav")
 	FILES.AddFile("sound/weapons/zs_flak/shot1.wav")
-
 	FILES.AddFile("sound/weapons/zs_rail/rail.wav")
-
 	FILES.AddFile("sound/weapons/zs_asmd/secondary2.wav")
 	FILES.AddFile("sound/weapons/zs_asmd/main3.wav")
-
 	FILES.AddFile("sound/weapons/zs_power/power1.ogg")
 	FILES.AddFile("sound/weapons/zs_power/power4.wav")
-
 	FILES.AddFile("materials/zombiesurvival/arsenalcrate.png")
-
 	FILES.AddFile("sound/" .. tostring(self.LastHumanSound))
 	FILES.AddFile("sound/" .. tostring(self.AllLoseSound))
 	FILES.AddFile("sound/" .. tostring(self.HumanWinSound))
@@ -654,6 +634,7 @@ end
 
 function GM:PlayerPointsAdded(pl, amount) end
 
+-- table for converting map props into weapon_zs_items loot items
 local mdl2weapon = {}
 mdl2weapon["models/props/cs_office/computer_keyboard.mdl"] = "weapon_zs_keyboard"
 mdl2weapon["models/props_c17/computer01_keyboard.mdl"] = "weapon_zs_keyboard"
