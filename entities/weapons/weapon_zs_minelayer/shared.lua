@@ -14,11 +14,11 @@ SWEP.WorldModel = "models/weapons/w_rocket_launcher.mdl"
 SWEP.ViewModelFOV = 60
 
 SWEP.Primary.Sound = Sound("weapons/grenade_launcher1.wav")
-SWEP.Primary.Delay = 1
+SWEP.Primary.Delay = 0.7
 
 SWEP.Primary.Damage = 26.67
 SWEP.Primary.ClipSize = 1
-SWEP.Primary.Automatic = false
+SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "impactmine"
 SWEP.Primary.DefaultClip = 7
 
