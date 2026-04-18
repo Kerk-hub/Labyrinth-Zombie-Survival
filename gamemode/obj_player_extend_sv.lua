@@ -2,16 +2,6 @@ local meta = FindMetaTable("Player")
 local P_Team = meta.Team
 
 local DMG_TAKE_BLEED = DMG_SLASH + DMG_CLUB + DMG_BULLET + DMG_BUCKSHOT + DMG_CRUSH
-local NON_ZOMBIE_DAMAGE_CAP = 50
-
-local function ClampNonZombieDamage(attacker, dmginfo)
-	if dmginfo:GetDamage() <= NON_ZOMBIE_DAMAGE_CAP or attacker:IsValidLivingZombie() then
-		return
-	end
-
-	dmginfo:SetDamage(NON_ZOMBIE_DAMAGE_CAP)
-end
-
 function meta:ProcessDamage(dmginfo)
 	if not self:IsValidLivingPlayer() then
 		return
@@ -121,9 +111,7 @@ function meta:ProcessDamage(dmginfo)
 			end
 		end
 
-		local handled = not dmgbypass and self:CallZombieFunction1("ProcessDamage", dmginfo)
-		ClampNonZombieDamage(attacker, dmginfo)
-		return handled
+		return not dmgbypass and self:CallZombieFunction1("ProcessDamage", dmginfo)
 	end
 
 	if attacker == self and dmgtype ~= DMG_CRUSH and dmgtype ~= DMG_FALL then
@@ -307,8 +295,6 @@ function meta:ProcessDamage(dmginfo)
 	then
 		self:SetPhantomHealth(math.min(self:GetPhantomHealth() + dmginfo:GetDamage() / 2, self:GetMaxHealth()))
 	end
-
-	ClampNonZombieDamage(attacker, dmginfo)
 
 	if dmginfo:GetDamage() > 0 and not self:HasGodMode() then
 		self.NextRegenTrinket = CurTime() + 12
