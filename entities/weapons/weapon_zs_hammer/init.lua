@@ -91,7 +91,7 @@ function SWEP:SecondaryAttack()
 	or trent:GetMoveType() ~= MOVETYPE_VPHYSICS and not trent:GetNailFrozen()
 	or trent.NoNails
 	or trent:IsProjectile()
-	or trent:IsNailed() and (#trent.Nails >= 8 or trent:GetPropsInContraption() >= GAMEMODE.MaxPropsInBarricade)
+	or trent:IsNailed() and (#trent.Nails >= GAMEMODE.MaxNails or trent:GetPropsInContraption() >= GAMEMODE.MaxPropsInBarricade)
 	or trent:GetMaxHealth() == 1 and trent:Health() == 0 and not trent.TotalHealth
 	or trent.PreHoldCollisionGroup and (trent.PreHoldCollisionGroup == COLLISION_GROUP_DEBRIS or trent.PreHoldCollisionGroup == COLLISION_GROUP_DEBRIS_TRIGGER or trent.PreHoldCollisionGroup == COLLISION_GROUP_INTERACTIVE_DEBRIS)
 	or not trent:IsNailed() and not trent:GetPhysicsObject():IsMoveable() then return end
@@ -163,7 +163,7 @@ function SWEP:SecondaryAttack()
 		--end
 		-- removing these checks should allow nails to be placed on glass and other materials 
 
-		if ent and ent:IsValid() and (ent:IsProjectile() or ent.NoNails or ent:IsNailed() and (#ent.Nails >= 8 or ent:GetPropsInContraption() >= GAMEMODE.MaxPropsInBarricade)) then return end
+		if ent and ent:IsValid() and (ent:IsProjectile() or ent.NoNails or ent:IsNailed() and (#ent.Nails >= GAMEMODE.MaxNails or ent:GetPropsInContraption() >= GAMEMODE.MaxPropsInBarricade)) then return end
 
 		if ent:GetBarricadeHealth() <= 0 and ent:GetMaxBarricadeHealth() > 0 then
 			owner:PrintTranslatedMessage(HUD_PRINTCENTER, "object_too_damaged_to_be_used")
