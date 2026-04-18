@@ -2664,16 +2664,40 @@ function GM:OnNailRemoved(nail, ent1, ent2, remover)
 	end
 end
 
+local function GhostStuckPlayersInProp(ent)
+	if not ent or not ent:IsValid() or ent:IsWorld() then return end
+
+	local mins, maxs = ent:WorldSpaceAABB()
+	local ext = Vector(4, 4, 8)
+	local shouldphase = false
+
+	mins = mins - ext
+	maxs = maxs + ext
+
+	for _, pl in pairs(ents.FindInBox(mins, maxs)) do
+		if pl:IsValidLivingHuman() then
+			pl:SetBarricadeGhosting(true, true)
+			shouldphase = true
+		end
+	end
+
+	if shouldphase then
+		ent:GhostAllPlayersInMe(0.35, true)
+	end
+end
+
 -- A nail is created between two entities.
 function GM:OnNailCreated(ent1, ent2, nail)
 	if ent1 and ent1:IsValid() and not ent1:IsWorld() then
 		timer.Simple(0, function()
 			evalfreeze(ent1)
+			GhostStuckPlayersInProp(ent1)
 		end)
 	end
 	if ent2 and ent2:IsValid() and not ent2:IsWorld() then
 		timer.Simple(0, function()
 			evalfreeze(ent2)
+			GhostStuckPlayersInProp(ent2)
 		end)
 	end
 end
