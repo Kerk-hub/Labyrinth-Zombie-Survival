@@ -182,7 +182,7 @@ function GM:TryHumanPickup(pl, entity)
 		return
 	end
 
-	if gamemode.Call("DisallowHumanPickup", pl, entity) or pl:GetInfo("zs_nopickupprops") == "1" then
+	if gamemode.Call("DisallowHumanPickup", pl, entity) or pl:GetZSClientBool("zs_nopickupprops") then
 		return
 	end
 
@@ -1240,7 +1240,7 @@ function GM:SortZombieSpawnDistances(allplayers)
 	for _, pl in pairs(allplayers) do
 		if pl:Team() == TEAM_UNDEAD then
 			pl._ZombieSpawnDistance = sortbysigils and maxdist + 2 or -2
-		elseif pl:GetInfo("zs_alwaysvolunteer") == "1" then
+		elseif pl:GetZSClientBool("zs_alwaysvolunteer") then
 			pl._ZombieSpawnDistance = sortbysigils and maxdist + 1 or -1
 		elseif CLIENT or pl.LastNotAFK and CurTime() <= pl.LastNotAFK + 60 then
 			plpos = pl:GetPos()
@@ -1520,7 +1520,7 @@ GM.LastCalculatedBossTime = 0
 function GM:CalculateNextBoss()
 	local zombies = {}
 	for _, ent in pairs(team.GetPlayers(TEAM_UNDEAD)) do
-		if ent:GetInfo("zs_nobosspick") == "0" and not ent:GetZombieClassTable().Boss then
+		if not ent:GetZSClientBool("zs_nobosspick") and not ent:GetZombieClassTable().Boss then
 			table.insert(zombies, ent)
 		end
 	end
@@ -2264,7 +2264,7 @@ function GM:PlayerReadyRound(pl)
 		gamemode.Call("DoHonorableMentions", pl)
 	end
 
-	if pl:GetInfo("zs_noredeem") == "1" then
+	if pl:GetZSClientBool("zs_noredeem") then
 		pl.NoRedeeming = true
 	end
 
@@ -3640,7 +3640,7 @@ function GM:SetClosestsToZombie()
 	if #zombies > desiredzombies then
 		local toswap = #zombies - desiredzombies
 		for _, pl in pairs(zombies) do
-			if pl.DiedDuringWave0 and pl:GetInfo("zs_alwaysvolunteer") ~= "1" and not pl.IsZSBot then
+			if pl.DiedDuringWave0 and not pl:GetZSClientBool("zs_alwaysvolunteer") and not pl.IsZSBot then
 				pl:ChangeTeam(TEAM_HUMAN)
 				pl:UnSpectateAndSpawn()
 				toswap = toswap - 1

@@ -10,7 +10,7 @@ function GM:RepairedObject(other, health)
 	gamemode.Call("FloatingScore", other, "floatingscore_rep", health, nil, true)
 end
 
-local cvarNoFloatingScore = CreateClientConVar("labyrinth_zs_nofloatingscore", 0, true, false)
+local cvarNoFloatingScore = CreateClientConVar("labyrinth_zs_nofloatingscore", 1, true, false)
 function GM:FloatingScore(victim, effectname, frags, flags, override_allow)
 	if cvarNoFloatingScore:GetBool() then
 		return

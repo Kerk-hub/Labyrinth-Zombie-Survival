@@ -1,64 +1,64 @@
 function GM:RenderScreenspaceEffects() end
 
-GM.PostProcessingEnabled = CreateClientConVar("zs_postprocessing", 1, true, false):GetBool()
-cvars.AddChangeCallback("zs_postprocessing", function(cvar, oldvalue, newvalue)
+GM.PostProcessingEnabled = CreateClientConVar("labyrinth_zs_postprocessing", 1, true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_postprocessing", function(cvar, oldvalue, newvalue)
 	GAMEMODE.PostProcessingEnabled = tonumber(newvalue) == 1
 end)
 
-GM.FilmGrainEnabled = CreateClientConVar("zs_filmgrain", 1, true, false):GetBool()
-cvars.AddChangeCallback("zs_filmgrain", function(cvar, oldvalue, newvalue)
+GM.FilmGrainEnabled = CreateClientConVar("labyrinth_zs_filmgrain", 1, true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_filmgrain", function(cvar, oldvalue, newvalue)
 	GAMEMODE.FilmGrainEnabled = tonumber(newvalue) == 1
 end)
 
-GM.FilmGrainOpacity = CreateClientConVar("zs_filmgrainopacity", 50, true, false):GetInt()
-cvars.AddChangeCallback("zs_filmgrainopacity", function(cvar, oldvalue, newvalue)
+GM.FilmGrainOpacity = CreateClientConVar("labyrinth_zs_filmgrainopacity", 50, true, false):GetInt()
+cvars.AddChangeCallback("labyrinth_zs_filmgrainopacity", function(cvar, oldvalue, newvalue)
 	GAMEMODE.FilmGrainOpacity = math.Clamp(tonumber(newvalue) or 0, 0, 255)
 end)
 
-GM.ColorModEnabled = CreateClientConVar("zs_colormod", "1", true, false):GetBool()
-cvars.AddChangeCallback("zs_colormod", function(cvar, oldvalue, newvalue)
+GM.ColorModEnabled = CreateClientConVar("labyrinth_zs_colormod", "1", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_colormod", function(cvar, oldvalue, newvalue)
 	GAMEMODE.ColorModEnabled = tonumber(newvalue) == 1
 end)
 
-GM.Auras = CreateClientConVar("zs_auras", 1, true, false):GetBool()
-cvars.AddChangeCallback("zs_auras", function(cvar, oldvalue, newvalue)
+GM.Auras = CreateClientConVar("labyrinth_zs_auras", 1, true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_auras", function(cvar, oldvalue, newvalue)
 	GAMEMODE.Auras = tonumber(newvalue) == 1
 end)
 
 GM.AuraColorEmpty = Color(
-	CreateClientConVar("zs_auracolor_empty_r", 255, true, false):GetInt(),
-	CreateClientConVar("zs_auracolor_empty_g", 0, true, false):GetInt(),
-	CreateClientConVar("zs_auracolor_empty_b", 0, true, false):GetInt(),
+	CreateClientConVar("labyrinth_zs_auracolor_empty_r", 255, true, false):GetInt(),
+	CreateClientConVar("labyrinth_zs_auracolor_empty_g", 0, true, false):GetInt(),
+	CreateClientConVar("labyrinth_zs_auracolor_empty_b", 0, true, false):GetInt(),
 	255
 )
 GM.AuraColorFull = Color(
-	CreateClientConVar("zs_auracolor_full_r", 20, true, false):GetInt(),
-	CreateClientConVar("zs_auracolor_full_g", 255, true, false):GetInt(),
-	CreateClientConVar("zs_auracolor_full_b", 20, true, false):GetInt(),
+	CreateClientConVar("labyrinth_zs_auracolor_full_r", 20, true, false):GetInt(),
+	CreateClientConVar("labyrinth_zs_auracolor_full_g", 255, true, false):GetInt(),
+	CreateClientConVar("labyrinth_zs_auracolor_full_b", 20, true, false):GetInt(),
 	255
 )
 
-cvars.AddChangeCallback("zs_auracolor_empty_r", function(cvar, oldvalue, newvalue)
+cvars.AddChangeCallback("labyrinth_zs_auracolor_empty_r", function(cvar, oldvalue, newvalue)
 	GAMEMODE.AuraColorEmpty.r = math.Clamp(math.ceil(tonumber(newvalue) or 0), 0, 255)
 end)
 
-cvars.AddChangeCallback("zs_auracolor_empty_g", function(cvar, oldvalue, newvalue)
+cvars.AddChangeCallback("labyrinth_zs_auracolor_empty_g", function(cvar, oldvalue, newvalue)
 	GAMEMODE.AuraColorEmpty.g = math.Clamp(math.ceil(tonumber(newvalue) or 0), 0, 255)
 end)
 
-cvars.AddChangeCallback("zs_auracolor_empty_b", function(cvar, oldvalue, newvalue)
+cvars.AddChangeCallback("labyrinth_zs_auracolor_empty_b", function(cvar, oldvalue, newvalue)
 	GAMEMODE.AuraColorEmpty.b = math.Clamp(math.ceil(tonumber(newvalue) or 0), 0, 255)
 end)
 
-cvars.AddChangeCallback("zs_auracolor_full_r", function(cvar, oldvalue, newvalue)
+cvars.AddChangeCallback("labyrinth_zs_auracolor_full_r", function(cvar, oldvalue, newvalue)
 	GAMEMODE.AuraColorFull.r = math.Clamp(math.ceil(tonumber(newvalue) or 0), 0, 255)
 end)
 
-cvars.AddChangeCallback("zs_auracolor_full_g", function(cvar, oldvalue, newvalue)
+cvars.AddChangeCallback("labyrinth_zs_auracolor_full_g", function(cvar, oldvalue, newvalue)
 	GAMEMODE.AuraColorFull.g = math.Clamp(math.ceil(tonumber(newvalue) or 0), 0, 255)
 end)
 
-cvars.AddChangeCallback("zs_auracolor_full_b", function(cvar, oldvalue, newvalue)
+cvars.AddChangeCallback("labyrinth_zs_auracolor_full_b", function(cvar, oldvalue, newvalue)
 	GAMEMODE.AuraColorFull.b = math.Clamp(math.ceil(tonumber(newvalue) or 0), 0, 255)
 end)
 

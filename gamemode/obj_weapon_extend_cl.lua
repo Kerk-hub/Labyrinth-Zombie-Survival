@@ -7,8 +7,8 @@ function meta:DrawWeaponCrosshair()
 	self:DrawCrosshairDot()
 end
 
-local ironsightscrosshair = CreateClientConVar("zs_ironsightscrosshair", "0", true, false):GetBool()
-cvars.AddChangeCallback("zs_ironsightscrosshair", function(cvar, oldvalue, newvalue)
+local ironsightscrosshair = CreateClientConVar("labyrinth_zs_ironsightscrosshair", "1", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_ironsightscrosshair", function(cvar, oldvalue, newvalue)
 	ironsightscrosshair = tonumber(newvalue) == 1
 end)
 

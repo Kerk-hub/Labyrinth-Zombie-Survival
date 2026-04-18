@@ -35,6 +35,19 @@ function meta:LogID()
 	return "<" .. self:SteamID() .. "> " .. self:Name()
 end
 
+function meta:GetZSClientInfo(cvarname)
+	local value = self:GetInfo("labyrinth_" .. cvarname)
+	if value == nil or value == "" then
+		value = self:GetInfo(cvarname)
+	end
+
+	return value or ""
+end
+
+function meta:GetZSClientBool(cvarname)
+	return self:GetZSClientInfo(cvarname) == "1"
+end
+
 function meta:GetMaxHealthEx()
 	if P_Team(self) == TEAM_UNDEAD then
 		return self:GetMaxZombieHealth()
