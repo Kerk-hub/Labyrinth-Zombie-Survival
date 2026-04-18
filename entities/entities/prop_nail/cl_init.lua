@@ -88,7 +88,8 @@ function ENT:DrawTranslucent()
 		eyepos = EyePos()
 		if myteam == TEAM_HUMAN or myteam == TEAM_SPECTATOR then
 			local activeweapon = MySelf:GetActiveWeapon()
-			drawinfo = (GAMEMODE.AlwaysShowNails or MySelf:KeyDown(IN_SPEED) or GAMEMODE.TraceTargetNoPlayers == parent) and eyepos:DistToSqr(pos) <= 262144 and WorldVisible(eyepos, pos)
+			local alwaysshow = GAMEMODE.AlwaysShowNails
+			drawinfo = (alwaysshow or MySelf:KeyDown(IN_SPEED) or GAMEMODE.TraceTargetNoPlayers == parent) and eyepos:DistToSqr(pos) <= 262144 and (alwaysshow or WorldVisible(eyepos, pos))
 			drawoutline = myteam == TEAM_HUMAN and IsHammerWeapon(activeweapon) and GAMEMODE.TraceTargetNoPlayers == parent and eyepos:DistToSqr(pos) <= 262144
 		elseif myteam == TEAM_UNDEAD then
 			drawinfo = GAMEMODE.TraceTargetNoPlayers == parent
@@ -170,9 +171,10 @@ function ENT:DrawTranslucent()
 		ang:RotateAroundAxis(ang:Up(), -90)
 		ang:RotateAroundAxis(ang:Forward(), 90)
 
-		local nearest = parent:WorldSpaceCenter()
+		local nearest = parent:WorldSpaceCenter() + Vector(0, 0, math.min(math.max(parent:BoundingRadius() * 0.2, 8), 24))
 		local norm = nearest - eyepos
 		norm:Normalize()
+		nearest = nearest - norm * math.min(parent:BoundingRadius() * 0.15, 12)
 		local dot = EyeVector():Dot(norm)
 
 		local dotsq = dot * dot
