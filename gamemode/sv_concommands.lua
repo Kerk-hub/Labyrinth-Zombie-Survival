@@ -173,22 +173,7 @@ concommand.Add("zs_pointsshopbuy", function(sender, command, arguments)
 			end
 		end
 	else
-		local nearest = sender:NearestArsenalCrateOwnedByOther()
-		if nearest then
-			local owner = nearest.GetObjectOwner and nearest:GetObjectOwner() or nearest:GetOwner()
-			if owner:IsValid() then
-				local commission = cost * GAMEMODE.ArsenalCrateCommission
-				if commission > 0 then
-					owner:AddPoints(commission, nil, nil, true)
-
-					net.Start("zs_commission")
-					net.WriteEntity(nearest)
-					net.WriteEntity(sender)
-					net.WriteFloat(commission)
-					net.Send(owner)
-				end
-			end
-		end
+		-- Arsenal crate point commissions disabled.
 	end
 end)
 

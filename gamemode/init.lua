@@ -4843,13 +4843,7 @@ function GM:WaveStateChanged(newstate)
 					pl:SetHealth(math.min(pl:GetMaxHealth(), pl:Health() + self.EndWaveHealthBonus))
 				end
 				if pointsbonus then
-					local pointsreward = pointsbonus + (pl.EndWavePointsExtra or 0)
-
-					if pl:IsSkillActive(SKILL_SCOURER) then
-						pl:GiveAmmo(math.ceil(pointsreward), "scrap")
-					else
-						pl:AddPoints(pointsreward, nil, nil, true)
-					end
+					-- End-wave survival rewards disabled.
 				end
 			elseif pl:Team() == TEAM_UNDEAD and not pl:Alive() and not pl.Revive then
 				local curclass = pl.DeathClass or pl:GetZombieClass()

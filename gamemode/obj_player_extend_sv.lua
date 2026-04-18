@@ -1091,14 +1091,6 @@ function meta:Resupply(owner, obj)
 			if obj:GetClass() == "prop_resupplybox" then
 				owner.ResupplyBoxUsedByOthers = owner.ResupplyBoxUsedByOthers + 1
 			end
-
-			owner:AddPoints(0.15, nil, nil, true)
-
-			net.Start("zs_commission")
-			net.WriteEntity(obj)
-			net.WriteEntity(self)
-			net.WriteFloat(0.15)
-			net.Send(owner)
 		end
 	end
 

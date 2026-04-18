@@ -495,13 +495,11 @@ function meta:DamageNails(attacker, inflictor, damage, dmginfo)
 		local applier = self.ReinforceApplier
 		local multi = 0.92
 		local dmgbefore = damage * 0.08
-		local points = dmgbefore / 8
 
 		dmginfo:SetDamage(dmginfo:GetDamage() * multi)
 		damage = damage * multi
 
 		applier.PropDef = (applier.PropDef or 0) + dmgbefore
-		applier:AddPoints(points)
 	end
 
 	if gamemode.Call("IsEscapeDoorOpen") then
