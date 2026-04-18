@@ -352,3 +352,8 @@ end)
 if GM.BeatSetZombie == "default" then
 	GM.BeatSetZombie = GM.BeatSetZombieDefault
 end
+
+GM.AutoBuyAmmo = CreateClientConVar("labyrinth_zs_autobuyammo", "0", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_autobuyammo", function(cvar, oldvalue, newvalue)
+	GAMEMODE.AutoBuyAmmo = tonumber(newvalue) == 1
+end)

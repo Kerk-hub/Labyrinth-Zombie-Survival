@@ -59,6 +59,12 @@ function MakepOptions()
 	list:AddItem(check)
 
 	check = vgui.Create("DCheckBoxLabel", Window)
+	check:SetText("Automatically buy ammo when out of ammo and have the required points")
+	check:SetConVar("labyrinth_zs_autobuyammo")
+	check:SizeToContents()
+	list:AddItem(check)
+
+	check = vgui.Create("DCheckBoxLabel", Window)
 	check:SetText("Automatic suicide when changing classes")
 	check:SetConVar("labyrinth_zs_suicideonchange")
 	check:SizeToContents()
