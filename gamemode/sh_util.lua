@@ -1,3 +1,4 @@
+-- get all active players
 function player.GetAllActive()
 	local t = {}
 
@@ -10,6 +11,7 @@ function player.GetAllActive()
 	return t
 end
 
+-- get all players spectating
 function player.GetAllSpectators()
 	local t = {}
 
@@ -21,6 +23,7 @@ function player.GetAllSpectators()
 
 	return t
 end
+
 
 function FindStartingItem(id)
 	local item = FindItem(id)
@@ -71,10 +74,12 @@ function INC_SERVER()
 	include("shared.lua")
 end
 
+-- why??? -- why???
 function INC_CLIENT()
 	include("shared.lua")
 end
 INC_CLIENT_NO_SHARED = INC_CLIENT
+-- why??? -- why???
 
 function INC_SERVER_NO_SHARED()
 	AddCSLuaFile("cl_init.lua")
@@ -478,7 +483,7 @@ function tonumbersafe(a)
 	return nil
 end
 
--- y from the top left can be retrieved with quad_h - y
+-- UNUSED??? -- y from the top left can be retrieved with quad_h - y
 function util.IntersectRayWithQuad(start, dir, quad_bottom_left, quad_angles, quad_w, quad_h, double_sided)
 	local quad_normal = quad_angles:Forward()
 
@@ -495,6 +500,7 @@ function util.IntersectRayWithQuad(start, dir, quad_bottom_left, quad_angles, qu
 	end
 end
 
+-- UNUSED???
 local pulseeffect = EffectData()
 pulseeffect:SetRadius(8)
 pulseeffect:SetMagnitude(1)
