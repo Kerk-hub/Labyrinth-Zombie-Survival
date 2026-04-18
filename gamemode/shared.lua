@@ -74,7 +74,7 @@ include_library("ammoexpand")
 
 GM.EndRound = false
 GM.PreventWin = false
-GM.StartingWorth = 150
+GM.StartingWorth = 100
 GM.ZombieVolunteers = {}
 
 team.SetUp(TEAM_ZOMBIE, "The Undead", Color(0, 255, 0, 255))
