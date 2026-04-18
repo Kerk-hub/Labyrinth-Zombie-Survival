@@ -171,7 +171,7 @@ net.Receive("zs_waveend", function(length)
 				)
 			end
 
-			if GAMEMODE.EndWavePointsBonus > 0 then
+			--[[if GAMEMODE.EndWavePointsBonus > 0 then
 				local pointsbonus = GAMEMODE.EndWavePointsBonus
 					+ (GAMEMODE:GetWave() - 1) * GAMEMODE.EndWavePointsBonusPerWave
 					+ (MySelf.EndWavePointsExtra or 0)
@@ -181,7 +181,7 @@ net.Receive("zs_waveend", function(length)
 				else
 					GAMEMODE:CenterNotify(COLOR_ORANGE, translate.Format("scrap_for_surviving", pointsbonus))
 				end
-			end
+			end]]
 		end
 
 		surface_PlaySound("ambient/atmosphere/cave_hit" .. math.random(6) .. ".wav")
