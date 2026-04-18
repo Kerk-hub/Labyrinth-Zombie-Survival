@@ -146,6 +146,15 @@ local function GetPhasePropBind()
 	return "ZOOM"
 end
 
+local function GetContextMenuBind()
+	local bind = input.LookupBinding("+menu_context")
+	if bind and bind ~= "" then
+		return string.upper(bind)
+	end
+
+	return "C"
+end
+
 local function ShouldShowPhasePropPrompt()
 	if PhasePropPromptConsumed then
 		return false
@@ -1162,7 +1171,7 @@ function GM:HumanHUD(screenscale)
 
 	if gamemode.Call("PlayerCanPurchase", MySelf) and not WorthArsenalPromptConsumed then
 		draw_SimpleTextBlurry(
-			translate.Get("press_f2_for_the_points_shop"),
+			translate.Format("press_f2_for_the_points_shop", GetContextMenuBind()),
 			"ZSHUDFontSmall",
 			w * 0.5,
 			hinty,
@@ -2631,14 +2640,11 @@ function GM:PlayerBindPress(pl, bind, wasin)
 		timer.Create("ReleaseZoom", 1, 1, function()
 			RunConsoleCommand("-zoom")
 		end)
-	--[[ This allows players to toggle third and first person
 	elseif bind == "+menu_context" then
-		if P_Team(pl) == TEAM_UNDEAD then
-			self.ZombieThirdPerson = not self.ZombieThirdPerson
-		elseif P_Team(pl) == TEAM_HUMAN then
-			self:ToggleOTSCamera()
+		if pl == MySelf and not gui.IsGameUIVisible() and not gui.IsConsoleVisible() and not vgui.GetKeyboardFocus() then
+			self:OpenWorthOrArsenalMenu()
+			return true
 		end
-	--]]
 	elseif bind == "impulse 100" then
 		if P_Team(pl) == TEAM_UNDEAD and pl:Alive() then
 			self:ToggleZombieVision()
@@ -2647,11 +2653,6 @@ function GM:PlayerBindPress(pl, bind, wasin)
 end
 
 function GM:PlayerButtonDown(pl, button)
-	if pl ~= MySelf or button ~= KEY_B or gui.IsGameUIVisible() or gui.IsConsoleVisible() or vgui.GetKeyboardFocus() then
-		return
-	end
-
-	self:OpenWorthOrArsenalMenu()
 end
 
 function GM:_ShouldDrawLocalPlayer(pl)
