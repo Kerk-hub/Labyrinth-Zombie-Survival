@@ -747,6 +747,7 @@ local function MeleeTraceFilter(ent)
 	if
 		ent == temp_attacker
 		or E_GetTable(ent).IgnoreMelee
+		or temp_attacker_team == TEAM_UNDEAD and ent.LastHeld and CurTime() < ent.LastHeld + 0.1
 		or getmetatable(ent) == meta and P_Team(ent) == temp_attacker_team
 		or not temp_override_team and ent.IgnoreMeleeTeam and ent.IgnoreMeleeTeam == temp_attacker_team
 		or temp_pen_ents[ent]

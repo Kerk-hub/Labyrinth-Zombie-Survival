@@ -2953,7 +2953,7 @@ function GM:EntityTakeDamage(ent, dmginfo)
 		return
 	end
 
-	if ent.LastHeld and CurTime() < ent.LastHeld + 0.1 and attacker:IsPlayer() and P_Team(attacker) == TEAM_HUMAN then
+	if ent.LastHeld and CurTime() < ent.LastHeld + 0.1 and attacker:IsPlayer() then
 		dmginfo:SetDamage(0)
 		dmginfo:SetDamageType(0)
 		dmginfo:ScaleDamage(0)
