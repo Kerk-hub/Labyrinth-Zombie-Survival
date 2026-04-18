@@ -21,5 +21,5 @@ function GM:PlayerSay(pl, text, teamchat)
         return cmd(pl)
     end
 
-    return ""
+    return text
 end
