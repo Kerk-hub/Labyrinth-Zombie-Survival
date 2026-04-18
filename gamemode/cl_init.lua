@@ -804,12 +804,13 @@ function GM:_Think()
 
 	self:TrackLastDeath()
 
-	local endtime = self:GetWaveActive() and self:GetWaveEnd() or self:GetWaveStart()
+	local waveactive = self:GetWaveActive()
+	local endtime = waveactive and self:GetWaveEnd() or self:GetWaveStart()
 	if endtime ~= -1 then
 		local timleft = math.max(0, endtime - time)
 		if timleft <= 10 and lastwarntim ~= math.ceil(timleft) then
 			lastwarntim = math.ceil(timleft)
-			if 0 < lastwarntim then
+			if waveactive and 0 < lastwarntim then
 				LocalPlayer():EmitSound("buttons/lightswitch2.wav", 100, 110 - lastwarntim * 2)
 			end
 		end
