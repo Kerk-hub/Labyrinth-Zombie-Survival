@@ -64,7 +64,7 @@ SWEP.UseHands = true
 SWEP.Primary.Sound = Sound("weapons/sg550/sg550-1.wav")
 SWEP.Primary.Damage = 86.5
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Delay = 1
+SWEP.Primary.Delay = 0.6
 
 SWEP.Primary.ClipSize = 6
 SWEP.Primary.Automatic = true

@@ -36,9 +36,9 @@ SWEP.UseHands = true
 
 SWEP.ReloadSound = Sound("Weapon_AWP.ClipOut")
 SWEP.Primary.Sound = Sound("Weapon_Hunter.Single")
-SWEP.Primary.Damage = 111
+SWEP.Primary.Damage = 95
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Delay = 1.5
+SWEP.Primary.Delay = 0.3
 SWEP.ReloadDelay = SWEP.Primary.Delay
 
 SWEP.Primary.ClipSize = 1
@@ -96,15 +96,15 @@ function SWEP:SendWeaponAnimation()
 	local speed = self.ReloadSpeed * self:GetReloadSpeedMultiplier()
 
 	if vm:IsValid() then
-		vm:SetPlaybackRate(0.5 * speed)
+		vm:SetPlaybackRate(0.7 * speed)
 	end
 
-	self:SetReloadFinish(CurTime() + 2.5 / speed)
+	self:SetReloadFinish(CurTime() + 1.3 / speed)
 end
 
 function SWEP:MockReload()
 	local speed = self.ReloadSpeed * self:GetReloadSpeedMultiplier()
-	self:SetReloadFinish(CurTime() + 2.5 / speed)
+	self:SetReloadFinish(CurTime() + 1.3 / speed)
 end
 
 function SWEP:Reload()
