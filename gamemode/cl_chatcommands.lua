@@ -20,4 +20,6 @@ function GM:PlayerSay(pl, text, teamchat)
     if cmd then
         return cmd(pl)
     end
+
+    return ""
 end
