@@ -31,7 +31,7 @@ function MakepOptions()
 	list:SetPos(12, y)
 	list:SetPadding(8)
 	list:SetSpacing(4)
-
+ 
 	gamemode.Call("AddExtraOptions", list, Window)
 
 	local check = vgui.Create("DCheckBoxLabel", Window)

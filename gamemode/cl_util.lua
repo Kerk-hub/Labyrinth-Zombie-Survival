@@ -84,30 +84,29 @@ function EasyButton(parent, text, xpadding, ypadding)
 end
 
 local lastautobuytime = 0
-hook.Add("Think", "AutoBuyAmmo", function()
-	if not GAMEMODE.AutoBuyAmmo then return end
+hook.Add("PlayerButtonDown", "AutoBuyAmmo", function(ply, button)
+    if ply ~= LocalPlayer() then return end
+    if not GAMEMODE.AutoBuyAmmo then return end
 
-	if vgui.CursorVisible() then return end
+    if vgui.CursorVisible() then return end
+    if ply:Team() ~= TEAM_HUMAN or not ply:Alive() then return end
 
-	if not (input.IsKeyDown(1) or input.IsMouseDown(107) or input.IsMouseDown(108)) then return end
+    local wep = ply:GetActiveWeapon()
+    if not IsValid(wep) then return end
 
-	local pl = LocalPlayer()
-	if not pl:Alive() or pl:Team() ~= TEAM_HUMAN then return end
+    local ammotype = wep:GetPrimaryAmmoType()
+    if ammotype == -1 then return end
 
-	local wep = pl:GetActiveWeapon()
-	if not IsValid(wep) then return end
+    local clip = wep:Clip1()
+    local reserve = ply:GetAmmoCount(ammotype)
 
-	local ammotype = wep:GetPrimaryAmmoType()
-	if ammotype == -1 then return end
+    if clip + reserve > 0 then return end
+    if ply:GetPoints() < 5 then return end
 
-	local clip = wep:Clip1()
-	local reserve = pl:GetAmmoCount(ammotype)
-	if clip + reserve > 0 then return end
+    if CurTime() - lastautobuytime < 1 then return end
 
-	if pl:GetPoints() < 5 then return end
-
-	if CurTime() - lastautobuytime < 1 then return end
-
-	RunConsoleCommand("zs_quickbuyammo")
-	lastautobuytime = CurTime()
+    if button == MOUSE_LEFT or button == MOUSE_RIGHT or button == MOUSE_MIDDLE then
+        RunConsoleCommand("zs_quickbuyammo")
+        lastautobuytime = CurTime()
+    end
 end)
