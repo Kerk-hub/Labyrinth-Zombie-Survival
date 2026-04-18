@@ -1173,6 +1173,18 @@ function GM:HumanHUD(screenscale)
 		hinty = hinty + draw_GetFontHeight("ZSHUDFontSmall")
 	end
 
+	if P_Team(MySelf) == TEAM_UNDEAD and not self:ShouldUseAlternateDynamicSpawn() then
+		draw_SimpleTextBlurry(
+			translate.Format("press_f3_to_change_your_zombie_class", GetContextMenuBind()),
+			"ZSHUDFontSmall",
+			w * 0.5,
+			hinty,
+			COLOR_GRAY,
+			TEXT_ALIGN_CENTER
+		)
+		hinty = hinty + draw_GetFontHeight("ZSHUDFontSmall")
+	end
+
 	if gamemode.Call("PlayerCanPurchase", MySelf) and not WorthArsenalPromptConsumed then
 		draw_SimpleTextBlurry(
 			translate.Format("press_f2_for_the_points_shop", GetContextMenuBind()),
@@ -1289,6 +1301,17 @@ function GM:ZombieObserverHUD(obsmode)
 			COLOR_GRAY,
 			TEXT_ALIGN_CENTER
 		)
+
+		if not self:ShouldUseAlternateDynamicSpawn() then
+			draw_SimpleTextBlurry(
+				translate.Format("press_f3_to_change_your_zombie_class", GetContextMenuBind()),
+				"ZSHUDFontSmaller",
+				x,
+				y + space * 5,
+				COLOR_GRAY,
+				TEXT_ALIGN_CENTER
+			)
+		end
 	end
 
 	draw_SimpleTextBlurry(
@@ -2634,6 +2657,11 @@ function GM:ZombieSpawnMenu()
 end
 
 function GM:OpenWorthOrArsenalMenu()
+	if P_Team(MySelf) == TEAM_UNDEAD then
+		RunConsoleCommand("gm_showspare1")
+		return
+	end
+
 	WorthArsenalPromptConsumed = true
 	RunConsoleCommand("gm_showteam")
 end
