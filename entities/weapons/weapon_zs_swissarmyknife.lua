@@ -39,7 +39,7 @@ SWEP.NoHitSoundFlesh = true
 SWEP.AllowQualityWeapons = true
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.085)
-GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Spring' Knife", "Right click while in the air to keep yourself in the air longer 5 second cooldown. Deals less damage.", function(wept)
+GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Spring' Knife", "Right click while in the air to double jump 5 second cooldown. Deals less damage.", function(wept)
 	wept.SwissAltRightClick = true
 	wept.MeleeDamage = wept.MeleeDamage * 0.8
 end)
@@ -64,7 +64,7 @@ function SWEP:SecondaryAttack()
 	if self:GetNextSecondaryFire() > CurTime() then return end
 
 	if SERVER then
-		owner:SetVelocity(owner:GetForward() * 50 + Vector(0, 0, 200))
+		owner:SetVelocity(Vector(0, 0, 280))
 		self:EmitSound("Weapon_Flashbang.Bounce")
 	end
 
@@ -73,9 +73,18 @@ function SWEP:SecondaryAttack()
 end
 
 function SWEP:Think()
-	if self.Branch == 1 and self:GetNextSecondaryFire() > 0 and self:GetNextSecondaryFire() <= CurTime() and not self.SwissAltBeeped then
-		self.SwissAltBeeped = true
-		self:EmitSound("buttons/button1.wav", 75, 100)
+	if self.Branch == 1 then
+		local isCharged = self:GetNextSecondaryFire() <= CurTime()
+		
+		if CLIENT then
+			if isCharged and not self.m_WasChargedNotified then
+				self.m_WasChargedNotified = true
+				self:EmitSound("buttons/button1.wav", 75, 100)
+				GAMEMODE:CenterNotify(COLOR_BLUE, "Double Jump Charged")
+			elseif not isCharged then
+				self.m_WasChargedNotified = false
+			end
+		end
 	end
 
 	BaseClass.Think(self)
