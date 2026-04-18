@@ -4999,3 +4999,16 @@ net.Receive("zs_nestspec", function(len, sender)
 		sender:SpectateEntity(nest)
 	end
 end)
+
+
+local SIGIL_CLASS = "prop_obj_sigil"
+
+hook.Add("ShouldCollide", "ZS_SigilHumanPass", function(ent1, ent2)
+	if ent1:GetClass() == SIGIL_CLASS and ent2:IsPlayer() then
+		return ent2:Team() ~= TEAM_HUMAN
+	end
+
+	if ent2:GetClass() == SIGIL_CLASS and ent1:IsPlayer() then
+		return ent1:Team() ~= TEAM_HUMAN
+	end
+end)
