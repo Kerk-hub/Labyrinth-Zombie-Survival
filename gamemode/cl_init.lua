@@ -473,6 +473,9 @@ local matAura = Material("models/debug/debugwhite")
 local skip = false
 function GM.PostPlayerDrawMedical(pl)
 	if not skip and P_Team(pl) == TEAM_HUMAN and pl ~= MySelf then
+
+		if pl:Health() == pl:GetMaxHealth() then return end
+
 		local eyepos = EyePos()
 		local dist = pl:NearestPoint(eyepos):DistToSqr(eyepos)
 		if dist < MedicalAuraDistance then
