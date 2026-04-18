@@ -231,10 +231,10 @@ function GM:TryHumanPickup(pl, entity)
 	end
 end
 
--- alias global resource table, go against what god intended
-local FILES = resource
-
 function GM:AddResources()
+	-- alias global resource table, go against what god intended
+	local FILES = resource
+
 	FILES.AddFile("resource/fonts/typenoksidi.ttf")
 	FILES.AddFile("resource/fonts/hidden.ttf")
 	FILES.AddFile("resource/fonts/ghoulfriaoe.ttf")
