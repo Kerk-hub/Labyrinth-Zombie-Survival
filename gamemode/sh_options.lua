@@ -529,10 +529,10 @@ end)
 item.NoClassicMode = true
 item.CanMakeFromScrap = true
 -- Tier 1
-GM:ShopAdd("brassknuckles", ITEMS_MELEE, 10, "weapon_zs_brassknuckles").Model =
+GM:ShopAdd("brassknuckles", ITEMS_MELEE, 15, "weapon_zs_brassknuckles").Model =
 	"models/props_c17/utilityconnecter005.mdl"
-GM:ShopAdd("knife", ITEMS_MELEE, 10, "weapon_zs_swissarmyknife")
-GM:ShopAdd("zpplnk", ITEMS_MELEE, 10, "weapon_zs_plank")
+GM:ShopAdd("knife", ITEMS_MELEE, 15, "weapon_zs_swissarmyknife")
+GM:ShopAdd("zpplnk", ITEMS_MELEE, 15, "weapon_zs_plank")
 GM:ShopAdd("axe", ITEMS_MELEE, 15, "weapon_zs_axe")
 GM:ShopAdd("zpfryp", ITEMS_MELEE, 15, "weapon_zs_fryingpan")
 GM:ShopAdd("zpcpot", ITEMS_MELEE, 15, "weapon_zs_pot")
@@ -668,16 +668,16 @@ item = GM:ShopAdd("ffemitter", ITEMS_DEPLOYABLES, 40, "weapon_zs_ffemitter", nil
 end)
 item.Countables = "prop_ffemitter"
 GM:ShopAdd("propanetank", ITEMS_TOOLS, 15, "comp_propanecan")
-GM:ShopAdd("busthead", ITEMS_TOOLS, 25, "comp_busthead")
-GM:ShopAdd("sawblade", ITEMS_TOOLS, 30, "comp_sawblade").SkillRequirement = SKILL_U_CRAFTINGPACK
-GM:ShopAdd("cpuparts", ITEMS_TOOLS, 30, "comp_cpuparts").SkillRequirement = SKILL_U_CRAFTINGPACK
-GM:ShopAdd("electrobattery", ITEMS_TOOLS, 40, "comp_electrobattery").SkillRequirement = SKILL_U_CRAFTINGPACK
-GM:ShopAdd("barricadekit", ITEMS_DEPLOYABLES, 85, "weapon_zs_barricadekit")
+GM:ShopAdd("busthead", ITEMS_TOOLS, 15, "comp_busthead")
+GM:ShopAdd("sawblade", ITEMS_TOOLS, 15, "comp_sawblade").SkillRequirement = SKILL_U_CRAFTINGPACK
+GM:ShopAdd("cpuparts", ITEMS_TOOLS, 15, "comp_cpuparts").SkillRequirement = SKILL_U_CRAFTINGPACK
+GM:ShopAdd("electrobattery", ITEMS_TOOLS, 15, "comp_electrobattery").SkillRequirement = SKILL_U_CRAFTINGPACK
+GM:ShopAdd("barricadekit", ITEMS_DEPLOYABLES, 50, "weapon_zs_barricadekit")
 GM:ShopAdd("medkit", ITEMS_TOOLS, 30, "weapon_zs_medicalkit")
 GM:ShopAdd("medgun", ITEMS_TOOLS, 30, "weapon_zs_medicgun")
-item = GM:ShopAdd("strengthshot", ITEMS_TOOLS, 30, "weapon_zs_strengthshot")
+item = GM:ShopAdd("strengthshot", ITEMS_TOOLS, 20, "weapon_zs_strengthshot")
 item.SkillRequirement = SKILL_U_STRENGTHSHOT
-item = GM:ShopAdd("antidote", ITEMS_TOOLS, 30, "weapon_zs_antidoteshot")
+item = GM:ShopAdd("antidote", ITEMS_TOOLS, 20, "weapon_zs_antidoteshot")
 item.SkillRequirement = SKILL_U_ANTITODESHOT
 GM:ShopAdd("medrifle", ITEMS_TOOLS, 55, "weapon_zs_medicrifle")
 GM:ShopAdd("healray", ITEMS_TOOLS, 125, "weapon_zs_healingray")
