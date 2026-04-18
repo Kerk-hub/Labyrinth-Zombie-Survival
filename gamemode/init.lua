@@ -4759,7 +4759,7 @@ function GM:WaveStateChanged(newstate)
 			end
 		end
 	elseif self:GetWave() >= self:GetNumberOfWaves() then -- Last wave is over
-		if self:GetUseSigils() then
+		if self:GetUseSigils() and self:NumSigils() > 0 then
 			if self:GetEscapeStage() == ESCAPESTAGE_BOSS then
 				-- 2 minutes is enough to decide people left are stuck or griefing.
 				self:SetEscapeStage(ESCAPESTAGE_DEATH)
@@ -4803,7 +4803,9 @@ function GM:WaveStateChanged(newstate)
 				end
 			end
 		else
-			-- If not using sigils then humans all win.
+			self:SetUseSigils(false)
+
+			-- If not using sigils, or there are none left to turn into exits, humans all win.
 			gamemode.Call("EndRound", TEAM_HUMAN)
 
 			local curwave = self:GetWave()
