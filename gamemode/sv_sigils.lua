@@ -37,29 +37,15 @@ function GM:CreateSigils(secondtry, rearrange)
 
 	local nodes = {}
 
-	-- Maybe the mapper made some!
-	local vec
+	-- Only use mapper-placed sigil nodes. If a map has none, sigils stay disabled.
 	local mapplacednodes = ents.FindByClass("info_sigilnode")
-	if #mapplacednodes > 0 and not self.ProfilerIsPreMade then -- or maybe they're a twit
-		for _, placednode in pairs(mapplacednodes) do
-			nodes[#nodes + 1] = {v = placednode:GetPos(), en = placednode}
-		end
-	else
-		-- Copy from profile
-		for _, node in pairs(self.ProfilerNodes) do
-			-- Check to see if this node is stuck in something.
-			validity_trace.start:Set(node)
-			validity_trace.start.z = node.z + 1
-			validity_trace.endpos:Set(node)
-			validity_trace.endpos.z = node.z + 73
-			if util.TraceHull(validity_trace).Hit then
-				print("bad sigil node at", node)
-			else
-				vec = Vector(0, 0, 0)
-				vec:Set(node)
-				nodes[#nodes + 1] = {v = vec}
-			end
-		end
+	if #mapplacednodes == 0 then
+		self:SetUseSigils(false)
+		return
+	end
+
+	for _, placednode in pairs(mapplacednodes) do
+		nodes[#nodes + 1] = {v = placednode:GetPos(), en = placednode}
 	end
 
 	--[[if secondtry then
