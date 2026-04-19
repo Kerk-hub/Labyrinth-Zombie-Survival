@@ -102,9 +102,14 @@ local function CanProcessAutoAmmo(ply)
     return true, wep, ammotype
 end
 
+local function ShouldSkipAutoReload(wep)
+    local class = wep:GetClass()
+    return class == "weapon_zs_hammer" or class == "weapon_zs_electrohammer" or wep.UseMelee1
+end
+
 local function TryForceReloadFromAttack(ply)
     local ok, wep, ammotype = CanProcessAutoAmmo(ply)
-    if not ok then return false end
+    if not ok or ShouldSkipAutoReload(wep) then return false end
 
     local clip = wep:Clip1()
     local reserve = ply:GetAmmoCount(ammotype)
@@ -114,7 +119,7 @@ local function TryForceReloadFromAttack(ply)
         magsize = wep.Primary.ClipSize or -1
     end
 
-    if magsize <= 0 or clip > 0 or reserve <= 0 then return false end
+    if magsize <= 0 or clip ~= 0 or reserve <= 0 then return false end
 
     if totalammo < magsize and ply:GetPoints() >= 5 and CurTime() - lastautobuytime >= 1 then
         RunConsoleCommand("zs_quickbuyammo")
@@ -135,6 +140,7 @@ end
 local function TryAutoBuyAmmo(ply, reloadcheck)
     local ok, wep, ammotype = CanProcessAutoAmmo(ply)
     if not ok then return end
+    if reloadcheck and ShouldSkipAutoReload(wep) then return end
 
     local clip = wep:Clip1()
     local reserve = ply:GetAmmoCount(ammotype)
@@ -160,7 +166,7 @@ end
 hook.Add("PlayerButtonDown", "AutoBuyAmmo", function(ply, button)
     if button == KEY_R then
         TryAutoBuyAmmo(ply, true)
-    elseif button == MOUSE_LEFT or button == MOUSE_RIGHT or button == MOUSE_MIDDLE then
+    elseif button == MOUSE_LEFT then
         if not TryForceReloadFromAttack(ply) then
             TryAutoBuyAmmo(ply, false)
         end
