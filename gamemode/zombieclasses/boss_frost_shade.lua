@@ -108,24 +108,16 @@ if not CLIENT then return end
 CLASS.Icon = "zombiesurvival/killicons/shadev2"
 CLASS.IconColor = Color(0, 190, 255)
 
-local nodraw = false
 local matWhite = Material("models/debug/debugwhite")
-local matRefract = Material("models/spawn_effect")
 function CLASS:PreRenderEffects(pl)
-	if render.SupportsVertexShaders_2_0() then
-		local normal = pl:GetUp()
-		render.EnableClipping(true)
-		render.PushCustomClipPlane(normal, normal:Dot(pl:GetPos() + normal * 16))
-	end
-
-	if nodraw then return end
-
 	local red = 0
 	local status = pl.status_frostshadeambience
 	if status and status:IsValid() then
 		red = 1 - math_Clamp((CurTime() - status:GetLastDamaged()) * 3, 0, 1) ^ 3
 	end
 
+	-- Keep the Shade effect lightweight and avoid extra clip/refract passes,
+	-- which can leak render state and cause HUD elements to disappear.
 	render.SetColorModulation(red, 0.7 * (1 - red), 1 - red)
 	render.SetBlend(0.5 + math_abs(math_cos(CurTime())) ^ 2 * 0.1)
 	render.SuppressEngineLighting(true)
@@ -133,29 +125,10 @@ function CLASS:PreRenderEffects(pl)
 end
 
 function CLASS:PostRenderEffects(pl)
-	if render.SupportsVertexShaders_2_0() then
-		render.PopCustomClipPlane()
-		render.EnableClipping(false)
-	end
-
-	if nodraw then return end
-
 	render.SetColorModulation(1, 1, 1)
 	render.SetBlend(1)
 	render.SuppressEngineLighting(false)
 	render.ModelMaterialOverride()
-
-	if render.SupportsPixelShaders_2_0() then
-		render.UpdateRefractTexture()
-
-		matRefract:SetFloat("$refractamount", 0.01)
-
-		render.ModelMaterialOverride(matRefract)
-		nodraw = true
-		pl:DrawModel()
-		nodraw = false
-		render.ModelMaterialOverride(0)
-	end
 end
 
 function CLASS:PrePlayerDraw(pl)

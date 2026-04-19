@@ -105,14 +105,13 @@ function ENT:DrawTranslucent()
 	render.SetBlend(1)
 
 	if render.SupportsPixelShaders_2_0() then
-		self.ShieldMaterial:SetFloat("$refractamount", 0.01 * scale)
-		self.ShieldMaterial:SetFloat("$BlurAmount", 0.01 * scale)
-		render.UpdateRefractTexture()
+		self.ShieldMaterial:SetFloat("$refractamount", 0.006 * scale)
+		self.ShieldMaterial:SetFloat("$BlurAmount", 0.006 * scale)
 
+		-- Skip the extra refraction pass here to avoid leaking render state
+		-- into the HUD when a Shade shield is active nearby.
 		render.ModelMaterialOverride(self.ShieldMaterial)
-		nodraw = true
 		self:DrawModel()
-		nodraw = false
 		render.ModelMaterialOverride(0)
 	end
 end
