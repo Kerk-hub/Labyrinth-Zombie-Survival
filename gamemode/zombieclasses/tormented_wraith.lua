@@ -9,7 +9,7 @@ CLASS.Health = 150
 CLASS.Points = CLASS.Health/GM.NoHeadboxZombiePointRatio
 CLASS.Speed = 150
 
-CLASS.Wave = 2 / 6
+CLASS.Wave = 3 / 6
 
 CLASS.SWEP = "weapon_zs_tormentedwraith"
 
