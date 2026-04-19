@@ -194,6 +194,62 @@ concommand.Add("zs_revive", function(sender, command, arguments)
 	
 end)
 
+concommand.Add("zs_class", function(sender, command, arguments)
+	if not (IsValid(sender) and sender:IsPlayer() and sender:IsAdmin()) then
+		return
+	end
+
+	local desired = string.Trim(table.concat(arguments or {}, " "))
+	if desired == "" then
+		GAMEMODE:ConCommandErrorMessage(sender, "Usage: zs_class <class name>")
+		return
+	end
+
+	local desiredlower = string.lower(desired)
+	local desiredcompact = string.gsub(desiredlower, "[%s_%-]", "")
+	local matchname
+
+	for _, classtab in ipairs(GAMEMODE.ZombieClasses) do
+		if classtab and classtab.Name and not classtab.Disabled then
+			local namelower = string.lower(classtab.Name)
+			local namecompact = string.gsub(namelower, "[%s_%-]", "")
+			local translower = classtab.TranslationName and string.lower(classtab.TranslationName) or ""
+			local sweplower = classtab.SWEP and string.lower(classtab.SWEP) or ""
+
+			if namelower == desiredlower or namecompact == desiredcompact then
+				matchname = classtab.Name
+				break
+			elseif not matchname and (
+				string.find(namelower, desiredlower, 1, true)
+				or string.find(namecompact, desiredcompact, 1, true)
+				or string.find(translower, desiredlower, 1, true)
+				or string.find(sweplower, desiredlower, 1, true)
+			) then
+				matchname = classtab.Name
+			end
+		end
+	end
+
+	if not matchname then
+		GAMEMODE:ConCommandErrorMessage(sender, "No zombie class matched: " .. desired)
+		return
+	end
+
+	local classid = GAMEMODE:GetBestAvailableZombieClass(matchname)
+	local classtab = GAMEMODE.ZombieClasses[classid]
+	if not classtab then
+		GAMEMODE:ConCommandErrorMessage(sender, "Unable to force zombie class: " .. desired)
+		return
+	end
+
+	sender.DeathClass = classtab.Index
+	sender:CenterNotify(COLOR_CYAN, "You will respawn as ", color_white, classtab.Name)
+
+	if sender:Alive() then
+		sender:Kill()
+	end
+end)
+
 concommand.Add("zs_dismantle", function(sender, command, arguments)
 	if not (sender:IsValid() and sender:IsConnected() and sender:IsValidLivingHuman()) then
 		return
