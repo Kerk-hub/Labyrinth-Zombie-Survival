@@ -2692,16 +2692,23 @@ end
 
 -- A nail is created between two entities.
 function GM:OnNailCreated(ent1, ent2, nail)
+	local ent1firstnail = ent1 and ent1:IsValid() and not ent1:IsWorld() and ent1:NumLivingNails() <= 1
+	local ent2firstnail = ent2 and ent2:IsValid() and not ent2:IsWorld() and ent2:NumLivingNails() <= 1
+
 	if ent1 and ent1:IsValid() and not ent1:IsWorld() then
 		timer.Simple(0, function()
 			evalfreeze(ent1)
-			GhostStuckPlayersInProp(ent1)
+			if ent1firstnail then
+				GhostStuckPlayersInProp(ent1)
+			end
 		end)
 	end
 	if ent2 and ent2:IsValid() and not ent2:IsWorld() then
 		timer.Simple(0, function()
 			evalfreeze(ent2)
-			GhostStuckPlayersInProp(ent2)
+			if ent2firstnail then
+				GhostStuckPlayersInProp(ent2)
+			end
 		end)
 	end
 
