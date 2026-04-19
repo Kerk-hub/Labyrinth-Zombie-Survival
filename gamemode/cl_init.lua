@@ -879,7 +879,7 @@ function GM:ShouldPlayBeats(teamid, fear)
 	return not self.RoundEnded and not self.ZombieEscape and not GetGlobalBool("beatsdisabled", false)
 end
 
-local cv_ShouldPlayMusic = CreateClientConVar("labyrinth_zs_playmusic", 1, true, false)
+local cv_ShouldPlayMusic = CreateClientConVar("labyrinth_zs_playmusic", 0, true, false)
 local NextBeat = 0
 local LastBeatLevel = 0
 function GM:PlayBeats(teamid, fear)
