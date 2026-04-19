@@ -17,6 +17,9 @@ SWEP.Secondary.Automatic = false
 SWEP.ShadeControl = "env_shadecontrol"
 SWEP.ShadeProjectile = "projectile_shaderock"
 
+local SHADE_MAXIMUM_MASS = 999
+local SHADE_MAXIMUM_VOLUME = 999
+
 function SWEP:Initialize()
 	self:HideWorldModel()
 end
@@ -41,7 +44,7 @@ function SWEP:PrimaryAttack()
 				local vel = owner:GetAimVector() * 1000
 
 				local phys = obj:GetPhysicsObject()
-				if phys:IsValid() and phys:IsMoveable() and phys:GetMass() <= 300 then
+				if phys:IsValid() and phys:IsMoveable() and phys:GetMass() <= SHADE_MAXIMUM_MASS then
 					phys:Wake()
 					phys:SetVelocity(vel)
 					obj:SetPhysicsAttacker(owner)
@@ -85,7 +88,7 @@ function SWEP:SecondaryAttack()
 
 		if SERVER then
 		local phys = ent:GetPhysicsObject()
-		if phys:IsValid() and phys:IsMoveable() and phys:GetMass() <= 300 then
+		if phys:IsValid() and phys:IsMoveable() and phys:GetMass() <= SHADE_MAXIMUM_MASS and ent:OBBMins():Length() + ent:OBBMaxs():Length() <= SHADE_MAXIMUM_VOLUME then
 			for _, ent2 in pairs(ents.FindByClass(self.ShadeControl)) do
 				if ent2:IsValid() and ent2:GetParent() == ent then
 					ent2:Remove()
