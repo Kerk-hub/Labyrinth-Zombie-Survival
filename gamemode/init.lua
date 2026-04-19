@@ -1578,11 +1578,14 @@ function GM:CalculateInfliction(victim, attacker)
 	end
 
 	local infliction = math.max(zombies / players, self.CappedInfliction)
+	if self.PreventWin and infliction >= 1 then
+		infliction = 0.999
+	end
 	self.CappedInfliction = infliction
 
 	if humans == 1 and 2 < zombies then
 		gamemode.Call("LastHuman", hum)
-	elseif 1 <= infliction then
+	elseif not self.PreventWin and 1 <= infliction then
 		infliction = 1
 
 		if wonhumans >= 1 then
@@ -4826,6 +4829,12 @@ function GM:WaveStateChanged(newstate)
 				end
 			end
 		else
+			if self.PreventWin then
+				SetGlobalBool("waveactive", true)
+				gamemode.Call("SetWaveEnd", -1)
+				return
+			end
+
 			self:SetUseSigils(false)
 
 			-- If not using sigils, or there are none left to turn into exits, humans all win.

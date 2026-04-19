@@ -100,7 +100,7 @@ local function GetRandomBarricadeLootItem()
 		pool = {}
 
 		for _, item in ipairs(GAMEMODE.Items or {}) do
-			if item.PointShop and item.Price == 15 and item.SWEP and barricadelootcategories[item.Category] then
+			if item and item.PointShop and item.Price == 15 and item.SWEP and item.Category and barricadelootcategories[item.Category] then
 				pool[#pool + 1] = item
 			end
 		end
