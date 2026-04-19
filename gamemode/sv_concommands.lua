@@ -89,7 +89,9 @@ concommand.Add("zs_pointsshopbuy", function(sender, command, arguments)
 	end
 
 	if itemtab.Callback then
-		itemtab.Callback(sender)
+		if itemtab.Callback(sender) == false then
+			return
+		end
 	elseif itemtab.SWEP then
 		if string.sub(itemtab.SWEP, 1, 6) ~= "weapon" then
 			if

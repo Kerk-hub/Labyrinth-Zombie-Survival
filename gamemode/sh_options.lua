@@ -330,7 +330,38 @@ GM:WorthAdd("busthead", ITEMS_TOOLS, 10, "comp_busthead")
 GM:WorthAdd("sawblade", ITEMS_TOOLS, 10, "comp_sawblade").SkillRequirement = SKILL_U_CRAFTINGPACK
 GM:WorthAdd("cpuparts", ITEMS_TOOLS, 10, "comp_cpuparts").SkillRequirement = SKILL_U_CRAFTINGPACK
 GM:WorthAdd("electrobattery", ITEMS_TOOLS, 10, "comp_electrobattery").SkillRequirement = SKILL_U_CRAFTINGPACK
-GM:WorthAdd("msgbeacon", ITEMS_DEPLOYABLES, 0, "weapon_zs_messagebeacon").Countables = "prop_messagebeacon"
+
+local function PlayerHasBarricadeBeacon(pl)
+	if pl:GetAmmoCount("striderminigun") > 0 then
+		return true
+	end
+
+	for _, ent in ipairs(ents.FindByClass("prop_messagebeacon")) do
+		if ent:IsValid() and ent.GetObjectOwner and ent:GetObjectOwner() == pl then
+			return true
+		end
+	end
+
+	return false
+end
+
+local function GiveBarricadeBeacon(pl)
+	if PlayerHasBarricadeBeacon(pl) then
+		if SERVER and GAMEMODE.ConCommandErrorMessage then
+			GAMEMODE:ConCommandErrorMessage(pl, "You can only have one Barricade Beacon at a time.")
+		end
+
+		return false
+	end
+
+	pl:GiveEmptyWeapon("weapon_zs_messagebeacon")
+	pl:GiveAmmo(1, "striderminigun")
+end
+
+item = GM:WorthAdd("msgbeacon", ITEMS_DEPLOYABLES, 0, "weapon_zs_messagebeacon", nil, nil, nil, function(pl)
+	return GiveBarricadeBeacon(pl)
+end)
+item.Countables = "prop_messagebeacon"
 item = GM:WorthAdd("ffemitter", ITEMS_DEPLOYABLES, 20, "weapon_zs_ffemitter", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_ffemitter")
 	pl:GiveAmmo(1, "slam")
@@ -568,7 +599,10 @@ GM:ShopAdd("wrench", ITEMS_TOOLS, 20, "weapon_zs_wrench").NoClassicMode = true
 --GM:ShopAdd("arsenalcrate", ITEMS_DEPLOYABLES, 40, "weapon_zs_arsenalcrate").Countables = "prop_arsenalcrate" --
 GM:ShopAdd("resupplybox", ITEMS_DEPLOYABLES, 40, "weapon_zs_resupplybox").Countables = "prop_resupplybox"
 --GM:ShopAdd("remantler", ITEMS_DEPLOYABLES, 40, "weapon_zs_remantler").Countables = "prop_remantler"
-GM:ShopAdd("msgbeacon", ITEMS_DEPLOYABLES, 0, "weapon_zs_messagebeacon").Countables = "prop_messagebeacon"
+item = GM:ShopAdd("msgbeacon", ITEMS_DEPLOYABLES, 0, "weapon_zs_messagebeacon", nil, nil, nil, function(pl)
+	return GiveBarricadeBeacon(pl)
+end)
+item.Countables = "prop_messagebeacon"
 GM:ShopAdd("camera", ITEMS_DEPLOYABLES, 15, "weapon_zs_camera").Countables = "prop_camera"
 GM:ShopAdd("tv", ITEMS_DEPLOYABLES, 25, "weapon_zs_tv").Countables = "prop_tv"
 item = GM:ShopAdd("infturret", ITEMS_DEPLOYABLES, 50, "weapon_zs_gunturret", nil, nil, nil, function(pl)
