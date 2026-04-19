@@ -110,6 +110,7 @@ end
 local function TryForceReloadFromAttack(ply)
     local ok, wep, ammotype = CanProcessAutoAmmo(ply)
     if not ok or ShouldSkipAutoReload(wep) then return false end
+    if ply:KeyDown(IN_RELOAD) then return false end
 
     local clip = wep:Clip1()
     local reserve = ply:GetAmmoCount(ammotype)
@@ -119,6 +120,8 @@ local function TryForceReloadFromAttack(ply)
         magsize = wep.Primary.ClipSize or -1
     end
 
+    if wep.GetReloadFinish and wep:GetReloadFinish() > 0 then return false end
+    if wep.CanReload and not wep:CanReload() then return false end
     if magsize <= 0 or clip ~= 0 or reserve <= 0 then return false end
 
     if totalammo < magsize and ply:GetPoints() >= 5 and CurTime() - lastautobuytime >= 1 then
