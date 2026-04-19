@@ -8,13 +8,26 @@ local function pointslabelThink(self)
 	end
 end
 
+local function MenuFrameHovered(pan, mx, my)
+	if not (pan and pan:IsValid() and pan:IsVisible()) then
+		return false
+	end
+
+	local x, y = pan:GetPos()
+	return mx >= x - 16 and my >= y - 16 and mx <= x + pan:GetWide() + 16 and my <= y + pan:GetTall() + 16
+end
+
 hook.Add("Think", "ArsenalMenuThink", function()
 	local pan = GAMEMODE.ArsenalInterface
 	if pan and pan:IsValid() and pan:IsVisible() then
 		local mx, my = gui.MousePos()
-		local x, y = pan:GetPos()
-		if mx < x - 16 or my < y - 16 or mx > x + pan:GetWide() + 16 or my > y + pan:GetTall() + 16 then
+		if not MenuFrameHovered(pan, mx, my) and not MenuFrameHovered(GAMEMODE.RemantlerInterface, mx, my) then
 			pan:SetVisible(false)
+
+			local remantler = GAMEMODE.RemantlerInterface
+			if remantler and remantler:IsValid() then
+				remantler:SetVisible(false)
+			end
 		end
 	end
 end)
@@ -684,9 +697,31 @@ function GM:CreateItemInfoViewer(frame, propertysheet, topspace, bottomspace, me
 	viewer.m_AmmoPrice = pricelab
 end
 
+function GM:LayoutArsenalAndRemantler()
+	local arsenal = self.ArsenalInterface
+	if not (arsenal and arsenal:IsValid()) then
+		return
+	end
+
+	local remantler = self.RemantlerInterface
+	if remantler and remantler:IsValid() and remantler:IsVisible() then
+		local gap = 8 * BetterScreenScale()
+		local totalwidth = arsenal:GetWide() + remantler:GetWide() + gap
+		local x = math.max(8, (ScrW() - totalwidth) * 0.5)
+		local y = math.max(8, (ScrH() - math.max(arsenal:GetTall(), remantler:GetTall())) * 0.5)
+
+		arsenal:SetPos(x, y)
+		remantler:SetPos(math.min(x + arsenal:GetWide() + gap, ScrW() - remantler:GetWide() - 8), y)
+	else
+		arsenal:Center()
+	end
+end
+
 function GM:OpenArsenalMenu()
 	if self.ArsenalInterface and self.ArsenalInterface:IsValid() then
 		self.ArsenalInterface:SetVisible(true)
+		self:OpenRemantlerMenu(nil, true)
+		self:LayoutArsenalAndRemantler()
 		self.ArsenalInterface:CenterMouse()
 		return
 	end
@@ -852,5 +887,7 @@ function GM:OpenArsenalMenu()
 	self:CreateItemInfoViewer(frame, propertysheet, topspace, bottomspace, MENU_POINTSHOP)
 
 	frame:MakePopup()
+	self:OpenRemantlerMenu(nil, true)
+	self:LayoutArsenalAndRemantler()
 	frame:CenterMouse()
 end

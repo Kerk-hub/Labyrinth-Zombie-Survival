@@ -253,7 +253,7 @@ item = GM:WorthAdd("antidoteshot", ITEMS_TOOLS, 20, "weapon_zs_antidoteshot")
 item.SkillRequirement = SKILL_U_ANTITODESHOT
 -- GM:WorthAdd("arscrate", ITEMS_DEPLOYABLES, 50, "weapon_zs_arsenalcrate").Countables = "prop_arsenalcrate" --
 GM:WorthAdd("resupplybox", ITEMS_DEPLOYABLES, 20, "weapon_zs_resupplybox").Countables = "prop_resupplybox"
-GM:WorthAdd("remantler", ITEMS_DEPLOYABLES, 20, "weapon_zs_remantler").Countables = "prop_remantler"
+-- GM:WorthAdd("remantler", ITEMS_DEPLOYABLES, 20, "weapon_zs_remantler").Countables = "prop_remantler"
 item = GM:WorthAdd("infturret", ITEMS_DEPLOYABLES, 30, "weapon_zs_gunturret", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_gunturret")
 	pl:GiveAmmo(1, "thumper")
@@ -567,7 +567,7 @@ end)
 GM:ShopAdd("wrench", ITEMS_TOOLS, 20, "weapon_zs_wrench").NoClassicMode = true
 --GM:ShopAdd("arsenalcrate", ITEMS_DEPLOYABLES, 40, "weapon_zs_arsenalcrate").Countables = "prop_arsenalcrate" --
 GM:ShopAdd("resupplybox", ITEMS_DEPLOYABLES, 40, "weapon_zs_resupplybox").Countables = "prop_resupplybox"
-GM:ShopAdd("remantler", ITEMS_DEPLOYABLES, 40, "weapon_zs_remantler").Countables = "prop_remantler"
+--GM:ShopAdd("remantler", ITEMS_DEPLOYABLES, 40, "weapon_zs_remantler").Countables = "prop_remantler"
 GM:ShopAdd("msgbeacon", ITEMS_DEPLOYABLES, 10, "weapon_zs_messagebeacon").Countables = "prop_messagebeacon"
 GM:ShopAdd("camera", ITEMS_DEPLOYABLES, 15, "weapon_zs_camera").Countables = "prop_camera"
 GM:ShopAdd("tv", ITEMS_DEPLOYABLES, 25, "weapon_zs_tv").Countables = "prop_tv"

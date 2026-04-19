@@ -1681,7 +1681,7 @@ function GM:PlayerHealedTeamMember(pl, other, health, wep, pointmul, nobymsg, fl
 			return
 		end
 
-		local points = health / hpperpoint * pointmul * 2
+		local points = health / hpperpoint * pointmul * 1.5
 
 		pl:AddPoints(points)
 	end
@@ -3065,7 +3065,7 @@ function GM:EntityTakeDamage(ent, dmginfo)
 						elseif myteam == TEAM_HUMAN and otherteam == TEAM_UNDEAD then
 							ent.DamagedBy[attacker] = (ent.DamagedBy[attacker] or 0) + damage
 							if time >= ent.m_LastWaveStartSpawn + 3 and time >= ent.m_LastGasHeal + 2 then
-								local points = damage / ent:GetMaxHealth() * ent:GetZombieClassTable().Points * 3
+								local points = damage / ent:GetMaxHealth() * ent:GetZombieClassTable().Points * 2
 								if POINTSMULTIPLIER then
 									points = points * POINTSMULTIPLIER
 								end

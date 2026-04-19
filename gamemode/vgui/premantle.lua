@@ -12,6 +12,15 @@ local function SelectedInv()
 	return GAMEMODE.InventoryMenu and GAMEMODE.InventoryMenu.SelInv
 end
 
+local function GetRemantlerTarget()
+	if SelectedInv() then
+		return SelectedInv()
+	end
+
+	local active = MySelf:GetActiveWeapon()
+	return active:IsValid() and active:GetClass() or nil
+end
+
 local function DismantleClick()
 	Derma_Query("Dismantle weapon? This cannot be reversed.", "Confirm Dissassembling Weapon",
 	"Dismantle", function()
@@ -24,13 +33,26 @@ local function DismantleClick()
 	end)
 end
 
+local function RemantlerFrameHovered(pan, mx, my)
+	if not (pan and pan:IsValid() and pan:IsVisible()) then
+		return false
+	end
+
+	local x, y = pan:GetPos()
+	return mx >= x - 16 and my >= y - 16 and mx <= x + pan:GetWide() + 16 and my <= y + pan:GetTall() + 16
+end
+
 hook.Add("Think", "RemantlerMenuThink", function()
 	local pan = GAMEMODE.RemantlerInterface
 	if pan and pan:IsValid() and pan:IsVisible() then
 		local mx, my = gui.MousePos()
-		local x, y = pan:GetPos()
-		if mx < x - 16 or my < y - 16 or mx > x + pan:GetWide() + 16 or my > y + pan:GetTall() + 16 then
+		if not RemantlerFrameHovered(pan, mx, my) and not RemantlerFrameHovered(GAMEMODE.ArsenalInterface, mx, my) then
 			pan:SetVisible(false)
+
+			local arsenal = GAMEMODE.ArsenalInterface
+			if arsenal and arsenal:IsValid() then
+				arsenal:SetVisible(false)
+			end
 		end
 	end
 end)
@@ -501,14 +523,27 @@ end
 
 vgui.Register("ZSRemantlePath", PANEL, "Panel")
 
-function GM:OpenRemantlerMenu(remantler)
-	if not (remantler and remantler:IsValid()) or (self.RemantlerInterface and self.RemantlerInterface:IsVisible()) then return end
-	local mytarget = SelectedInv() or MySelf:GetActiveWeapon():GetClass()
+function GM:OpenRemantlerMenu(remantler, dockedtoarsenal)
+	local mytarget = GetRemantlerTarget()
+	if not mytarget then return end
 
-	if self.RemantlerInterface and self.RemantlerInterface:IsValid() and self.RemantlerInterface.m_WepClass == mytarget then
-		self.RemantlerInterface:SetVisible(true)
-		self.RemantlerInterface:CenterMouse()
-		return
+	local linked = dockedtoarsenal or (self.ArsenalInterface and self.ArsenalInterface:IsValid() and self.ArsenalInterface:IsVisible())
+
+	if self.RemantlerInterface and self.RemantlerInterface:IsValid() then
+		if self.RemantlerInterface.m_WepClass == mytarget then
+			self.RemantlerInterface.LinkedToArsenal = linked
+			self.RemantlerInterface:SetVisible(true)
+			if linked and self.LayoutArsenalAndRemantler then
+				self:LayoutArsenalAndRemantler()
+			else
+				self.RemantlerInterface:Center()
+			end
+			self.RemantlerInterface:CenterMouse()
+			return
+		end
+
+		self.RemantlerInterface:Remove()
+		self.RemantlerInterface = nil
 	end
 
 	local screenscale = BetterScreenScale()
@@ -527,6 +562,7 @@ function GM:OpenRemantlerMenu(remantler)
 	frame.CenterMouse = RemantlerCenterMouse
 	self.RemantlerInterface = frame
 
+	frame.LinkedToArsenal = linked
 	frame.m_Remantler = remantler
 	frame.m_WepClass = mytarget
 
@@ -735,5 +771,10 @@ function GM:OpenRemantlerMenu(remantler)
 	frame.m_ComponentDis = compdisl
 
 	frame:MakePopup()
+	if linked and self.LayoutArsenalAndRemantler then
+		self:LayoutArsenalAndRemantler()
+	else
+		frame:Center()
+	end
 	frame:CenterMouse()
 end

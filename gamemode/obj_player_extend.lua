@@ -273,18 +273,7 @@ end
 meta.IsNearArsenalCrate = meta.NearArsenalCrate
 
 function meta:NearRemantler()
-	local pos = self:EyePos()
-
-	local remantlers = ents.FindByClass("prop_remantler")
-
-	for _, ent in pairs(remantlers) do
-		local nearest = ent:NearestPoint(pos)
-		if pos:DistToSqr(nearest) <= 10000 and (WorldVisible(pos, nearest) or self:TraceLine(100).Entity == ent) then -- 80^2
-			return true
-		end
-	end
-
-	return false
+	return true
 end
 
 function meta:GetResupplyAmmoType()
