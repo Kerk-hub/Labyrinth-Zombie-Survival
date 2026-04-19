@@ -22,7 +22,7 @@ CLASS.Speed = 210
 CLASS.NoFallDamage = true
 CLASS.NoFallSlowdown = true
 
-CLASS.ModelScale = 1
+CLASS.ModelScale = 1.5
 CLASS.Hull = {Vector(-16, -16, 0), Vector(16, 16, 12 * CLASS.ModelScale)}
 CLASS.HullDuck = {Vector(-16, -16, 0), Vector(16, 16, 12 * CLASS.ModelScale)}
 CLASS.ViewOffset = Vector(0, 0, 48)
