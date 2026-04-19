@@ -1,5 +1,15 @@
 INC_SERVER()
 
+local function HasDeployedBarricadeBeacon(owner)
+	for _, ent in ipairs(ents.FindByClass("prop_messagebeacon")) do
+		if ent:IsValid() and ent.GetObjectOwner and ent:GetObjectOwner() == owner then
+			return true
+		end
+	end
+
+	return false
+end
+
 function SWEP:Deploy()
 	gamemode.Call("WeaponDeployed", self:GetOwner(), self)
 
@@ -38,6 +48,11 @@ function SWEP:PrimaryAttack()
 	if not self:CanPrimaryAttack() then return end
 
 	local owner = self:GetOwner()
+	if HasDeployedBarricadeBeacon(owner) then
+		owner:PrintMessage(HUD_PRINTCENTER, "You already have a Barricade Beacon deployed.")
+		self:SetNextPrimaryAttack(CurTime() + 0.5)
+		return
+	end
 
 	local status = owner.status_ghost_messagebeacon
 	if not (status and status:IsValid()) then return end

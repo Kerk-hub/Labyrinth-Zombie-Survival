@@ -49,7 +49,17 @@ end
 timer.Create("checkfriend", 5, 0, function()
 	-- This probably isn't the fastest function in the world so I cache it.
 	for _, pl in pairs(player.GetAll()) do
-		pl.m_IsFriend = pl:GetFriendStatus() == "friend"
+		local isfriend = pl:GetFriendStatus() == "friend"
+		pl.m_IsFriend = isfriend
+
+		if isfriend and pl ~= MySelf and GAMEMODE and GAMEMODE.ZSFriends and not GAMEMODE.ZSFriends[pl:SteamID()] then
+			GAMEMODE.ZSFriends[pl:SteamID()] = true
+
+			net.Start("zs_zsfriend")
+				net.WriteString(pl:SteamID())
+				net.WriteBool(true)
+			net.SendToServer()
+		end
 	end
 end)
 

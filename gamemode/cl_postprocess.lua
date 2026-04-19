@@ -1,11 +1,11 @@
 function GM:RenderScreenspaceEffects() end
 
-GM.PostProcessingEnabled = CreateClientConVar("labyrinth_zs_postprocessing", 1, true, false):GetBool()
+GM.PostProcessingEnabled = CreateClientConVar("labyrinth_zs_postprocessing", 0, true, false):GetBool()
 cvars.AddChangeCallback("labyrinth_zs_postprocessing", function(cvar, oldvalue, newvalue)
 	GAMEMODE.PostProcessingEnabled = tonumber(newvalue) == 1
 end)
 
-GM.FilmGrainEnabled = CreateClientConVar("labyrinth_zs_filmgrain", 1, true, false):GetBool()
+GM.FilmGrainEnabled = CreateClientConVar("labyrinth_zs_filmgrain", 0, true, false):GetBool()
 cvars.AddChangeCallback("labyrinth_zs_filmgrain", function(cvar, oldvalue, newvalue)
 	GAMEMODE.FilmGrainEnabled = tonumber(newvalue) == 1
 end)
@@ -15,7 +15,7 @@ cvars.AddChangeCallback("labyrinth_zs_filmgrainopacity", function(cvar, oldvalue
 	GAMEMODE.FilmGrainOpacity = math.Clamp(tonumber(newvalue) or 0, 0, 255)
 end)
 
-GM.ColorModEnabled = CreateClientConVar("labyrinth_zs_colormod", "1", true, false):GetBool()
+GM.ColorModEnabled = CreateClientConVar("labyrinth_zs_colormod", "0", true, false):GetBool()
 cvars.AddChangeCallback("labyrinth_zs_colormod", function(cvar, oldvalue, newvalue)
 	GAMEMODE.ColorModEnabled = tonumber(newvalue) == 1
 end)

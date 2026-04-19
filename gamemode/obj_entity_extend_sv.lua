@@ -89,6 +89,51 @@ local healthpropscalar = {
 	["models/props_c17/door01_left.mdl"] = 0.7,
 }
 
+local function IsBarricadeLootCategory(category)
+	return category == ITEMS_GUNS or category == ITEMS_MELEE
+end
+
+local function GetRandomBarricadeLootItem()
+	local pool = GAMEMODE.CachedBarricadeLootPool
+	if not pool then
+		pool = {}
+
+		for _, item in ipairs(GAMEMODE.Items or {}) do
+			if item and item.PointShop and item.Price == 15 and item.SWEP and item.Category and IsBarricadeLootCategory(item.Category) then
+				pool[#pool + 1] = item
+			end
+		end
+
+		GAMEMODE.CachedBarricadeLootPool = pool
+	end
+
+	if #pool == 0 then
+		return nil
+	end
+
+	return pool[math.random(#pool)]
+end
+
+function meta:DropRandomBarricadeLoot()
+	local item = GetRandomBarricadeLootItem()
+	if not item then return end
+
+	local ent = ents.Create("prop_weapon")
+	if ent:IsValid() then
+		ent:SetPos(self:LocalToWorld(self:OBBCenter()) + Vector(0, 0, 12))
+		ent:SetAngles(Angle(0, math.random(0, 359), 0))
+		ent:SetWeaponType(item.SWEP)
+		ent:Spawn()
+
+		local phys = ent:GetPhysicsObject()
+		if phys:IsValid() then
+			phys:Wake()
+			phys:SetVelocityInstantaneous(VectorRand():GetNormalized() * math.Rand(24, 80) + Vector(0, 0, math.Rand(24, 64)))
+			phys:AddAngleVelocity(VectorRand() * 120)
+		end
+	end
+end
+
 function meta:GetDefaultBarricadeHealth()
 	local mass = 2
 	if self._OriginalMass then
@@ -546,6 +591,8 @@ function meta:DamageNails(attacker, inflictor, damage, dmginfo)
 		if self:GetBarricadeHealth() <= 0 then
 			-- Store nails before removing the prop
 			local storedNails = nails
+
+			self:DropRandomBarricadeLoot()
 
 			-- Remove the prop immediately
 			self:Remove()

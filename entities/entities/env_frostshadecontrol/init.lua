@@ -28,7 +28,7 @@ function ENT:Think()
 			local eyepos = owner:EyePos()
 			if eyepos:DistToSqr(ent:NearestPoint(eyepos)) <= 160000 then --400^2
 				local phys = ent:GetPhysicsObject()
-				if phys:IsValid() and phys:IsMoveable() and phys:GetMass() <= 300 then
+				if phys:IsValid() and phys:IsMoveable() and phys:GetMass() <= 999 then
 					local ct = CurTime()
 
 					local eyeangles = owner:EyeAngles()

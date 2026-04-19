@@ -103,18 +103,18 @@ cvars.AddChangeCallback("labyrinth_zs_crosshair_cola2", function(cvar, oldvalue,
 	GAMEMODE.CrosshairColor2.a = tonumber(newvalue) or 255
 end)
 
-GM.FilmMode = CreateClientConVar("labyrinth_zs_filmmode", "1", true, false):GetBool()
+GM.FilmMode = CreateClientConVar("labyrinth_zs_filmmode", "0", true, false):GetBool()
 cvars.AddChangeCallback("labyrinth_zs_filmmode", function(cvar, oldvalue, newvalue)
 	GAMEMODE.FilmMode = tonumber(newvalue) == 1
 
 	gamemode.Call("EvaluateFilmMode")
 end)
 
-CreateClientConVar("labyrinth_zs_noredeem", "1", true, true)
-CreateClientConVar("labyrinth_zs_alwaysvolunteer", "1", true, true)
+CreateClientConVar("labyrinth_zs_noredeem", "0", true, true)
+CreateClientConVar("labyrinth_zs_alwaysvolunteer", "0", true, true)
 CreateClientConVar("labyrinth_zs_nobosspick", "0", true, true)
-CreateClientConVar("labyrinth_zs_nousetodeposit", "1", true, true)
-CreateClientConVar("labyrinth_zs_nopickupprops", "1", true, true)
+CreateClientConVar("labyrinth_zs_nousetodeposit", "0", true, true)
+CreateClientConVar("labyrinth_zs_nopickupprops", "0", true, true)
 
 GM.DisableScopes = CreateClientConVar("labyrinth_zs_disablescopes", "1", true, false):GetBool()
 cvars.AddChangeCallback("labyrinth_zs_disablescopes", function(cvar, oldvalue, newvalue)
@@ -242,7 +242,7 @@ cvars.AddChangeCallback("labyrinth_zs_nocrosshairrotate", function(cvar, oldvalu
 	GAMEMODE.NoCrosshairRotate = tonumber(newvalue) == 1
 end)
 
-GM.HideViewModels = CreateClientConVar("labyrinth_zs_hideviewmodels", "1", true, false):GetBool()
+GM.HideViewModels = CreateClientConVar("labyrinth_zs_hideviewmodels", "0", true, false):GetBool()
 cvars.AddChangeCallback("labyrinth_zs_hideviewmodels", function(cvar, oldvalue, newvalue)
 	GAMEMODE.HideViewModels = tonumber(newvalue) == 1
 end)
@@ -268,7 +268,7 @@ cvars.AddChangeCallback("labyrinth_zs_transparencyradius3p", function(cvar, oldv
 	GAMEMODE.TransparencyRadius3p = math.Clamp(tonumber(newvalue) or 0, 0, GAMEMODE.TransparencyRadiusMax) ^ 2
 end)
 
-GM.MovementViewRoll = CreateClientConVar("labyrinth_zs_movementviewroll", "1", true, false):GetBool()
+GM.MovementViewRoll = CreateClientConVar("labyrinth_zs_movementviewroll", "0", true, false):GetBool()
 cvars.AddChangeCallback("labyrinth_zs_movementviewroll", function(cvar, oldvalue, newvalue)
 	GAMEMODE.MovementViewRoll = tonumber(newvalue) == 1
 end)
@@ -309,7 +309,7 @@ cvars.AddChangeCallback("labyrinth_zs_hidepacks", function(cvar, oldvalue, newva
 	GAMEMODE.HidePacks = tonumber(newvalue) == 1
 end)
 
-GM.AlwaysDrawFriend = CreateClientConVar("labyrinth_zs_showfriends", "1", true, false):GetBool()
+GM.AlwaysDrawFriend = CreateClientConVar("labyrinth_zs_showfriends", "0", true, false):GetBool()
 cvars.AddChangeCallback("labyrinth_zs_showfriends", function(cvar, oldvalue, newvalue)
 	GAMEMODE.AlwaysDrawFriend = tonumber(newvalue) == 1
 end)

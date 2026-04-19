@@ -1,7 +1,29 @@
 INC_CLIENT()
 
+
 ENT.NextGas = 0
 ENT.NextSound = 0
+
+local function BlendColor(col1, col2, frac)
+	return Color(
+		Lerp(frac, col1.r, col2.r),
+		Lerp(frac, col1.g, col2.g),
+		Lerp(frac, col1.b, col2.b),
+		Lerp(frac, col1.a or 255, col2.a or 255)
+	)
+end
+
+local function ShouldDrawWireZone(ent)
+	if not MySelf:IsValid() or not MySelf:Alive() then
+		return false
+	end
+
+	local pos = ent:GetPos()
+	local radius = ent:GetRadius()
+	local dist = MySelf:NearestPoint(pos):Distance(pos)
+
+	return dist <= radius + 150
+end
 
 function ENT:Think()
 	if GAMEMODE.ZombieEscape then return end
@@ -31,10 +53,19 @@ local particleTable = {
 }
 
 function ENT:Draw()
-	if GAMEMODE.ZombieEscape or CurTime() < self.NextGas then return end
-	self.NextGas = CurTime() + math.Rand( 0.05, 0.25 )
+	if GAMEMODE.ZombieEscape then return end
 
 	local pos = self:GetPos()
+	local radius = self:GetRadius()
+	local showwire = ShouldDrawWireZone(self)
+
+	if showwire then
+		render.DrawWireframeSphere(pos, radius, 24, 16, Color(0, 180, 0, 255), true)
+	end
+
+	if CurTime() < self.NextGas then return end
+	self.NextGas = CurTime() + math.Rand( 0.05, 0.25 )
+
 	local vecRan = VectorRand()
 	vecRan:Normalize()
 	local particledata = particleTable[math.random(7)]
@@ -45,10 +76,11 @@ function ENT:Draw()
 	emitter:SetNearClip( 48, 64 )
 
 	local radiusmul = self:GetRadius() / 170
+	local particlecolor = showwire and BlendColor(particledata.color, Color(10, 95, 10), 0.9) or particledata.color
 
 	local particle = emitter:Add( particledata.particle, pos + vecRan )
 	particle:SetVelocity( Vector( math.Rand(-particledata.randXY, particledata.randXY) * radiusmul * 2, math.Rand(-particledata.randXY, particledata.randXY) * radiusmul * 2, math.Rand(particledata.randZMin, particledata.randZMax) * radiusmul ))
-	particle:SetColor( particledata.color.r, particledata.color.g, particledata.color.b )
+	particle:SetColor( particlecolor.r, particlecolor.g, particlecolor.b )
 	particle:SetAirResistance( particledata.airRecis )
 	particle:SetCollide( true )
 	particle:SetDieTime( math.Rand( particledata.lifeTimeMin , particledata.lifeTimeMax ) )

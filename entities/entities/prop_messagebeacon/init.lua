@@ -76,7 +76,11 @@ end
 
 function ENT:OnPackedUp(pl)
 	pl:GiveEmptyWeapon("weapon_zs_messagebeacon")
-	pl:GiveAmmo(1, "striderminigun")
+
+	local ammocount = pl:GetAmmoCount("striderminigun")
+	if ammocount < 1 then
+		pl:GiveAmmo(1 - ammocount, "striderminigun")
+	end
 
 	pl:PushPackedItem(self:GetClass(), self.ObjHealth)
 

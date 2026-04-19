@@ -1518,11 +1518,22 @@ end
 GM.LastCalculatedBossTime = 0
 function GM:CalculateNextBoss()
 	local zombies = {}
+	local humanzombies = {}
+
 	for _, ent in pairs(team.GetPlayers(TEAM_UNDEAD)) do
 		if not ent:GetZSClientBool("zs_nobosspick") and not ent:GetZombieClassTable().Boss then
 			table.insert(zombies, ent)
+
+			if not ent:IsBot() then
+				humanzombies[#humanzombies + 1] = ent
+			end
 		end
 	end
+
+	if #humanzombies > 0 then
+		zombies = humanzombies
+	end
+
 	table.sort(zombies, BossZombieSort)
 	local newboss = zombies[1]
 
@@ -1578,11 +1589,14 @@ function GM:CalculateInfliction(victim, attacker)
 	end
 
 	local infliction = math.max(zombies / players, self.CappedInfliction)
+	if self.PreventWin and infliction >= 1 then
+		infliction = 0.999
+	end
 	self.CappedInfliction = infliction
 
 	if humans == 1 and 2 < zombies then
 		gamemode.Call("LastHuman", hum)
-	elseif 1 <= infliction then
+	elseif not self.PreventWin and 1 <= infliction then
 		infliction = 1
 
 		if wonhumans >= 1 then
@@ -2561,6 +2575,10 @@ function GM:CanRemoveOthersNail(pl, nailowner, ent)
 	if nailowner.ZSFriends[pl] then
 		return true
 	end
+	if ent and ent:IsValid() and self.IsBeaconProtectedProp and self:IsBeaconProtectedProp(ent, pl) then
+		pl:PrintMessage(HUD_PRINTCENTER, "This beacon protected prop can only be unnailed by the owner or friends.")
+		return false
+	end
 
 	if pl:BarricadeExpertPrecedence(nailowner) == -1 then
 		pl:PrintTranslatedMessage(HUD_PRINTCENTER, "cant_remove_nails_of_superior_player")
@@ -2688,17 +2706,36 @@ end
 
 -- A nail is created between two entities.
 function GM:OnNailCreated(ent1, ent2, nail)
+	local ent1firstnail = ent1 and ent1:IsValid() and not ent1:IsWorld() and ent1:NumLivingNails() <= 1
+	local ent2firstnail = ent2 and ent2:IsValid() and not ent2:IsWorld() and ent2:NumLivingNails() <= 1
+
 	if ent1 and ent1:IsValid() and not ent1:IsWorld() then
 		timer.Simple(0, function()
 			evalfreeze(ent1)
-			GhostStuckPlayersInProp(ent1)
+			if ent1firstnail then
+				GhostStuckPlayersInProp(ent1)
+			end
 		end)
 	end
 	if ent2 and ent2:IsValid() and not ent2:IsWorld() then
 		timer.Simple(0, function()
 			evalfreeze(ent2)
-			GhostStuckPlayersInProp(ent2)
+			if ent2firstnail then
+				GhostStuckPlayersInProp(ent2)
+			end
 		end)
+	end
+
+	local deployer = nail and nail:IsValid() and nail:GetDeployer()
+	if deployer and deployer:IsValid() then
+		if self.IsBeaconProtectedProp then
+			self:IsBeaconProtectedProp(ent1, deployer)
+			self:IsBeaconProtectedProp(ent2, deployer)
+		end
+		if self.TryRewardPropSearch then
+			self:TryRewardPropSearch(deployer, ent1)
+			self:TryRewardPropSearch(deployer, ent2)
+		end
 	end
 end
 
@@ -4803,6 +4840,12 @@ function GM:WaveStateChanged(newstate)
 				end
 			end
 		else
+			if self.PreventWin then
+				SetGlobalBool("waveactive", true)
+				gamemode.Call("SetWaveEnd", -1)
+				return
+			end
+
 			self:SetUseSigils(false)
 
 			-- If not using sigils, or there are none left to turn into exits, humans all win.
