@@ -2561,6 +2561,10 @@ function GM:CanRemoveOthersNail(pl, nailowner, ent)
 	if nailowner.ZSFriends[pl] then
 		return true
 	end
+	if ent and ent:IsValid() and self.IsBeaconProtectedProp and self:IsBeaconProtectedProp(ent, pl) then
+		pl:PrintMessage(HUD_PRINTCENTER, "This beacon protected prop can only be unnailed by the owner or friends.")
+		return false
+	end
 
 	if pl:BarricadeExpertPrecedence(nailowner) == -1 then
 		pl:PrintTranslatedMessage(HUD_PRINTCENTER, "cant_remove_nails_of_superior_player")
@@ -2699,6 +2703,18 @@ function GM:OnNailCreated(ent1, ent2, nail)
 			evalfreeze(ent2)
 			GhostStuckPlayersInProp(ent2)
 		end)
+	end
+
+	local deployer = nail and nail:IsValid() and nail:GetDeployer()
+	if deployer and deployer:IsValid() then
+		if self.IsBeaconProtectedProp then
+			self:IsBeaconProtectedProp(ent1, deployer)
+			self:IsBeaconProtectedProp(ent2, deployer)
+		end
+		if self.TryRewardPropSearch then
+			self:TryRewardPropSearch(deployer, ent1)
+			self:TryRewardPropSearch(deployer, ent2)
+		end
 	end
 end
 

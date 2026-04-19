@@ -1,4 +1,4 @@
-local PROPSEARCH_BEACON_DISTANCE = 160
+local PROPSEARCH_BEACON_DISTANCE = 260
 local PROPSEARCH_BEACON_DISTANCE_SQR = PROPSEARCH_BEACON_DISTANCE * PROPSEARCH_BEACON_DISTANCE
 local PROPSEARCH_SCRAP_REWARD = {
 	Name = "1 scrap",
@@ -151,6 +151,60 @@ local function FindSearchBeacon(pl, held)
 	end
 end
 
+local function MarkBeaconProtectedProp(pl, prop)
+	if not (prop and prop:IsValid()) or prop:IsWorld() then
+		return false
+	end
+
+	if FindSearchBeacon(pl, prop) then
+		prop.ZSBeaconProtected = true
+		prop:SetNWBool("zs_beacon_protected", true)
+		return true
+	end
+
+	return false
+end
+
+local function TryRewardPropSearch(pl, prop)
+	if not (pl and pl:IsValid() and pl:Alive() and pl:Team() == TEAM_HUMAN and prop and prop:IsValid()) or prop:IsWorld() then
+		return false
+	end
+
+	if prop.PropSearchRewarded or prop:GetNWBool("zs_prop_searched", false) then
+		return false
+	end
+
+	if not MarkBeaconProtectedProp(pl, prop) then
+		return false
+	end
+
+	prop.PropSearchRewarded = true
+	prop:SetNWBool("zs_prop_searched", true)
+
+	if pl.PropSearchTarget == prop then
+		ClearPropSearch(pl)
+	end
+
+	GiveRandomPropSearchReward(pl)
+	return true
+end
+
+function GM:TryRewardPropSearch(pl, prop)
+	return TryRewardPropSearch(pl, prop)
+end
+
+function GM:IsBeaconProtectedProp(prop, pl)
+	if not (prop and prop:IsValid()) or prop:IsWorld() then
+		return false
+	end
+
+	if prop.ZSBeaconProtected or prop:GetNWBool("zs_beacon_protected", false) then
+		return true
+	end
+
+	return MarkBeaconProtectedProp(pl, prop)
+end
+
 hook.Add("Think", "ZSPropSearchThink", function()
 	for _, pl in ipairs(player.GetAll()) do
 		if not pl:IsValid() then continue end
@@ -174,12 +228,7 @@ hook.Add("Think", "ZSPropSearchThink", function()
 			pl.PropSearchTarget = held
 		end
 
-		if FindSearchBeacon(pl, held) then
-			held.PropSearchRewarded = true
-			held:SetNWBool("zs_prop_searched", true)
-			ClearPropSearch(pl)
-			GiveRandomPropSearchReward(pl)
-		end
+		TryRewardPropSearch(pl, held)
 	end
 end)
 

@@ -1,5 +1,5 @@
-SWEP.PrintName = "Message Beacon"
-SWEP.Description = "This beacon allows you to display messages to all other humans in range.\nPress SECONDARY ATTACK to select different messages.\nPress PRIMARY ATTACK to deploy.\nPress SPRINT on a deployed message beacon that you own to pick it up."
+SWEP.PrintName = "Barricade Beacon"
+SWEP.Description = "Marks a barricade location for your team and helps turn props into scrap rewards.\nBring or nail props near the beacon to search them for a reward.\nPress SECONDARY ATTACK to select a message.\nPress PRIMARY ATTACK to deploy.\nPress SPRINT on your deployed beacon to pick it up."
 SWEP.Slot = 4
 SWEP.SlotPos = 0
 

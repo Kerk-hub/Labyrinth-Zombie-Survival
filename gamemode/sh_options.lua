@@ -988,7 +988,7 @@ end
 GM:AddDeployableInfo("prop_arsenalcrate", "Arsenal Crate", "weapon_zs_arsenalcrate")
 GM:AddDeployableInfo("prop_resupplybox", "Resupply Box", "weapon_zs_resupplybox")
 GM:AddDeployableInfo("prop_remantler", "Weapon Remantler", "weapon_zs_remantler")
-GM:AddDeployableInfo("prop_messagebeacon", "Message Beacon", "weapon_zs_messagebeacon")
+GM:AddDeployableInfo("prop_messagebeacon", "Barricade Beacon", "weapon_zs_messagebeacon")
 GM:AddDeployableInfo("prop_camera", "Camera", "weapon_zs_camera")
 GM:AddDeployableInfo("prop_gunturret", "Gun Turret", "weapon_zs_gunturret")
 GM:AddDeployableInfo("prop_gunturret_assault", "Assault Turret", "weapon_zs_gunturret_assault")
