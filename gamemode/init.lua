@@ -1518,11 +1518,22 @@ end
 GM.LastCalculatedBossTime = 0
 function GM:CalculateNextBoss()
 	local zombies = {}
+	local humanzombies = {}
+
 	for _, ent in pairs(team.GetPlayers(TEAM_UNDEAD)) do
 		if not ent:GetZSClientBool("zs_nobosspick") and not ent:GetZombieClassTable().Boss then
 			table.insert(zombies, ent)
+
+			if not ent:IsBot() then
+				humanzombies[#humanzombies + 1] = ent
+			end
 		end
 	end
+
+	if #humanzombies > 0 then
+		zombies = humanzombies
+	end
+
 	table.sort(zombies, BossZombieSort)
 	local newboss = zombies[1]
 
