@@ -89,10 +89,9 @@ local healthpropscalar = {
 	["models/props_c17/door01_left.mdl"] = 0.7,
 }
 
-local barricadelootcategories = {
-	[ITEMS_GUNS] = true,
-	[ITEMS_MELEE] = true,
-}
+local function IsBarricadeLootCategory(category)
+	return category == ITEMS_GUNS or category == ITEMS_MELEE
+end
 
 local function GetRandomBarricadeLootItem()
 	local pool = GAMEMODE.CachedBarricadeLootPool
@@ -100,7 +99,7 @@ local function GetRandomBarricadeLootItem()
 		pool = {}
 
 		for _, item in ipairs(GAMEMODE.Items or {}) do
-			if item and item.PointShop and item.Price == 15 and item.SWEP and item.Category and barricadelootcategories[item.Category] then
+			if item and item.PointShop and item.Price == 15 and item.SWEP and item.Category and IsBarricadeLootCategory(item.Category) then
 				pool[#pool + 1] = item
 			end
 		end
