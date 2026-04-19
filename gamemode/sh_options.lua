@@ -330,7 +330,7 @@ GM:WorthAdd("busthead", ITEMS_TOOLS, 10, "comp_busthead")
 GM:WorthAdd("sawblade", ITEMS_TOOLS, 10, "comp_sawblade").SkillRequirement = SKILL_U_CRAFTINGPACK
 GM:WorthAdd("cpuparts", ITEMS_TOOLS, 10, "comp_cpuparts").SkillRequirement = SKILL_U_CRAFTINGPACK
 GM:WorthAdd("electrobattery", ITEMS_TOOLS, 10, "comp_electrobattery").SkillRequirement = SKILL_U_CRAFTINGPACK
-GM:WorthAdd("msgbeacon", ITEMS_DEPLOYABLES, 10, "weapon_zs_messagebeacon").Countables = "prop_messagebeacon"
+GM:WorthAdd("msgbeacon", ITEMS_DEPLOYABLES, 0, "weapon_zs_messagebeacon").Countables = "prop_messagebeacon"
 item = GM:WorthAdd("ffemitter", ITEMS_DEPLOYABLES, 20, "weapon_zs_ffemitter", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_ffemitter")
 	pl:GiveAmmo(1, "slam")
@@ -383,7 +383,7 @@ GM:WorthAdd("corgasgrenade", ITEMS_OTHER, 15, "weapon_zs_corgasgrenade")
 GM:WorthAdd("crygasgrenade", ITEMS_OTHER, 15, "weapon_zs_crygasgrenade").SkillRequirement = SKILL_U_CRYGASGREN
 GM:WorthAdd("detpck", ITEMS_OTHER, 15, "weapon_zs_detpack").Countables = "prop_detpack"
 
-item.SkillRequirement = SKILL_U_CORRUPTEDFRAGMENT
+-- item.SkillRequirement = SKILL_U_CORRUPTEDFRAGMENT
 item = GM:WorthAdd("medcloud", ITEMS_OTHER, 15, "weapon_zs_mediccloudbomb")
 item.SkillRequirement = SKILL_U_MEDICCLOUD
 --[[
@@ -391,10 +391,10 @@ item = GM:WorthAdd("nanitecloud", ITEMS_OTHER, 25, "weapon_zs_nanitecloudbomb")
 item.SkillRequirement = SKILL_U_NANITECLOUD
 ]]
 GM:WorthAdd("bloodshot", ITEMS_OTHER, 15, "weapon_zs_bloodshotbomb")
-item = GM:WorthAdd("sigfragment", ITEMS_OTHER, 15, "weapon_zs_sigilfragment")
-item.NoClassicMode = true
-item = GM:WorthAdd("corfragment", ITEMS_OTHER, 20, "weapon_zs_corruptedfragment")
-item.NoClassicMode = true
+-- item = GM:WorthAdd("sigfragment", ITEMS_OTHER, 15, "weapon_zs_sigilfragment")
+-- item.NoClassicMode = true
+-- item = GM:WorthAdd("corfragment", ITEMS_OTHER, 20, "weapon_zs_corruptedfragment")
+-- item.NoClassicMode = true
 
 ------------
 -- Point Shop --
@@ -568,7 +568,7 @@ GM:ShopAdd("wrench", ITEMS_TOOLS, 20, "weapon_zs_wrench").NoClassicMode = true
 --GM:ShopAdd("arsenalcrate", ITEMS_DEPLOYABLES, 40, "weapon_zs_arsenalcrate").Countables = "prop_arsenalcrate" --
 GM:ShopAdd("resupplybox", ITEMS_DEPLOYABLES, 40, "weapon_zs_resupplybox").Countables = "prop_resupplybox"
 --GM:ShopAdd("remantler", ITEMS_DEPLOYABLES, 40, "weapon_zs_remantler").Countables = "prop_remantler"
-GM:ShopAdd("msgbeacon", ITEMS_DEPLOYABLES, 10, "weapon_zs_messagebeacon").Countables = "prop_messagebeacon"
+GM:ShopAdd("msgbeacon", ITEMS_DEPLOYABLES, 0, "weapon_zs_messagebeacon").Countables = "prop_messagebeacon"
 GM:ShopAdd("camera", ITEMS_DEPLOYABLES, 15, "weapon_zs_camera").Countables = "prop_camera"
 GM:ShopAdd("tv", ITEMS_DEPLOYABLES, 25, "weapon_zs_tv").Countables = "prop_tv"
 item = GM:ShopAdd("infturret", ITEMS_DEPLOYABLES, 50, "weapon_zs_gunturret", nil, nil, nil, function(pl)
@@ -800,11 +800,11 @@ GM:ShopAdd("detpck", ITEMS_OTHER, 40, "weapon_zs_detpack")
 item = GM:ShopAdd("crygasgrenade", ITEMS_OTHER, 40, "weapon_zs_crygasgrenade")
 item.SkillRequirement = SKILL_U_CRYGASGREN
 GM:ShopAdd("corgasgrenade", ITEMS_OTHER, 45, "weapon_zs_corgasgrenade")
-GM:ShopAdd("sigfragment", ITEMS_OTHER, 30, "weapon_zs_sigilfragment")
+-- GM:ShopAdd("sigfragment", ITEMS_OTHER, 30, "weapon_zs_sigilfragment")
 GM:ShopAdd("bloodshot", ITEMS_OTHER, 45, "weapon_zs_bloodshotbomb")
-item = GM:ShopAdd("corruptedfragment", ITEMS_OTHER, 55, "weapon_zs_corruptedfragment")
-item.NoClassicMode = true
-item.SkillRequirement = SKILL_U_CORRUPTEDFRAGMENT
+-- item = GM:ShopAdd("corruptedfragment", ITEMS_OTHER, 55, "weapon_zs_corruptedfragment")
+-- item.NoClassicMode = true
+-- item.SkillRequirement = SKILL_U_CORRUPTEDFRAGMENT
 item = GM:ShopAdd("medcloud", ITEMS_OTHER, 40, "weapon_zs_mediccloudbomb")
 item.SkillRequirement = SKILL_U_MEDICCLOUD
 --[[
