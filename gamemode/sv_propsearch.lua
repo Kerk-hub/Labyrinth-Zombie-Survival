@@ -1,4 +1,5 @@
-local SEARCH_DURATION = 3
+local PROPSEARCH_BEACON_DISTANCE = 160
+local PROPSEARCH_BEACON_DISTANCE_SQR = PROPSEARCH_BEACON_DISTANCE * PROPSEARCH_BEACON_DISTANCE
 local PROPSEARCH_SCRAP_REWARD = {
 	Name = "1 scrap",
 	Callback = function(pl)
@@ -124,6 +125,32 @@ local function GiveRandomPropSearchReward(pl)
 	pl:CenterNotify(COLOR_PURPLE, translate.ClientGet(pl, "arsenal_upgraded") .. ": ", color_white, itemtab.Name or "Reward")
 end
 
+local function IsBeaconVisibleToHeldProp(pl, held, beacon)
+	if not (pl:IsValid() and held:IsValid() and beacon:IsValid()) then
+		return false
+	end
+
+	if held:WorldSpaceCenter():DistToSqr(beacon:WorldSpaceCenter()) > PROPSEARCH_BEACON_DISTANCE_SQR then
+		return false
+	end
+
+	local tr = util.TraceLine({
+		start = held:WorldSpaceCenter(),
+		endpos = beacon:WorldSpaceCenter(),
+		filter = {pl, held, beacon}
+	})
+
+	return not tr.Hit or tr.Entity == beacon
+end
+
+local function FindSearchBeacon(pl, held)
+	for _, beacon in ipairs(ents.FindByClass("prop_messagebeacon")) do
+		if IsBeaconVisibleToHeldProp(pl, held, beacon) then
+			return beacon
+		end
+	end
+end
+
 hook.Add("Think", "ZSPropSearchThink", function()
 	for _, pl in ipairs(player.GetAll()) do
 		if not pl:IsValid() then continue end
@@ -145,11 +172,9 @@ hook.Add("Think", "ZSPropSearchThink", function()
 
 		if pl.PropSearchTarget ~= held then
 			pl.PropSearchTarget = held
-			pl.PropSearchStartTime = CurTime()
-			pl.PropSearchEndTime = CurTime() + SEARCH_DURATION
-			pl:SetNWFloat("zs_propsearch_start", pl.PropSearchStartTime)
-			pl:SetNWFloat("zs_propsearch_end", pl.PropSearchEndTime)
-		elseif pl.PropSearchEndTime and CurTime() >= pl.PropSearchEndTime then
+		end
+
+		if FindSearchBeacon(pl, held) then
 			held.PropSearchRewarded = true
 			held:SetNWBool("zs_prop_searched", true)
 			ClearPropSearch(pl)
