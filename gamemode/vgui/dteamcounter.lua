@@ -61,9 +61,17 @@ function PANEL:UpdateVisuals()
 		self.m_Symbol:SetVisible(false)
 		self.m_Image:SetImage(original and "zombiesurvival/humanhead" or "zombiesurvival/personsymbol2")
 	elseif undead then
-		self.m_Image:SetVisible(true)
-		self.m_Symbol:SetVisible(false)
-		self.m_Image:SetImage("zombiesurvival/zombiehead")
+		if original then
+			self.m_Image:SetVisible(true)
+			self.m_Symbol:SetVisible(false)
+			self.m_Image:SetImage("zombiesurvival/zombiehead")
+		else
+			self.m_Image:SetVisible(false)
+			self.m_Symbol:SetVisible(true)
+			self.m_Symbol:SetText("☣")
+			self.m_Symbol:SetTextColor(Color(245, 245, 245))
+			self.m_Symbol:SizeToContents()
+		end
 	else
 		self.m_Image:SetVisible(true)
 		self.m_Symbol:SetVisible(false)
