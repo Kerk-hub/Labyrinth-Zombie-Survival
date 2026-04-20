@@ -46,7 +46,10 @@ hook.Add("Think", "RemantlerMenuThink", function()
 	local pan = GAMEMODE.RemantlerInterface
 	if pan and pan:IsValid() and pan:IsVisible() then
 		local mx, my = gui.MousePos()
-		if not RemantlerFrameHovered(pan, mx, my) and not RemantlerFrameHovered(GAMEMODE.ArsenalInterface, mx, my) then
+		if not RemantlerFrameHovered(pan, mx, my)
+			and not RemantlerFrameHovered(GAMEMODE.ArsenalInterface, mx, my)
+			and not RemantlerFrameHovered(pWorth, mx, my)
+		then
 			pan:SetVisible(false)
 
 			local arsenal = GAMEMODE.ArsenalInterface
@@ -523,18 +526,22 @@ end
 
 vgui.Register("ZSRemantlePath", PANEL, "Panel")
 
-function GM:OpenRemantlerMenu(remantler, dockedtoarsenal)
+function GM:OpenRemantlerMenu(remantler, dockedtoarsenal, dockedtoworth)
 	local mytarget = GetRemantlerTarget()
 	if not mytarget then return end
 
 	local linked = dockedtoarsenal or (self.ArsenalInterface and self.ArsenalInterface:IsValid() and self.ArsenalInterface:IsVisible())
+	local linkedworth = dockedtoworth or (pWorth and pWorth:IsValid() and pWorth:IsVisible())
 
 	if self.RemantlerInterface and self.RemantlerInterface:IsValid() then
 		if self.RemantlerInterface.m_WepClass == mytarget then
 			self.RemantlerInterface.LinkedToArsenal = linked
+			self.RemantlerInterface.LinkedToWorth = linkedworth
 			self.RemantlerInterface:SetVisible(true)
 			if linked and self.LayoutArsenalAndRemantler then
 				self:LayoutArsenalAndRemantler()
+			elseif linkedworth and self.LayoutWorthAndRemantler then
+				self:LayoutWorthAndRemantler()
 			else
 				self.RemantlerInterface:Center()
 			end
@@ -563,6 +570,7 @@ function GM:OpenRemantlerMenu(remantler, dockedtoarsenal)
 	self.RemantlerInterface = frame
 
 	frame.LinkedToArsenal = linked
+	frame.LinkedToWorth = linkedworth
 	frame.m_Remantler = remantler
 	frame.m_WepClass = mytarget
 
@@ -773,6 +781,8 @@ function GM:OpenRemantlerMenu(remantler, dockedtoarsenal)
 	frame:MakePopup()
 	if linked and self.LayoutArsenalAndRemantler then
 		self:LayoutArsenalAndRemantler()
+	elseif linkedworth and self.LayoutWorthAndRemantler then
+		self:LayoutWorthAndRemantler()
 	else
 		frame:Center()
 	end

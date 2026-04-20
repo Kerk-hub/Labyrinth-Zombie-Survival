@@ -197,6 +197,25 @@ local function WorthThink(self)
 	end
 end
 
+function GM:LayoutWorthAndRemantler()
+	if not (pWorth and pWorth:IsValid()) then
+		return
+	end
+
+	local remantler = self.RemantlerInterface
+	if remantler and remantler:IsValid() and remantler:IsVisible() then
+		local gap = 8 * BetterScreenScale()
+		local totalwidth = pWorth:GetWide() + remantler:GetWide() + gap
+		local x = math.max(8, (ScrW() - totalwidth) * 0.5)
+		local y = math.max(8, (ScrH() - math.max(pWorth:GetTall(), remantler:GetTall())) * 0.5)
+
+		pWorth:SetPos(x, y)
+		remantler:SetPos(math.min(x + pWorth:GetWide() + gap, ScrW() - remantler:GetWide() - 8), y)
+	else
+		pWorth:Center()
+	end
+end
+
 function MakepWorth()
 	if pWorth and pWorth:IsValid() then
 		pWorth:Remove()
@@ -219,6 +238,13 @@ function MakepWorth()
 	-- Set blue-gray background color for the main panel (similar to arsenal menu)
 	frame.Paint = function(self, w, h)
 		draw.RoundedBox(8, 0, 0, w, h, Color(40, 60, 90, 245))
+	end
+	frame.OnRemove = function()
+		local remantler = GAMEMODE.RemantlerInterface
+		if remantler and remantler:IsValid() and remantler.LinkedToWorth then
+			remantler:Close()
+			GAMEMODE.RemantlerInterface = nil
+		end
 	end
 
 	local topspace = vgui.Create("DPanel", frame)
@@ -406,7 +432,8 @@ function MakepWorth()
 	clearbutton:MoveAbove(randombutton, 8)
 	clearbutton.DoClick = ClearCartDoClick
 
-	frame:Center()
+	GAMEMODE:OpenRemantlerMenu(nil, false, true)
+	GAMEMODE:LayoutWorthAndRemantler()
 	frame:SetAlpha(0)
 	frame:AlphaTo(255, 0.15, 0)
 	frame:MakePopup()
