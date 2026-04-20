@@ -143,6 +143,19 @@ function GM:IsBarricadeBeaconCoveringPosition(beacon, pos, filter)
 	return self:IsBarricadeBeaconTraceClear(pos, beaconcenter, filter)
 end
 
+function GM:FindBarricadeBeaconCoveringPosition(pos, owner, ignoredbeacon, filter)
+	for _, beacon in ipairs(ents.FindByClass("prop_messagebeacon")) do
+		if beacon:IsValid() and beacon ~= ignoredbeacon then
+			local beaconowner = beacon.GetObjectOwner and beacon:GetObjectOwner()
+			if (not owner or beaconowner == owner) and self:IsBarricadeBeaconCoveringPosition(beacon, pos, filter) then
+				return beacon
+			end
+		end
+	end
+
+	return nil
+end
+
 function GM:FindConflictingBarricadeBeacon(pos, owner, ignoredbeacon)
 	for _, beacon in ipairs(ents.FindByClass("prop_messagebeacon")) do
 		if beacon:IsValid() and beacon ~= ignoredbeacon then

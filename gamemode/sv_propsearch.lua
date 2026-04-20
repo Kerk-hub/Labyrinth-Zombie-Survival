@@ -132,11 +132,65 @@ local function IsBeaconVisibleToHeldProp(pl, held, beacon)
 end
 
 local function FindSearchBeacon(pl, held)
-	for _, beacon in ipairs(ents.FindByClass("prop_messagebeacon")) do
-		if IsBeaconVisibleToHeldProp(pl, held, beacon) then
-			return beacon
-		end
+	if not (pl:IsValid() and held:IsValid()) then
+		return nil
 	end
+
+	return GAMEMODE.FindBarricadeBeaconCoveringPosition and GAMEMODE:FindBarricadeBeaconCoveringPosition(held:WorldSpaceCenter(), nil, nil, {pl, held}) or nil
+end
+
+function GM:GetBarricadeBeaconOwnerForProp(prop)
+	if not (prop and prop:IsValid()) or prop:IsWorld() then
+		return nil
+	end
+
+	local beacon = self.FindBarricadeBeaconCoveringPosition and self:FindBarricadeBeaconCoveringPosition(prop:WorldSpaceCenter(), nil, nil, {prop})
+	if not (beacon and beacon:IsValid() and beacon.GetObjectOwner) then
+		return nil
+	end
+
+	local owner = beacon:GetObjectOwner()
+	if owner and owner:IsValid() then
+		return owner, beacon
+	end
+
+	return nil, beacon
+end
+
+function GM:IsPropWithinBarricadeBeaconArea(prop)
+	if not (prop and prop:IsValid()) or prop:IsWorld() then
+		return false
+	end
+
+	return self.FindBarricadeBeaconCoveringPosition and self:FindBarricadeBeaconCoveringPosition(prop:WorldSpaceCenter(), nil, nil, {prop}) ~= nil or false
+end
+
+function GM:CanUnnailBeaconProtectedProp(pl, prop)
+	if not (pl and pl:IsValid() and prop and prop:IsValid()) or prop:IsWorld() then
+		return true
+	end
+
+	if not self:IsPropWithinBarricadeBeaconArea(prop) then
+		return true
+	end
+
+	local owner = self:GetBarricadeBeaconOwnerForProp(prop)
+	if not (owner and owner:IsValid()) then
+		return true
+	end
+	if not owner:Alive() then
+		return true
+	end
+
+	if owner == pl then
+		return true
+	end
+
+	if owner.ZSFriends and owner.ZSFriends[pl] then
+		return true
+	end
+
+	return false, owner
 end
 
 local function MarkBeaconProtectedProp(pl, prop)
@@ -144,9 +198,14 @@ local function MarkBeaconProtectedProp(pl, prop)
 		return false
 	end
 
-	if FindSearchBeacon(pl, prop) then
+	local beacon = FindSearchBeacon(pl, prop)
+	if beacon then
 		prop.ZSBeaconProtected = true
 		prop:SetNWBool("zs_beacon_protected", true)
+		local owner = beacon.GetObjectOwner and beacon:GetObjectOwner()
+		if owner and owner:IsValid() then
+			prop.ZSBeaconOwner = owner
+		end
 		return true
 	end
 

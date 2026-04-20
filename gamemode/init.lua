@@ -974,6 +974,15 @@ function GM:PlayerShouldTakeNailRemovalPenalty(pl, nail, nailowner, prop)
 	if gamemode.Call("PlayerIsAdmin", pl) then
 		return false
 	end
+	if not (prop and prop:IsValid()) or prop:IsWorld() then
+		return false
+	end
+	if self.IsPropWithinBarricadeBeaconArea and not self:IsPropWithinBarricadeBeaconArea(prop) then
+		return false
+	end
+	if not (nailowner and nailowner:IsValid() and nailowner:IsPlayer()) or not nailowner:Alive() then
+		return false
+	end
 	if nailowner.ZSFriends[pl] then
 		return false
 	end
@@ -2572,12 +2581,26 @@ function GM:CanRemoveOthersNail(pl, nailowner, ent)
 	if gamemode.Call("PlayerIsAdmin", pl) then
 		return true
 	end
-	if nailowner.ZSFriends[pl] then
+	if not (ent and ent:IsValid()) or ent:IsWorld() then
+		return true
+	end
+	if self.IsPropWithinBarricadeBeaconArea and not self:IsPropWithinBarricadeBeaconArea(ent) then
 		return true
 	end
 	if ent and ent:IsValid() and self.IsBeaconProtectedProp and self:IsBeaconProtectedProp(ent, pl) then
-		pl:PrintMessage(HUD_PRINTCENTER, "This beacon protected prop can only be unnailed by the owner or friends.")
-		return false
+		if self.CanUnnailBeaconProtectedProp then
+			local canunnail = self:CanUnnailBeaconProtectedProp(pl, ent)
+			if not canunnail then
+				pl:PrintMessage(HUD_PRINTCENTER, "This beacon protected prop can only be unnailed by the beacon owner or players they hearted/friended.")
+				return false
+			end
+		end
+	end
+	if not (nailowner and nailowner:IsValid() and nailowner:IsPlayer()) or not nailowner:Alive() then
+		return true
+	end
+	if nailowner.ZSFriends[pl] then
+		return true
 	end
 
 	if pl:BarricadeExpertPrecedence(nailowner) == -1 then
