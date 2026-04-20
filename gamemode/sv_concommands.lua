@@ -291,12 +291,8 @@ concommand.Add("zs_dismantle", function(sender, command, arguments)
 		potinv = GAMEMODE.Breakdowns[invitem]
 	end
 
-	local scrap = GAMEMODE:GetDismantleScrap(wtbl or GAMEMODE.ZSInventoryItemData[invitem], invitem)
-	net.Start("zs_ammopickup")
-	net.WriteUInt(scrap, 16)
-	net.WriteString("scrap")
-	net.Send(sender)
-	sender:GiveAmmo(scrap, "scrap")
+	local pointreward = math.ceil(GAMEMODE:ScrapToPoints(GAMEMODE:GetDismantleScrap(wtbl or GAMEMODE.ZSInventoryItemData[invitem], invitem)))
+	sender:AddPoints(pointreward, sender, FM_NONE, true)
 
 	if invitem then
 		sender:TakeInventoryItem(invitem)
@@ -343,15 +339,15 @@ concommand.Add("zs_upgrade", function(sender, command, arguments)
 	end
 
 	local wtbl = weapons.Get(contents)
-	local scrapcost = GAMEMODE:GetUpgradeScrap(wtbl, desiredqua)
+	local pointcost = math.ceil(GAMEMODE:ScrapToPoints(GAMEMODE:GetUpgradeScrap(wtbl, desiredqua)))
 
 	if wtbl.AmmoIfHas and sender:GetAmmoCount(wtbl.Primary.Ammo) == 0 then
 		sender:SendLua('surface.PlaySound("buttons/button10.wav")')
 		return
 	end
 
-	if sender:GetAmmoCount("scrap") < scrapcost then
-		GAMEMODE:ConCommandErrorMessage(sender, translate.ClientGet(sender, "need_to_have_enough_scrap"))
+	if sender:GetPoints() < pointcost then
+		GAMEMODE:ConCommandErrorMessage(sender, translate.ClientGet(sender, "dont_have_enough_points"))
 		return
 	end
 
@@ -370,7 +366,7 @@ concommand.Add("zs_upgrade", function(sender, command, arguments)
 	local upgname = classtbl.PrintName
 	sender:CenterNotify(COLOR_CYAN, translate.ClientGet(sender, "remantle_success"), color_white, " " .. upgname)
 	sender:SendLua('surface.PlaySound("buttons/lever' .. math.random(5) .. '.wav")')
-	sender:RemoveAmmo(scrapcost, "scrap")
+	sender:SetPoints(sender:GetPoints() - pointcost)
 
 	local wep = sender:GiveEmptyWeapon(upgclass)
 	if wep and wep:IsValid() then
@@ -395,9 +391,9 @@ concommand.Add("zs_upgrade", function(sender, command, arguments)
 	if nearest and nearest:IsValid() then
 		local owner = nearest.GetObjectOwner and nearest:GetObjectOwner() or nearest:GetOwner()
 		if owner:IsValid() and owner ~= sender then
-			local scrapcom = math.ceil(scrapcost * 0.08)
-			nearest:SetScraps(nearest:GetScraps() + scrapcom)
-			nearest:GetObjectOwner():CenterNotify(COLOR_GREEN, translate.Format("remantle_used", scrapcom))
+			local pointcom = math.ceil(pointcost * 0.08)
+			owner:AddPoints(pointcom, nearest, FM_NONE, true)
+			owner:CenterNotify(COLOR_GREEN, translate.Format("remantle_points_used", pointcom))
 		end
 	end
 end)

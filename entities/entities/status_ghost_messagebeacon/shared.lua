@@ -36,12 +36,7 @@ function ENT:RecalculateValidity()
 		if self:IsInsideProp() then
 			valid = false
 		else
-			for _, ent in pairs(ents.FindInSphere(tr.HitPos, 48)) do
-				if ent and ent:IsValid() and ent:GetClass() == "prop_messagebeacon" then
-					valid = false
-					break
-				end
-			end
+			valid = not (GAMEMODE.FindConflictingBarricadeBeacon and GAMEMODE:FindConflictingBarricadeBeacon(tr.HitPos, owner))
 		end
 
 		if valid and SERVER and GAMEMODE:EntityWouldBlockSpawn(self) then

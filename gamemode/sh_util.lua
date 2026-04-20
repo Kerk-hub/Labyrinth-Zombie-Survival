@@ -116,6 +116,59 @@ function WorldVisible(posa, posb)
 	return not util.TraceLine(WorldVisibleTrace).Hit
 end
 
+local BarricadeBeaconTrace = {mask = MASK_SOLID_BRUSHONLY}
+function GM:GetBarricadeBeaconCoverageDistance()
+	return 360
+end
+
+function GM:IsBarricadeBeaconTraceClear(posa, posb, filter)
+	BarricadeBeaconTrace.start = posa
+	BarricadeBeaconTrace.endpos = posb
+	BarricadeBeaconTrace.filter = filter
+
+	return not util.TraceLine(BarricadeBeaconTrace).HitWorld
+end
+
+function GM:IsBarricadeBeaconCoveringPosition(beacon, pos, filter)
+	if not (beacon and beacon:IsValid() and pos) then
+		return false
+	end
+
+	local distance = self:GetBarricadeBeaconCoverageDistance()
+	local beaconcenter = beacon:WorldSpaceCenter()
+	if pos:DistToSqr(beaconcenter) > distance * distance then
+		return false
+	end
+
+	return self:IsBarricadeBeaconTraceClear(pos, beaconcenter, filter)
+end
+
+function GM:FindBarricadeBeaconCoveringPosition(pos, owner, ignoredbeacon, filter)
+	for _, beacon in ipairs(ents.FindByClass("prop_messagebeacon")) do
+		if beacon:IsValid() and beacon ~= ignoredbeacon then
+			local beaconowner = beacon.GetObjectOwner and beacon:GetObjectOwner()
+			if (not owner or beaconowner == owner) and self:IsBarricadeBeaconCoveringPosition(beacon, pos, filter) then
+				return beacon
+			end
+		end
+	end
+
+	return nil
+end
+
+function GM:FindConflictingBarricadeBeacon(pos, owner, ignoredbeacon)
+	for _, beacon in ipairs(ents.FindByClass("prop_messagebeacon")) do
+		if beacon:IsValid() and beacon ~= ignoredbeacon then
+			local beaconowner = beacon.GetObjectOwner and beacon:GetObjectOwner()
+			if beaconowner and beaconowner:IsValid() and beaconowner ~= owner and self:IsBarricadeBeaconCoveringPosition(beacon, pos, {owner, beacon, ignoredbeacon}) then
+				return beacon
+			end
+		end
+	end
+
+	return nil
+end
+
 function CosineInterpolation(y1, y2, mu)
 	local mu2 = (1 - math.cos(mu * math.pi)) / 2
 	return y1 * (1 - mu2) + y2 * mu2

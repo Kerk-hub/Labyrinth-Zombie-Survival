@@ -4,7 +4,8 @@ CLASS.Name = "The Grave Digger"
 CLASS.TranslationName = "class_gravedigger"
 CLASS.Description = "description_gravedigger"
 CLASS.Help = "controls_gravedigger"
-
+CLASS.Hidden = true
+CLASS.Disabled = true
 CLASS.Boss = true
 
 CLASS.Health = 1600

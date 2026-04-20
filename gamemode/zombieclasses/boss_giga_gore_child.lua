@@ -2,7 +2,8 @@ CLASS.Name = "Giga Gore Child"
 CLASS.TranslationName = "class_giga_gore_child"
 CLASS.Description = "description_giga_gore_child"
 CLASS.Help = "controls_giga_gore_child"
-
+CLASS.Hidden = true
+CLASS.Disabled = true
 CLASS.Boss = true
 
 CLASS.KnockbackScale = 0

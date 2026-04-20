@@ -61,6 +61,11 @@ function SWEP:PrimaryAttack()
 
 	local pos, ang = status:RecalculateValidity()
 	if not pos or not ang then return end
+	if GAMEMODE.FindConflictingBarricadeBeacon and GAMEMODE:FindConflictingBarricadeBeacon(pos, owner) then
+		owner:PrintMessage(HUD_PRINTCENTER, "Another Barricade Beacon already covers this area.")
+		self:SetNextPrimaryAttack(CurTime() + 0.5)
+		return
+	end
 
 	self:SetNextPrimaryAttack(CurTime() + self.Primary.Delay)
 

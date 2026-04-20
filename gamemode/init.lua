@@ -974,6 +974,15 @@ function GM:PlayerShouldTakeNailRemovalPenalty(pl, nail, nailowner, prop)
 	if gamemode.Call("PlayerIsAdmin", pl) then
 		return false
 	end
+	if not (prop and prop:IsValid()) or prop:IsWorld() then
+		return false
+	end
+	if self.IsPropWithinBarricadeBeaconArea and not self:IsPropWithinBarricadeBeaconArea(prop) then
+		return false
+	end
+	if not (nailowner and nailowner:IsValid() and nailowner:IsPlayer()) or not nailowner:Alive() then
+		return false
+	end
 	if nailowner.ZSFriends[pl] then
 		return false
 	end
@@ -2316,6 +2325,46 @@ concommand.Add("initpostentity", function(sender, command, arguments)
 end)
 
 local playerheight = Vector(0, 0, 72)
+local redeembeaconzombieradius = 50
+local redeembeaconspawnoffset = Vector(0, 0, 11)
+local trace_redeembeaconspawn = {mins = playermins, maxs = playermaxs, mask = MASK_SOLID}
+
+function GM:GetRandomSafeRedeemBeaconSpawn(pl)
+	local validbeacons = {}
+
+	for _, beacon in ipairs(ents.FindByClass("prop_messagebeacon")) do
+		if beacon:IsValid() then
+			local beaconpos = beacon:WorldSpaceCenter()
+			local blocked = false
+
+			for __, ent in pairs(ents.FindInSphere(beaconpos, redeembeaconzombieradius)) do
+				if ent:IsValidLivingZombie() then
+					blocked = true
+					break
+				end
+			end
+
+			if not blocked then
+				local spawnpos = beacon:GetPos() + redeembeaconspawnoffset
+				trace_redeembeaconspawn.start = spawnpos
+				trace_redeembeaconspawn.endpos = spawnpos + playerheight
+				trace_redeembeaconspawn.filter = {pl, beacon}
+
+				if not util.TraceHull(trace_redeembeaconspawn).Hit then
+					validbeacons[#validbeacons + 1] = beacon
+				end
+			end
+		end
+	end
+
+	if #validbeacons == 0 then
+		return
+	end
+
+	local beacon = table.Random(validbeacons)
+	return beacon:GetPos() + redeembeaconspawnoffset, Angle(0, beacon:GetAngles().y, 0)
+end
+
 local function groupsort(ga, gb)
 	return #ga > #gb
 end
@@ -2436,6 +2485,7 @@ function GM:PlayerInitialSpawnRound(pl)
 	pl.LifeBarricadeDamage = 0
 	pl.LifeHumanDamage = 0
 	pl.LifeBrainsEaten = 0
+	pl.NailedPropDamageTaken = 0
 
 	pl.WaveBarricadeDamage = 0
 	pl.WaveHumanDamage = 0
@@ -2572,12 +2622,26 @@ function GM:CanRemoveOthersNail(pl, nailowner, ent)
 	if gamemode.Call("PlayerIsAdmin", pl) then
 		return true
 	end
-	if nailowner.ZSFriends[pl] then
+	if not (ent and ent:IsValid()) or ent:IsWorld() then
+		return true
+	end
+	if self.IsPropWithinBarricadeBeaconArea and not self:IsPropWithinBarricadeBeaconArea(ent) then
 		return true
 	end
 	if ent and ent:IsValid() and self.IsBeaconProtectedProp and self:IsBeaconProtectedProp(ent, pl) then
-		pl:PrintMessage(HUD_PRINTCENTER, "This beacon protected prop can only be unnailed by the owner or friends.")
-		return false
+		if self.CanUnnailBeaconProtectedProp then
+			local canunnail = self:CanUnnailBeaconProtectedProp(pl, ent)
+			if not canunnail then
+				pl:PrintMessage(HUD_PRINTCENTER, "This beacon protected prop can only be unnailed by the beacon owner or players they hearted/friended.")
+				return false
+			end
+		end
+	end
+	if not (nailowner and nailowner:IsValid() and nailowner:IsPlayer()) or not nailowner:Alive() then
+		return true
+	end
+	if nailowner.ZSFriends[pl] then
+		return true
 	end
 
 	if pl:BarricadeExpertPrecedence(nailowner) == -1 then
@@ -4452,6 +4516,7 @@ function GM:PlayerSpawn(pl)
 		pl.LifeBarricadeDamage = 0
 		pl.LifeHumanDamage = 0
 		pl.LifeBrainsEaten = 0
+		pl.NailedPropDamageTaken = 0
 
 		pl.BossHealRemaining = nil
 
@@ -4567,6 +4632,7 @@ function GM:PlayerSpawn(pl)
 		pl:CallZombieFunction0("OnSpawned")
 	elseif pl:Team() == TEAM_HUMAN then
 		pl.PointQueue = 0
+		pl.NailedPropDamageTaken = 0
 		pl.PackedItems = {}
 		pl:ClearUselessDamage()
 
@@ -4616,6 +4682,13 @@ function GM:PlayerSpawn(pl)
 
 		pl:SetViewOffset(DEFAULT_VIEW_OFFSET)
 		pl:SetViewOffsetDucked(DEFAULT_VIEW_OFFSET_DUCKED)
+
+		if pl.m_PreRedeem and pl.m_RedeemBeaconSpawnPos then
+			pl:SetPos(pl.m_RedeemBeaconSpawnPos)
+			if pl.m_RedeemBeaconSpawnAngles then
+				pl:SetEyeAngles(pl.m_RedeemBeaconSpawnAngles)
+			end
+		end
 
 		if self.ZombieEscape then
 			local randomprimary = table.Random(self.ZombieEscapeWeaponsPrimary)

@@ -223,12 +223,6 @@ end)
 GM:WorthAdd("90mkit", ITEMS_AMMO, 20, nil, "90 medical power", nil, "ammo_medpower", function(pl)
 	pl:GiveAmmo(90, "Battery", true)
 end)
-GM:WorthAdd("3scrap", ITEMS_AMMO, 15, nil, "3 scrap", nil, "ammo_scrap", function(pl)
-	pl:GiveAmmo(3, "Scrap", true)
-end)
-GM:WorthAdd("9scrap", ITEMS_AMMO, 25, nil, "9 scrap", nil, "ammo_scrap", function(pl)
-	pl:GiveAmmo(9, "Scrap", true)
-end)
 
 GM:WorthAdd("brassknuckles", ITEMS_MELEE, 15, "weapon_zs_brassknuckles").Model =
 	"models/props_c17/utilityconnecter005.mdl"

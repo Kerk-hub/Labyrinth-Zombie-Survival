@@ -50,6 +50,33 @@ function PANEL:CloseMenu()
 	if self.CloseTime then return end
 	self.CloseTime = RealTime() + self.SlideTime
 
+	-- Human utility menu is paired with inventory UI; close both together even when opened from non-ALT paths.
+	if GAMEMODE and GAMEMODE.InventoryMenu and GAMEMODE.InventoryMenu:IsValid() then
+		GAMEMODE.InventoryMenu:SetVisible(false)
+
+		if GAMEMODE.m_InvViewer and GAMEMODE.m_InvViewer:IsValid() then
+			GAMEMODE.m_InvViewer:SetVisible(false)
+		end
+
+		if GAMEMODE.HumanMenuSupplyChoice and GAMEMODE.HumanMenuSupplyChoice:IsValid() then
+			GAMEMODE.HumanMenuSupplyChoice:CloseMenu()
+		end
+
+		if GAMEMODE.InventoryMenu.SelInv then
+			GAMEMODE.InventoryMenu.SelInv = nil
+			if GAMEMODE.DoAltSelectedItemUpdate then
+				GAMEMODE:DoAltSelectedItemUpdate()
+			end
+
+			local grid = GAMEMODE.InventoryMenu.Grid
+			if grid and grid:IsValid() then
+				for _, item in pairs(grid:GetChildren()) do
+					item.On = false
+				end
+			end
+		end
+	end
+
 	--self:MoveTo(ScrW() - 1, 0, self.SlideTime, 0, self.SlideTime * 0.8)
 end
 

@@ -19,8 +19,8 @@ SWEP.Secondary.Ammo	= "none"
 SWEP.PounceDamage = 8
 SWEP.PounceDamageType = DMG_SLASH
 
-SWEP.NoHitRecovery = 0.75
-SWEP.HitRecovery = 1
+SWEP.NoHitRecovery = 1.05
+SWEP.HitRecovery = 1.3
 
 SWEP.BurrowTime = 1.5
 
@@ -48,7 +48,7 @@ function SWEP:Think()
 				end
 
 				if owner:Health() < owner:GetMaxHealth() then
-					owner:SetHealth(owner:Health() + 1)
+					owner:SetHealth(math.min(owner:GetMaxHealth(), owner:Health() + 3))
 				end
 			end
 		end

@@ -78,6 +78,31 @@ GM.CrosshairColor2 = Color(
 	CreateClientConVar("labyrinth_zs_crosshair_colb2", "0", true, false):GetInt(),
 	CreateClientConVar("labyrinth_zs_crosshair_cola2", "220", true, false):GetInt()
 )
+GM.HealthBarBackgroundColor = Color(
+	CreateClientConVar("labyrinth_zs_healthbar_bg_colr", "0", true, false):GetInt(),
+	CreateClientConVar("labyrinth_zs_healthbar_bg_colg", "0", true, false):GetInt(),
+	CreateClientConVar("labyrinth_zs_healthbar_bg_colb", "0", true, false):GetInt(),
+	CreateClientConVar("labyrinth_zs_healthbar_bg_cola", "230", true, false):GetInt()
+)
+GM.GameStatePanelColor = GM.HealthBarBackgroundColor
+GM.OriginalHUD = CreateClientConVar("labyrinth_zs_originalhud", "0", true, false):GetBool()
+
+cvars.AddChangeCallback("labyrinth_zs_originalhud", function(cvar, oldvalue, newvalue)
+	GAMEMODE.OriginalHUD = tonumber(newvalue) == 1
+	local screenscale = BetterScreenScale()
+
+	if GAMEMODE.HealthHUD and GAMEMODE.HealthHUD:IsValid() then
+		GAMEMODE.HealthHUD:InvalidateLayout(true)
+	end
+
+	if GAMEMODE.GameStatePanel and GAMEMODE.GameStatePanel:IsValid() then
+		GAMEMODE.GameStatePanel:SetTextFont(GAMEMODE.OriginalHUD and "ZSHUDFontSmaller" or "ZSHUDFontTiny")
+		GAMEMODE.GameStatePanel:SetAlpha(GAMEMODE.OriginalHUD and 220 or 190)
+		GAMEMODE.GameStatePanel:SetSize(GAMEMODE.OriginalHUD and screenscale * 420 or math.max(screenscale * 420, 340), GAMEMODE.OriginalHUD and screenscale * 80 or math.max(screenscale * 120, 104))
+		GAMEMODE.GameStatePanel:InvalidateLayout(true)
+	end
+end)
+
 cvars.AddChangeCallback("labyrinth_zs_crosshair_colr", function(cvar, oldvalue, newvalue)
 	GAMEMODE.CrosshairColor.r = tonumber(newvalue) or 255
 end)
@@ -101,6 +126,18 @@ cvars.AddChangeCallback("labyrinth_zs_crosshair_colb2", function(cvar, oldvalue,
 end)
 cvars.AddChangeCallback("labyrinth_zs_crosshair_cola2", function(cvar, oldvalue, newvalue)
 	GAMEMODE.CrosshairColor2.a = tonumber(newvalue) or 255
+end)
+cvars.AddChangeCallback("labyrinth_zs_healthbar_bg_colr", function(cvar, oldvalue, newvalue)
+	GAMEMODE.HealthBarBackgroundColor.r = tonumber(newvalue) or 0
+end)
+cvars.AddChangeCallback("labyrinth_zs_healthbar_bg_colg", function(cvar, oldvalue, newvalue)
+	GAMEMODE.HealthBarBackgroundColor.g = tonumber(newvalue) or 0
+end)
+cvars.AddChangeCallback("labyrinth_zs_healthbar_bg_colb", function(cvar, oldvalue, newvalue)
+	GAMEMODE.HealthBarBackgroundColor.b = tonumber(newvalue) or 0
+end)
+cvars.AddChangeCallback("labyrinth_zs_healthbar_bg_cola", function(cvar, oldvalue, newvalue)
+	GAMEMODE.HealthBarBackgroundColor.a = tonumber(newvalue) or 230
 end)
 
 GM.FilmMode = CreateClientConVar("labyrinth_zs_filmmode", "0", true, false):GetBool()
@@ -209,8 +246,10 @@ cvars.AddChangeCallback("labyrinth_zs_interfacesize", function(cvar, oldvalue, n
 
 	GAMEMODE.HealthHUD:InvalidateLayout()
 
-	GAMEMODE.GameStatePanel:InvalidateLayout()
-	GAMEMODE.GameStatePanel:SetSize(screenscale * 420, screenscale * 80)
+	GAMEMODE.GameStatePanel:InvalidateLayout(true)
+	GAMEMODE.GameStatePanel:SetTextFont(GAMEMODE.OriginalHUD and "ZSHUDFontSmaller" or "ZSHUDFontTiny")
+	GAMEMODE.GameStatePanel:SetAlpha(GAMEMODE.OriginalHUD and 220 or 190)
+	GAMEMODE.GameStatePanel:SetSize(GAMEMODE.OriginalHUD and screenscale * 420 or math.max(screenscale * 420, 340), GAMEMODE.OriginalHUD and screenscale * 80 or math.max(screenscale * 120, 104))
 
 	GAMEMODE.TopNotificationHUD:InvalidateLayout()
 	GAMEMODE.CenterNotificationHUD:InvalidateLayout()
@@ -302,6 +341,44 @@ end)
 GM.FontEffects = CreateClientConVar("labyrinth_zs_fonteffects", "1", true, false):GetBool()
 cvars.AddChangeCallback("labyrinth_zs_fonteffects", function(cvar, oldvalue, newvalue)
 	GAMEMODE.FontEffects = tonumber(newvalue) == 1
+end)
+
+GM.UseSheltenHUDFont = CreateClientConVar("labyrinth_zs_hudfontshelten", "0", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_hudfontshelten", function(cvar, oldvalue, newvalue)
+	GAMEMODE.UseSheltenHUDFont = tonumber(newvalue) == 1
+
+	if not GAMEMODE.CreateScalingFonts then
+		return
+	end
+
+	GAMEMODE:CreateScalingFonts()
+
+	if GAMEMODE.EmptyCachedFontHeights then
+		GAMEMODE:EmptyCachedFontHeights()
+	end
+
+	if GAMEMODE.HealthHUD and GAMEMODE.HealthHUD:IsValid() then
+		GAMEMODE.HealthHUD:InvalidateLayout()
+	end
+	if GAMEMODE.GameStatePanel and GAMEMODE.GameStatePanel:IsValid() then
+		GAMEMODE.GameStatePanel:InvalidateLayout()
+	end
+	if GAMEMODE.TopNotificationHUD and GAMEMODE.TopNotificationHUD:IsValid() then
+		GAMEMODE.TopNotificationHUD:InvalidateLayout()
+	end
+	if GAMEMODE.CenterNotificationHUD and GAMEMODE.CenterNotificationHUD:IsValid() then
+		GAMEMODE.CenterNotificationHUD:InvalidateLayout()
+	end
+	if GAMEMODE.XPHUD and GAMEMODE.XPHUD:IsValid() then
+		GAMEMODE.XPHUD:InvalidateLayout()
+	end
+	if GAMEMODE.StatusHUD and GAMEMODE.StatusHUD:IsValid() then
+		GAMEMODE.StatusHUD:InvalidateLayout()
+	end
+
+	if GAMEMODE.ScoreboardRebuild then
+		GAMEMODE:ScoreboardRebuild()
+	end
 end)
 
 GM.HidePacks = CreateClientConVar("labyrinth_zs_hidepacks", "0", true, false):GetBool()

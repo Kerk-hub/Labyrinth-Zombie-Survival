@@ -536,6 +536,18 @@ function meta:AddLifeBarricadeDamage(amount)
 	end
 end
 
+function meta:AddNailedPropDamageTaken(amount, floatingscoreobject)
+	self.NailedPropDamageTaken = self.NailedPropDamageTaken + amount
+
+	local payouts = math.floor(self.NailedPropDamageTaken / 100)
+	if payouts <= 0 then
+		return
+	end
+
+	self.NailedPropDamageTaken = self.NailedPropDamageTaken - payouts * 100
+	self:AddPoints(payouts * 2, floatingscoreobject, FM_NONE)
+end
+
 function meta:AddLifeHumanDamage(amount)
 	self.LifeHumanDamage = self.LifeHumanDamage + amount
 	self.WaveHumanDamage = self.WaveHumanDamage + amount
@@ -1370,6 +1382,12 @@ function meta:Redeem(silent, noequip)
 		return
 	end
 
+	self.m_RedeemBeaconSpawnPos = nil
+	self.m_RedeemBeaconSpawnAngles = nil
+	if GAMEMODE.GetRandomSafeRedeemBeaconSpawn then
+		self.m_RedeemBeaconSpawnPos, self.m_RedeemBeaconSpawnAngles = GAMEMODE:GetRandomSafeRedeemBeaconSpawn(self)
+	end
+
 	self:RemoveStatus("overridemodel", false, true)
 
 	self:KillSilent()
@@ -1384,6 +1402,8 @@ function meta:Redeem(silent, noequip)
 	end
 
 	self:Spawn()
+	self.m_RedeemBeaconSpawnPos = nil
+	self.m_RedeemBeaconSpawnAngles = nil
 
 	self.m_PreRedeem = nil
 	self:DoHulls()

@@ -33,7 +33,7 @@ function SWEP:Think()
 				end
 
 				if owner:Health() < owner:GetMaxHealth() then
-					owner:SetHealth(owner:Health() + 1)
+					owner:SetHealth(math.min(owner:GetMaxHealth(), owner:Health() + 3))
 				end
 			end
 		end
