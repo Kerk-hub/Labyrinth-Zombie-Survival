@@ -1382,6 +1382,12 @@ function meta:Redeem(silent, noequip)
 		return
 	end
 
+	self.m_RedeemBeaconSpawnPos = nil
+	self.m_RedeemBeaconSpawnAngles = nil
+	if GAMEMODE.GetRandomSafeRedeemBeaconSpawn then
+		self.m_RedeemBeaconSpawnPos, self.m_RedeemBeaconSpawnAngles = GAMEMODE:GetRandomSafeRedeemBeaconSpawn(self)
+	end
+
 	self:RemoveStatus("overridemodel", false, true)
 
 	self:KillSilent()
@@ -1396,6 +1402,8 @@ function meta:Redeem(silent, noequip)
 	end
 
 	self:Spawn()
+	self.m_RedeemBeaconSpawnPos = nil
+	self.m_RedeemBeaconSpawnAngles = nil
 
 	self.m_PreRedeem = nil
 	self:DoHulls()

@@ -2325,6 +2325,46 @@ concommand.Add("initpostentity", function(sender, command, arguments)
 end)
 
 local playerheight = Vector(0, 0, 72)
+local redeembeaconzombieradius = 50
+local redeembeaconspawnoffset = Vector(0, 0, 11)
+local trace_redeembeaconspawn = {mins = playermins, maxs = playermaxs, mask = MASK_SOLID}
+
+function GM:GetRandomSafeRedeemBeaconSpawn(pl)
+	local validbeacons = {}
+
+	for _, beacon in ipairs(ents.FindByClass("prop_messagebeacon")) do
+		if beacon:IsValid() then
+			local beaconpos = beacon:WorldSpaceCenter()
+			local blocked = false
+
+			for __, ent in pairs(ents.FindInSphere(beaconpos, redeembeaconzombieradius)) do
+				if ent:IsValidLivingZombie() then
+					blocked = true
+					break
+				end
+			end
+
+			if not blocked then
+				local spawnpos = beacon:GetPos() + redeembeaconspawnoffset
+				trace_redeembeaconspawn.start = spawnpos
+				trace_redeembeaconspawn.endpos = spawnpos + playerheight
+				trace_redeembeaconspawn.filter = {pl, beacon}
+
+				if not util.TraceHull(trace_redeembeaconspawn).Hit then
+					validbeacons[#validbeacons + 1] = beacon
+				end
+			end
+		end
+	end
+
+	if #validbeacons == 0 then
+		return
+	end
+
+	local beacon = table.Random(validbeacons)
+	return beacon:GetPos() + redeembeaconspawnoffset, Angle(0, beacon:GetAngles().y, 0)
+end
+
 local function groupsort(ga, gb)
 	return #ga > #gb
 end
@@ -4642,6 +4682,13 @@ function GM:PlayerSpawn(pl)
 
 		pl:SetViewOffset(DEFAULT_VIEW_OFFSET)
 		pl:SetViewOffsetDucked(DEFAULT_VIEW_OFFSET_DUCKED)
+
+		if pl.m_PreRedeem and pl.m_RedeemBeaconSpawnPos then
+			pl:SetPos(pl.m_RedeemBeaconSpawnPos)
+			if pl.m_RedeemBeaconSpawnAngles then
+				pl:SetEyeAngles(pl.m_RedeemBeaconSpawnAngles)
+			end
+		end
 
 		if self.ZombieEscape then
 			local randomprimary = table.Random(self.ZombieEscapeWeaponsPrimary)
