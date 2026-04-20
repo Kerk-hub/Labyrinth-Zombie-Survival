@@ -36,7 +36,7 @@ function ENT:Think()
 			self.NextHeal = fCurTime + 0.25
 
 			if owner:Health() < owner:GetMaxHealth() and not owner:GetZombieClassTable().Boss then
-				owner:SetHealth(math.min(owner:GetMaxHealth(), owner:Health() + math.min(owner:GetMaxHealth() * 0.035, 3)))
+				owner:SetHealth(math.min(owner:GetMaxHealth(), owner:Health() + math.min(owner:GetMaxHealth() * 0.035, 9)))
 			end
 		end
 	end
