@@ -4,7 +4,8 @@ CLASS.Name = "Giga Shadow Child"
 CLASS.TranslationName = "class_giga_shadow_child"
 CLASS.Description = "description_giga_shadow_child"
 CLASS.Help = "controls_giga_shadow_child"
-
+CLASS.Hidden = true
+CLASS.Disabled = true
 CLASS.Boss = true
 
 CLASS.Health = 2000
