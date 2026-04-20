@@ -78,6 +78,12 @@ GM.CrosshairColor2 = Color(
 	CreateClientConVar("labyrinth_zs_crosshair_colb2", "0", true, false):GetInt(),
 	CreateClientConVar("labyrinth_zs_crosshair_cola2", "220", true, false):GetInt()
 )
+GM.HealthBarBackgroundColor = Color(
+	CreateClientConVar("labyrinth_zs_healthbar_bg_colr", "0", true, false):GetInt(),
+	CreateClientConVar("labyrinth_zs_healthbar_bg_colg", "0", true, false):GetInt(),
+	CreateClientConVar("labyrinth_zs_healthbar_bg_colb", "0", true, false):GetInt(),
+	CreateClientConVar("labyrinth_zs_healthbar_bg_cola", "230", true, false):GetInt()
+)
 cvars.AddChangeCallback("labyrinth_zs_crosshair_colr", function(cvar, oldvalue, newvalue)
 	GAMEMODE.CrosshairColor.r = tonumber(newvalue) or 255
 end)
@@ -101,6 +107,18 @@ cvars.AddChangeCallback("labyrinth_zs_crosshair_colb2", function(cvar, oldvalue,
 end)
 cvars.AddChangeCallback("labyrinth_zs_crosshair_cola2", function(cvar, oldvalue, newvalue)
 	GAMEMODE.CrosshairColor2.a = tonumber(newvalue) or 255
+end)
+cvars.AddChangeCallback("labyrinth_zs_healthbar_bg_colr", function(cvar, oldvalue, newvalue)
+	GAMEMODE.HealthBarBackgroundColor.r = tonumber(newvalue) or 0
+end)
+cvars.AddChangeCallback("labyrinth_zs_healthbar_bg_colg", function(cvar, oldvalue, newvalue)
+	GAMEMODE.HealthBarBackgroundColor.g = tonumber(newvalue) or 0
+end)
+cvars.AddChangeCallback("labyrinth_zs_healthbar_bg_colb", function(cvar, oldvalue, newvalue)
+	GAMEMODE.HealthBarBackgroundColor.b = tonumber(newvalue) or 0
+end)
+cvars.AddChangeCallback("labyrinth_zs_healthbar_bg_cola", function(cvar, oldvalue, newvalue)
+	GAMEMODE.HealthBarBackgroundColor.a = tonumber(newvalue) or 230
 end)
 
 GM.FilmMode = CreateClientConVar("labyrinth_zs_filmmode", "0", true, false):GetBool()
@@ -302,6 +320,44 @@ end)
 GM.FontEffects = CreateClientConVar("labyrinth_zs_fonteffects", "1", true, false):GetBool()
 cvars.AddChangeCallback("labyrinth_zs_fonteffects", function(cvar, oldvalue, newvalue)
 	GAMEMODE.FontEffects = tonumber(newvalue) == 1
+end)
+
+GM.UseSheltenHUDFont = CreateClientConVar("labyrinth_zs_hudfontshelten", "0", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_hudfontshelten", function(cvar, oldvalue, newvalue)
+	GAMEMODE.UseSheltenHUDFont = tonumber(newvalue) == 1
+
+	if not GAMEMODE.CreateScalingFonts then
+		return
+	end
+
+	GAMEMODE:CreateScalingFonts()
+
+	if GAMEMODE.EmptyCachedFontHeights then
+		GAMEMODE:EmptyCachedFontHeights()
+	end
+
+	if GAMEMODE.HealthHUD and GAMEMODE.HealthHUD:IsValid() then
+		GAMEMODE.HealthHUD:InvalidateLayout()
+	end
+	if GAMEMODE.GameStatePanel and GAMEMODE.GameStatePanel:IsValid() then
+		GAMEMODE.GameStatePanel:InvalidateLayout()
+	end
+	if GAMEMODE.TopNotificationHUD and GAMEMODE.TopNotificationHUD:IsValid() then
+		GAMEMODE.TopNotificationHUD:InvalidateLayout()
+	end
+	if GAMEMODE.CenterNotificationHUD and GAMEMODE.CenterNotificationHUD:IsValid() then
+		GAMEMODE.CenterNotificationHUD:InvalidateLayout()
+	end
+	if GAMEMODE.XPHUD and GAMEMODE.XPHUD:IsValid() then
+		GAMEMODE.XPHUD:InvalidateLayout()
+	end
+	if GAMEMODE.StatusHUD and GAMEMODE.StatusHUD:IsValid() then
+		GAMEMODE.StatusHUD:InvalidateLayout()
+	end
+
+	if GAMEMODE.ScoreboardRebuild then
+		GAMEMODE:ScoreboardRebuild()
+	end
 end)
 
 GM.HidePacks = CreateClientConVar("labyrinth_zs_hidepacks", "0", true, false):GetBool()
