@@ -2445,6 +2445,7 @@ function GM:PlayerInitialSpawnRound(pl)
 	pl.LifeBarricadeDamage = 0
 	pl.LifeHumanDamage = 0
 	pl.LifeBrainsEaten = 0
+	pl.NailedPropDamageTaken = 0
 
 	pl.WaveBarricadeDamage = 0
 	pl.WaveHumanDamage = 0
@@ -4475,6 +4476,7 @@ function GM:PlayerSpawn(pl)
 		pl.LifeBarricadeDamage = 0
 		pl.LifeHumanDamage = 0
 		pl.LifeBrainsEaten = 0
+		pl.NailedPropDamageTaken = 0
 
 		pl.BossHealRemaining = nil
 
@@ -4590,6 +4592,7 @@ function GM:PlayerSpawn(pl)
 		pl:CallZombieFunction0("OnSpawned")
 	elseif pl:Team() == TEAM_HUMAN then
 		pl.PointQueue = 0
+		pl.NailedPropDamageTaken = 0
 		pl.PackedItems = {}
 		pl:ClearUselessDamage()
 

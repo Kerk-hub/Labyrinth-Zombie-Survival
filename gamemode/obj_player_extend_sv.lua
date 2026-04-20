@@ -536,6 +536,18 @@ function meta:AddLifeBarricadeDamage(amount)
 	end
 end
 
+function meta:AddNailedPropDamageTaken(amount, floatingscoreobject)
+	self.NailedPropDamageTaken = self.NailedPropDamageTaken + amount
+
+	local payouts = math.floor(self.NailedPropDamageTaken / 100)
+	if payouts <= 0 then
+		return
+	end
+
+	self.NailedPropDamageTaken = self.NailedPropDamageTaken - payouts * 100
+	self:AddPoints(payouts * 2, floatingscoreobject, FM_NONE)
+end
+
 function meta:AddLifeHumanDamage(amount)
 	self.LifeHumanDamage = self.LifeHumanDamage + amount
 	self.WaveHumanDamage = self.WaveHumanDamage + amount

@@ -481,6 +481,21 @@ function meta:ResetLastBarricadeAttacker(attacker, dmginfo)
 	end
 end
 
+local function GetValidLivingNailOwners(nails)
+	local owners = {}
+	local seen = {}
+
+	for _, nail in ipairs(nails) do
+		local owner = nail:GetOwner()
+		if owner:IsValid() and owner:IsPlayer() and owner:Alive() and owner:Team() == TEAM_HUMAN and not seen[owner] then
+			seen[owner] = true
+			owners[#owners + 1] = owner
+		end
+	end
+
+	return owners
+end
+
 if not meta.OldSetPhysicsAttacker then
 	meta.OldSetPhysicsAttacker = meta.SetPhysicsAttacker
 
@@ -574,6 +589,16 @@ function meta:DamageNails(attacker, inflictor, damage, dmginfo)
 	self:SetBarricadeHealth(self:GetBarricadeHealth() - damage)
 	for i, nail in ipairs(nails) do
 		nail:OnDamaged(damage, attacker, inflictor, dmginfo)
+	end
+
+	if attacker:IsPlayer() and attacker:Team() == TEAM_UNDEAD then
+		local owners = GetValidLivingNailOwners(nails)
+		if #owners > 0 then
+			local sharedDamage = damage / #owners
+			for _, owner in ipairs(owners) do
+				owner:AddNailedPropDamageTaken(sharedDamage, self)
+			end
+		end
 	end
 
 	-- No points for repairing damage from fire, trigger_hurt, etc.
