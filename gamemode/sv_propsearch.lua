@@ -130,17 +130,21 @@ local function IsBeaconVisibleToHeldProp(pl, held, beacon)
 		return false
 	end
 
-	if held:WorldSpaceCenter():DistToSqr(beacon:WorldSpaceCenter()) > PROPSEARCH_BEACON_DISTANCE_SQR then
+	local heldcenter = held:WorldSpaceCenter()
+	local beaconcenter = beacon:WorldSpaceCenter()
+	local distancesqr = heldcenter:DistToSqr(beaconcenter)
+
+	if distancesqr > PROPSEARCH_BEACON_DISTANCE_SQR then
 		return false
 	end
 
 	local tr = util.TraceLine({
-		start = held:WorldSpaceCenter(),
-		endpos = beacon:WorldSpaceCenter(),
+		start = heldcenter,
+		endpos = beaconcenter,
 		filter = {pl, held, beacon}
 	})
 
-	return not tr.Hit or tr.Entity == beacon
+	return not tr.HitWorld
 end
 
 local function FindSearchBeacon(pl, held)
