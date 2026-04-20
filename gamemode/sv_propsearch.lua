@@ -1,5 +1,3 @@
-local PROPSEARCH_BEACON_DISTANCE = 360
-local PROPSEARCH_BEACON_DISTANCE_SQR = PROPSEARCH_BEACON_DISTANCE * PROPSEARCH_BEACON_DISTANCE
 local PROPSEARCH_SCRAP_REWARD = {
 	Name = "1 scrap",
 	Callback = function(pl)
@@ -130,21 +128,7 @@ local function IsBeaconVisibleToHeldProp(pl, held, beacon)
 		return false
 	end
 
-	local heldcenter = held:WorldSpaceCenter()
-	local beaconcenter = beacon:WorldSpaceCenter()
-	local distancesqr = heldcenter:DistToSqr(beaconcenter)
-
-	if distancesqr > PROPSEARCH_BEACON_DISTANCE_SQR then
-		return false
-	end
-
-	local tr = util.TraceLine({
-		start = heldcenter,
-		endpos = beaconcenter,
-		filter = {pl, held, beacon}
-	})
-
-	return not tr.HitWorld
+	return GAMEMODE.IsBarricadeBeaconCoveringPosition and GAMEMODE:IsBarricadeBeaconCoveringPosition(beacon, held:WorldSpaceCenter(), {pl, held, beacon}) or false
 end
 
 local function FindSearchBeacon(pl, held)
