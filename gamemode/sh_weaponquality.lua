@@ -286,6 +286,10 @@ function GM:GetUpgradeScrap(wtbl, qualitychoice)
 	return math.ceil(self.ScrapVals[itier or 1] * qualitychoice * (wtbl.IsMelee and 0.85 or 1))
 end
 
+function GM:ScrapToPoints(scrap)
+	return scrap * (70 / 32)
+end
+
 function GM:PointsToScrap(points)
 	return points / (70 / 32)
 end

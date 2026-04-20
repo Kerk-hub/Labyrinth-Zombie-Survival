@@ -1,7 +1,7 @@
-local PROPSEARCH_SCRAP_REWARD = {
-	Name = "1 scrap",
+local PROPSEARCH_POINT_REWARD = {
+	Name = "1 point",
 	Callback = function(pl)
-		pl:GiveAmmo(1, "Scrap", true)
+		pl:AddPoints(1, pl, FM_NONE, true)
 	end
 }
 
@@ -13,12 +13,12 @@ local function GetPropSearchItemPools()
 	local gm = GetZSGameMode()
 	if not gm then
 		return {
-			{PROPSEARCH_SCRAP_REWARD}
+			{PROPSEARCH_POINT_REWARD}
 		}
 	end
 
 	gm.PropSearchItemPools = gm.PropSearchItemPools or {
-		{PROPSEARCH_SCRAP_REWARD}
+		{PROPSEARCH_POINT_REWARD}
 	}
 
 	return gm.PropSearchItemPools

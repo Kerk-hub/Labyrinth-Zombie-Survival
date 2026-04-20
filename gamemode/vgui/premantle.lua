@@ -1,9 +1,9 @@
-local function ScrapLabelThink(self)
-	local scrap = MySelf:GetAmmoCount("scrap")
-	if self.m_LastScrap ~= scrap then
-		self.m_LastScrap = scrap
+local function PointsLabelThink(self)
+	local points = MySelf:GetPoints()
+	if self.m_LastPoints ~= points then
+		self.m_LastPoints = points
 
-		self:SetText("Scrap for usage: "..scrap)
+		self:SetText("Points for usage: "..points)
 		self:SizeToContents()
 	end
 end
@@ -172,17 +172,17 @@ function PANEL:Init()
 	bottom:SetSize(ScrW(), 36 * screenscale)
 	bottom:SetMouseInputEnabled(false)
 
-	local scrapcost = vgui.Create("DLabel", bottom)
-	scrapcost:SetFont("ZSHUDFontSmaller")
-	scrapcost:SetTextColor(COLOR_WHITE)
-	scrapcost:SetContentAlignment(2)
-	scrapcost:Dock(TOP)
+	local pointcost = vgui.Create("DLabel", bottom)
+	pointcost:SetFont("ZSHUDFontSmaller")
+	pointcost:SetTextColor(COLOR_WHITE)
+	pointcost:SetContentAlignment(2)
+	pointcost:Dock(TOP)
 
 	self.Top = top
 	self.QualityName = qualityname
 	self.QualityDesc = desc
 	self.Bottom = bottom
-	self.ScrapCost = scrapcost
+	self.ScrapCost = pointcost
 
 	top:SetAlpha(0)
 	bottom:SetAlpha(0)
@@ -420,14 +420,14 @@ function PANEL:Paint(w, h)
 			local quals = GAMEMODE.WeaponQualities[hovquality]
 			if quals then
 				txt = self.RemantleNodes[hovbranch][hovquality].Name or hovbranch == 0 and quals[1] or quals[3]
-				scost = GAMEMODE:GetUpgradeScrap(self.GunTab, hovquality)
+				scost = math.ceil(GAMEMODE:ScrapToPoints(GAMEMODE:GetUpgradeScrap(self.GunTab, hovquality)))
 			end
 
 			self.QualityName:SetText(txt)
 			self.QualityName:SizeToContents()
 
-			self.ScrapCost:SetText(scost ~= "" and "Scrap Cost: " .. scost or "")
-			self.ScrapCost:SetTextColor(scost ~= "" and MySelf:GetAmmoCount("scrap") >= scost and COLOR_WHITE or COLOR_RED)
+			self.ScrapCost:SetText(scost ~= "" and "Point Cost: " .. scost or "")
+			self.ScrapCost:SetTextColor(scost ~= "" and MySelf:GetPoints() >= scost and COLOR_WHITE or COLOR_RED)
 			self.ScrapCost:SizeToContents()
 
 			local dtxt
@@ -474,17 +474,17 @@ net.Receive("zs_remantleconf", function()
 
 	GAMEMODE.GunTab = weapons.Get(upgclass)
 	local gtbl = GAMEMODE.GunTab
-	local scost = GAMEMODE:GetUpgradeScrap(gtbl, desiredqua)
+	local scost = math.ceil(GAMEMODE:ScrapToPoints(GAMEMODE:GetUpgradeScrap(gtbl, desiredqua)))
 
 	path.RemantleNodes[hovbranch][hovquality].Unlocked = true
-	path.ScrapCost:SetTextColor((MySelf:GetAmmoCount("scrap") - scost) >= scost and COLOR_WHITE or COLOR_RED)
+	path.ScrapCost:SetTextColor((MySelf:GetPoints() - scost) >= scost and COLOR_WHITE or COLOR_RED)
 
 	ri.m_ContentsLabel:SetText(gtbl.PrintName)
 	ri.m_ContentsLabel:SizeToContents()
 	ri.m_ContentsLabel:CenterHorizontal()
 
-	local retscrap = GAMEMODE:GetDismantleScrap(gtbl)
-	local disscraptxt = gtbl.NoDismantle and "Cannot Dismantle" or "Dismantle for " .. retscrap .. " Scrap"
+	local retpoints = math.ceil(GAMEMODE:ScrapToPoints(GAMEMODE:GetDismantleScrap(gtbl)))
+	local disscraptxt = gtbl.NoDismantle and "Cannot Dismantle" or "Dismantle for " .. retpoints .. " Points"
 
 	ri.m_Dismantle:SetText(disscraptxt)
 	ri.m_Dismantle:SizeToContents()
@@ -503,14 +503,14 @@ function PANEL:OnMousePressed(mc)
 		local prev = self.RemantleNodes[hovbranch][hovquality - 1] or hovquality == 1 and self.RemantleNodes[0][0]
 		if cqua and hovquality > cqua and prev and prev.Unlocked and not current.Locked then
 
-			local scost = GAMEMODE:GetUpgradeScrap(self.GunTab, hovquality)
-			if MySelf:GetAmmoCount("scrap") >= scost then
+			local scost = math.ceil(GAMEMODE:ScrapToPoints(GAMEMODE:GetUpgradeScrap(self.GunTab, hovquality)))
+			if MySelf:GetPoints() >= scost then
 				GAMEMODE.RemantlerInterface.BranchCache = hovbranch
 				RunConsoleCommand("zs_upgrade", hovbranch ~= 0 and hovbranch)
 
 				return
 			else
-				GAMEMODE:CenterNotify(COLOR_RED, "You need enough scrap to upgrade this weapon!")
+				GAMEMODE:CenterNotify(COLOR_RED, "You need enough points to upgrade this weapon!")
 				surface.PlaySound("buttons/button8.wav")
 
 				return
@@ -592,7 +592,7 @@ function GM:OpenRemantlerMenu(remantler, dockedtoarsenal, dockedtoworth)
 
 	local title = EasyLabel(topspace, "Weapon Remantler", "ZSHUDFontSmall", COLOR_WHITE)
 	title:CenterHorizontal()
-	local subtitle = EasyLabel(topspace, "Dismantle weapons into scrap and use scrap to upgrade weapons!", "ZSHUDFontTiny", COLOR_WHITE)
+	local subtitle = EasyLabel(topspace, "Dismantle weapons into points and use points to upgrade weapons!", "ZSHUDFontTiny", COLOR_WHITE)
 	subtitle:CenterHorizontal()
 	subtitle:MoveBelow(title, 4)
 
@@ -604,10 +604,10 @@ function GM:OpenRemantlerMenu(remantler, dockedtoarsenal, dockedtoworth)
 	local bottomspace = vgui.Create("DPanel", frame)
 	bottomspace:SetWide(topspace:GetWide())
 
-	local pointslabel = EasyLabel(bottomspace, "Scrap for usage: 0", "ZSHUDFontTiny", COLOR_GREEN)
+	local pointslabel = EasyLabel(bottomspace, "Points for usage: 0", "ZSHUDFontTiny", COLOR_GREEN)
 	pointslabel:AlignTop(4)
 	pointslabel:AlignLeft(8)
-	pointslabel.Think = ScrapLabelThink
+	pointslabel.Think = PointsLabelThink
 
 	local lab = EasyLabel(bottomspace, "Disassembling your weapons cannot be reversed!", "ZSHUDFontTiny")
 	lab:AlignTop(4)
@@ -761,8 +761,8 @@ function GM:OpenRemantlerMenu(remantler, dockedtoarsenal, dockedtoworth)
 
 	local disscraptxt = ""
 	if gtbl then
-		local retscrap = self:GetDismantleScrap(gtbl, SelectedInv())
-		disscraptxt = gtbl.NoDismantle and "Cannot Dismantle" or "Dismantle for " .. retscrap .. " Scrap"
+		local retpoints = math.ceil(self:ScrapToPoints(self:GetDismantleScrap(gtbl, SelectedInv())))
+		disscraptxt = gtbl.NoDismantle and "Cannot Dismantle" or "Dismantle for " .. retpoints .. " Points"
 	end
 
 	local disscrap = EasyLabel(remantleframe, disscraptxt, "ZSHUDFontSmaller", COLOR_WHITE)
