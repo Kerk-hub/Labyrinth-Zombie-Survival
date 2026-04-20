@@ -84,6 +84,25 @@ GM.HealthBarBackgroundColor = Color(
 	CreateClientConVar("labyrinth_zs_healthbar_bg_colb", "0", true, false):GetInt(),
 	CreateClientConVar("labyrinth_zs_healthbar_bg_cola", "230", true, false):GetInt()
 )
+GM.GameStatePanelColor = GM.HealthBarBackgroundColor
+GM.OriginalHUD = CreateClientConVar("labyrinth_zs_originalhud", "0", true, false):GetBool()
+
+cvars.AddChangeCallback("labyrinth_zs_originalhud", function(cvar, oldvalue, newvalue)
+	GAMEMODE.OriginalHUD = tonumber(newvalue) == 1
+	local screenscale = BetterScreenScale()
+
+	if GAMEMODE.HealthHUD and GAMEMODE.HealthHUD:IsValid() then
+		GAMEMODE.HealthHUD:InvalidateLayout(true)
+	end
+
+	if GAMEMODE.GameStatePanel and GAMEMODE.GameStatePanel:IsValid() then
+		GAMEMODE.GameStatePanel:SetTextFont(GAMEMODE.OriginalHUD and "ZSHUDFontSmaller" or "ZSHUDFontTiny")
+		GAMEMODE.GameStatePanel:SetAlpha(GAMEMODE.OriginalHUD and 220 or 190)
+		GAMEMODE.GameStatePanel:SetSize(GAMEMODE.OriginalHUD and screenscale * 420 or math.max(screenscale * 420, 340), GAMEMODE.OriginalHUD and screenscale * 80 or math.max(screenscale * 120, 104))
+		GAMEMODE.GameStatePanel:InvalidateLayout(true)
+	end
+end)
+
 cvars.AddChangeCallback("labyrinth_zs_crosshair_colr", function(cvar, oldvalue, newvalue)
 	GAMEMODE.CrosshairColor.r = tonumber(newvalue) or 255
 end)
@@ -227,8 +246,10 @@ cvars.AddChangeCallback("labyrinth_zs_interfacesize", function(cvar, oldvalue, n
 
 	GAMEMODE.HealthHUD:InvalidateLayout()
 
-	GAMEMODE.GameStatePanel:InvalidateLayout()
-	GAMEMODE.GameStatePanel:SetSize(screenscale * 420, screenscale * 80)
+	GAMEMODE.GameStatePanel:InvalidateLayout(true)
+	GAMEMODE.GameStatePanel:SetTextFont(GAMEMODE.OriginalHUD and "ZSHUDFontSmaller" or "ZSHUDFontTiny")
+	GAMEMODE.GameStatePanel:SetAlpha(GAMEMODE.OriginalHUD and 220 or 190)
+	GAMEMODE.GameStatePanel:SetSize(GAMEMODE.OriginalHUD and screenscale * 420 or math.max(screenscale * 420, 340), GAMEMODE.OriginalHUD and screenscale * 80 or math.max(screenscale * 120, 104))
 
 	GAMEMODE.TopNotificationHUD:InvalidateLayout()
 	GAMEMODE.CenterNotificationHUD:InvalidateLayout()
