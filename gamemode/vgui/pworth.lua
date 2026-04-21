@@ -242,8 +242,7 @@ function MakepWorth()
 	frame.OnRemove = function()
 		local remantler = GAMEMODE.RemantlerInterface
 		if remantler and remantler:IsValid() and remantler.LinkedToWorth then
-			remantler:Close()
-			GAMEMODE.RemantlerInterface = nil
+			GAMEMODE:CloseRemantler()
 		end
 	end
 

@@ -3266,9 +3266,7 @@ function GM:CloseShopMenus()
 		self.ArsenalInterface:SetVisible(false)
 	end
 
-	if self.RemantlerInterface and self.RemantlerInterface:IsValid() then
-		self.RemantlerInterface:SetVisible(false)
-	end
+	self:CloseRemantler()
 
 	self:UpdateShopCloseButton()
 end
@@ -3291,6 +3289,14 @@ function GM:CloseWorth()
 		pWorth:Remove()
 		pWorth = nil
 	end
+end
+
+function GM:CloseRemantler()
+	if self.RemantlerInterface and self.RemantlerInterface:IsValid() then
+		self.RemantlerInterface:Remove()
+		self.RemantlerInterface = nil
+	end
+	self:UpdateShopCloseButton()
 end
 
 function GM:SuppressArsenalUpgrades(suppresstime)
