@@ -1465,23 +1465,36 @@ function meta:ShouldCrouchJumpPunish()
 end
 
 function meta:TakeBrains(amount)
+	amount = math.floor(tonumber(amount) or 1)
+	if amount == 0 then
+		return
+	end
+
 	self:AddFrags(-amount)
-	self.BrainsEaten = self.BrainsEaten - 1
+	self.BrainsEaten = self.BrainsEaten - amount
 end
 
 function meta:AddBrains(amount)
+	amount = math.floor(tonumber(amount) or 1)
+	if amount == 0 then
+		return
+	end
+
 	self:AddFrags(amount)
-	self.BrainsEaten = self.BrainsEaten + 1
+	self.BrainsEaten = self.BrainsEaten + amount
 	self:CheckRedeem()
 end
 
 meta.GetBrains = meta.Frags
 
 function meta:CheckRedeem(instant)
+	local toredeem = GAMEMODE:GetRedeemBrains()
+
 	if
 		not self:IsValid()
 		or P_Team(self) ~= TEAM_UNDEAD
-		or self:GetBrains() < 2
+		or toredeem <= 0
+		or self:GetBrains() < toredeem
 		or GAMEMODE.NoRedeeming
 		or self.NoRedeeming
 	then

@@ -4018,6 +4018,17 @@ function GM:CanPlayerSuicide(pl)
 	end
 
 	if pl:Team() == TEAM_HUMAN then
+		if self:PlayerIsAdmin(pl) then
+			return pl:GetObserverMode() == OBS_MODE_NONE
+				and pl:Alive()
+				and (not pl.SpawnNoSuicide or pl.SpawnNoSuicide < CurTime())
+		end
+
+		if not self:PlayerIsAdmin(pl) then
+			pl:CenterNotify(COLOR_RED, "You can't use kill while on the human team.")
+			return false
+		end
+
 		if self:GetWave() <= self.NoSuicideWave then
 			pl:PrintTranslatedMessage(HUD_PRINTCENTER, "give_time_before_suicide")
 			return false
@@ -4746,6 +4757,10 @@ function GM:SetWave(wave)
 	end
 
 	SetGlobalInt("wave", wave)
+
+	if not self.ZombieEscape then
+		self:SetRedeemBrains(math.max(wave, 0))
+	end
 
 	for classid in pairs(previouslylocked) do
 		if gamemode.Call("IsClassUnlocked", classid) then

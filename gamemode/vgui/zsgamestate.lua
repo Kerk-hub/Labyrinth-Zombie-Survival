@@ -359,7 +359,7 @@ function PANEL:Text3Paint()
 			local readoutCol, readoutSoftCol = GetMonitorReadoutColors()
 
 			if MySelf:Team() == TEAM_UNDEAD then
-				local toredeem = 2
+				local toredeem = GAMEMODE:GetRedeemBrains()
 				draw.SimpleText(
 					translate.Format("brains_eaten_x", MySelf:Frags() .. " / " .. toredeem),
 					self.Font,

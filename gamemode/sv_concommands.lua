@@ -186,6 +186,31 @@ concommand.Add("zs_addpoints", function(sender, command, arguments)
 	pl:AddPoints(amount)
 end)
 
+concommand.Add("zs_brain", function(sender, command, arguments)
+	if not (IsValid(sender) and sender:IsPlayer() and sender:IsAdmin()) then
+		return
+	end
+
+	if #arguments == 0 then
+		GAMEMODE:ConCommandErrorMessage(sender, "Usage: zs_brain <number>")
+		return
+	end
+
+	local amount = math.floor(tonumber(arguments[1]) or 0)
+	if amount <= 0 then
+		GAMEMODE:ConCommandErrorMessage(sender, "Usage: zs_brain <number>")
+		return
+	end
+
+	if not sender:IsValidZombie() then
+		GAMEMODE:ConCommandErrorMessage(sender, "You must be undead to use zs_brain.")
+		return
+	end
+
+	sender:AddBrains(amount)
+	GAMEMODE:ConCommandErrorMessage(sender, "Added " .. amount .. " brains.")
+end)
+
 concommand.Add("zs_revive", function(sender, command, arguments)
 	if not sender:IsAdmin() then
 		return
