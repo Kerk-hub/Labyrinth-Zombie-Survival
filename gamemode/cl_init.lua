@@ -3195,8 +3195,14 @@ function GM:EnsureShopCloseButton()
 		button:SetKeyboardInputEnabled(false)
 		button:SetMouseInputEnabled(true)
 		button:SetFont("ZSHUDFontSmall")
-		button.OnCursorEntered = function()
-			GAMEMODE:CloseShopMenus()
+		button.CloseHoverArmed = false
+		button.OnCursorEntered = function(pnl)
+			if pnl.CloseHoverArmed then
+				GAMEMODE:CloseShopMenus()
+			end
+		end
+		button.OnCursorExited = function(pnl)
+			pnl.CloseHoverArmed = true
 		end
 		button.Think = function(pnl)
 			local scale = BetterScreenScale()
@@ -3237,10 +3243,16 @@ function GM:UpdateShopCloseButton()
 	end
 
 	button, topbutton = self:EnsureShopCloseButton()
+	if not button:IsVisible() then
+		button.CloseHoverArmed = not button:IsHovered()
+	end
 	button:SetVisible(true)
 	button:MoveToFront()
 	button:MakePopup()
 	button:SetKeyboardInputEnabled(false)
+	if not topbutton:IsVisible() then
+		topbutton.CloseHoverArmed = not topbutton:IsHovered()
+	end
 	topbutton:SetVisible(true)
 	topbutton:MoveToFront()
 	topbutton:MakePopup()
