@@ -8,30 +8,6 @@ local function pointslabelThink(self)
 	end
 end
 
-local function MenuFrameHovered(pan, mx, my)
-	if not (pan and pan:IsValid() and pan:IsVisible()) then
-		return false
-	end
-
-	local x, y = pan:GetPos()
-	return mx >= x - 16 and my >= y - 16 and mx <= x + pan:GetWide() + 16 and my <= y + pan:GetTall() + 16
-end
-
-hook.Add("Think", "ArsenalMenuThink", function()
-	local pan = GAMEMODE.ArsenalInterface
-	if pan and pan:IsValid() and pan:IsVisible() then
-		local mx, my = gui.MousePos()
-		if not MenuFrameHovered(pan, mx, my) and not MenuFrameHovered(GAMEMODE.RemantlerInterface, mx, my) then
-			pan:SetVisible(false)
-
-			local remantler = GAMEMODE.RemantlerInterface
-			if remantler and remantler:IsValid() then
-				remantler:SetVisible(false)
-			end
-		end
-	end
-end)
-
 local function ArsenalMenuCenterMouse(self)
 	local x, y = self:GetPos()
 	local w, h = self:GetSize()

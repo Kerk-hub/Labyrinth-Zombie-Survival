@@ -33,33 +33,6 @@ local function DismantleClick()
 	end)
 end
 
-local function RemantlerFrameHovered(pan, mx, my)
-	if not (pan and pan:IsValid() and pan:IsVisible()) then
-		return false
-	end
-
-	local x, y = pan:GetPos()
-	return mx >= x - 16 and my >= y - 16 and mx <= x + pan:GetWide() + 16 and my <= y + pan:GetTall() + 16
-end
-
-hook.Add("Think", "RemantlerMenuThink", function()
-	local pan = GAMEMODE.RemantlerInterface
-	if pan and pan:IsValid() and pan:IsVisible() then
-		local mx, my = gui.MousePos()
-		if not RemantlerFrameHovered(pan, mx, my)
-			and not RemantlerFrameHovered(GAMEMODE.ArsenalInterface, mx, my)
-			and not RemantlerFrameHovered(pWorth, mx, my)
-		then
-			pan:SetVisible(false)
-
-			local arsenal = GAMEMODE.ArsenalInterface
-			if arsenal and arsenal:IsValid() then
-				arsenal:SetVisible(false)
-			end
-		end
-	end
-end)
-
 local function RemantlerCenterMouse(self)
 	local x, y = self:GetPos()
 	local w, h = self:GetSize()

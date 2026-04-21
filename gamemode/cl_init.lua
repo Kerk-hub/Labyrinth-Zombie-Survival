@@ -2673,6 +2673,13 @@ function GM:ZombieSpawnMenu()
 end
 
 function GM:OpenWorthOrArsenalMenu()
+	--[[ Disabled for now: keep F2/context menu from acting as a close toggle.
+	if self:IsShopMenuOpen() then
+		self:CloseShopMenus()
+		return
+	end
+	]]
+
 	if P_Team(MySelf) == TEAM_UNDEAD then
 		RunConsoleCommand("gm_showspare1")
 		return
@@ -2688,7 +2695,7 @@ function GM:PlayerBindPress(pl, bind, wasin)
 		timer.Create("ReleaseZoom", 1, 1, function()
 			RunConsoleCommand("-zoom")
 		end)
-	elseif bind == "+menu_context" then
+	elseif bind == "+menu_context" or string.find(bind, "gm_showteam", 1, true) then
 		if pl == MySelf and not gui.IsGameUIVisible() and not gui.IsConsoleVisible() and not vgui.GetKeyboardFocus() then
 			self:OpenWorthOrArsenalMenu()
 			return true
@@ -3167,6 +3174,98 @@ end
 function GM:PlayerCanCheckout(pl)
 	return pl:IsValid() and P_Team(pl) == TEAM_HUMAN and pl:Alive() and self:GetWave() <= 0
 end
+
+function GM:IsShopMenuOpen()
+	return pWorth and pWorth:IsValid() and pWorth:IsVisible()
+		or self.ArsenalInterface and self.ArsenalInterface:IsValid() and self.ArsenalInterface:IsVisible()
+		or self.RemantlerInterface and self.RemantlerInterface:IsValid() and self.RemantlerInterface:IsVisible()
+end
+
+function GM:EnsureShopCloseButton()
+	if self.ShopMenuCloseButton and self.ShopMenuCloseButton:IsValid()
+		and self.ShopMenuCloseButtonTop and self.ShopMenuCloseButtonTop:IsValid()
+	then
+		return self.ShopMenuCloseButton, self.ShopMenuCloseButtonTop
+	end
+
+	local function createbutton(aligntop)
+		local button = vgui.Create("DButton")
+		button:SetText("")
+		button:SetVisible(false)
+		button:SetKeyboardInputEnabled(false)
+		button:SetMouseInputEnabled(true)
+		button:SetFont("ZSHUDFontSmall")
+		button.OnCursorEntered = function()
+			GAMEMODE:CloseShopMenus()
+		end
+		button.Think = function(pnl)
+			local scale = BetterScreenScale()
+			local wide = math.min(ScrW() - 40 * scale, 1680 * scale)
+			local tall = 52 * scale
+			pnl:SetSize(wide, tall)
+			pnl:SetPos((ScrW() - wide) * 0.5, aligntop and 20 * scale or ScrH() - tall - 20 * scale)
+		end
+		button.Paint = function(pnl, w, h)
+			local hovered = pnl:IsHovered()
+			draw.RoundedBox(12, 0, 0, w, h, hovered and Color(170, 55, 55, 245) or Color(120, 35, 35, 235))
+			draw.SimpleText("Close Menus", "ZSHUDFontSmall", w * 0.5, h * 0.38, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+			draw.SimpleText("Hover to close menu", "ZSHUDFontSmaller", w * 0.5, h * 0.72, COLOR_GRAY, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+			return true
+		end
+		button:MakePopup()
+		return button
+	end
+
+	self.ShopMenuCloseButton = createbutton(false)
+	self.ShopMenuCloseButtonTop = createbutton(true)
+	return self.ShopMenuCloseButton, self.ShopMenuCloseButtonTop
+end
+
+function GM:UpdateShopCloseButton()
+	local button = self.ShopMenuCloseButton
+	local topbutton = self.ShopMenuCloseButtonTop
+	local shouldshow = self:IsShopMenuOpen()
+
+	if not shouldshow then
+		if button and button:IsValid() then
+			button:SetVisible(false)
+		end
+		if topbutton and topbutton:IsValid() then
+			topbutton:SetVisible(false)
+		end
+		return
+	end
+
+	button, topbutton = self:EnsureShopCloseButton()
+	button:SetVisible(true)
+	button:MoveToFront()
+	button:MakePopup()
+	button:SetKeyboardInputEnabled(false)
+	topbutton:SetVisible(true)
+	topbutton:MoveToFront()
+	topbutton:MakePopup()
+	topbutton:SetKeyboardInputEnabled(false)
+end
+
+function GM:CloseShopMenus()
+	self:CloseWorth()
+
+	if self.ArsenalInterface and self.ArsenalInterface:IsValid() then
+		self.ArsenalInterface:SetVisible(false)
+	end
+
+	if self.RemantlerInterface and self.RemantlerInterface:IsValid() then
+		self.RemantlerInterface:SetVisible(false)
+	end
+
+	self:UpdateShopCloseButton()
+end
+
+hook.Add("Think", "ShopMenuCloseButtonThink", function()
+	if GAMEMODE and GAMEMODE.UpdateShopCloseButton then
+		GAMEMODE:UpdateShopCloseButton()
+	end
+end)
 
 function GM:OpenWorth()
 	WorthArsenalPromptConsumed = true
