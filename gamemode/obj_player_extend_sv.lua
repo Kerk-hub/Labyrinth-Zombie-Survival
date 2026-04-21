@@ -1597,8 +1597,6 @@ function meta:CheckRedeem(instant)
 		or P_Team(self) ~= TEAM_UNDEAD
 		or toredeem <= 0
 		or self:GetBrains() < toredeem
-		or GAMEMODE.NoRedeeming
-		or self.NoRedeeming
 	then
 		return
 	end

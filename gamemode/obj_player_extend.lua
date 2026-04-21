@@ -475,6 +475,10 @@ function meta:IsBossZombie()
 	return P_Team(self) == TEAM_UNDEAD and classtab and classtab.Boss or false
 end
 
+function meta:IsZMain()
+	return self:GetNWBool("zs_zmain", false) and P_Team(self) == TEAM_UNDEAD
+end
+
 -- Called a lot, so optimized
 -- vararg was culled out because it created tables. Should call the one with appropriate # of args.
 local zctab

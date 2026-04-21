@@ -299,6 +299,8 @@ function PANEL:Init()
 	self.m_ClassImage:SetVisible(false)
 
 	self.m_PlayerLabel = EasyLabel(self, " ", "ZSScoreBoardPlayer", COLOR_WHITE)
+	self.m_ZMainLabel = EasyLabel(self, "Z-main", "ZSScoreBoardPlayerSmaller", Color(255, 235, 235))
+	self.m_ZMainLabel:SetVisible(false)
 	self.m_ScoreLabel = EasyLabel(self, " ", "ZSScoreBoardPlayerSmall", COLOR_WHITE)
 	self.m_RemortLabel = EasyLabel(self, " ", "ZSScoreBoardPlayerSmaller", COLOR_WHITE)
 
@@ -313,12 +315,17 @@ function PANEL:Init()
 end
 
 local colTemp = Color(255, 255, 255, 200)
+local zmainScoreboardColor = Color(215, 40, 40, 200)
 function PANEL:Paint()
 	local col = color_black_alpha220
 	local mul = 0.5
 	local pl = self:GetPlayer()
 	if pl:IsValid() then
-		col = team.GetColor(pl:Team())
+		if pl.IsZMain and pl:IsZMain() then
+			col = zmainScoreboardColor
+		else
+			col = team.GetColor(pl:Team())
+		end
 
 		if self.m_Flash then
 			mul = 0.6 + math.abs(math.sin(RealTime() * 6)) * 0.4
@@ -353,6 +360,12 @@ function PANEL:PerformLayout()
 	self.m_PlayerLabel:SizeToContents()
 	self.m_PlayerLabel:MoveRightOf(self.m_AvatarButton, 4)
 	self.m_PlayerLabel:CenterVertical()
+
+	if self.m_ZMainLabel:IsVisible() then
+		self.m_ZMainLabel:SizeToContents()
+		self.m_ZMainLabel:MoveRightOf(self.m_PlayerLabel, 6)
+		self.m_ZMainLabel:CenterVertical()
+	end
 
 	self.m_ScoreLabel:SizeToContents()
 	self.m_ScoreLabel:SetPos(self:GetWide() * 0.6 - self.m_ScoreLabel:GetWide() / 2, 0)
@@ -396,6 +409,10 @@ function PANEL:RefreshPlayer()
 	end
 	self.m_PlayerLabel:SetText(name)
 	self.m_PlayerLabel:SetAlpha(240)
+
+	local iszmain = pl.IsZMain and pl:IsZMain()
+	self.m_ZMainLabel:SetVisible(iszmain)
+	self.m_ZMainLabel:SetAlpha(iszmain and 240 or 0)
 
 	self.m_ScoreLabel:SetText(pl:Frags())
 	self.m_ScoreLabel:SetAlpha(240)

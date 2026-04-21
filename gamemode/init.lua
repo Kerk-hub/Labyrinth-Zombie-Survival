@@ -1520,11 +1520,32 @@ end
 
 GM.LastCalculatedBossTime = 0
 function GM:CalculateNextBoss()
+	if not self:IsValidZMainCandidate(self.ZMainPlayer) then
+		self:ResolveZMain()
+	end
+
+	if self:IsValidZMainCandidate(self.ZMainPlayer) and not self.ZMainPlayer:GetZombieClassTable().Boss then
+		local zmain = self.ZMainPlayer
+		self:DebugPrintZMain("Forcing boss selection to " .. zmain:Name())
+
+		if zmain ~= self.LastCalculatedBoss or CurTime() >= self.LastCalculatedBossTime + 2 then
+			self.LastCalculatedBoss = zmain
+			self.LastCalculatedBossTime = CurTime()
+
+			net.Start("zs_nextboss")
+			net.WriteEntity(zmain)
+			net.WriteUInt(zmain:GetBossZombieIndex(), 8)
+			net.Broadcast()
+		end
+
+		return zmain
+	end
+
 	local zombies = {}
 	local humanzombies = {}
 
 	for _, ent in pairs(team.GetPlayers(TEAM_UNDEAD)) do
-		if not ent:GetZSClientBool("zs_nobosspick") and not ent:GetZombieClassTable().Boss then
+		if not ent:GetZombieClassTable().Boss then
 			table.insert(zombies, ent)
 
 			if not ent:IsBot() then
@@ -1857,6 +1878,109 @@ GM.StartingZombie = {}
 GM.CheckedOut = {}
 GM.PreviouslyDied = {}
 GM.StoredUndeadFrags = {}
+GM.ZMainJoinSequence = 0
+
+function GM:DebugPrintZMain(message)
+	print("[ZS Z-main] " .. tostring(message))
+end
+
+function GM:IsExactZMainBot(pl)
+	return IsValid(pl) and pl:IsPlayer() and pl:IsBot() and pl:Name() == "Z-main"
+end
+
+function GM:IsValidZMainCandidate(pl)
+	return IsValid(pl) and pl:IsPlayer() and pl:Team() == TEAM_UNDEAD
+end
+
+function GM:ClearZMain(pl)
+	if IsValid(pl) then
+		self:DebugPrintZMain("Clearing Z-main from " .. pl:Name())
+		pl:SetNWBool("zs_zmain", false)
+	end
+
+	if self.ZMainPlayer == pl then
+		self.ZMainPlayer = nil
+	end
+end
+
+function GM:SetZMain(pl)
+	if self.ZMainPlayer == pl and IsValid(pl) then
+		if not pl:GetNWBool("zs_zmain", false) then
+			self:DebugPrintZMain("Restoring missing Z-main flag on " .. pl:Name())
+			pl:SetNWBool("zs_zmain", true)
+		end
+
+		return pl
+	end
+
+	self:ClearZMain(self.ZMainPlayer)
+
+	if not self:IsValidZMainCandidate(pl) then
+		self:DebugPrintZMain("No valid candidate available for Z-main")
+		return nil
+	end
+
+	pl:SetNWBool("zs_zmain", true)
+	self.ZMainPlayer = pl
+	self:DebugPrintZMain("Assigned Z-main to " .. pl:Name() .. " [bot=" .. tostring(pl:IsBot()) .. "]")
+
+	return pl
+end
+
+function GM:GetPreferredZMainCandidate()
+	local humanzombies = {}
+	local botzombies = {}
+
+	for _, pl in pairs(team.GetPlayers(TEAM_UNDEAD)) do
+		if self:IsValidZMainCandidate(pl) then
+			if pl:IsBot() then
+				botzombies[#botzombies + 1] = pl
+			else
+				humanzombies[#humanzombies + 1] = pl
+			end
+		end
+	end
+
+	table.sort(humanzombies, function(a, b)
+		return (a.ZMainJoinSequence or math.huge) < (b.ZMainJoinSequence or math.huge)
+	end)
+
+	if humanzombies[1] then
+		return humanzombies[1]
+	end
+
+	for _, pl in pairs(botzombies) do
+		if self:IsExactZMainBot(pl) then
+			return pl
+		end
+	end
+
+	table.sort(botzombies, function(a, b)
+		return (a.ZMainJoinSequence or math.huge) < (b.ZMainJoinSequence or math.huge)
+	end)
+
+	return botzombies[1]
+end
+
+function GM:ResolveZMain(preferred)
+	if IsValid(preferred) then
+		self:DebugPrintZMain("Resolving Z-main with preferred candidate " .. preferred:Name())
+	else
+		self:DebugPrintZMain("Resolving Z-main without preferred candidate")
+	end
+
+	if self:IsValidZMainCandidate(preferred) then
+		return self:SetZMain(preferred)
+	end
+
+	if self:IsValidZMainCandidate(self.ZMainPlayer) then
+		return self:SetZMain(self.ZMainPlayer)
+	end
+
+	self:ClearZMain(self.ZMainPlayer)
+
+	return self:SetZMain(self:GetPreferredZMainCandidate())
+end
 
 function GM:RestartLua()
 	self.CachedHMs = nil
@@ -1896,6 +2020,8 @@ function GM:RestartLua()
 	self.CheckedOut = {}
 	self.PreviouslyDied = {}
 	self.StoredUndeadFrags = {}
+	self.ZMainJoinSequence = 0
+	self:ClearZMain(self.ZMainPlayer)
 
 	ROUNDWINNER = nil
 	LAST_BITE = nil
@@ -2280,10 +2406,6 @@ function GM:PlayerReadyRound(pl)
 		gamemode.Call("DoHonorableMentions", pl)
 	end
 
-	if pl:GetZSClientBool("zs_noredeem") then
-		pl.NoRedeeming = true
-	end
-
 	if self:GetWave() == 0 then
 		self:SendZombieVolunteers(pl, true)
 	end
@@ -2587,6 +2709,13 @@ function GM:PlayerDisconnected(pl)
 	end
 
 	self:SaveVault(pl)
+
+	if self.ZMainPlayer == pl then
+		self:DebugPrintZMain("Current Z-main disconnected: " .. pl:Name())
+		self:ClearZMain(pl)
+		self:ResolveZMain()
+		self:CalculateNextBoss()
+	end
 
 	gamemode.Call("CalculateInfliction")
 end
@@ -3564,6 +3693,14 @@ end
 
 function GM:OnPlayerChangedTeam(pl, oldteam, newteam)
 	if newteam == TEAM_UNDEAD then
+		self.ZMainJoinSequence = self.ZMainJoinSequence + 1
+		pl.ZMainJoinSequence = self.ZMainJoinSequence
+		self:DebugPrintZMain(pl:Name() .. " joined undead with sequence " .. self.ZMainJoinSequence)
+	else
+		pl.ZMainJoinSequence = nil
+	end
+
+	if newteam == TEAM_UNDEAD then
 		pl:SetPoints(0)
 
 		--pl.WaveBarricadeDamage = 0
@@ -3600,6 +3737,20 @@ function GM:OnPlayerChangedTeam(pl, oldteam, newteam)
 	timer.Simple(0, function()
 		gamemode.Call("CalculateInfliction")
 	end)
+
+	if newteam == TEAM_UNDEAD then
+		if not self:IsValidZMainCandidate(self.ZMainPlayer)
+		or (self:IsExactZMainBot(self.ZMainPlayer) and not pl:IsBot()) then
+			self:DebugPrintZMain("Re-evaluating Z-main because " .. pl:Name() .. " entered undead")
+			self:ResolveZMain(pl)
+		end
+
+		self:CalculateNextBoss()
+	elseif oldteam == TEAM_UNDEAD and self.ZMainPlayer == pl then
+		self:DebugPrintZMain("Current Z-main left undead: " .. pl:Name())
+		self:ResolveZMain()
+		self:CalculateNextBoss()
+	end
 end
 
 function GM:SetToDefaultZombieClass(pl)
