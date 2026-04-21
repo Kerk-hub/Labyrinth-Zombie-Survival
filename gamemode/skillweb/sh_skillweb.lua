@@ -261,11 +261,11 @@ function meta:GetZSSPUsed()
 end
 
 function meta:GetZSSPRemaining()
-	return self:GetZSSPTotal() - self:GetZSSPUsed()
+	return 0
 end
 
 function meta:GetZSSPTotal()
-	return 999
+	return self:GetZSSPUsed()
 end
 
 function meta:GetDesiredActiveSkills()

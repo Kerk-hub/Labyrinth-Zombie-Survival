@@ -139,13 +139,6 @@ local function PopulateGeneralTab(menu, parent)
 			action = function() RunHelpMenuAction(menu, MakepWeapons) end
 		},
 		{
-			kicker = "Progression",
-			title = "Skills",
-			subtitle = "Open the skill web and spend points.",
-			accent = Color(90, 204, 216),
-			action = function() RunHelpMenuAction(menu, function() GAMEMODE:ToggleSkillWeb() end) end
-		},
-		{
 			kicker = "Archive",
 			title = "Credits",
 			subtitle = "View credits and project information.",
@@ -185,14 +178,6 @@ local function PopulateHumanTab(gamemode, menu, parent)
 					end
 				end)
 			end
-		},
-		{
-			kicker = "Growth",
-			title = "Skill Web",
-			subtitle = "Jump straight into skills without leaving this hub.",
-			accent = Color(118, 224, 202),
-			enabled = true,
-			action = function() RunHelpMenuAction(menu, function() gamemode:ToggleSkillWeb() end) end
 		}
 	}
 
