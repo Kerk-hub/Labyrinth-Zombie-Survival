@@ -4,7 +4,7 @@ AddCSLuaFile("cl_init.lua")
 
 include("shared.lua")
 
-local BrainPickupColor = Color(255, 135, 185)
+local BrainPickupColor = Color(255, 175, 215)
 
 function ENT:Initialize()
 	self:SetModel("models/Gibs/HGIBS.mdl")

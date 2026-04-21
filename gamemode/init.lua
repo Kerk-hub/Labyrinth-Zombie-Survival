@@ -1299,20 +1299,13 @@ function GM:Think()
 		if self:GetWaveActive() then
 			if self:GetWaveEnd() <= time and self:GetWaveEnd() ~= -1 then
 				gamemode.Call("SetWaveActive", false)
+				if not self:UpdateZMainBossPreview() then
+					self:CalculateNextBoss()
+				end
 			end
 		elseif self:GetWaveStart() ~= -1 then
 			if self:GetWaveStart() <= time then
 				gamemode.Call("SetWaveActive", true)
-			elseif
-				self.BossZombies
-				and not self.PantsMode
-				and not self:IsClassicMode()
-				and not self.ZombieEscape
-				and self.LastBossZombieSpawned ~= wave
-				and wave > 0
-				and not self.RoundEnded
-			then
-				self:CalculateNextBoss()
 			end
 		end
 	end
@@ -1520,25 +1513,8 @@ end
 
 GM.LastCalculatedBossTime = 0
 function GM:CalculateNextBoss()
-	if not self:IsValidZMainCandidate(self.ZMainPlayer) then
-		self:ResolveZMain()
-	end
-
-	if self:IsValidZMainCandidate(self.ZMainPlayer) and not self.ZMainPlayer:GetZombieClassTable().Boss then
-		local zmain = self.ZMainPlayer
-		self:DebugPrintZMain("Forcing boss selection to " .. zmain:Name())
-
-		if zmain ~= self.LastCalculatedBoss or CurTime() >= self.LastCalculatedBossTime + 2 then
-			self.LastCalculatedBoss = zmain
-			self.LastCalculatedBossTime = CurTime()
-
-			net.Start("zs_nextboss")
-			net.WriteEntity(zmain)
-			net.WriteUInt(zmain:GetBossZombieIndex(), 8)
-			net.Broadcast()
-		end
-
-		return zmain
+	if self.LastCalculatedBoss == self.ZMainPlayer and self:IsValidZMainCandidate(self.ZMainPlayer) and not self.ZMainPlayer:GetZombieClassTable().Boss then
+		return self.ZMainPlayer
 	end
 
 	local zombies = {}
@@ -1889,7 +1865,7 @@ function GM:IsExactZMainBot(pl)
 end
 
 function GM:IsValidZMainCandidate(pl)
-	return IsValid(pl) and pl:IsPlayer() and pl:Team() == TEAM_UNDEAD
+	return IsValid(pl) and pl:IsPlayer() and pl:Team() == TEAM_UNDEAD and (not pl:IsBot() or self:IsExactZMainBot(pl))
 end
 
 function GM:ClearZMain(pl)
@@ -1927,14 +1903,33 @@ function GM:SetZMain(pl)
 	return pl
 end
 
+function GM:UpdateZMainBossPreview()
+	if self:IsValidZMainCandidate(self.ZMainPlayer) and not self.ZMainPlayer:GetZombieClassTable().Boss then
+		local zmain = self.ZMainPlayer
+
+		self:DebugPrintZMain("Forcing boss selection to " .. zmain:Name())
+		self.LastCalculatedBoss = zmain
+		self.LastCalculatedBossTime = CurTime()
+
+		net.Start("zs_nextboss")
+		net.WriteEntity(zmain)
+		net.WriteUInt(zmain:GetBossZombieIndex(), 8)
+		net.Broadcast()
+
+		return zmain
+	end
+end
+
 function GM:GetPreferredZMainCandidate()
 	local humanzombies = {}
-	local botzombies = {}
+	local zmainbot
 
 	for _, pl in pairs(team.GetPlayers(TEAM_UNDEAD)) do
 		if self:IsValidZMainCandidate(pl) then
 			if pl:IsBot() then
-				botzombies[#botzombies + 1] = pl
+				if self:IsExactZMainBot(pl) then
+					zmainbot = pl
+				end
 			else
 				humanzombies[#humanzombies + 1] = pl
 			end
@@ -1949,17 +1944,7 @@ function GM:GetPreferredZMainCandidate()
 		return humanzombies[1]
 	end
 
-	for _, pl in pairs(botzombies) do
-		if self:IsExactZMainBot(pl) then
-			return pl
-		end
-	end
-
-	table.sort(botzombies, function(a, b)
-		return (a.ZMainJoinSequence or math.huge) < (b.ZMainJoinSequence or math.huge)
-	end)
-
-	return botzombies[1]
+	return zmainbot
 end
 
 function GM:ResolveZMain(preferred)
@@ -2714,7 +2699,9 @@ function GM:PlayerDisconnected(pl)
 		self:DebugPrintZMain("Current Z-main disconnected: " .. pl:Name())
 		self:ClearZMain(pl)
 		self:ResolveZMain()
-		self:CalculateNextBoss()
+		if not self:UpdateZMainBossPreview() then
+			self:CalculateNextBoss()
+		end
 	end
 
 	gamemode.Call("CalculateInfliction")
@@ -3739,17 +3726,37 @@ function GM:OnPlayerChangedTeam(pl, oldteam, newteam)
 	end)
 
 	if newteam == TEAM_UNDEAD then
+		local previouszmain = self.ZMainPlayer
+
 		if not self:IsValidZMainCandidate(self.ZMainPlayer)
 		or (self:IsExactZMainBot(self.ZMainPlayer) and not pl:IsBot()) then
 			self:DebugPrintZMain("Re-evaluating Z-main because " .. pl:Name() .. " entered undead")
 			self:ResolveZMain(pl)
 		end
 
-		self:CalculateNextBoss()
-	elseif oldteam == TEAM_UNDEAD and self.ZMainPlayer == pl then
-		self:DebugPrintZMain("Current Z-main left undead: " .. pl:Name())
-		self:ResolveZMain()
-		self:CalculateNextBoss()
+		if self.ZMainPlayer ~= previouszmain then
+			if not self:UpdateZMainBossPreview() then
+				self:CalculateNextBoss()
+			end
+		else
+			self:CalculateNextBoss()
+		end
+	elseif oldteam == TEAM_UNDEAD then
+		local waszmain = self.ZMainPlayer == pl
+
+		if IsValid(pl) then
+			self:ClearZMain(pl)
+		end
+
+		if waszmain then
+			self:DebugPrintZMain("Current Z-main left undead: " .. pl:Name())
+			self:ResolveZMain()
+			if not self:UpdateZMainBossPreview() then
+				self:CalculateNextBoss()
+			end
+		else
+			self:CalculateNextBoss()
+		end
 	end
 end
 
