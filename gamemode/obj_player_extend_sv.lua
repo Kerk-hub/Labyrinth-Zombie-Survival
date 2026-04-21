@@ -508,11 +508,18 @@ function meta:CreateHumanDeathCorpse()
 	end
 
 	local pos, ang = self:GetHumanCorpseAnchor()
-	local ent = self:FakeDeath(sequence, self:GetModelScale())
+	local ent = ents.Create("prop_humancorpse")
 	if ent and ent:IsValid() then
+		ent.CorpseModel = self:GetModel()
+		ent.CorpseSkin = self:GetSkin()
+		ent.CorpseColor = self:GetColor()
+		ent.CorpseMaterial = self:GetMaterial()
+		ent.CorpseModelScale = self:GetModelScale()
+		ent.CorpseSequence = sequence
+		ent.CorpseAngles = ang
 		ent:SetPos(pos)
-		ent:SetDeathAngles(ang)
-		ent:SetRemoveTime(CurTime() + 45)
+		ent:SetAngles(ang)
+		ent:Spawn()
 
 		return ent
 	end

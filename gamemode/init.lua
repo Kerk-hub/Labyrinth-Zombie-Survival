@@ -4161,14 +4161,7 @@ function GM:ZombieKilledHuman(pl, attacker, inflictor, dmginfo, headshot, suicid
 	end
 	pl.ZombieSpawnDeathDistance = math.ceil(math.sqrt(dist))
 
-	attacker:AddBrains(1)
-	attacker:AddLifeBrainsEaten(1)
 	attacker:AddZSXP(self.InitialVolunteers[attacker:UniqueID()] and xp or math.floor(xp / 4))
-
-	local classtab = attacker:GetZombieClassTable()
-	if classtab and classtab.Name then
-		GAMEMODE.StatTracking:IncreaseElementKV(STATTRACK_TYPE_ZOMBIECLASS, classtab.Name, "BrainsEaten", 1)
-	end
 
 	if not pl.Gibbed and not suicide then
 		local status = pl:GiveStatus("revive_slump_human")

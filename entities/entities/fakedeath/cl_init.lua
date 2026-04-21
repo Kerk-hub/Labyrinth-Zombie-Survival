@@ -2,6 +2,13 @@ INC_CLIENT()
 
 ENT.RenderGroup = RENDERGROUP_TRANSLUCENT
 
+local matWhite = Material("models/debug/debugwhite")
+
+local function IsZombieVisionCorpse(ent)
+	local owner = ent:GetOwner()
+	return owner:IsValid() and owner:GetClass() == "prop_humancorpse" and GAMEMODE.m_ZombieVision and MySelf:IsValidZombie()
+end
+
 function ENT:Initialize()
 	self:SharedInitialize()
 end
@@ -21,8 +28,24 @@ function ENT:DrawTranslucent()
 	self:SetCycle(cycle)
 	self:SetAngles(self:GetDeathAngles())
 
+	local removetime = self:GetRemoveTime()
+	local blend = removetime > 0 and math.Clamp(removetime - CurTime(), 0, 1) or 1
+
 	cam.Start3D(EyePos() + Vector(0, 0, 4), EyeAngles())
-		render.SetBlend(math.Clamp(self:GetRemoveTime() - CurTime(), 0, 1))
+		if IsZombieVisionCorpse(self) then
+			cam.IgnoreZ(true)
+			render.ModelMaterialOverride(matWhite)
+			render.SetColorModulation(0.9, 0.15, 0.15)
+			render.SuppressEngineLighting(true)
+			render.SetBlend(0.8)
+			self:DrawModel()
+			render.SuppressEngineLighting(false)
+			render.SetColorModulation(1, 1, 1)
+			render.ModelMaterialOverride()
+			cam.IgnoreZ(false)
+		end
+
+		render.SetBlend(blend)
 		self:DrawModel()
 		render.SetBlend(1)
 	cam.End3D()
