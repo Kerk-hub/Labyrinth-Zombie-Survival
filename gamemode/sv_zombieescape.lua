@@ -157,6 +157,11 @@ hook.Add("Think", "zombieescape", function()
 	CheckTime = CheckTime or (CurTime() + 2.5)
 
 	if CheckTime and CurTime() >= CheckTime then
+		if GAMEMODE:IsRoundEndPrevented() then
+			CheckTime = nil
+			return
+		end
+
 		gamemode.Call("EndRound", TEAM_HUMAN)
 	end
 end)

@@ -1592,14 +1592,14 @@ function GM:CalculateInfliction(victim, attacker)
 	end
 
 	local infliction = math.max(zombies / players, self.CappedInfliction)
-	if self.PreventWin and infliction >= 1 then
+	if self:IsRoundEndPrevented() and infliction >= 1 then
 		infliction = 0.999
 	end
 	self.CappedInfliction = infliction
 
 	if humans == 1 and 2 < zombies then
 		gamemode.Call("LastHuman", hum)
-	elseif not self.PreventWin and 1 <= infliction then
+	elseif not self:IsRoundEndPrevented() and 1 <= infliction then
 		infliction = 1
 
 		if wonhumans >= 1 then
@@ -2094,7 +2094,7 @@ end
 function GM:OnPlayerLose(pl) end
 
 function GM:EndRound(winner)
-	if self.PreventWin then
+	if self:IsRoundEndPrevented() then
 		return
 	end
 	if self.RoundEnded then
@@ -4934,7 +4934,7 @@ function GM:WaveStateChanged(newstate)
 				end
 			end
 		else
-			if self.PreventWin then
+			if self:IsRoundEndPrevented() then
 				SetGlobalBool("waveactive", true)
 				gamemode.Call("SetWaveEnd", -1)
 				return
