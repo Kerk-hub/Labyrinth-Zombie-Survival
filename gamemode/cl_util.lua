@@ -107,6 +107,10 @@ local function ShouldSkipAutoReload(wep)
     return class == "weapon_zs_hammer" or class == "weapon_zs_electrohammer" or wep.UseMelee1
 end
 
+local function ShouldAutoBuyOnSecondary(wep)
+    return wep.AutoBuyAmmoOnSecondary
+end
+
 local function TryForceReloadFromAttack(ply)
     local ok, wep, ammotype = CanProcessAutoAmmo(ply)
     if not ok or ShouldSkipAutoReload(wep) then return false end
@@ -170,7 +174,15 @@ hook.Add("PlayerButtonDown", "AutoBuyAmmo", function(ply, button)
     if button == KEY_R then
         TryAutoBuyAmmo(ply, true)
     elseif button == MOUSE_LEFT then
+        local wep = ply:GetActiveWeapon()
+        if IsValid(wep) and ShouldAutoBuyOnSecondary(wep) then return end
+
         if not TryForceReloadFromAttack(ply) then
+            TryAutoBuyAmmo(ply, false)
+        end
+    elseif button == MOUSE_RIGHT then
+        local wep = ply:GetActiveWeapon()
+        if IsValid(wep) and ShouldAutoBuyOnSecondary(wep) then
             TryAutoBuyAmmo(ply, false)
         end
     end
@@ -179,6 +191,17 @@ end)
 hook.Add("Think", "AutoBuyAmmoHoldAttack", function()
     local ply = LocalPlayer()
     if not IsValid(ply) then return end
+
+    local wep = ply:GetActiveWeapon()
+    if not IsValid(wep) then return end
+
+    if ShouldAutoBuyOnSecondary(wep) then
+        if ply:KeyDown(IN_ATTACK2) then
+            TryAutoBuyAmmo(ply, false)
+        end
+
+        return
+    end
 
     if ply:KeyDown(IN_ATTACK) then
         if not TryForceReloadFromAttack(ply) then
