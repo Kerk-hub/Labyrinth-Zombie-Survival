@@ -3,6 +3,35 @@ local P_Team = meta.Team
 
 local DMG_TAKE_BLEED = DMG_SLASH + DMG_CLUB + DMG_BULLET + DMG_BUCKSHOT + DMG_CRUSH
 local NON_PLAYER_DAMAGE_CAP = 50
+local HumanCorpseTraceMins = Vector(-4, -4, -4)
+local HumanCorpseTraceMaxs = Vector(4, 4, 4)
+local HumanCorpseSequenceNames = {
+	"death_01",
+	"death_02",
+	"death_03",
+	"death_04",
+	"death_05",
+	"death_06",
+	"death_07",
+	"death_08",
+	"death_09",
+	"death"
+}
+
+local function GetHumanCorpseAnchorPosition(pos)
+	local tr = util.TraceHull({
+		start = pos + Vector(0, 0, 8),
+		endpos = pos + Vector(0, 0, -48),
+		mask = MASK_SOLID_BRUSHONLY,
+		mins = HumanCorpseTraceMins,
+		maxs = HumanCorpseTraceMaxs
+	})
+
+	if tr.Hit then
+		return tr.HitPos + tr.HitNormal
+	end
+
+end
 
 local function ClampNonPlayerDamage(attacker, dmginfo)
 	if dmginfo:GetDamage() <= NON_PLAYER_DAMAGE_CAP then
@@ -436,6 +465,59 @@ function meta:SetWasHitInHead()
 	self.m_LastHitInHead = CurTime() + 0.2
 end
 
+function meta:UpdateHumanCorpseAnchor(pos, ang)
+	local anchor = GetHumanCorpseAnchorPosition(pos or self:GetPos())
+	if not anchor then
+		return
+	end
+
+	self.HumanCorpseAnchor = anchor
+	self.HumanCorpseAngles = Angle(0, (ang or self:EyeAngles()).yaw, 0)
+
+	return anchor, self.HumanCorpseAngles
+end
+
+function meta:GetHumanCorpseAnchor()
+	local anchor, ang = self:UpdateHumanCorpseAnchor()
+	if anchor then
+		return anchor, ang
+	end
+
+	return self.HumanCorpseAnchor or self:GetPos(), self.HumanCorpseAngles or Angle(0, self:EyeAngles().yaw, 0)
+end
+
+function meta:GetHumanCorpseSequence()
+	local validsequences = {}
+
+	for _, name in ipairs(HumanCorpseSequenceNames) do
+		local sequence = self:LookupSequence(name)
+		if sequence and sequence > 0 then
+			validsequences[#validsequences + 1] = sequence
+		end
+	end
+
+	if validsequences[1] then
+		return validsequences[math.random(#validsequences)]
+	end
+end
+
+function meta:CreateHumanDeathCorpse()
+	local sequence = self:GetHumanCorpseSequence()
+	if not sequence then
+		return
+	end
+
+	local pos, ang = self:GetHumanCorpseAnchor()
+	local ent = self:FakeDeath(sequence, self:GetModelScale())
+	if ent and ent:IsValid() then
+		ent:SetPos(pos)
+		ent:SetDeathAngles(ang)
+		ent:SetRemoveTime(CurTime() + 45)
+
+		return ent
+	end
+end
+
 function meta:SetPoints(points)
 	self:SetDTInt(1, points)
 end
@@ -786,6 +868,20 @@ function meta:StartFeignDeath(force)
 		end
 	end
 end
+
+hook.Add("Move", "ZSRecordHumanCorpseAnchor", function(pl, mv)
+	if not pl:Alive() or P_Team(pl) ~= TEAM_HUMAN then
+		return
+	end
+
+	local ct = CurTime()
+	if pl.NextHumanCorpseAnchorUpdate and pl.NextHumanCorpseAnchorUpdate > ct then
+		return
+	end
+
+	pl.NextHumanCorpseAnchorUpdate = ct + 0.1
+	pl:UpdateHumanCorpseAnchor(mv:GetOrigin(), pl:EyeAngles())
+end)
 
 function meta:UpdateLegDamage()
 	net.Start("zs_legdamage")

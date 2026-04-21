@@ -4219,6 +4219,8 @@ function GM:DoPlayerDeath(pl, attacker, dmginfo)
 	pl:Freeze(false)
 
 	local headshot = pl:WasHitInHead()
+	local cangib = pl:Health() <= -70 and not pl.NoGibs and not self.ZombieEscape
+	local createdhumancorpse = false
 
 	if suicide then
 		attacker = pl:GetLastAttacker() or attacker
@@ -4246,10 +4248,15 @@ function GM:DoPlayerDeath(pl, attacker, dmginfo)
 		util.Effect("headshot", effectdata, true, true)
 	end
 
+	if plteam == TEAM_HUMAN and not pl.KnockedDown and not cangib then
+		local corpse = pl:CreateHumanDeathCorpse()
+		createdhumancorpse = corpse and corpse:IsValid() or false
+	end
+
 	if not pl:CallZombieFunction5("OnKilled", attacker, inflictor, suicide, headshot, dmginfo) then
-		if pl:Health() <= -70 and not pl.NoGibs and not self.ZombieEscape then
+		if cangib then
 			pl:Gib(dmginfo)
-		elseif not pl.KnockedDown then
+		elseif not pl.KnockedDown and not createdhumancorpse then
 			pl:CreateRagdoll()
 		end
 	end
