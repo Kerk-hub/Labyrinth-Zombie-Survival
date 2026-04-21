@@ -4163,21 +4163,6 @@ function GM:ZombieKilledHuman(pl, attacker, inflictor, dmginfo, headshot, suicid
 
 	attacker:AddZSXP(self.InitialVolunteers[attacker:UniqueID()] and xp or math.floor(xp / 4))
 
-	if not pl.Gibbed and not suicide then
-		local status = pl:GiveStatus("revive_slump_human")
-		if status then
-			status:SetReviveTime(CurTime() + 4)
-			status:SetZombieInitializeTime(CurTime() + 2)
-		end
-
-		pl:SetZombieClassName(
-			self.ZombieEscape and "Super Zombie"
-				or self:IsClassicMode() and "Classic Zombie"
-				or self:IsBabyMode() and "Gore Child"
-				or "Fresh Dead"
-		)
-	end
-
 	gamemode.Call("PostZombieKilledHuman", pl, attacker, inflictor, dmginfo, headshot, suicide)
 
 	return attacker:Frags()
@@ -4241,7 +4226,7 @@ function GM:DoPlayerDeath(pl, attacker, dmginfo)
 		util.Effect("headshot", effectdata, true, true)
 	end
 
-	if plteam == TEAM_HUMAN and not pl.KnockedDown and not cangib then
+	if plteam == TEAM_HUMAN then
 		local corpse = pl:CreateHumanDeathCorpse()
 		createdhumancorpse = corpse and corpse:IsValid() or false
 	end

@@ -35,6 +35,24 @@ local function GetBloodDirection(dmginfo)
 	return Vector(0, 0, 1)
 end
 
+local function SpawnHitGib(pos, dir)
+	local ent = ents.CreateLimited("prop_playergib")
+	if not ent:IsValid() then
+		return
+	end
+
+	ent:SetPos(pos)
+	ent:SetAngles(AngleRand())
+	ent:SetGibType(math.random(3, #GAMEMODE.HumanGibs))
+	ent:Spawn()
+
+	local phys = ent:GetPhysicsObject()
+	if phys:IsValid() then
+		phys:ApplyForceCenter(dir * math.Rand(400, 900) + VectorRand() * 250 + Vector(0, 0, 200))
+		phys:AddAngleVelocity(VectorRand() * 220)
+	end
+end
+
 function ENT:Initialize()
 	self.ObjHealth = self.ObjHealth or 175
 
@@ -65,7 +83,7 @@ function ENT:Initialize()
 		fakebody:SetDeathAngles(self.CorpseAngles or self:GetAngles())
 		fakebody:SetDeathSequenceLength(1)
 		fakebody:SetDeathSequenceStart(0)
-		fakebody:SetRemoveTime(0)
+		fakebody:SetRemoveTime(-1)
 
 		self.FakeBody = fakebody
 		self:DeleteOnRemove(fakebody)
@@ -89,7 +107,11 @@ function ENT:OnTakeDamage(dmginfo)
 		bloodpos = self:WorldSpaceCenter()
 	end
 
-	util.Blood(bloodpos, math.max(1, math.ceil(dmginfo:GetDamage() / 20)), GetBloodDirection(dmginfo), 100, true)
+	GAMEMODE:DamageFloater(attacker, self, bloodpos, dmginfo:GetDamage())
+
+	local blooddir = GetBloodDirection(dmginfo)
+	util.Blood(bloodpos, math.max(1, math.ceil(dmginfo:GetDamage() / 20)), blooddir, 100, true)
+	SpawnHitGib(bloodpos, blooddir)
 
 	self.ObjHealth = self.ObjHealth - dmginfo:GetDamage()
 	if self.ObjHealth <= 0 then

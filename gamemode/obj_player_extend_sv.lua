@@ -499,13 +499,12 @@ function meta:GetHumanCorpseSequence()
 	if validsequences[1] then
 		return validsequences[math.random(#validsequences)]
 	end
+
+	return 0
 end
 
 function meta:CreateHumanDeathCorpse()
 	local sequence = self:GetHumanCorpseSequence()
-	if not sequence then
-		return
-	end
 
 	local pos, ang = self:GetHumanCorpseAnchor()
 	local ent = ents.Create("prop_humancorpse")
