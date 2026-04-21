@@ -1311,6 +1311,8 @@ function GM:Think()
 	end
 
 	local allplayers = player_GetAll()
+	local hasnonbotundead = self:HasNonBotUndeadPlayer()
+	local zombiegasses = not hasnonbotundead and ents.FindByClass("zombiegasses") or nil
 
 	for _, pl in pairs(allplayers) do
 		if pl.ShouldFlinch then
@@ -1319,6 +1321,10 @@ function GM:Think()
 		end
 
 		if P_Team(pl) == TEAM_HUMAN then
+			if not hasnonbotundead and self:VolunteerPlayerFromZombieGas(pl, zombiegasses, hasnonbotundead) then
+				break
+			end
+
 			if P_GetBarricadeGhosting(pl) then
 				P_BarricadeGhostingThink(pl)
 			end
@@ -1509,6 +1515,61 @@ function GM:CalculateZombieVolunteers()
 		self.ZombieVolunteers = volunteers
 		self:SendZombieVolunteers()
 	end
+end
+
+function GM:IsPlayerInZombieGas(pl, gasses)
+	local plpos = pl:GetPos()
+	gasses = gasses or ents.FindByClass("zombiegasses")
+
+	for _, gas in pairs(gasses) do
+		if gas:IsValid() and gas:NearestPoint(plpos):DistToSqr(plpos) <= 1 then
+			return true
+		end
+	end
+
+	return false
+end
+
+function GM:HasNonBotUndeadPlayer()
+	for _, pl in pairs(team.GetPlayers(TEAM_UNDEAD)) do
+		if IsValid(pl) and pl:IsPlayer() and not pl:IsBot() then
+			return true
+		end
+	end
+
+	return false
+end
+
+function GM:VolunteerPlayerFromZombieGas(pl, gasses, hasnonbotundead)
+	if not IsValid(pl) or not pl:IsPlayer() or pl:Team() ~= TEAM_HUMAN or not pl:Alive() then
+		return false
+	end
+
+	if hasnonbotundead == nil then
+		hasnonbotundead = self:HasNonBotUndeadPlayer()
+	end
+
+	if hasnonbotundead or not self:IsPlayerInZombieGas(pl, gasses) then
+		return false
+	end
+
+	pl:ChangeTeam(TEAM_UNDEAD)
+	pl:SetFrags(0)
+	pl:SetDeaths(0)
+
+	self.StartingZombie[pl:UniqueID()] = true
+	self.PreviouslyDied[pl:UniqueID()] = CurTime()
+	pl:UnSpectateAndSpawn()
+
+	if self.ZMainPlayer ~= pl or not pl:IsZMain() then
+		self:ResolveZMain(pl)
+	end
+
+	if not pl:IsZMain() then
+		self:SetZMain(pl)
+	end
+
+	return true
 end
 
 GM.LastCalculatedBossTime = 0
