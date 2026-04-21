@@ -311,7 +311,7 @@ function meta:GetBloodArmor()
 end
 
 function meta:AddLegDamage(damage)
-	if self.SpawnProtection then
+	if self.SpawnProtection or self:IsBossZombie() then
 		return
 	end
 
@@ -325,6 +325,10 @@ function meta:AddLegDamage(damage)
 end
 
 function meta:AddLegDamageExt(damage, attacker, inflictor, type)
+	if self:IsBossZombie() then
+		return
+	end
+
 	inflictor = inflictor or attacker
 
 	if type == SLOWTYPE_PULSE then
@@ -358,6 +362,10 @@ function meta:AddLegDamageExt(damage, attacker, inflictor, type)
 end
 
 function meta:SetLegDamage(damage)
+	if self:IsBossZombie() and damage > 0 then
+		damage = 0
+	end
+
 	self.LegDamage = CurTime() + math.min(GAMEMODE.MaxLegDamage, damage * 0.125)
 	if SERVER then
 		self:UpdateLegDamage()
@@ -365,6 +373,10 @@ function meta:SetLegDamage(damage)
 end
 
 function meta:RawSetLegDamage(time)
+	if self:IsBossZombie() and time > CurTime() then
+		time = CurTime()
+	end
+
 	self.LegDamage = math.min(CurTime() + GAMEMODE.MaxLegDamage, time)
 	if SERVER then
 		self:UpdateLegDamage()
@@ -376,10 +388,18 @@ function meta:RawCapLegDamage(time)
 end
 
 function meta:GetLegDamage()
+	if self:IsBossZombie() then
+		return 0
+	end
+
 	return math.max(0, (self.LegDamage or 0) - CurTime())
 end
 
 function meta:GetFlatLegDamage()
+	if self:IsBossZombie() then
+		return 0
+	end
+
 	return math.max(0, ((self.LegDamage or 0) - CurTime()) * 8)
 end
 
@@ -448,6 +468,11 @@ hook.Add("Initialize", "LocalizeZombieClasses", function()
 end)
 function meta:GetZombieClassTable()
 	return ZombieClasses[self:GetZombieClass()]
+end
+
+function meta:IsBossZombie()
+	local classtab = self:GetZombieClassTable()
+	return P_Team(self) == TEAM_UNDEAD and classtab and classtab.Boss or false
 end
 
 -- Called a lot, so optimized

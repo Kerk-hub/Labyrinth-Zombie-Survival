@@ -857,6 +857,10 @@ function meta:GetStatus(sType)
 end
 
 function meta:GiveStatus(sType, fDie)
+	if self:IsBossZombie() and (sType == "slow" or sType == "frost" or sType == "spawnslow") then
+		return
+	end
+
 	local resistable = table.HasValue(GAMEMODE.ResistableStatuses, sType)
 
 	if resistable and self:IsSkillActive(SKILL_HAEMOSTASIS) and self:GetBloodArmor() >= 2 then
@@ -1245,6 +1249,13 @@ function meta:SetZombieClass(cl, onlyupdate, filter)
 	local classtab = GAMEMODE.ZombieClasses[cl]
 	if classtab then
 		self.Class = cl
+		if classtab.Boss then
+			self:SetLegDamage(0)
+			self:RemoveStatus("slow", true, true)
+			self:RemoveStatus("frost", true, true)
+			self:RemoveStatus("spawnslow", true, true)
+		end
+
 		if P_Team(self) == TEAM_UNDEAD then
 			self:DoHulls(cl)
 		end
