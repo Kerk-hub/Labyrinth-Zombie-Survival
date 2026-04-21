@@ -1594,6 +1594,7 @@ function meta:CheckRedeem(instant)
 
 	if
 		not self:IsValid()
+		or self:IsBot()
 		or P_Team(self) ~= TEAM_UNDEAD
 		or toredeem <= 0
 		or self:GetBrains() < toredeem
