@@ -1918,7 +1918,6 @@ GM.StoredUndeadFrags = {}
 GM.ZMainJoinSequence = 0
 
 function GM:DebugPrintZMain(message)
-	print("[ZS Z-main] " .. tostring(message))
 end
 
 function GM:IsExactZMainBot(pl)
