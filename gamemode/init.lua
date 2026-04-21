@@ -1159,7 +1159,7 @@ local function BossZombieSort(za, zb)
 	return ascore > bscore
 end
 
-function GM:SpawnBossZombie(bossplayer, silent, bossindex, triggerboss)
+function GM:SpawnBossZombie(bossplayer, silent, bossindex, triggerboss, spawnwave)
 	if not bossplayer then
 		bossplayer = self:CalculateNextBoss()
 	end
@@ -1186,7 +1186,7 @@ function GM:SpawnBossZombie(bossplayer, silent, bossindex, triggerboss)
 		)
 	end
 
-	self.LastBossZombieSpawned = self:GetWave()
+	self.LastBossZombieSpawned = spawnwave or self:GetWave()
 
 	local curclass = bossplayer.DeathClass or bossplayer:GetZombieClass()
 	bossplayer:KillSilent()
@@ -1312,11 +1312,7 @@ function GM:Think()
 				and wave > 0
 				and not self.RoundEnded
 			then
-				if self:GetWaveStart() - 5 <= time then
-					self:SpawnBossZombie()
-				else
-					self:CalculateNextBoss()
-				end
+				self:CalculateNextBoss()
 			end
 		end
 	end
@@ -4834,6 +4830,14 @@ function GM:WaveStateChanged(newstate)
 			)
 		end
 
+		local shouldspawnboss = self.BossZombies
+			and not self.PantsMode
+			and not self:IsClassicMode()
+			and not self.ZombieEscape
+			and self.LastBossZombieSpawned ~= prevwave
+			and prevwave > 0
+			and not self.RoundEnded
+
 		net.Start("zs_wavestart")
 		net.WriteInt(self:GetWave(), 16)
 		net.WriteFloat(self:GetWaveEnd())
@@ -4848,6 +4852,10 @@ function GM:WaveStateChanged(newstate)
 			elseif not pl:Alive() and not pl.Revive then
 				pl:UnSpectateAndSpawn()
 			end
+		end
+
+		if shouldspawnboss then
+			self:SpawnBossZombie(nil, nil, nil, nil, prevwave)
 		end
 
 		for _, pl in pairs(player.GetAll()) do
