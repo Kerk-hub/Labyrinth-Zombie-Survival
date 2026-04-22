@@ -86,6 +86,39 @@ end
 local lastautobuytime = 0
 local lastforcereloadtime = 0
 
+local deployableammotypes = {
+    prop_ffemitter = "pulse",
+    prop_repairfield = "pulse",
+    prop_zapper = "pulse",
+    prop_zapper_arc = "pulse",
+    prop_gunturret = "smg1",
+    prop_gunturret_rocket = "impactmine"
+}
+
+local function ResolveDeployableUseAmmoType(ent)
+    if not IsValid(ent) then return end
+
+    if ent:GetClass() == "prop_deployablehitbox" then
+        ent = ent.GetParent and ent:GetParent() or NULL
+        if not IsValid(ent) then return end
+    end
+
+    local ammotype = ent.AmmoType or deployableammotypes[ent:GetClass()]
+    if not ammotype then return end
+
+    ammotype = string.lower(ammotype)
+    if not ammonames[ammotype] then return end
+
+    if not (ent.GetAmmo and ent.MaxAmmo and ent.GetObjectOwner) then return end
+
+    local owner = ent:GetObjectOwner()
+    if not IsValid(owner) then return end
+
+    if ent:GetAmmo() >= ent.MaxAmmo then return end
+
+    return ammotype
+end
+
 local function CanProcessAutoAmmo(ply)
     if ply ~= LocalPlayer() then return false end
     if not GAMEMODE.AutoBuyAmmo then return false end
@@ -170,9 +203,28 @@ local function TryAutoBuyAmmo(ply, reloadcheck)
     lastautobuytime = CurTime()
 end
 
+local function TryAutoBuyDeployableAmmo(ply)
+    if ply ~= LocalPlayer() then return end
+    if not GAMEMODE.AutoBuyAmmo then return end
+    if vgui.CursorVisible() then return end
+    if ply:Team() ~= TEAM_HUMAN or not ply:Alive() then return end
+    if ply:GetPoints() < 5 then return end
+    if CurTime() - lastautobuytime < 1 then return end
+
+    local tr = ply:GetEyeTrace()
+    local ammotype = tr and ResolveDeployableUseAmmoType(tr.Entity)
+    if not ammotype then return end
+    if ply:GetAmmoCount(ammotype) > 0 then return end
+
+    RunConsoleCommand("zs_pointsshopbuy", "ps_"..ammonames[ammotype])
+    lastautobuytime = CurTime()
+end
+
 hook.Add("PlayerButtonDown", "AutoBuyAmmo", function(ply, button)
     if button == KEY_R then
         TryAutoBuyAmmo(ply, true)
+    elseif button == KEY_E then
+        TryAutoBuyDeployableAmmo(ply)
     elseif button == MOUSE_LEFT then
         local wep = ply:GetActiveWeapon()
         if IsValid(wep) and ShouldAutoBuyOnSecondary(wep) then return end
