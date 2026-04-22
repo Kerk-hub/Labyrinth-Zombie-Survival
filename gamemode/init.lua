@@ -1311,8 +1311,8 @@ function GM:Think()
 	end
 
 	local allplayers = player_GetAll()
-	local hasnonbotundead = self:HasNonBotUndeadPlayer()
-	local zombiegasses = not hasnonbotundead and ents.FindByClass("zombiegasses") or nil
+	local canvolunteerviagas = self:IsZombieGasVolunteerOpen()
+	local zombiegasses = canvolunteerviagas and ents.FindByClass("zombiegasses") or nil
 
 	for _, pl in pairs(allplayers) do
 		if pl.ShouldFlinch then
@@ -1321,7 +1321,7 @@ function GM:Think()
 		end
 
 		if P_Team(pl) == TEAM_HUMAN then
-			if not hasnonbotundead and self:VolunteerPlayerFromZombieGas(pl, zombiegasses, hasnonbotundead) then
+			if canvolunteerviagas and self:VolunteerPlayerFromZombieGas(pl, zombiegasses, false) then
 				break
 			end
 
@@ -1518,12 +1518,20 @@ function GM:CalculateZombieVolunteers()
 end
 
 function GM:IsPlayerInZombieGas(pl, gasses)
-	local plpos = pl:GetPos()
+	local gaspos, radius
 	gasses = gasses or ents.FindByClass("zombiegasses")
 
 	for _, gas in pairs(gasses) do
-		if gas:IsValid() and gas:NearestPoint(plpos):DistToSqr(plpos) <= 1 then
-			return true
+		if gas:IsValid() then
+			gaspos = gas:GetPos()
+			radius = gas.GetRadius and gas:GetRadius() or 0
+			if radius <= 0 then
+				radius = 400
+			end
+
+			if pl:NearestPoint(gaspos):DistToSqr(gaspos) <= radius * radius then
+				return true
+			end
 		end
 	end
 
@@ -1540,26 +1548,44 @@ function GM:HasNonBotUndeadPlayer()
 	return false
 end
 
+function GM:IsZombieGasVolunteerOpen()
+	if not self:IsValidZMainCandidate(self.ZMainPlayer) then
+		return true
+	end
+
+	if self.ZMainPlayer:IsBot() then
+		return true
+	end
+
+	return not self:HasNonBotUndeadPlayer()
+end
+
 function GM:VolunteerPlayerFromZombieGas(pl, gasses, hasnonbotundead)
 	if not IsValid(pl) or not pl:IsPlayer() or pl:Team() ~= TEAM_HUMAN or not pl:Alive() then
 		return false
 	end
 
 	if hasnonbotundead == nil then
-		hasnonbotundead = self:HasNonBotUndeadPlayer()
+		hasnonbotundead = not self:IsZombieGasVolunteerOpen()
 	end
 
 	if hasnonbotundead or not self:IsPlayerInZombieGas(pl, gasses) then
 		return false
 	end
 
+	pl.ZSForcedZMainVolunteer = true
 	pl:ChangeTeam(TEAM_UNDEAD)
 	pl:SetFrags(0)
 	pl:SetDeaths(0)
 
 	self.StartingZombie[pl:UniqueID()] = true
 	self.PreviouslyDied[pl:UniqueID()] = CurTime()
-	pl:UnSpectateAndSpawn()
+	if pl ~= nil and IsValid(pl) and pl:IsPlayer() and pl:Alive() then
+		pl:KillSilent()
+	end
+	if self:GetWave() > 0 then
+		pl:UnSpectateAndSpawn()
+	end
 
 	if self.ZMainPlayer ~= pl or not pl:IsZMain() then
 		self:ResolveZMain(pl)
@@ -1981,27 +2007,14 @@ function GM:UpdateZMainBossPreview()
 end
 
 function GM:GetPreferredZMainCandidate()
-	local humanzombies = {}
 	local zmainbot
 
 	for _, pl in pairs(team.GetPlayers(TEAM_UNDEAD)) do
 		if self:IsValidZMainCandidate(pl) then
-			if pl:IsBot() then
-				if self:IsExactZMainBot(pl) then
-					zmainbot = pl
-				end
-			else
-				humanzombies[#humanzombies + 1] = pl
+			if pl:IsBot() and self:IsExactZMainBot(pl) then
+				zmainbot = pl
 			end
 		end
-	end
-
-	table.sort(humanzombies, function(a, b)
-		return (a.ZMainJoinSequence or math.huge) < (b.ZMainJoinSequence or math.huge)
-	end)
-
-	if humanzombies[1] then
-		return humanzombies[1]
 	end
 
 	return zmainbot
@@ -2764,6 +2777,10 @@ function GM:PlayerDisconnected(pl)
 		if not self:UpdateZMainBossPreview() then
 			self:CalculateNextBoss()
 		end
+	end
+
+	if pl:Team() == TEAM_UNDEAD then
+		self:CalculateZombieVolunteers()
 	end
 
 	gamemode.Call("CalculateInfliction")
@@ -3741,6 +3758,9 @@ function GM:PreOnPlayerChangedTeam(pl, oldteam, newteam)
 end
 
 function GM:OnPlayerChangedTeam(pl, oldteam, newteam)
+	local wasforcedzmainvolunteer = pl.ZSForcedZMainVolunteer
+	pl.ZSForcedZMainVolunteer = nil
+
 	if newteam == TEAM_UNDEAD then
 		self.ZMainJoinSequence = self.ZMainJoinSequence + 1
 		pl.ZMainJoinSequence = self.ZMainJoinSequence
@@ -3790,10 +3810,9 @@ function GM:OnPlayerChangedTeam(pl, oldteam, newteam)
 	if newteam == TEAM_UNDEAD then
 		local previouszmain = self.ZMainPlayer
 
-		if not self:IsValidZMainCandidate(self.ZMainPlayer)
-		or (self:IsExactZMainBot(self.ZMainPlayer) and not pl:IsBot()) then
+		if not self:IsValidZMainCandidate(self.ZMainPlayer) then
 			self:DebugPrintZMain("Re-evaluating Z-main because " .. pl:Name() .. " entered undead")
-			self:ResolveZMain(pl)
+			self:ResolveZMain()
 		end
 
 		if self.ZMainPlayer ~= previouszmain then
@@ -3803,6 +3822,22 @@ function GM:OnPlayerChangedTeam(pl, oldteam, newteam)
 		else
 			self:CalculateNextBoss()
 		end
+
+		if wasforcedzmainvolunteer and not pl:IsBot() then
+			self:DebugPrintZMain("Forcing Z-main to gas volunteer " .. pl:Name())
+			self:ResolveZMain(pl)
+			if not pl:IsZMain() then
+				self:SetZMain(pl)
+			end
+
+			if self.ZMainPlayer ~= previouszmain then
+				if not self:UpdateZMainBossPreview() then
+					self:CalculateNextBoss()
+				end
+			end
+		end
+
+		self:CalculateZombieVolunteers()
 	elseif oldteam == TEAM_UNDEAD then
 		local waszmain = self.ZMainPlayer == pl
 
@@ -3819,6 +3854,8 @@ function GM:OnPlayerChangedTeam(pl, oldteam, newteam)
 		else
 			self:CalculateNextBoss()
 		end
+
+		self:CalculateZombieVolunteers()
 	end
 end
 
