@@ -114,8 +114,8 @@ GM.BaseDeploySpeed = 1 -- Put this back to 1 to increase the value of it
 GM.ExtraHealthPerExtraNail = 75
 GM.MaxNails = 4
 
--- Moved from options to globals because the game is now balanced around it being static. The gamemode will BREAK if this is not 6!!
-GM.NumberOfWaves = 6
+-- Moved from options to globals because the game is balanced around a static wave count.
+GM.NumberOfWaves = 5
 
 GM.PulsePointsMultiplier = 1.25
 

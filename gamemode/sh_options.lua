@@ -1112,7 +1112,7 @@ GM.NoSuicideWave = 1
 GM.WaveZeroLength = 250
 
 -- Time humans have between waves to do stuff without NEW zombies spawning. Any dead zombies will be in spectator (crow) view and any living ones will still be living.
-GM.WaveIntermissionLength = 90
+GM.WaveIntermissionLength = 120
 
 -- Time in seconds between end round and next map.
 GM.EndGameTime = 45
@@ -1150,7 +1150,7 @@ GM.LockItemTiers = false
 GM.PointSavingLimit = 0
 
 -- For Classic Mode
-GM.WaveIntermissionLengthClassic = 20
+GM.WaveIntermissionLengthClassic = 120
 GM.WaveOneLengthClassic = 120
 GM.TimeAddedPerWaveClassic = 10
 
