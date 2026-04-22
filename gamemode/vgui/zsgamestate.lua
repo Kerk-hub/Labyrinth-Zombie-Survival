@@ -229,11 +229,9 @@ function PANEL:Text1Paint()
 		elseif GAMEMODE.ZombieEscape then
 			text = translate.Get("zombie_escape")
 
-			-- I'm gonna leave this as 2 for now, since it is 2 on NoX.
-			--if GAMEMODE.RoundLimit > 0 then
-			round = GAMEMODE.CurrentRound
-			text = text .. " - " .. translate.Format("round_x_of_y", round, 2)
-			--end
+			local round = GAMEMODE.CurrentRound
+			local roundlimit = GAMEMODE.RoundLimit > 0 and GAMEMODE.RoundLimit or round
+			text = text .. " - " .. translate.Format("round_x_of_y", round, roundlimit)
 		else
 			local maxwaves = GAMEMODE:GetNumberOfWaves()
 			if maxwaves ~= -1 then

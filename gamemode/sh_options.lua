@@ -1159,12 +1159,12 @@ end)
 
 GM.RoundLimit = CreateConVar(
 	"zs_roundlimit",
-	"3",
+	"1",
 	FCVAR_ARCHIVE + FCVAR_NOTIFY,
-	"How many times the game can be played on the same map. -1 means infinite or only use time limit. 0 means once."
+	"How many times the game can be played on the same map. -1 means infinite or only use time limit. 1 means once. 0 disables round-limit based rotation."
 ):GetInt()
 cvars.AddChangeCallback("zs_roundlimit", function(cvar, oldvalue, newvalue)
-	GAMEMODE.RoundLimit = tonumber(newvalue) or 3
+	GAMEMODE.RoundLimit = tonumber(newvalue) or 1
 end)
 
 -- Static values that don't need convars...
