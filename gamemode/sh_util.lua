@@ -118,7 +118,7 @@ end
 
 local BarricadeBeaconTrace = {mask = MASK_SOLID_BRUSHONLY}
 function GM:GetBarricadeBeaconCoverageDistance()
-	return 360
+	return 700
 end
 
 function GM:IsBarricadeBeaconTraceClear(posa, posb, filter)

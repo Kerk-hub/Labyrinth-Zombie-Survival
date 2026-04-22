@@ -162,6 +162,7 @@ LANGUAGE.nest_built_by_x = "A Flesh Creeper nest has been built by %s and is now
 LANGUAGE.nest_destroyed = "A Flesh Creeper nest has been destroyed."
 LANGUAGE.wait_x_seconds_before_making_a_new_nest = "You must wait %d more seconds before creating a new nest."
 LANGUAGE.too_close_to_a_human = "Too close to a human!"
+LANGUAGE.too_close_to_a_barricade_beacon = "Too close to a barricade beacon!"
 LANGUAGE.too_close_to_a_spawn = "Too close to a zombie spawn!"
 LANGUAGE.too_close_to_uncorrupt = "Too close to an uncorrupted sigil!"
 LANGUAGE.x_has_built_this_nest_and_is_still_around =
