@@ -1574,6 +1574,7 @@ function GM:VolunteerPlayerFromZombieGas(pl, gasses, hasnonbotundead)
 	end
 
 	pl.ZSForcedZMainVolunteer = true
+	pl:SetNWBool("zs_zmain_volunteer", true)
 	pl:ChangeTeam(TEAM_UNDEAD)
 	pl:SetFrags(0)
 	pl:SetDeaths(0)
@@ -2055,6 +2056,7 @@ function GM:RestartLua()
 	for _, pl in pairs(player.GetAll()) do
 		pl.AmmoPickups = nil
 		pl.WeaponPickups = nil
+		pl:SetNWBool("zs_zmain_volunteer", false)
 	end
 
 	self.OverrideEndSlomo = nil
@@ -2623,6 +2625,7 @@ function GM:PlayerInitialSpawnRound(pl)
 
 	pl:SetCanWalk(false)
 	pl:SetCanZoom(false)
+	pl:SetNWBool("zs_zmain_volunteer", false)
 
 	-- This is the culprit for shitty player to player collisions when standing on an enemy's head. No idea why.
 	pl:SetNoCollideWithTeammates(false) --pl:SetNoCollideWithTeammates(true)
@@ -4593,6 +4596,9 @@ function GM:DoPlayerDeath(pl, attacker, dmginfo)
 		pl:CallZombieFunction5("PostOnKilled", attacker, inflictor, suicide, headshot, dmginfo)
 	elseif plteam == TEAM_HUMAN then
 		pl.NextSpawnTime = ct + 4
+		if not pl:GetNWBool("zs_zmain_volunteer", false) then
+			pl.StartSpectating = ct + 7
+		end
 
 		pl:PlayDeathSound()
 

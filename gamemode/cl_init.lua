@@ -315,6 +315,12 @@ function GM:CenterNotify(...)
 	end
 end
 
+function GM:ScreenCenterNotify(...)
+	if self.ScreenCenterNotificationHUD and self.ScreenCenterNotificationHUD:IsValid() then
+		return self.ScreenCenterNotificationHUD:AddNotification(...)
+	end
+end
+
 function GM:TopNotify(...)
 	if self.TopNotificationHUD and self.TopNotificationHUD:IsValid() then
 		return self.TopNotificationHUD:AddNotification(...)
@@ -2383,6 +2389,16 @@ function GM:CreateVGUI()
 	end
 	self.CenterNotificationHUD:InvalidateLayout()
 	self.CenterNotificationHUD:ParentToHUD()
+
+	self.ScreenCenterNotificationHUD = vgui.Create("DEXNotificationsList")
+	self.ScreenCenterNotificationHUD:SetAlign(CENTER)
+	self.ScreenCenterNotificationHUD:SetMessageHeight(36)
+	self.ScreenCenterNotificationHUD.PerformLayout = function(pan)
+		pan:SetSize(ScrW() * 0.7, ScrH() * 0.2)
+		pan:Center()
+	end
+	self.ScreenCenterNotificationHUD:InvalidateLayout()
+	self.ScreenCenterNotificationHUD:ParentToHUD()
 end
 
 function GM:CreateLateVGUI()
@@ -3138,10 +3154,14 @@ end
 
 function GM:LocalPlayerDied(attackername)
 	LASTDEATH = RealTime()
+	local showredeemhint = not MySelf:GetNWBool("zs_zmain_volunteer", false)
 
 	surface_PlaySound(self.DeathSound)
 	if attackername then
 		self:CenterNotify(COLOR_RED, { font = "ZSHUDFont" }, translate.Get("you_have_died"))
+		if showredeemhint then
+			self:ScreenCenterNotify(COLOR_RED, { font = "ZSHUDFont" }, translate.Get("destroy_bodies_collect_brains_redeem"))
+		end
 		self:CenterNotify(
 			COLOR_RED,
 			translate.Format(
@@ -3151,6 +3171,9 @@ function GM:LocalPlayerDied(attackername)
 		)
 	else
 		self:CenterNotify(COLOR_RED, { font = "ZSHUDFont" }, translate.Get("you_have_died"))
+		if showredeemhint then
+			self:ScreenCenterNotify(COLOR_RED, { font = "ZSHUDFont" }, translate.Get("destroy_bodies_collect_brains_redeem"))
+		end
 	end
 end
 
