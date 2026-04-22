@@ -62,6 +62,61 @@ GM.ItemSubCategories = {
 	[TRINKETS_SPECIAL] = "Special",
 }
 
+GM.PurchasableWeaponSlots = GM.PurchasableWeaponSlots or {}
+
+local function GetPurchasableWeaponSlot(category, swep)
+	if not swep or swep == "" then
+		return nil
+	end
+
+	if not string.StartWith(swep, "weapon_") then
+		return nil
+	end
+
+	if swep == "weapon_zs_wrench" or swep == "weapon_zs_hammer" then
+		return 1
+	end
+
+	if swep == "weapon_zs_strengthshot" then
+		return 3
+	end
+
+	if swep == "weapon_zs_antidoteshot" then
+		return 4
+	end
+
+	if swep == "weapon_zs_medicalkit" or swep == "weapon_zs_medicgun" or swep == "weapon_zs_medicrifle" or swep == "weapon_zs_healingray" then
+		return 3
+	end
+
+	if category == ITEMS_GUNS then
+		return 2
+	end
+
+	if category == ITEMS_MELEE then
+		return 1
+	end
+
+	if category == ITEMS_DEPLOYABLES then
+		return 5
+	end
+
+	if category == ITEMS_OTHER then
+		return 4
+	end
+
+	return nil
+end
+
+function GM:ApplyPurchasableWeaponSlots()
+	for swep, slot in pairs(self.PurchasableWeaponSlots) do
+		local weptab = weapons.GetStored(swep)
+		if weptab then
+			weptab.Slot = slot
+		end
+	end
+end
+
 --[[
 Humans select what weapons (or other things) they want to start with and can even save favorites. Each object has a number of 'Worth' points.
 Signature is a unique signature to give in case the item is renamed or reordered. Don't use a number or a string number!
@@ -84,6 +139,11 @@ function GM:AddItem(signature, category, price, swep, name, desc, model, callbac
 	}
 
 	tab.Worth = tab.Price -- compat
+	tab.WeaponSlot = GetPurchasableWeaponSlot(category, swep)
+
+	if tab.WeaponSlot then
+		self.PurchasableWeaponSlots[swep] = tab.WeaponSlot
+	end
 
 	self.Items[#self.Items + 1] = tab
 	self.Items[signature] = tab
@@ -839,6 +899,14 @@ item.SkillRequirement = SKILL_U_MEDICCLOUD
 item = GM:ShopAdd("nanitecloud", ITEMS_OTHER, 40, "weapon_zs_nanitecloudbomb")
 item.SkillRequirement = SKILL_U_NANITECLOUD
 ]]
+
+GM:ApplyPurchasableWeaponSlots()
+
+if CLIENT then
+	hook.Add("InitPostEntity", "ZSApplyPurchasableWeaponSlots", function()
+		GAMEMODE:ApplyPurchasableWeaponSlots()
+	end)
+end
 
 -- These are the honorable mentions that come at the end of the round.
 
