@@ -2757,7 +2757,7 @@ function GM:PlayerDisconnected(pl)
 	self.PreviouslyDied[uid] = CurTime()
 
 	if pl:Team() == TEAM_HUMAN then
-		pl:DropAll()
+		self:StoreRedeemInventorySnapshot(pl)
 	elseif pl:Team() == TEAM_UNDEAD then
 		self.StoredUndeadFrags[uid] = pl:Frags()
 	end
@@ -4606,7 +4606,7 @@ function GM:DoPlayerDeath(pl, attacker, dmginfo)
 			gamemode.Call("ZombieKilledHuman", pl, attacker, inflictor, dmginfo, headshot, suicide)
 		end
 
-		pl:DropAll()
+		self:StoreRedeemInventorySnapshot(pl)
 		timer.Simple(0, function()
 			DelayedChangeToZombie(pl)
 		end) -- We don't want people shooting barrels near teammates.
@@ -4993,15 +4993,17 @@ function GM:PlayerSpawn(pl)
 			if self.StartingLoadout then
 				self:GiveStartingLoadout(pl)
 			elseif pl.m_PreRedeem then
-				if self.RedeemLoadout then
-					for _, class in pairs(self.RedeemLoadout) do
-						pl:Give(class)
+				if not self:RestoreRedeemInventorySnapshot(pl) then
+					if self.RedeemLoadout then
+						for _, class in pairs(self.RedeemLoadout) do
+							pl:Give(class)
+						end
+					else
+						pl:Give("weapon_zs_redeemers")
+						pl:Give("weapon_zs_swissarmyknife")
+						pl:Give("weapon_zs_hammer")
+						pl:Give("weapon_zs_medicalkit")
 					end
-				else
-					pl:Give("weapon_zs_redeemers")
-					pl:Give("weapon_zs_swissarmyknife")
-					pl:Give("weapon_zs_hammer")
-					pl:Give("weapon_zs_medicalkit")
 				end
 			end
 		end

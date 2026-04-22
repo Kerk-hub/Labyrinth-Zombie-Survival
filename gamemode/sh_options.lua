@@ -311,7 +311,7 @@ item.SkillRequirement = SKILL_U_STRENGTHSHOT
 item = GM:WorthAdd("antidoteshot", ITEMS_TOOLS, 20, "weapon_zs_antidoteshot")
 item.SkillRequirement = SKILL_U_ANTITODESHOT
 -- GM:WorthAdd("arscrate", ITEMS_DEPLOYABLES, 50, "weapon_zs_arsenalcrate").Countables = "prop_arsenalcrate" --
-GM:WorthAdd("resupplybox", ITEMS_DEPLOYABLES, 20, "weapon_zs_resupplybox").Countables = "prop_resupplybox"
+-- GM:WorthAdd("resupplybox", ITEMS_DEPLOYABLES, 20, "weapon_zs_resupplybox").Countables = "prop_resupplybox" -- Disabled: no longer purchasable.
 -- GM:WorthAdd("remantler", ITEMS_DEPLOYABLES, 20, "weapon_zs_remantler").Countables = "prop_remantler"
 item = GM:WorthAdd("infturret", ITEMS_DEPLOYABLES, 30, "weapon_zs_gunturret", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_gunturret")
@@ -656,7 +656,7 @@ GM:ShopAdd("crphmr", ITEMS_TOOLS, 25, "weapon_zs_hammer", nil, nil, nil, functio
 end)
 GM:ShopAdd("wrench", ITEMS_TOOLS, 20, "weapon_zs_wrench").NoClassicMode = true
 --GM:ShopAdd("arsenalcrate", ITEMS_DEPLOYABLES, 40, "weapon_zs_arsenalcrate").Countables = "prop_arsenalcrate" --
-GM:ShopAdd("resupplybox", ITEMS_DEPLOYABLES, 40, "weapon_zs_resupplybox").Countables = "prop_resupplybox"
+--GM:ShopAdd("resupplybox", ITEMS_DEPLOYABLES, 40, "weapon_zs_resupplybox").Countables = "prop_resupplybox" -- Disabled: no longer purchasable.
 --GM:ShopAdd("remantler", ITEMS_DEPLOYABLES, 40, "weapon_zs_remantler").Countables = "prop_remantler"
 item = GM:ShopAdd("msgbeacon", ITEMS_DEPLOYABLES, 0, "weapon_zs_messagebeacon", nil, nil, nil, function(pl)
 	return GiveBarricadeBeacon(pl)

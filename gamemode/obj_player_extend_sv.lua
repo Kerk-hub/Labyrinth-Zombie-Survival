@@ -1032,6 +1032,129 @@ function meta:DropAll()
 	self:DropAllInventoryItems()
 end
 
+local function CopyInventoryCounts(items)
+	local copied = {}
+
+	for item, amount in pairs(items or {}) do
+		amount = math.floor(tonumber(amount) or 0)
+		if amount > 0 then
+			copied[item] = amount
+		end
+	end
+
+	return copied
+end
+
+function meta:BuildRedeemInventorySnapshot()
+	local snapshot = {
+		weapons = {},
+		ammo = {},
+		inventory = CopyInventoryCounts(self:GetInventoryItems()),
+		activeweapon = nil
+	}
+
+	local activewep = self:GetActiveWeapon()
+	for _, wep in pairs(self:GetWeapons()) do
+		if wep:IsValid() then
+			local class = wep:GetClass()
+			if class and class ~= "" and class ~= "weapon_zs_fists" then
+				table.insert(snapshot.weapons, {
+					class = class,
+					clip1 = wep:Clip1(),
+					clip2 = wep:Clip2()
+				})
+
+				if wep == activewep then
+					snapshot.activeweapon = class
+				end
+			end
+		end
+	end
+
+	for ammotype in pairs(GAMEMODE.AmmoCache) do
+		local count = self:GetAmmoCount(ammotype)
+		if count > 0 then
+			snapshot.ammo[ammotype] = count
+		end
+	end
+
+	return snapshot
+end
+
+function GM:StoreRedeemInventorySnapshot(pl)
+	if not IsValid(pl) then
+		return
+	end
+
+	self.StoredRedeemInventory = self.StoredRedeemInventory or {}
+	self.StoredRedeemInventory[pl:UniqueID()] = pl:BuildRedeemInventorySnapshot()
+end
+
+function GM:GetRedeemInventorySnapshot(pl)
+	local uid = isstring(pl) and pl or IsValid(pl) and pl:UniqueID() or nil
+	if not uid then
+		return nil
+	end
+
+	local stored = self.StoredRedeemInventory
+	return stored and stored[uid] or nil
+end
+
+function GM:RestoreRedeemInventorySnapshot(pl)
+	if not IsValid(pl) then
+		return false
+	end
+
+	local snapshot = self:GetRedeemInventorySnapshot(pl)
+	if not snapshot then
+		return false
+	end
+
+	for item, amount in pairs(snapshot.inventory or {}) do
+		if self:IsInventoryItem(item) then
+			for i = 1, amount do
+				pl:AddInventoryItem(item)
+			end
+		end
+	end
+
+	for _, wepdata in ipairs(snapshot.weapons or {}) do
+		local class = wepdata.class
+		if class and class ~= "" then
+			pl:Give(class)
+			local wep = pl:GetWeapon(class)
+			if IsValid(wep) then
+				if wepdata.clip1 and wepdata.clip1 >= 0 then
+					wep:SetClip1(wepdata.clip1)
+				end
+
+				if wepdata.clip2 and wepdata.clip2 >= 0 then
+					wep:SetClip2(wepdata.clip2)
+				end
+			end
+		end
+	end
+
+	for ammotype, amount in pairs(snapshot.ammo or {}) do
+		amount = math.max(0, math.floor(tonumber(amount) or 0))
+		local current = pl:GetAmmoCount(ammotype)
+		local delta = amount - current
+		if delta > 0 then
+			pl:GiveAmmo(delta, ammotype, true)
+		elseif delta < 0 then
+			pl:RemoveAmmo(-delta, ammotype)
+		end
+	end
+
+	if snapshot.activeweapon and pl:HasWeapon(snapshot.activeweapon) then
+		pl:SelectWeapon(snapshot.activeweapon)
+	end
+
+	pl:UpdateAltSelectedWeapon()
+
+	return true
+end
+
 local OldPlayerCreateRagdoll = meta.CreateRagdoll
 
 local function CreateRagdoll(pl)
