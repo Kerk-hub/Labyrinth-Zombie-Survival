@@ -96,6 +96,7 @@ local collectgarbage = collectgarbage
 local render = render
 local surface = surface
 local draw = draw
+local draw_GetFontHeight = draw.GetFontHeight
 local cam = cam
 local player = player
 local ents = ents
@@ -138,6 +139,8 @@ local TEAM_HUMAN = TEAM_HUMAN
 local TEAM_UNDEAD = TEAM_UNDEAD
 local IN_ZOOM = IN_ZOOM
 local translate = translate
+local M_Player = FindMetaTable("Player")
+local P_Team = M_Player.Team
 
 local function HasPhasePropBind()
 	local bind = input.LookupBinding("+zoom")
@@ -169,6 +172,18 @@ local function GetContextMenuBind()
 	end
 
 	return "C"
+end
+
+local function ShouldShowWorthPrompt()
+	if WorthArsenalPromptConsumed or not MySelf:IsValid() or P_Team(MySelf) ~= TEAM_HUMAN or not MySelf:Alive() then
+		return false
+	end
+
+	return GAMEMODE:GetWave() <= 0 and GAMEMODE.StartingWorth > 0 and not GAMEMODE.StartingLoadout and not GAMEMODE.ZombieEscape
+end
+
+local function ShouldShowArsenalPrompt()
+	return not WorthArsenalPromptConsumed and gamemode.Call("PlayerCanPurchase", MySelf)
 end
 
 local function ShouldShowPhasePropPrompt()
@@ -264,12 +279,8 @@ local render_GetFogMode = render.GetFogMode
 local draw_SimpleText = draw.SimpleText
 local draw_SimpleTextBlurry = draw.SimpleTextBlurry
 local draw_SimpleTextBlur = draw.SimpleTextBlur
-local draw_GetFontHeight = draw.GetFontHeight
 
 local MedicalAuraDistance = 800 ^ 2
-
-local M_Player = FindMetaTable("Player")
-local P_Team = M_Player.Team
 
 GM.LifeStatsBrainsEaten = 0
 GM.LifeStatsHumanDamage = 0
@@ -1197,7 +1208,16 @@ function GM:HumanHUD(screenscale)
 		hinty = hinty + draw_GetFontHeight("ZSHUDFontSmall")
 	end
 
-	if gamemode.Call("PlayerCanPurchase", MySelf) and not WorthArsenalPromptConsumed then
+	if ShouldShowWorthPrompt() then
+		draw_SimpleTextBlurry(
+			translate.Format("press_f2_for_the_worth_menu", GetContextMenuBind()),
+			"ZSHUDFontSmall",
+			w * 0.5,
+			hinty,
+			COLOR_GRAY,
+			TEXT_ALIGN_CENTER
+		)
+	elseif ShouldShowArsenalPrompt() then
 		draw_SimpleTextBlurry(
 			translate.Format("press_f2_for_the_points_shop", GetContextMenuBind()),
 			"ZSHUDFontSmall",

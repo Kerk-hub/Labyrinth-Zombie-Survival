@@ -81,6 +81,7 @@ LANGUAGE.wave_ends_in_x								= "Волна заканчивается чере
 LANGUAGE.wave_x_of_y								= "Волна %d из %d"
 LANGUAGE.zombie_invasion_in_x						= "Зараженные наступают через %s"
 LANGUAGE.intermission								= "Пауза"
+LANGUAGE.press_f2_for_the_worth_menu				= "Нажмите F2 чтобы открыть Worth Menu!"
 LANGUAGE.press_f2_for_the_points_shop				= "Нажмите F2 чтобы открыть Points Shop!"
 LANGUAGE.breath										= "Дыхание"
 LANGUAGE.zombie_volunteers							= "Зараженными станут"

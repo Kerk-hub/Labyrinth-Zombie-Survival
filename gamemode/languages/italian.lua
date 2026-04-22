@@ -82,6 +82,7 @@ translate.AddLanguage("it", "Italian")
     LANGUAGE.wave_x_of_y                                                    = "Ondata %d di %d"
     LANGUAGE.zombie_invasion_in_x                                           = "Invasione zombie tra %s"
     LANGUAGE.intermission                                                   = "Intervallo"
+    LANGUAGE.press_f2_for_the_worth_menu                                    = "Premi F2 per visualizzare il Worth Menu!"
     LANGUAGE.press_f2_for_the_points_shop                                   = "Premi F2 per visualizzare lo Points Shop!"
     LANGUAGE.breath                                                 = "Respiro"
     LANGUAGE.zombie_volunteers                                              = "Zombie volontari"

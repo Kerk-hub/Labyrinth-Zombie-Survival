@@ -81,6 +81,7 @@ LANGUAGE.wave_ends_in_x                                                         
 LANGUAGE.wave_x_of_y                                                            = "Vague %d sur %d"
 LANGUAGE.zombie_invasion_in_x                                           = "Début de l'invasion dans %s"
 LANGUAGE.intermission                                                           = "Intermission"
+LANGUAGE.press_f2_for_the_worth_menu                          = "Appuyez sur F2 pour ouvrir le menu Worth!"
 LANGUAGE.press_f2_for_the_points_shop                           = "Appuyez sur F2 pour ouvrir la Boutique!"
 LANGUAGE.breath                                                                         = "Respiration"
 LANGUAGE.zombie_volunteers                                                      = "Volontaires pour être zombie"
