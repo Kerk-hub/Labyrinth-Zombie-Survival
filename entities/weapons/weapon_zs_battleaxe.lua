@@ -19,6 +19,7 @@ SWEP.Primary.Delay = 0.2
 SWEP.Primary.ClipSize = 12
 SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "pistol"
+SWEP.ReloadSpeed = 1.0
 GAMEMODE:SetupDefaultClip(SWEP.Primary)				-- setup starting reserve ammo
 
 -- client side view model settings
