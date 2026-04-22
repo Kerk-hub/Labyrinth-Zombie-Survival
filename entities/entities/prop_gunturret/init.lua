@@ -21,6 +21,8 @@ function ENT:Initialize()
 	self:SetModelScale(self.ModelScale or 1, 0)
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetCollisionGroup(COLLISION_GROUP_WORLD)
+	self:SetSolid(SOLID_BBOX)
+	self:SetCollisionBounds(Vector(-22, -22, -4), Vector(22, 22, 64))
 	self:SetUseType(SIMPLE_USE)
 
 	local phys = self:GetPhysicsObject()
@@ -203,6 +205,10 @@ end
 
 function ENT:Use(activator, caller)
 	if self.Removing or not activator:IsPlayer() or self:GetMaterial() ~= "" then return end
+
+	-- Debounce: KeyPress scan + engine leg-trace can both fire in the same frame.
+	if self.LastUseFrame == FrameNumber() then return end
+	self.LastUseFrame = FrameNumber()
 
 	if activator:Team() == TEAM_HUMAN then
 		if self:GetObjectOwner():IsValid() then

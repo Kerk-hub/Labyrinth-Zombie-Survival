@@ -92,13 +92,15 @@ local deployableammotypes = {
     prop_zapper = "pulse",
     prop_zapper_arc = "pulse",
     prop_gunturret = "smg1",
+    prop_gunturret_assault = "ar2",
+    prop_gunturret_buckshot = "buckshot",
     prop_gunturret_rocket = "impactmine"
 }
 
 local function ResolveDeployableUseAmmoType(ent)
     if not IsValid(ent) then return end
 
-    if ent:GetClass() == "prop_deployablehitbox" then
+    if ent:GetClass() == "prop_deployablehitbox" or ent.Base == "prop_deployablehitbox" then
         ent = ent.GetParent and ent:GetParent() or NULL
         if not IsValid(ent) then return end
     end
@@ -117,6 +119,37 @@ local function ResolveDeployableUseAmmoType(ent)
     if ent:GetAmmo() >= ent.MaxAmmo then return end
 
     return ammotype
+end
+
+local turretautobuyclasses = {
+    "prop_gunturret",
+    "prop_gunturret_assault",
+    "prop_gunturret_buckshot",
+    "prop_gunturret_rocket"
+}
+
+local function FindBestAimTurret(ply)
+    local shootpos = ply:GetShootPos()
+    local aimvec = ply:GetAimVector()
+    local best, bestPerp = nil, 36
+
+    for _, classname in ipairs(turretautobuyclasses) do
+        for _, turret in pairs(ents.FindByClass(classname)) do
+            if turret:IsValid() then
+                local toturret = turret:WorldSpaceCenter() - shootpos
+                local along = toturret:Dot(aimvec)
+                if along > 0 and along < 150 then
+                    local perp = (toturret - aimvec * along):Length()
+                    if perp < bestPerp then
+                        bestPerp = perp
+                        best = turret
+                    end
+                end
+            end
+        end
+    end
+
+    return best
 end
 
 local function CanProcessAutoAmmo(ply)
@@ -213,6 +246,12 @@ local function TryAutoBuyDeployableAmmo(ply)
 
     local tr = ply:GetEyeTrace()
     local ammotype = tr and ResolveDeployableUseAmmoType(tr.Entity)
+    if not ammotype then
+        local turret = FindBestAimTurret(ply)
+        if turret then
+            ammotype = ResolveDeployableUseAmmoType(turret)
+        end
+    end
     if not ammotype then return end
     if ply:GetAmmoCount(ammotype) > 0 then return end
 

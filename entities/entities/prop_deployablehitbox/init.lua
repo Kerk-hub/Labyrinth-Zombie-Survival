@@ -5,6 +5,10 @@ function ENT:Initialize()
 	self:SetNoDraw(true)
 
 	self:PhysicsInitBox(self.BoxMin, self.BoxMax)
+	self:SetSolid(SOLID_BBOX)
+	self:SetMoveType(MOVETYPE_NONE)
+	self:SetCollisionBounds(self.BoxMin, self.BoxMax)
+	self:SetUseType(SIMPLE_USE)
 
 	self:SetCustomCollisionCheck(true)
 	self:CollisionRulesChanged()
@@ -12,6 +16,13 @@ function ENT:Initialize()
 	local phys = self:GetPhysicsObject()
 	if phys:IsValid() then
 		phys:EnableMotion(false)
+	end
+end
+
+function ENT:Use(activator, caller, usetype, value)
+	local parent = self:GetParent()
+	if parent and parent:IsValid() and parent.Use then
+		parent:Use(activator, caller, usetype, value)
 	end
 end
 

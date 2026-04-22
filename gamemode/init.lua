@@ -4134,6 +4134,36 @@ function GM:KeyPress(pl, key)
 				pl.status_human_holding:RemoveNextFrame()
 			else
 				self:TryHumanPickup(pl, pl:TraceLine(64).Entity)
+
+				-- Turret VPhysics mesh only covers the 3 legs; bypass with an aim-ray scan.
+				-- Check perpendicular distance from the aim ray to the turret centre so
+				-- aiming at the wide body dome registers correctly, not just the top.
+				local shootpos = pl:GetShootPos()
+				local aimvec = pl:GetAimVector()
+				local best, bestPerp = nil, 36
+				for _, classname in ipairs({
+					"prop_gunturret",
+					"prop_gunturret_assault",
+					"prop_gunturret_buckshot",
+					"prop_gunturret_rocket"
+				}) do
+					for _, turret in pairs(ents.FindByClass(classname)) do
+						if turret:IsValid() then
+							local toturret = turret:WorldSpaceCenter() - shootpos
+							local along = toturret:Dot(aimvec)
+							if along > 0 and along < 150 then
+								local perp = (toturret - aimvec * along):Length()
+								if perp < bestPerp then
+									bestPerp = perp
+									best = turret
+								end
+							end
+						end
+					end
+				end
+				if best then
+					best:Use(pl, pl)
+				end
 			end
 		end
 	elseif key == IN_SPEED then
