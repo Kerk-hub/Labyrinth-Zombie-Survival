@@ -2,7 +2,9 @@ function InitialWorthMenu()
 	timer.Create("WaitUntilSkillsLoaded", 0, 0, function()
 		if GAMEMODE.ReceivedInitialSkills then
 			timer.Remove("WaitUntilSkillsLoaded")
-			MakepWorth()
+			if not (pWorth and pWorth:IsValid()) then
+				MakepWorth()
+			end
 		end
 	end)
 end
@@ -217,7 +219,10 @@ function GM:LayoutWorthAndRemantler()
 end
 
 function MakepWorth()
+	timer.Remove("WaitUntilSkillsLoaded")
+
 	if pWorth and pWorth:IsValid() then
+		pWorth.SuppressLinkedRemantlerClose = true
 		pWorth:Remove()
 		pWorth = nil
 	end
@@ -239,10 +244,15 @@ function MakepWorth()
 	frame.Paint = function(self, w, h)
 		draw.RoundedBox(8, 0, 0, w, h, Color(40, 60, 90, 245))
 	end
-	frame.OnRemove = function()
+	frame.OnRemove = function(self)
+		if self.SuppressLinkedRemantlerClose then
+			return
+		end
+
 		local remantler = GAMEMODE.RemantlerInterface
 		if remantler and remantler:IsValid() and remantler.LinkedToWorth then
-			GAMEMODE:CloseRemantler()
+			remantler:Close()
+			GAMEMODE.RemantlerInterface = nil
 		end
 	end
 

@@ -26,7 +26,8 @@ local function DismantleClick()
 	"Dismantle", function()
 		RunConsoleCommand("zs_dismantle", SelectedInv())
 
-		GAMEMODE:CloseRemantler()
+		GAMEMODE.RemantlerInterface:Close()
+		GAMEMODE.RemantlerInterface = nil
 	end,
 	"Cancel", function()
 	end)
@@ -506,6 +507,21 @@ function GM:OpenRemantlerMenu(remantler, dockedtoarsenal, dockedtoworth)
 	local linkedworth = dockedtoworth or (pWorth and pWorth:IsValid() and pWorth:IsVisible())
 
 	if self.RemantlerInterface and self.RemantlerInterface:IsValid() then
+		if self.RemantlerInterface.m_WepClass == mytarget then
+			self.RemantlerInterface.LinkedToArsenal = linked
+			self.RemantlerInterface.LinkedToWorth = linkedworth
+			self.RemantlerInterface:SetVisible(true)
+			if linked and self.LayoutArsenalAndRemantler then
+				self:LayoutArsenalAndRemantler()
+			elseif linkedworth and self.LayoutWorthAndRemantler then
+				self:LayoutWorthAndRemantler()
+			else
+				self.RemantlerInterface:Center()
+			end
+			self.RemantlerInterface:CenterMouse()
+			return
+		end
+
 		self.RemantlerInterface:Remove()
 		self.RemantlerInterface = nil
 	end
@@ -517,19 +533,13 @@ function GM:OpenRemantlerMenu(remantler, dockedtoarsenal, dockedtoworth)
 	local frame = vgui.Create("DFrame")
 	frame:SetSize(wid, hei)
 	frame:Center()
-	frame:SetDeleteOnClose(true)
+	frame:SetDeleteOnClose(false)
 	frame:SetTitle(" ")
 	frame:SetDraggable(false)
 	if frame.btnClose and frame.btnClose:IsValid() then frame.btnClose:SetVisible(false) end
 	if frame.btnMinim and frame.btnMinim:IsValid() then frame.btnMinim:SetVisible(false) end
 	if frame.btnMaxim and frame.btnMaxim:IsValid() then frame.btnMaxim:SetVisible(false) end
 	frame.CenterMouse = RemantlerCenterMouse
-	frame.OnRemove = function()
-		if GAMEMODE.RemantlerInterface == frame then
-			GAMEMODE.RemantlerInterface = nil
-			GAMEMODE:UpdateShopCloseButton()
-		end
-	end
 	self.RemantlerInterface = frame
 
 	frame.LinkedToArsenal = linked
