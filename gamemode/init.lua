@@ -2728,7 +2728,7 @@ function GM:GetDynamicSpawning()
 end
 
 function GM:PrePlayerRedeemed(pl, silent, noequip)
-	return pl:IsBot()
+	return pl:IsBot() or pl:IsZMain()
 end
 
 function GM:PostPlayerRedeemed(pl, silent, noequip) end

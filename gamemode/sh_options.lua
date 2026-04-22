@@ -1036,15 +1036,7 @@ GM:AddDeployableInfo("prop_tv", "TV", "weapon_zs_tv")
 
 GM.MaxSigils = 3
 
-GM.DefaultRedeem = CreateConVar(
-	"zs_redeem",
-	"2",
-	FCVAR_REPLICATED + FCVAR_ARCHIVE + FCVAR_NOTIFY,
-	"The amount of kills a zombie needs to do in order to redeem. Set to 0 to disable."
-):GetInt()
-cvars.AddChangeCallback("zs_redeem", function(cvar, oldvalue, newvalue)
-	GAMEMODE.DefaultRedeem = math.max(0, tonumber(newvalue) or 0)
-end)
+GM.DefaultRedeem = 2
 
 GM.WaveOneZombies = 0.11 --math.Round(CreateConVar("zs_waveonezombies", "0.1", FCVAR_REPLICATED + FCVAR_ARCHIVE + FCVAR_NOTIFY, "The percentage of players that will start as zombies when the game begins."):GetFloat(), 2)
 -- cvars.AddChangeCallback("zs_waveonezombies", function(cvar, oldvalue, newvalue)
