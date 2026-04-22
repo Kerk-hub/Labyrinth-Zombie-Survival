@@ -23,13 +23,13 @@ local function DrawPinkBrain(ent)
 end
 
 function ENT:Draw()
-	if self:IsValidBrainCollector(MySelf) then
+	if self:CanSeeBrainPickup(MySelf) then
 		DrawPinkBrain(self)
 	end
 end
 
 function ENT:DrawTranslucent()
-	if not self:IsValidBrainCollector(MySelf) then
+	if not self:CanSeeBrainPickup(MySelf) then
 		return
 	end
 
