@@ -68,6 +68,7 @@ w, h = ScrW(), ScrH()
 local PhasePropPromptConsumed = false
 local PhasePropPromptNextCheck = 0
 local PhasePropPromptTouching = false
+local PhasePropPromptAutoPhasing = false
 local WorthArsenalPromptConsumed = false
 
 MySelf = MySelf or NULL
@@ -76,6 +77,7 @@ hook.Add("InitPostEntity", "GetLocal", function()
 	PhasePropPromptConsumed = false
 	PhasePropPromptNextCheck = 0
 	PhasePropPromptTouching = false
+	PhasePropPromptAutoPhasing = false
 	WorthArsenalPromptConsumed = false
 
 	GAMEMODE.HookGetLocal = GAMEMODE.HookGetLocal or function(g) end
@@ -137,6 +139,11 @@ local TEAM_UNDEAD = TEAM_UNDEAD
 local IN_ZOOM = IN_ZOOM
 local translate = translate
 
+local function HasPhasePropBind()
+	local bind = input.LookupBinding("+zoom")
+	return bind and bind ~= ""
+end
+
 local function GetPhasePropBind()
 	local bind = input.LookupBinding("+zoom")
 	if bind and bind ~= "" then
@@ -144,6 +151,15 @@ local function GetPhasePropBind()
 	end
 
 	return "ZOOM"
+end
+
+local function SetPhasePropPromptAutoPhasing(active)
+	if PhasePropPromptAutoPhasing == active then
+		return
+	end
+
+	PhasePropPromptAutoPhasing = active
+	RunConsoleCommand(active and "+zoom" or "-zoom")
 end
 
 local function GetContextMenuBind()
@@ -156,20 +172,26 @@ local function GetContextMenuBind()
 end
 
 local function ShouldShowPhasePropPrompt()
-	if PhasePropPromptConsumed then
+	local hasbind = HasPhasePropBind()
+
+	if PhasePropPromptConsumed and hasbind then
+		SetPhasePropPromptAutoPhasing(false)
 		return false
 	end
 
 	if not MySelf:IsValid() then
+		SetPhasePropPromptAutoPhasing(false)
 		return false
 	end
 
-	if MySelf:KeyDown(IN_ZOOM) then
+	if MySelf:KeyDown(IN_ZOOM) and hasbind then
 		PhasePropPromptConsumed = true
+		SetPhasePropPromptAutoPhasing(false)
 		return false
 	end
 
 	if not MySelf:Alive() or MySelf:Team() ~= TEAM_HUMAN or GAMEMODE.ZombieEscape then
+		SetPhasePropPromptAutoPhasing(false)
 		return false
 	end
 
@@ -192,6 +214,7 @@ local function ShouldShowPhasePropPrompt()
 		end
 	end
 
+	SetPhasePropPromptAutoPhasing(PhasePropPromptTouching and not hasbind)
 	return PhasePropPromptTouching
 end
 
@@ -1148,6 +1171,18 @@ function GM:HumanHUD(screenscale)
 			TEXT_ALIGN_CENTER
 		)
 		hinty = hinty + draw_GetFontHeight("ZSHUDFontSmall")
+
+		if PhasePropPromptAutoPhasing then
+			draw_SimpleTextBlurry(
+				translate.Get("warning_zoom_suit_not_bound_autophasing"),
+				"ZSHUDFontSmall",
+				w * 0.5,
+				hinty,
+				COLOR_RED,
+				TEXT_ALIGN_CENTER
+			)
+			hinty = hinty + draw_GetFontHeight("ZSHUDFontSmall")
+		end
 	end
 
 	if P_Team(MySelf) == TEAM_UNDEAD and not self:ShouldUseAlternateDynamicSpawn() then
