@@ -65,6 +65,7 @@ GM.ItemSubCategories = {
 GM.PurchasableWeaponSlots = GM.PurchasableWeaponSlots or {}
 
 local function GetPurchasableWeaponSlot(category, swep)
+	-- GMod weapon slots are zero-based: 0=slot1, 1=slot2, ...
 	if not swep or swep == "" then
 		return nil
 	end
@@ -74,35 +75,39 @@ local function GetPurchasableWeaponSlot(category, swep)
 	end
 
 	if swep == "weapon_zs_wrench" or swep == "weapon_zs_hammer" then
-		return 1
+		return 0
 	end
 
 	if swep == "weapon_zs_strengthshot" then
-		return 3
-	end
-
-	if swep == "weapon_zs_antidoteshot" then
-		return 4
-	end
-
-	if swep == "weapon_zs_medicalkit" or swep == "weapon_zs_medicgun" or swep == "weapon_zs_medicrifle" or swep == "weapon_zs_healingray" then
-		return 3
-	end
-
-	if category == ITEMS_GUNS then
 		return 2
 	end
 
-	if category == ITEMS_MELEE then
+	if swep == "weapon_zs_antidoteshot" then
+		return 2
+	end
+
+	if swep == "weapon_zs_bloodshotbomb" or swep == "weapon_zs_mediccloudbomb" then
+		return 2
+	end
+
+	if swep == "weapon_zs_medicalkit" or swep == "weapon_zs_medicgun" or swep == "weapon_zs_medicrifle" or swep == "weapon_zs_healingray" then
+		return 2
+	end
+
+	if category == ITEMS_GUNS then
 		return 1
 	end
 
+	if category == ITEMS_MELEE then
+		return 0
+	end
+
 	if category == ITEMS_DEPLOYABLES then
-		return 5
+		return 4
 	end
 
 	if category == ITEMS_OTHER then
-		return 4
+		return 3
 	end
 
 	return nil
