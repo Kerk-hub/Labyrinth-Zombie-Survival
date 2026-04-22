@@ -39,6 +39,8 @@ SWEP.HealRange = 36
 
 SWEP.NoMagazine = true
 SWEP.AllowQualityWeapons = true
+SWEP.AutoBuyAmmoOnSecondary = true
+SWEP.AutoBuyAmmoOnPrimary = true
 
 SWEP.HoldType = "slam"
 

@@ -177,6 +177,10 @@ local function ShouldAutoBuyOnSecondary(wep)
     return wep.AutoBuyAmmoOnSecondary
 end
 
+local function ShouldSkipPrimaryAutoBuy(wep)
+    return ShouldAutoBuyOnSecondary(wep) and not wep.AutoBuyAmmoOnPrimary
+end
+
 local function TryForceReloadFromAttack(ply)
     local ok, wep, ammotype = CanProcessAutoAmmo(ply)
     if not ok or ShouldSkipAutoReload(wep) then return false end
@@ -266,7 +270,7 @@ hook.Add("PlayerButtonDown", "AutoBuyAmmo", function(ply, button)
         TryAutoBuyDeployableAmmo(ply)
     elseif button == MOUSE_LEFT then
         local wep = ply:GetActiveWeapon()
-        if IsValid(wep) and ShouldAutoBuyOnSecondary(wep) then return end
+        if IsValid(wep) and ShouldSkipPrimaryAutoBuy(wep) then return end
 
         if not TryForceReloadFromAttack(ply) then
             TryAutoBuyAmmo(ply, false)
@@ -291,7 +295,9 @@ hook.Add("Think", "AutoBuyAmmoHoldAttack", function()
             TryAutoBuyAmmo(ply, false)
         end
 
-        return
+        if ShouldSkipPrimaryAutoBuy(wep) then
+            return
+        end
     end
 
     if ply:KeyDown(IN_ATTACK) then
