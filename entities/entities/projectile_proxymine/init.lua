@@ -117,7 +117,7 @@ function ENT:Explode()
 	if owner:IsValidHuman() then
 		local pos = self:GetPos()
 
-		util.BlastDamagePlayer(self, owner, pos, 335, 235, DMG_ALWAYSGIB)
+		util.BlastDamagePlayer(self, owner, pos, 335, 400, DMG_ALWAYSGIB)
 
 		local effectdata = EffectData()
 			effectdata:SetOrigin(pos + Vector(0, 0, -1))
