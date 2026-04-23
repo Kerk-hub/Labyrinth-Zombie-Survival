@@ -2032,7 +2032,7 @@ function GM:SetZMain(pl)
 end
 
 function GM:UpdateZMainBossPreview()
-	if self:IsValidZMainCandidate(self.ZMainPlayer) and not self.ZMainPlayer:GetZombieClassTable().Boss then
+	if self:IsValidZMainCandidate(self.ZMainPlayer) then
 		local zmain = self.ZMainPlayer
 
 		self:DebugPrintZMain("Forcing boss selection to " .. zmain:Name())
