@@ -1016,6 +1016,23 @@ function GM:PlayerSelectSpawn(pl)
 
 	if pl.m_PreRedeem and teamid == TEAM_HUMAN and #self.RedeemSpawnPoints >= 1 then
 		tab = self.RedeemSpawnPoints
+	elseif teamid == TEAM_HUMAN then
+		-- Try to spawn at a barricade beacon if one exists
+		local beaconpos, beaconang = self:GetRandomSafeRedeemBeaconSpawn(pl)
+		if beaconpos then
+			-- Create a temporary spawn entity at the beacon position
+			local spawn = ents.Create("info_player_start")
+			if spawn and spawn:IsValid() then
+				spawn:SetPos(beaconpos)
+				spawn:SetAngles(beaconang)
+				spawn:Spawn()
+				-- Clean up the spawn entity after use
+				timer.Simple(0, function()
+					if IsValid(spawn) then spawn:Remove() end
+				end)
+				return spawn
+			end
+		end
 	elseif teamid == TEAM_UNDEAD then
 		if
 			pl:GetZombieClassTable().Boss
