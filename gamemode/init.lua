@@ -1819,7 +1819,31 @@ function GM:PlayerHealedTeamMember(pl, other, health, wep, pointmul, nobymsg, fl
 	end
 end
 
-function GM:ObjectPackedUp(pack, packer, owner) end
+function GM:ObjectPackedUp(pack, packer, owner)
+	-- pack: the entity being packed up
+	-- packer: the player who packed it up
+	-- owner: the player who owns the deployable
+
+	if not pack or not pack:IsValid() or not owner or not owner:IsValid() or not owner:IsPlayer() then return end
+
+	-- Get the inventory item type from the packed entity
+	local itype = pack.InventoryItemType or (pack.GetInventoryItemType and pack:GetInventoryItemType())
+	if not itype then return end
+
+	-- If the packer is not the owner, give the item to the owner
+	if packer ~= owner then
+		-- Remove from packer if they would have received it (optional, depends on existing logic)
+		-- Give to owner
+		owner:GiveInventoryItemByType(itype, owner)
+		if packer and packer:IsValid() and packer:IsPlayer() then
+			packer:CenterNotify(COLOR_YELLOW, "You packed up someone else's deployable. It was returned to the owner.")
+		end
+		owner:CenterNotify(COLOR_LIMEGREEN, "Your deployable was returned to you after being packed up by another player.")
+	else
+		-- Default: give to packer (owner)
+		owner:GiveInventoryItemByType(itype, owner)
+	end
+end
 
 function GM:PlayerRepairedObject(pl, other, health, wep)
 	health = health - other:RemoveUselessDamage(health)
