@@ -1,4 +1,40 @@
+-- Z-gas volunteer timer HUD logic
+local VolunteerTimer = 0
+local VolunteerTimerEnd = 0
+
+net.Receive("zs_zgas_volunteertimer", function()
+	local ply = net.ReadEntity()
+	local timeleft = net.ReadFloat()
+	if ply == LocalPlayer() then
+		if timeleft > 0 then
+			VolunteerTimer = timeleft
+			VolunteerTimerEnd = CurTime() + timeleft
+		else
+			VolunteerTimer = 0
+			VolunteerTimerEnd = 0
+		end
+	end
+end)
+
+hook.Add("HUDPaint", "ZS_ZGasVolunteerWarning", function()
+	if VolunteerTimer > 0 and CurTime() < VolunteerTimerEnd then
+		local w, h = ScrW(), ScrH()
+		local msg = "YOU WILL VOLUNTEER FOR Z-MAIN SOON!"
+		local font = "ZSHUDFontBig"
+		local color = Color(220, 0, 0, 255)
+		local timeleft = math.ceil(VolunteerTimerEnd - CurTime())
+		draw.SimpleTextBlur(msg, font, w/2, h*0.3, color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+		draw.SimpleTextBlur("("..timeleft.."s)", font, w/2, h*0.3+48, color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+	end
+end)
+
 INC_CLIENT()
+if not zs_zgas_volunteer_net_registered then
+	zs_zgas_volunteer_net_registered = true
+	if pcall(function() return util end) and util and util.AddNetworkString then
+		util.AddNetworkString("zs_zgas_volunteertimer")
+	end
+end
 
 
 ENT.NextGas = 0
