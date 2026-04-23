@@ -126,9 +126,11 @@ function SWEP:BuildingThink()
 		end
 	end
 
-	if GAMEMODE.FindBarricadeBeaconCoveringPosition and GAMEMODE:FindBarricadeBeaconCoveringPosition(hitpos) then
-		self:SendMessage("too_close_to_a_barricade_beacon")
-		return
+	for _, human in pairs(team.GetPlayers(TEAM_HUMAN)) do
+		if math.abs(human:GetPos().z - hitpos.z) < 64 and util.SkewedDistance(human:GetPos(), hitpos, 1.5) <= GAMEMODE.CreeperNestDistBuild then
+			self:SendMessage("too_close_to_a_human")
+			return
+		end
 	end
 
 	-- I didn't make this check where trigger_hurt entities are. Rather I made it check the time since the last time you were hit with a trigger_hurt.
