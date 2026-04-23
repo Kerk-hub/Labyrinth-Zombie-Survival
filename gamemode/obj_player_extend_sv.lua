@@ -1641,6 +1641,10 @@ function meta:Redeem(silent, noequip)
 	self.m_RedeemBeaconSpawnPos = nil
 	self.m_RedeemBeaconSpawnAngles = nil
 
+	-- Increase redeem brain cost for everyone by 1 each time a player redeems
+	local current = GAMEMODE:GetRedeemBrains()
+	GAMEMODE:SetRedeemBrains(current + 1)
+
 	self.m_PreRedeem = nil
 	self:DoHulls()
 

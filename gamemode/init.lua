@@ -5054,10 +5054,8 @@ function GM:SetWave(wave)
 	end
 
 	SetGlobalInt("wave", wave)
-
-	if not self.ZombieEscape then
-		self:SetRedeemBrains(math.max(wave, 0))
-	end
+	-- No longer scale redeem brains with wave. Only set at game start.
+	-- self:SetRedeemBrains(math.max(wave, 0))
 
 	for classid in pairs(previouslylocked) do
 		if gamemode.Call("IsClassUnlocked", classid) then
