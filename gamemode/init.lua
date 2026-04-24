@@ -1318,9 +1318,7 @@ function GM:Think()
 		if self:GetWaveActive() then
 			if self:GetWaveEnd() <= time and self:GetWaveEnd() ~= -1 then
 				gamemode.Call("SetWaveActive", false)
-				if not self:UpdateZMainBossPreview() then
-					self:CalculateNextBoss()
-				end
+				self:UpdateZMainBossPreview()
 			end
 		elseif self:GetWaveStart() ~= -1 then
 			if self:GetWaveStart() <= time then
@@ -1651,7 +1649,7 @@ end
 
 GM.LastCalculatedBossTime = 0
 function GM:CalculateNextBoss()
-	if self.LastCalculatedBoss == self.ZMainPlayer and self:IsValidZMainCandidate(self.ZMainPlayer) and not self.ZMainPlayer:GetZombieClassTable().Boss then
+	if self:IsValidZMainCandidate(self.ZMainPlayer) then
 		return self.ZMainPlayer
 	end
 
