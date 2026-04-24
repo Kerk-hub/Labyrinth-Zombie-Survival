@@ -1,3 +1,6 @@
+util.AddNetworkString("zs_zvol_gastimer")
+-- Table to track when each player entered zombie gas
+GM.ZombieGasEntryTimes = GM.ZombieGasEntryTimes or {}
 --[[
 Zombie Survival
 by William "JetBoom" Moodhe
@@ -1331,6 +1334,7 @@ function GM:Think()
 	local canvolunteerviagas = self:IsZombieGasVolunteerOpen()
 	local zombiegasses = canvolunteerviagas and ents.FindByClass("zombiegasses") or nil
 
+	local curtime = CurTime()
 	for _, pl in pairs(allplayers) do
 		if pl.ShouldFlinch then
 			pl.ShouldFlinch = nil
@@ -1338,8 +1342,35 @@ function GM:Think()
 		end
 
 		if P_Team(pl) == TEAM_HUMAN then
-			if canvolunteerviagas and self:VolunteerPlayerFromZombieGas(pl, zombiegasses, false) then
-				break
+			-- Zombie Gas Volunteering Delay Logic
+			local inGas = canvolunteerviagas and self:IsPlayerInZombieGas(pl, zombiegasses)
+			if inGas then
+				if not self.ZombieGasEntryTimes[pl] then
+					self.ZombieGasEntryTimes[pl] = curtime
+					if pl:IsBot() or not pl:IsPlayer() then return end
+					net.Start("zs_zvol_gastimer")
+					net.WriteBool(true)
+					net.Send(pl)
+				end
+			else
+				if self.ZombieGasEntryTimes[pl] then
+					self.ZombieGasEntryTimes[pl] = nil
+					if pl:IsBot() or not pl:IsPlayer() then return end
+					net.Start("zs_zvol_gastimer")
+					net.WriteBool(false)
+					net.Send(pl)
+				end
+			end
+
+			if inGas and self.ZombieGasEntryTimes[pl] and curtime - self.ZombieGasEntryTimes[pl] >= 5 then
+				if self:VolunteerPlayerFromZombieGas(pl, zombiegasses, false) then
+					self.ZombieGasEntryTimes[pl] = nil -- Reset after volunteering
+					if pl:IsBot() or not pl:IsPlayer() then return end
+					net.Start("zs_zvol_gastimer")
+					net.WriteBool(false)
+					net.Send(pl)
+					break
+				end
 			end
 
 			if P_GetBarricadeGhosting(pl) then
@@ -1586,9 +1617,12 @@ function GM:VolunteerPlayerFromZombieGas(pl, gasses, hasnonbotundead)
 		hasnonbotundead = not self:IsZombieGasVolunteerOpen()
 	end
 
+
 	if hasnonbotundead or not self:IsPlayerInZombieGas(pl, gasses) then
 		return false
 	end
+
+	-- The 5-second delay is enforced in Think, so no need to check here
 
 	pl.ZSForcedZMainVolunteer = true
 	pl:SetNWBool("zs_zmain_volunteer", true)

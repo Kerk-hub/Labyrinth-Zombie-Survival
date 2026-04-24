@@ -1,3 +1,16 @@
+-- Track volunteering timer for Z-main gas on client
+local ZS_VolunteerGasStart = 0
+local ZS_VolunteerGasActive = false
+-- Receive a net message from server to start/stop the volunteer timer
+net.Receive("zs_zvol_gastimer", function()
+	local active = net.ReadBool()
+	if active then
+		ZS_VolunteerGasStart = CurTime()
+		ZS_VolunteerGasActive = true
+	else
+		ZS_VolunteerGasActive = false
+	end
+end)
 -- Sometimes persistent ones don't get created.
 local dummy = CreateClientConVar("labyrinth__zs_dummyconvar", 1, false, false)
 local oldCreateClientConVar = CreateClientConVar
@@ -1036,6 +1049,19 @@ function GM:DrawSigilTeleportBar(x, y, fraction, target, screenscale)
 end
 
 function GM:HumanHUD(screenscale)
+
+		-- Show volunteering timer message if active
+		if ZS_VolunteerGasActive then
+			local remain = math.max(0, 5 - (CurTime() - ZS_VolunteerGasStart))
+			draw_SimpleTextBlurry(
+				"Volunteering For Z-main..." .. (remain > 0 and string.format(" (%.1fs)", remain) or ""),
+				"ZSHUDFontSmall",
+				w * 0.5,
+				h * 0.35,
+				COLOR_SOFTRED,
+				TEXT_ALIGN_CENTER
+			)
+		end
 	local curtime = CurTime()
 	local w, h = ScrW(), ScrH()
 
