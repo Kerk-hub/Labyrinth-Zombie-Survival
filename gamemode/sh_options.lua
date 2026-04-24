@@ -1109,7 +1109,7 @@ GM:AddDeployableInfo("prop_tv", "TV", "weapon_zs_tv")
 
 GM.MaxSigils = 3
 
-GM.DefaultRedeem = 2
+GM.DefaultRedeem = 1
 
 GM.WaveOneZombies = 0.11 --math.Round(CreateConVar("zs_waveonezombies", "0.1", FCVAR_REPLICATED + FCVAR_ARCHIVE + FCVAR_NOTIFY, "The percentage of players that will start as zombies when the game begins."):GetFloat(), 2)
 -- cvars.AddChangeCallback("zs_waveonezombies", function(cvar, oldvalue, newvalue)
