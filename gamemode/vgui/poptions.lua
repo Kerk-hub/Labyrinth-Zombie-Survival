@@ -262,11 +262,7 @@ function MakepOptions()
 	check:SizeToContents()
 	list:AddItem(check)
 
-	check = vgui.Create("DCheckBoxLabel", Window)
-	check:SetText("Always volunteer to start as a zombie")
-	check:SetConVar("labyrinth_zs_alwaysvolunteer")
-	check:SizeToContents()
-	list:AddItem(check)
+	-- Removed always volunteer to start as a zombie option
 
 	check = vgui.Create("DCheckBoxLabel", Window)
 	check:SetText("Always quick buy from arsenal and remantler")

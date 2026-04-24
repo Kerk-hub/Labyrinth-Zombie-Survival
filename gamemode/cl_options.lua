@@ -147,7 +147,6 @@ cvars.AddChangeCallback("labyrinth_zs_filmmode", function(cvar, oldvalue, newval
 	gamemode.Call("EvaluateFilmMode")
 end)
 
-CreateClientConVar("labyrinth_zs_alwaysvolunteer", "0", true, true)
 CreateClientConVar("labyrinth_zs_nousetodeposit", "0", true, true)
 CreateClientConVar("labyrinth_zs_nopickupprops", "0", true, true)
 

@@ -1267,8 +1267,7 @@ function GM:SortZombieSpawnDistances(allplayers)
 	for _, pl in pairs(allplayers) do
 		if pl:Team() == TEAM_UNDEAD then
 			pl._ZombieSpawnDistance = sortbysigils and maxdist + 2 or -2
-		elseif pl:GetZSClientBool("zs_alwaysvolunteer") then
-			pl._ZombieSpawnDistance = sortbysigils and maxdist + 1 or -1
+-- Removed always volunteer option
 		elseif CLIENT or pl.LastNotAFK and CurTime() <= pl.LastNotAFK + 60 then
 			plpos = pl:GetPos()
 			dist = maxdist
@@ -4093,7 +4092,7 @@ function GM:SetClosestsToZombie()
 	if #zombies > desiredzombies then
 		local toswap = #zombies - desiredzombies
 		for _, pl in pairs(zombies) do
-			if pl.DiedDuringWave0 and not pl:GetZSClientBool("zs_alwaysvolunteer") and not pl.IsZSBot then
+			if pl.DiedDuringWave0 and not pl.IsZSBot then
 				pl:ChangeTeam(TEAM_HUMAN)
 				pl:UnSpectateAndSpawn()
 				toswap = toswap - 1
