@@ -233,7 +233,7 @@ LANGUAGE.x_has_remorted_to_rl_y = "%s has remorted to remort level %d!!"
 LANGUAGE.you_have_reset_all = "All of your skills, XP, and skill points have been reset."
 
 -- Message beacon messages
-LANGUAGE.message_beacon_1 = "Bring Props Here For 1 Point!"
+LANGUAGE.message_beacon_1 = "Bring Props Here For Points!"
 LANGUAGE.message_beacon_2 = "Need defense here"
 LANGUAGE.message_beacon_3 = "Need turrets here"
 LANGUAGE.message_beacon_4 = "Need arsenal crates here"

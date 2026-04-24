@@ -1,7 +1,10 @@
 local PROPSEARCH_POINT_REWARD = {
-	Name = "1 point",
+	Name = function()
+		local wave = (GAMEMODE and GAMEMODE.GetWave and GAMEMODE:GetWave() or 0)
+		return tostring(1 + wave) .. " points"
+	end,
 	Callback = function(pl)
-		pl:AddPoints(1, pl, FM_NONE, true)
+		pl:AddPoints(1 + (GAMEMODE and GAMEMODE.GetWave and GAMEMODE:GetWave() or 0), pl, FM_NONE, true)
 	end
 }
 
@@ -40,8 +43,15 @@ local function GiveSearchItem(pl, itemtab)
 		return false
 	end
 
+	local name = itemtab.Name
+	local displayName = name
+	if type(name) == "function" then
+		displayName = name()
+	end
+
 	if itemtab.Callback then
 		itemtab.Callback(pl)
+		itemtab._LastDisplayName = displayName
 		return true
 	end
 
@@ -120,7 +130,8 @@ local function GiveRandomPropSearchReward(pl)
 	if not GiveSearchItem(pl, itemtab) then return end
 
 	pl:SendLua('surface.PlaySound("items/ammo_pickup.wav")')
-	pl:CenterNotify(COLOR_PURPLE, translate.ClientGet(pl, "arsenal_upgraded") .. ": ", color_white, itemtab.Name or "Reward")
+	local displayName = itemtab._LastDisplayName or (type(itemtab.Name) == "function" and itemtab.Name() or itemtab.Name) or "Reward"
+	pl:CenterNotify(COLOR_PURPLE, translate.ClientGet(pl, "arsenal_upgraded") .. ": ", color_white, displayName)
 end
 
 local function IsBeaconVisibleToHeldProp(pl, held, beacon)
