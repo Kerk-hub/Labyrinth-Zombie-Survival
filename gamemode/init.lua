@@ -4926,8 +4926,15 @@ function GM:PlayerSpawn(pl)
 			pl:SetPlayerColor(Vector(255, 255, 255))
 		end
 
-		if classtab.Boss then
-			pl:SetHealth(classtab.Health)
+		   if classtab.Boss then
+			   -- Set boss health to number of living, valid humans * 1000
+			   local humanCount = 0
+			   for _, human in pairs(player.GetAll()) do
+				   if human:Team() == TEAM_HUMAN and human:Alive() and human:Health() > 0 then
+					   humanCount = humanCount + 1
+				   end
+			   end
+			   pl:SetHealth(math.max(1, humanCount * 1000))
 		else
 			local lowundead = team.NumPlayers(TEAM_UNDEAD) < 4
 
