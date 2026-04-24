@@ -38,6 +38,12 @@ function SWEP:Think()
 		self.IdleAnimation = nil
 		self:SendWeaponAnim(ACT_VM_IDLE)
 	end
+
+	-- Remove the weapon if out of ammo
+	local owner = self:GetOwner()
+	if IsValid(owner) and self:GetPrimaryAmmoCount() <= 0 then
+		owner:StripWeapon(self:GetClass())
+	end
 end
 
 function SWEP:PrimaryAttack()
