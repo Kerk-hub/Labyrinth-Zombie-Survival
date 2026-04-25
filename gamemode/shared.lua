@@ -395,7 +395,7 @@ end
 GM.DynamicSpawnDist = 512
 GM.DynamicSpawnDistVis = 2048
 GM.CreeperNestDist = 150
-GM.CreeperNestDistBuild = 280
+GM.CreeperNestDistBuild = 1000
 GM.CreeperNestDistBuildNest = 160
 GM.CreeperNestDistBuildZSpawn = 256
 local trace_dynspawn = { mins = playermins, maxs = playermaxs, mask = MASK_SOLID }
