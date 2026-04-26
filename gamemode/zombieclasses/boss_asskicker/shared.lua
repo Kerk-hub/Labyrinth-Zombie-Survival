@@ -21,6 +21,8 @@ CLASS.JumpPower = 260
 
 CLASS.NoFallDamage = true
 CLASS.NoFallSlowdown = true
+CLASS.Hidden = true
+CLASS.Disabled = true
 
 CLASS.ModelScale = 1.75
 CLASS.Hull = {Vector(-16, -16, 0), Vector(16, 16, 32)}

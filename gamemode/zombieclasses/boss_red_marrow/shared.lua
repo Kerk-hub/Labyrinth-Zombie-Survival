@@ -4,6 +4,8 @@ CLASS.Description = "description_red_marrow"
 CLASS.Help = "controls_red_marrow"
 
 CLASS.Boss = true
+CLASS.Hidden = true
+CLASS.Disabled = true
 
 CLASS.KnockbackScale = 0
 

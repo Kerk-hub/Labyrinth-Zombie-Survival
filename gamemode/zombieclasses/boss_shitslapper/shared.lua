@@ -6,6 +6,8 @@ CLASS.Help = "controls_shitslapper"
 CLASS.Model = Model("models/Zombie/Classic_torso.mdl")
 
 CLASS.Boss = true
+CLASS.Hidden = true
+CLASS.Disabled = true
 
 CLASS.KnockbackScale = 0
 

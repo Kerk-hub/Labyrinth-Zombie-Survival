@@ -4,6 +4,8 @@ CLASS.Description = "description_doomcrab"
 CLASS.Help = "controls_doomcrab"
 
 CLASS.Boss = true
+CLASS.Hidden = true
+CLASS.Disabled = true
 
 CLASS.KnockbackScale = 0
 

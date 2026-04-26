@@ -4,6 +4,8 @@ CLASS.Description = "description_the_tickle_monster"
 CLASS.Help = "controls_the_tickle_monster"
 
 CLASS.Boss = true
+CLASS.Hidden = true
+CLASS.Disabled = true
 
 CLASS.KnockbackScale = 0
 

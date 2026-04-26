@@ -4,6 +4,8 @@ CLASS.Description = "description_howler"
 CLASS.Help = "controls_howler"
 
 CLASS.Boss = true
+CLASS.Hidden = true
+CLASS.Disabled = true
 
 CLASS.KnockbackScale = 0
 
