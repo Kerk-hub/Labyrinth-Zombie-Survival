@@ -811,6 +811,8 @@ function meta:ChangeToCrow()
 	self:DoHulls(crowindex, TEAM_UNDEAD)
 
 	self.DeathClass = nil
+	-- Stop crow flapping sound if still playing
+	self:StopSound("NPC_Crow.Flap")
 	self:UnSpectateAndSpawn()
 	self.DeathClass = curclass
 end

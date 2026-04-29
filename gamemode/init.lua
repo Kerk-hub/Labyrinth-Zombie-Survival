@@ -5175,6 +5175,13 @@ function GM:SetWave(wave)
 	end
 
 	SetGlobalInt("wave", wave)
+
+		-- Stop crow flapping sound for all players at wave start
+		for _, pl in pairs(player.GetAll()) do
+			if pl:IsValid() then
+				pl:StopSound("NPC_Crow.Flap")
+			end
+		end
 	-- No longer scale redeem brains with wave. Only set at game start.
 	-- self:SetRedeemBrains(math.max(wave, 0))
 
