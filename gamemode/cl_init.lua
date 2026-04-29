@@ -2448,11 +2448,12 @@ function GM:CreateLateVGUI()
 		self.StatusHUD = vgui.Create("ZSStatusArea")
 	end
 
-	if not self.XPHUD then
-		self.XPHUD = vgui.Create("ZSExperienceHUD")
-		self.XPHUD:ParentToHUD()
-		self.XPHUD:InvalidateLayout()
-	end
+	   -- Disabled EXP UI: Do not create ZSExperienceHUD
+	   -- if not self.XPHUD then
+	   --     self.XPHUD = vgui.Create("ZSExperienceHUD")
+	   --     self.XPHUD:ParentToHUD()
+	   --     self.XPHUD:InvalidateLayout()
+	   -- end
 end
 
 function GM:Initialize()
