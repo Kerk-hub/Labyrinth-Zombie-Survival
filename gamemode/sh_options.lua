@@ -428,8 +428,8 @@ item = GM:WorthAdd("ffemitter", ITEMS_DEPLOYABLES, 20, "weapon_zs_ffemitter", ni
 end)
 item.Countables = "prop_ffemitter"
 GM:WorthAdd("barricadekit", ITEMS_DEPLOYABLES, 30, "weapon_zs_barricadekit")
-GM:WorthAdd("camera", ITEMS_DEPLOYABLES, 5, "weapon_zs_camera").Countables = "prop_camera"
-GM:WorthAdd("tv", ITEMS_DEPLOYABLES, 10, "weapon_zs_tv").Countables = "prop_tv"
+--GM:WorthAdd("camera", ITEMS_DEPLOYABLES, 5, "weapon_zs_camera").Countables = "prop_camera"
+--GM:WorthAdd("tv", ITEMS_DEPLOYABLES, 10, "weapon_zs_tv").Countables = "prop_tv"
 
 GM:WorthAdd("oxtank", ITEMS_TRINKETS, 5, "trinket_oxygentank").SubCategory = TRINKETS_PERFORMANCE
 GM:WorthAdd("cutlery", ITEMS_TRINKETS, 5, "trinket_cutlery").SubCategory = TRINKETS_DEFENSIVE
@@ -662,8 +662,8 @@ item = GM:ShopAdd("msgbeacon", ITEMS_DEPLOYABLES, 0, "weapon_zs_messagebeacon", 
 	return GiveBarricadeBeacon(pl)
 end)
 item.Countables = "prop_messagebeacon"
-GM:ShopAdd("camera", ITEMS_DEPLOYABLES, 15, "weapon_zs_camera").Countables = "prop_camera"
-GM:ShopAdd("tv", ITEMS_DEPLOYABLES, 25, "weapon_zs_tv").Countables = "prop_tv"
+--GM:ShopAdd("camera", ITEMS_DEPLOYABLES, 15, "weapon_zs_camera").Countables = "prop_camera"
+--GM:ShopAdd("tv", ITEMS_DEPLOYABLES, 25, "weapon_zs_tv").Countables = "prop_tv"
 item = GM:ShopAdd("infturret", ITEMS_DEPLOYABLES, 50, "weapon_zs_gunturret", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_gunturret")
 	pl:GiveAmmo(1, "thumper")
@@ -1090,7 +1090,7 @@ GM:AddDeployableInfo("prop_arsenalcrate", "Arsenal Crate", "weapon_zs_arsenalcra
 GM:AddDeployableInfo("prop_resupplybox", "Resupply Box", "weapon_zs_resupplybox")
 GM:AddDeployableInfo("prop_remantler", "Weapon Remantler", "weapon_zs_remantler")
 GM:AddDeployableInfo("prop_messagebeacon", "Barricade Beacon", "weapon_zs_messagebeacon")
-GM:AddDeployableInfo("prop_camera", "Camera", "weapon_zs_camera")
+--GM:AddDeployableInfo("prop_camera", "Camera", "weapon_zs_camera")
 GM:AddDeployableInfo("prop_gunturret", "Gun Turret", "weapon_zs_gunturret")
 GM:AddDeployableInfo("prop_gunturret_assault", "Assault Turret", "weapon_zs_gunturret_assault")
 GM:AddDeployableInfo("prop_gunturret_buckshot", "Blast Turret", "weapon_zs_gunturret_buckshot")
@@ -1105,7 +1105,7 @@ GM:AddDeployableInfo("prop_drone", "Drone", "weapon_zs_drone")
 GM:AddDeployableInfo("prop_drone_pulse", "Pulse Drone", "weapon_zs_drone_pulse")
 GM:AddDeployableInfo("prop_drone_hauler", "Hauler Drone", "weapon_zs_drone_hauler")
 GM:AddDeployableInfo("prop_rollermine", "Rollermine", "weapon_zs_rollermine")
-GM:AddDeployableInfo("prop_tv", "TV", "weapon_zs_tv")
+--GM:AddDeployableInfo("prop_tv", "TV", "weapon_zs_tv")
 
 GM.MaxSigils = 3
 
