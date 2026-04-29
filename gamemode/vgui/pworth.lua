@@ -389,25 +389,27 @@ function MakepWorth()
 	end
 
 	for catid, catname in ipairs(GAMEMODE.ItemCategories) do
-		local itemframe = vgui.Create("DScrollPanel", propertysheet)
-		local trinkets = catid == ITEMS_TRINKETS
+		if catid ~= ITEMS_AMMO then -- Skip Ammunition tab
+			local itemframe = vgui.Create("DScrollPanel", propertysheet)
+			local trinkets = catid == ITEMS_TRINKETS
 
-		--list = vgui.Create("DPanelList", itemframe)
-		list = vgui.Create("DGrid", itemframe)
-		list:SetSize(propertysheet:GetWide() - 328, propertysheet:GetTall() - 32)
-		list:SetCols(2)
-		list:SetColWide(290 * screenscale)
-		list:SetRowHeight((trinkets and 64 or 100) * screenscale)
+			--list = vgui.Create("DPanelList", itemframe)
+			list = vgui.Create("DGrid", itemframe)
+			list:SetSize(propertysheet:GetWide() - 328, propertysheet:GetTall() - 32)
+			list:SetCols(2)
+			list:SetColWide(290 * screenscale)
+			list:SetRowHeight((trinkets and 64 or 100) * screenscale)
 
-		sheet = propertysheet:AddSheet(catname, itemframe, GAMEMODE.ItemCategoryIcons[catid], false, false)
-		sheet.Panel:SetPos(0, tabhei + 2)
+			sheet = propertysheet:AddSheet(catname, itemframe, GAMEMODE.ItemCategoryIcons[catid], false, false)
+			sheet.Panel:SetPos(0, tabhei + 2)
 
-		for i, tab in ipairs(GAMEMODE.Items) do
-			if tab.Category == catid and tab.WorthShop then
-				local button = vgui.Create("ZSWorthButton")
-				button:SetWorthID(i)
-				list:AddItem(button)
-				WorthButtons[i] = button
+			for i, tab in ipairs(GAMEMODE.Items) do
+				if tab.Category == catid and tab.WorthShop then
+					local button = vgui.Create("ZSWorthButton")
+					button:SetWorthID(i)
+					list:AddItem(button)
+					WorthButtons[i] = button
+				end
 			end
 		end
 	end
