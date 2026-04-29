@@ -1,6 +1,6 @@
 INC_CLIENT()
 
-local BeaconHintRange = 7680
+local BeaconHintRange = 400
 local TEXT_ALIGN_CENTER = TEXT_ALIGN_CENTER
 local TEAM_HUMAN = TEAM_HUMAN
 local team_GetColor = team.GetColor
