@@ -79,6 +79,7 @@ include("cl_zombieescape.lua")
 w, h = ScrW(), ScrH()
 
 local PhasePropPromptConsumed = false
+local PhasePropPromptManualPressed = false
 local PhasePropPromptNextCheck = 0
 local PhasePropPromptTouching = false
 local PhasePropPromptAutoPhasing = false
@@ -88,6 +89,7 @@ MySelf = MySelf or NULL
 hook.Add("InitPostEntity", "GetLocal", function()
 	MySelf = LocalPlayer()
 	PhasePropPromptConsumed = false
+	PhasePropPromptManualPressed = false
 	PhasePropPromptNextCheck = 0
 	PhasePropPromptTouching = false
 	PhasePropPromptAutoPhasing = false
@@ -98,6 +100,14 @@ hook.Add("InitPostEntity", "GetLocal", function()
 	RunConsoleCommand("initpostentity")
 
 	MySelf:ApplySkills()
+end)
+
+-- Track manual phase key presses
+hook.Add("PlayerButtonDown", "ZS_PhasePropPromptManualPress", function(ply, button)
+	if ply ~= LocalPlayer() then return end
+	if button == input.GetKeyCode(input.LookupBinding("+zoom") or "") then
+		PhasePropPromptManualPressed = true
+	end
 end)
 
 -- Remove when model decal crash is fixed.
@@ -200,50 +210,52 @@ local function ShouldShowArsenalPrompt()
 end
 
 local function ShouldShowPhasePropPrompt()
-	local hasbind = HasPhasePropBind()
+       local hasbind = HasPhasePropBind()
 
-	if PhasePropPromptConsumed and hasbind then
-		SetPhasePropPromptAutoPhasing(false)
-		return false
-	end
+       if PhasePropPromptConsumed and hasbind then
+	       SetPhasePropPromptAutoPhasing(false)
+	       return false
+       end
 
-	if not MySelf:IsValid() then
-		SetPhasePropPromptAutoPhasing(false)
-		return false
-	end
+       if not MySelf:IsValid() then
+	       SetPhasePropPromptAutoPhasing(false)
+	       return false
+       end
 
-	if MySelf:KeyDown(IN_ZOOM) and hasbind then
-		PhasePropPromptConsumed = true
-		SetPhasePropPromptAutoPhasing(false)
-		return false
-	end
+       -- Only consume the prompt if the player manually pressed the phase key
+       if PhasePropPromptManualPressed and hasbind then
+	       PhasePropPromptConsumed = true
+	       PhasePropPromptManualPressed = false
+	       SetPhasePropPromptAutoPhasing(false)
+	       return false
+       end
 
-	if not MySelf:Alive() or MySelf:Team() ~= TEAM_HUMAN or GAMEMODE.ZombieEscape then
-		SetPhasePropPromptAutoPhasing(false)
-		return false
-	end
+       if not MySelf:Alive() or MySelf:Team() ~= TEAM_HUMAN or GAMEMODE.ZombieEscape then
+	       SetPhasePropPromptAutoPhasing(false)
+	       return false
+       end
 
-	local ct = CurTime()
-	if ct >= PhasePropPromptNextCheck then
-		PhasePropPromptNextCheck = ct + 0.15
-		PhasePropPromptTouching = false
+       local ct = CurTime()
+       if ct >= PhasePropPromptNextCheck then
+	       PhasePropPromptNextCheck = ct + 0.15
+	       PhasePropPromptTouching = false
 
-		local mins, maxs = MySelf:WorldSpaceAABB()
-		mins.x = mins.x + 1
-		mins.y = mins.y + 1
-		maxs.x = maxs.x - 1
-		maxs.y = maxs.y - 1
+	       local mins, maxs = MySelf:WorldSpaceAABB()
+	       mins.x = mins.x + 1
+	       mins.y = mins.y + 1
+	       maxs.x = maxs.x - 1
+	       maxs.y = maxs.y - 1
 
-		for _, ent in pairs(ents.FindInBox(mins, maxs)) do
-			if ent:IsValid() and ent ~= MySelf and ent:IsNailed() then
-				PhasePropPromptTouching = true
-				break
-			end
-		end
-	end
+	       for _, ent in pairs(ents.FindInBox(mins, maxs)) do
+		       if ent:IsValid() and ent ~= MySelf and ent:IsNailed() then
+			       PhasePropPromptTouching = true
+			       break
+		       end
+	       end
+       end
 
-	SetPhasePropPromptAutoPhasing(PhasePropPromptTouching and not hasbind)
-	return PhasePropPromptTouching
+       SetPhasePropPromptAutoPhasing(PhasePropPromptTouching)
+       return PhasePropPromptTouching
 end
 
 local COLOR_PURPLE = COLOR_PURPLE
