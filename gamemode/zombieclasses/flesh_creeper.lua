@@ -7,6 +7,8 @@ CLASS.Wave = 0
 CLASS.Hidden = true
 CLASS.Unlocked = true
 CLASS.NotRandomStart = true
+CLASS.Hidden = true
+CLASS.Disabled = true
 
 CLASS.Health = 175
 CLASS.SWEP = "weapon_zs_fleshcreeper"

@@ -1055,13 +1055,15 @@ function GM:PlayerSelectSpawn(pl)
 					end
 				end
 
-				-- Not near a human when they died, so use best dynamic spawn based on human epicenter.
-				if not epicenter then
-					local best = self:GetBestDynamicSpawn(pl)
-					if IsValid(best) then
-						return best
-					end
-				end
+				   -- Not near a human when they died, so add best dynamic spawn to candidate list instead of returning early.
+				   if not epicenter then
+					   local best = self:GetBestDynamicSpawn(pl)
+					   if IsValid(best) then
+						   -- Add best dynamic spawn to the spawn table for consideration
+						   tab = tab or table.Copy(team.GetValidSpawnPoint(TEAM_UNDEAD))
+						   table.insert(tab, best)
+					   end
+				   end
 
 				tab = table.Copy(team.GetValidSpawnPoint(TEAM_UNDEAD))
 				local dynamicspawns = self:GetDynamicSpawns(pl)
@@ -1070,20 +1072,21 @@ function GM:PlayerSelectSpawn(pl)
 					table.Add(tab, dynamicspawns)
 				end
 			else
-				local dyn = pl.ForceDynamicSpawn
-				if dyn then -- We were spectating an entity.
-					pl.ForceDynamicSpawn = nil
-					if self:DynamicSpawnIsValid(dyn) then
-						if dyn:GetClass() == "prop_creepernest" then -- For honorable mentions
-							local owner = dyn:GetOwner()
-							if owner and owner:IsValid() and owner:Team() == TEAM_UNDEAD then
-								owner.NestSpawns = owner.NestSpawns + 1
-							end
-						end
-
-						return dyn
-					end
-				end
+				   local dyn = pl.ForceDynamicSpawn
+				   if dyn then -- We were spectating an entity.
+					   pl.ForceDynamicSpawn = nil
+					   if self:DynamicSpawnIsValid(dyn) then
+						   if dyn:GetClass() == "prop_creepernest" then -- For honorable mentions
+							   local owner = dyn:GetOwner()
+							   if owner and owner:IsValid() and owner:Team() == TEAM_UNDEAD then
+								   owner.NestSpawns = owner.NestSpawns + 1
+							   end
+						   end
+						   -- Add forced dynamic spawn to candidate list instead of returning it
+						   tab = tab or table.Copy(team.GetValidSpawnPoint(TEAM_UNDEAD))
+						   table.insert(tab, dyn)
+					   end
+				   end
 
 				-- Otherwise we just use whatever we can (creeper nests too)
 				tab = table.Copy(team.GetValidSpawnPoint(TEAM_UNDEAD))
@@ -1136,30 +1139,41 @@ function GM:PlayerSelectSpawn(pl)
 		end
 
 		-- Now our final spawn list is ready.
-		if #potential > 0 then
-			local spawn
-			if teamid == TEAM_UNDEAD then
-				if pl:KeyDown(IN_ATTACK2) then
-					spawn = self:GetClosestSpawnPoint(potential, epicenter or self:GetTeamEpicentre(TEAM_HUMAN))
-				elseif pl:KeyDown(IN_RELOAD) then
-					spawn = self:GetFurthestSpawnPoint(potential, epicenter or self:GetTeamEpicentre(TEAM_HUMAN))
-				elseif math.random(2) == 2 then
-					-- Let every other left click masher spawn randomly instead of closest so we have wandering zombies.
-					spawn = table.Random(potential)
-				else
-					spawn = self:GetClosestSpawnPoint(potential, epicenter or self:GetTeamEpicentre(TEAM_HUMAN))
-				end
-			else
-				spawn = table.Random(potential)
-			end
+		   if #potential > 0 then
+			   local spawn
+			   if teamid == TEAM_UNDEAD then
+				   -- D3bot nemesis-aware spawn logic for zombie bots
+				   if pl:IsBot() and D3bot and D3bot.GetZombieNemesis then
+					   local nemesis = D3bot.GetZombieNemesis(pl)
+					   if IsValid(nemesis) then
+						   -- Always consider all valid spawns (nests, Z-gas, static) and pick the closest
+						   spawn = self:GetClosestSpawnPoint(potential, nemesis:GetPos())
+					   end
+				   end
+				   -- If no nemesis or not a bot, use normal logic
+				   if not spawn then
+					   if pl:KeyDown(IN_ATTACK2) then
+						   spawn = self:GetClosestSpawnPoint(potential, epicenter or self:GetTeamEpicentre(TEAM_HUMAN))
+					   elseif pl:KeyDown(IN_RELOAD) then
+						   spawn = self:GetFurthestSpawnPoint(potential, epicenter or self:GetTeamEpicentre(TEAM_HUMAN))
+					   elseif math.random(2) == 2 then
+						   -- Let every other left click masher spawn randomly instead of closest so we have wandering zombies.
+						   spawn = table.Random(potential)
+					   else
+						   spawn = self:GetClosestSpawnPoint(potential, epicenter or self:GetTeamEpicentre(TEAM_HUMAN))
+					   end
+				   end
+			   else
+				   spawn = table.Random(potential)
+			   end
 
-			if spawn then
-				LastSpawnPoints[teamid] = spawn
-				pl.SpawnedOnSpawnPoint = spawn:GetClass():sub(1, 11) == "info_player"
-				pl.DidntSpawnOnSpawnPoint = pl.DidntSpawnOnSpawnPoint or not pl.SpawnedOnSpawnPoint
-				return spawn
-			end
-		end
+			   if spawn then
+				   LastSpawnPoints[teamid] = spawn
+				   pl.SpawnedOnSpawnPoint = spawn:GetClass():sub(1, 11) == "info_player"
+				   pl.DidntSpawnOnSpawnPoint = pl.DidntSpawnOnSpawnPoint or not pl.SpawnedOnSpawnPoint
+				   return spawn
+			   end
+		   end
 	end
 
 	pl.SpawnedOnSpawnPoint = false
