@@ -429,14 +429,22 @@ concommand.Add("worthrandom", function(sender, command, arguments)
 	end
 end)
 
-concommand.Add("worthcheckout", function(sender, command, arguments)
+ concommand.Add("worthcheckout", function(sender, command, arguments)
 	if not (sender:IsValid() and sender:IsConnected()) or #arguments == 0 then
 		return
 	end
 
-	if not gamemode.Call("PlayerCanCheckout", sender) then
+	local uid = sender:UniqueID()
+	local can_checkout = gamemode.Call("PlayerCanCheckout", sender)
+	if not can_checkout then
 		sender:CenterNotify(COLOR_RED, translate.ClientGet(sender, "cant_use_worth_anymore"))
 		return
+	end
+
+	-- If already checked out, but inventory matches, allow re-checkout and wipe inventory
+	if GAMEMODE.CheckedOut[uid] and GAMEMODE.WorthCheckedOutInventory[uid] and sender:CompareInventoryWithList(GAMEMODE.WorthCheckedOutInventory[uid]) then
+		sender:StripWeapons()
+		sender:WipePlayerInventory()
 	end
 
 	local cost = 0
@@ -457,6 +465,7 @@ concommand.Add("worthcheckout", function(sender, command, arguments)
 	end
 
 	hasalready = {}
+	local worth_inventory = {}
 
 	for _, id in pairs(arguments) do
 		id = tonumber(id) or id
@@ -474,11 +483,13 @@ concommand.Add("worthcheckout", function(sender, command, arguments)
 			elseif tab.SWEP then
 				GAMEMODE.StatTracking:IncreaseElementKV(STATTRACK_TYPE_WEAPON, tab.SWEP, "Checkouts", 1)
 
-				sender:StripWeapon(tab.SWEP) -- "Fixes" players giving each other empty weapons to make it so they get no ammo from the Worth menu purchase.
+				sender:StripWeapon(tab.SWEP)
 				if GAMEMODE.ZSInventoryItemData[tab.SWEP] then
 					sender:AddInventoryItem(tab.SWEP)
+					worth_inventory[tab.SWEP] = (worth_inventory[tab.SWEP] or 0) + 1
 				else
 					sender:Give(tab.SWEP)
+					worth_inventory[tab.SWEP] = (worth_inventory[tab.SWEP] or 0) + 1
 				end
 				hasalready[id] = true
 			end
@@ -486,11 +497,12 @@ concommand.Add("worthcheckout", function(sender, command, arguments)
 	end
 
 	if table.Count(hasalready) > 0 then
-		GAMEMODE.CheckedOut[sender:UniqueID()] = true
+		GAMEMODE.CheckedOut[uid] = true
+		GAMEMODE.WorthCheckedOutInventory[uid] = worth_inventory
 	end
 
 	gamemode.Call("RemoveDuplicateAmmo", sender)
-end)
+ end)
 
 concommand.Add("zsdropweapon", function(sender, command, arguments)
 	local currentwep = sender:GetActiveWeapon()

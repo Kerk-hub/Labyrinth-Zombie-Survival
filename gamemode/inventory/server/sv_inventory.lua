@@ -192,3 +192,18 @@ end
 function meta:HasInventoryItem(item)
 	return self.ZSInventory[item]
 end
+
+function meta:CompareInventoryWithList(itemlist)
+	local inv = self:GetInventoryItems()
+	for item, count in pairs(itemlist) do
+		if not inv[item] or inv[item] < count then
+			return false
+		end
+	end
+	for item, count in pairs(inv) do
+		if (itemlist[item] or 0) < count then
+			return false
+		end
+	end
+	return true
+end

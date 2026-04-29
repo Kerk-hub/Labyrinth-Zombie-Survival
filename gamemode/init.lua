@@ -2025,7 +2025,8 @@ GM.DynamicSpawning = true
 GM.CappedInfliction = 0
 GM.PeakPopulation = 0
 GM.StartingZombie = {}
-GM.CheckedOut = {}
+ GM.CheckedOut = {}
+ GM.WorthCheckedOutInventory = {}
 GM.PreviouslyDied = {}
 GM.StoredUndeadFrags = {}
 GM.ZMainJoinSequence = 0
@@ -3186,16 +3187,20 @@ function GM:GiveRandomEquipment(pl)
 	end
 end
 
-function GM:PlayerCanCheckout(pl)
-	return pl:IsValid()
-		and pl:Team() == TEAM_HUMAN
-		and pl:Alive()
-		and not self.CheckedOut[pl:UniqueID()]
-		and not self.StartingLoadout
-		and not self.ZombieEscape
-		and self.StartingWorth > 0
-		and self:GetWave() < 2
-end
+ function GM:PlayerCanCheckout(pl)
+	if not (pl:IsValid() and pl:Team() == TEAM_HUMAN and pl:Alive() and not self.StartingLoadout and not self.ZombieEscape and self.StartingWorth > 0 and self:GetWave() < 2) then
+		return false
+	end
+	local uid = pl:UniqueID()
+	if not self.CheckedOut[uid] then
+		return true
+	end
+	-- Allow re-checkout if inventory matches previous worth checkout
+	if self.WorthCheckedOutInventory[uid] and pl:CompareInventoryWithList(self.WorthCheckedOutInventory[uid]) then
+		return true
+	end
+	return false
+ end
 
 function GM:PlayerDeathThink(pl)
 	if self.RoundEnded or pl.Revive or self:GetWave() == 0 then
