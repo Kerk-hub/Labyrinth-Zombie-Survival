@@ -1,14 +1,3 @@
--- Spectator rejoin logic
-util.AddNetworkString("zs_spectator_rejoin")
-
--- Listen for rejoin requests from client
-net.Receive("zs_spectator_rejoin", function(len, ply)
-	if ply:Team() == TEAM_SPECTATOR then
-		ply:UnSpectateAndSpawn()
-		ply:ChangeTeam(TEAM_HUMAN)
-		ply:ChatPrint("You have rejoined the game.")
-	end
-end)
 util.AddNetworkString("zs_zvol_gastimer")
 -- Table to track when each player entered zombie gas
 GM.ZombieGasEntryTimes = GM.ZombieGasEntryTimes or {}
@@ -1434,40 +1423,11 @@ function GM:Think()
 			if P_Team(pl) == TEAM_HUMAN and P_Alive(pl) then
 				plpos = pl:GetPos()
 				if doafk then
-					local viewang = pl:EyeAngles()
-					if not pl.LastAFKViewAngle then
-						pl.LastAFKViewAngle = viewang
-					end
-					local viewChanged = (math.abs(pl.LastAFKViewAngle.yaw - viewang.yaw) > 2 or math.abs(pl.LastAFKViewAngle.pitch - viewang.pitch) > 2)
-					local moved = pl.LastAFKPosition and (pl.LastAFKPosition.x ~= plpos.x or pl.LastAFKPosition.y ~= plpos.y)
-					if moved or viewChanged then
+					if pl.LastAFKPosition and (pl.LastAFKPosition.x ~= plpos.x or pl.LastAFKPosition.y ~= plpos.y) then
 						pl.LastNotAFK = time
 					end
 					pl.LastAFKPosition = plpos
-					pl.LastAFKViewAngle = viewang
 				end
-		-- Move AFK players to spectator if AFK for more than 60 seconds
-		for _, pl in pairs(allplayers) do
-			if P_Team(pl) == TEAM_HUMAN and P_Alive(pl) then
-				if pl.LastNotAFK and CurTime() > pl.LastNotAFK + 60 then
-					pl:ChangeTeam(TEAM_SPECTATOR)
-					pl:StripWeapons()
-					pl:Spectate(OBS_MODE_ROAMING)
-					pl:GodDisable()
-					pl:ChatPrint("You have been moved to spectator for being AFK. Press left mouse button to rejoin.")
-				end
-			elseif P_Team(pl) == TEAM_SPECTATOR then
-				if pl:GetObserverMode() ~= OBS_MODE_ROAMING then
-					pl:Spectate(OBS_MODE_ROAMING)
-				end
-				pl:StripWeapons()
-				pl:GodDisable()
-				-- Kick spectator if AFK for 60 seconds
-				if pl.LastNotAFK and CurTime() > pl.LastNotAFK + 120 then
-					pl:Kick("AFK")
-				end
-			end
-		end
 
 				if pl:WaterLevel() >= 3 and not (pl.status_drown and pl.status_drown:IsValid()) then
 					pl:GiveStatus("drown")

@@ -1,10 +1,3 @@
--- Spectator rejoin: listen for M1 (left mouse button)
-hook.Add("PlayerButtonDown", "ZS_SpectatorRejoin", function(ply, button)
-	if ply == LocalPlayer() and ply:IsSpectator() and button == MOUSE_LEFT then
-		net.Start("zs_spectator_rejoin")
-		net.SendToServer()
-	end
-end)
 -- Track volunteering timer for Z-main gas on client
 local ZS_VolunteerGasStart = 0
 local ZS_VolunteerGasActive = false
