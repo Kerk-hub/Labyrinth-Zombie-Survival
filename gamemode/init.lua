@@ -5397,6 +5397,7 @@ function GM:WaveStateChanged(newstate)
 			pointsbonus = self.EndWavePointsBonus + (self:GetWave() - 1) * self.EndWavePointsBonusPerWave
 		end
 
+
 		for _, pl in pairs(player.GetAll()) do
 			if pl:Team() == TEAM_HUMAN and pl:Alive() then
 				if self.EndWaveHealthBonus > 0 then
@@ -5416,6 +5417,13 @@ function GM:WaveStateChanged(newstate)
 			end
 
 			pl.SkipCrow = nil
+		end
+
+		-- Slay all alive zombies at wave end
+		for _, pl in pairs(player.GetAll()) do
+			if pl:Team() == TEAM_UNDEAD and pl:Alive() then
+				pl:Kill()
+			end
 		end
 
 		local curwave = self:GetWave()
