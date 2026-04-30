@@ -250,7 +250,9 @@ cvars.AddChangeCallback("labyrinth_zs_interfacesize", function(cvar, oldvalue, n
 
 	GAMEMODE.TopNotificationHUD:InvalidateLayout()
 	GAMEMODE.CenterNotificationHUD:InvalidateLayout()
-	GAMEMODE.XPHUD:InvalidateLayout()
+	   if GAMEMODE.XPHUD and GAMEMODE.XPHUD.IsValid and GAMEMODE.XPHUD:IsValid() then
+		   GAMEMODE.XPHUD:InvalidateLayout()
+	   end
 	GAMEMODE.StatusHUD:InvalidateLayout()
 
 	GAMEMODE.ArsenalInterface = nil

@@ -3776,22 +3776,31 @@ function GM:EntityTakeDamage(ent, dmginfo)
 		dispatchdamagedisplay = true
 	end
 
-	local dmg = dmginfo:GetDamage()
-	if dmg > 0 then
-		local holder, status = ent:GetHolder()
-		if holder and not holder.BuffTaut then
-			status:Remove()
-		end
+	       local dmg = dmginfo:GetDamage()
+	       if dmg > 0 then
+		       local holder, status = ent:GetHolder()
+		       if holder and not holder.BuffTaut then
+			       status:Remove()
+		       end
 
-		local dmgpos = dmginfo:GetDamagePosition()
-		local hasdmgsess = attacker:IsPlayer() and attacker:HasDamageNumberSession()
+		       local dmgpos = dmginfo:GetDamagePosition()
+		       local hasdmgsess = attacker:IsPlayer() and attacker:HasDamageNumberSession()
 
-		if attacker:IsPlayer() and dispatchdamagedisplay and not hasdmgsess then
-			self:DamageFloater(attacker, ent, dmgpos, dmg)
-		elseif hasdmgsess and dispatchdamagedisplay then
-			attacker:CollectDamageNumberSession(dmg, dmgpos, ent:IsPlayer())
-		end
-	end
+		       -- Apply fear resistance for zombies so floaters show post-resistance damage
+		       local floaterdmg = dmg
+		       if ent:IsPlayer() and ent:Team() == TEAM_UNDEAD then
+			       local pos = ent:GetPos()
+			       local fearpower = GAMEMODE:GetFearMeterPower(pos, TEAM_UNDEAD, nil)
+			       local resistance = GAMEMODE:GetDamageResistance(fearpower)
+			       floaterdmg = math.max(0, dmg * (1 - resistance))
+		       end
+
+		       if attacker:IsPlayer() and dispatchdamagedisplay and not hasdmgsess then
+			       self:DamageFloater(attacker, ent, dmgpos, floaterdmg)
+		       elseif hasdmgsess and dispatchdamagedisplay then
+			       attacker:CollectDamageNumberSession(floaterdmg, dmgpos, ent:IsPlayer())
+		       end
+	       end
 end
 
 function GM:PostEntityTakeDamage(ent, dmginfo, wasDamageTaken)

@@ -670,12 +670,13 @@ GM.PlayerCanHearPlayersVoice = GetConVar("sv_alltalk"):GetBool() and GM.PlayerCa
 
 function GM:PlayerTraceAttack(pl, dmginfo, dir, trace) end
 
+
 function GM:GetDamageResistance(fearpower)
 	if self.MaxSigils > 0 and self:GetUseSigils() then
 		return fearpower * 0.1 + self:NumSigilsCorrupted() / self.MaxSigils * 0.2
 	end
-
-	return fearpower * 0.15
+	-- No sigils: max resistance is 30%
+	return fearpower * 0.3
 end
 
 function GM:FindUseEntity(pl, ent)
@@ -730,7 +731,7 @@ function GM:GetFurthestSpawnPoint(teamid, pos)
 end
 
 local FEAR_RANGE = 768 ^ 2
-local FEAR_PERINSTANCE = 0.075
+local FEAR_PERINSTANCE = 0.2
 local RALLYPOINT_THRESHOLD = 0.3
 
 local function GetEpicenter(tab)
@@ -845,9 +846,7 @@ function GM:GetCurrentEquipmentCount(id)
 end
 
 function GM:GetFearMeterPower(pos, teamid, ignore)
-	if LASTHUMAN then
-		return 1
-	end
+	-- Allow fear to operate normally even when LASTHUMAN is true
 
 	local dist
 
