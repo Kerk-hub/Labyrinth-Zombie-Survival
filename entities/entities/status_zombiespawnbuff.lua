@@ -5,28 +5,40 @@ ENT.Base = "status__base"
 
 function ENT:Initialize()
 	self.BaseClass.Initialize(self)
-
 	self.Seed = math.Rand(0, 10)
-
-	self:GetOwner().SpawnProtection = true
+	local owner = self:GetOwner()
+	if owner and owner:IsValid() then
+		owner.SpawnProtection = true
+		if SERVER then
+			owner.ZS_OriginalSpeed = owner.ZS_OriginalSpeed or owner:GetWalkSpeed()
+			owner:SetWalkSpeed(owner.ZS_OriginalSpeed * 10)
+			owner:SetRunSpeed(owner.ZS_OriginalSpeed * 10)
+		end
+	end
 end
 
 function ENT:PlayerSet(pl)
 	pl.SpawnProtection = true
+	if SERVER then
+		pl.ZS_OriginalSpeed = pl.ZS_OriginalSpeed or pl:GetWalkSpeed()
+		pl:SetWalkSpeed(pl.ZS_OriginalSpeed * 10)
+		pl:SetRunSpeed(pl.ZS_OriginalSpeed * 10)
+	end
 end
 
 function ENT:OnRemove()
 	self.BaseClass.OnRemove(self)
-
-	self:GetOwner().SpawnProtection = false
+	local owner = self:GetOwner()
+	if owner and owner:IsValid() then
+		owner.SpawnProtection = false
+		if SERVER and owner.ZS_OriginalSpeed then
+			owner:SetWalkSpeed(owner.ZS_OriginalSpeed)
+			owner:SetRunSpeed(owner.ZS_OriginalSpeed)
+		end
+	end
 end
 
 function ENT:SetDie(fTime)
-	if fTime == 0 or not fTime then
-		self.DieTime = 0
-	elseif fTime == -1 then
-		self.DieTime = 999999999
-	elseif self.DieTime < CurTime() + fTime then
-		self.DieTime = CurTime() + fTime
-	end
+	-- No timer-based expiration, indefinite until removed by logic
+	self.DieTime = 999999999
 end
