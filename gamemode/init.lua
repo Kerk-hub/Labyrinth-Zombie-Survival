@@ -1339,6 +1339,13 @@ function GM:Think()
 				gamemode.Call("SetWaveActive", true)
 			end
 		end
+
+		-- Kick the Z-main bot if it is on the zombie team and does not have the Z-main role
+		for _, pl in pairs(player.GetAll()) do
+			if pl:IsBot() and pl:Team() == TEAM_UNDEAD and pl:Name() == "Z-main" and not pl:GetNWBool("zs_zmain", false) then
+				pl:Kick("Z-main bot removed: no longer Z-main")
+			end
+		end
 	end
 
 	local allplayers = player_GetAll()
