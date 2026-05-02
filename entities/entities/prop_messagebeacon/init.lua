@@ -27,7 +27,7 @@ function ENT:Initialize()
 		worldhint:SetParent(self)
 		worldhint:Spawn()
 		worldhint:SetViewable(TEAM_HUMAN)
-		worldhint:SetRange(400)
+		worldhint:SetRange(1000)
 		worldhint:SetHint(self:GetMessage())
 		worldhint:SetTranslated(true)
 	end
@@ -97,7 +97,7 @@ function ENT:Think()
 	local owner = self.GetObjectOwner and self:GetObjectOwner()
 	if owner and owner:IsValid() and owner:IsPlayer() then
 		local dist = self:GetPos():DistToSqr(owner:GetPos())
-		if dist > 400 * 400 then
+		if dist > 800 * 800 then
 			-- Remove beacon and give deployable
 			if owner.GiveEmptyWeapon then
 				owner:GiveEmptyWeapon("weapon_zs_messagebeacon")
