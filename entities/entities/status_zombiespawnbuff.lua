@@ -11,8 +11,8 @@ function ENT:Initialize()
 		owner.SpawnProtection = true
 		if SERVER then
 			owner.ZS_OriginalSpeed = owner.ZS_OriginalSpeed or owner:GetWalkSpeed()
-			owner:SetWalkSpeed(owner.ZS_OriginalSpeed * 10)
-			owner:SetRunSpeed(owner.ZS_OriginalSpeed * 10)
+			owner:SetWalkSpeed(owner.ZS_OriginalSpeed * 3)
+			owner:SetRunSpeed(owner.ZS_OriginalSpeed * 3)
 		end
 	end
 end
@@ -21,8 +21,8 @@ function ENT:PlayerSet(pl)
 	pl.SpawnProtection = true
 	if SERVER then
 		pl.ZS_OriginalSpeed = pl.ZS_OriginalSpeed or pl:GetWalkSpeed()
-		pl:SetWalkSpeed(pl.ZS_OriginalSpeed * 10)
-		pl:SetRunSpeed(pl.ZS_OriginalSpeed * 10)
+		pl:SetWalkSpeed(pl.ZS_OriginalSpeed * 3)
+		pl:SetRunSpeed(pl.ZS_OriginalSpeed * 3)
 	end
 end
 

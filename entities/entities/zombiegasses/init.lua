@@ -39,15 +39,9 @@ function ENT:AcceptInput(name, activator, caller, arg)
 	end
 
 	local playersInGas = {}
-	local zombiesInGas = {}
 	for _, ent in pairs(ents.FindInSphere(vPos, self:GetRadius())) do
 		if ent and ent:IsValidLivingPlayer() and WorldVisible(vPos, ent:WorldSpaceCenter()) then
-			if ent:Team() == TEAM_UNDEAD then
-				if CurTime() >= (ent.LastRangedAttack or 0) + 3 then
-					ent:GiveStatus("zombiespawnbuff", -1) -- -1 means indefinite
-					table.insert(zombiesInGas, ent)
-				end
-			elseif GAMEMODE:GetWave() ~= 0 then
+			if ent:Team() ~= TEAM_UNDEAD and GAMEMODE:GetWave() ~= 0 then
 				ent:GiveStatus("spawnslow", self.TickTime + 0.1)
 				if not hasZMain then
 					table.insert(playersInGas, ent)
