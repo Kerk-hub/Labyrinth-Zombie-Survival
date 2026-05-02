@@ -58,6 +58,14 @@ function meta:ProcessDamage(dmginfo)
 
 	local dmgbypass = bit.band(dmgtype, DMG_DIRECT) ~= 0
 
+	-- Apply SpawnProtection to ALL players (humans and zombies), for all damage sources
+	if self.SpawnProtection then
+		dmginfo:SetDamage(0)
+		dmginfo:ScaleDamage(0)
+		dmginfo:SetDamageForce(vector_origin)
+		return
+	end
+
 	if self.DamageVulnerability and not dmgbypass then
 		dmginfo:SetDamage(dmginfo:GetDamage() * self.DamageVulnerability)
 	end
@@ -1640,6 +1648,13 @@ function meta:Redeem(silent, noequip)
 	end
 
 	self:Spawn()
+	-- Grant 10 seconds of invulnerability to all redeemed players
+	self.SpawnProtection = true
+	timer.Simple(10, function()
+		if IsValid(self) then
+			self.SpawnProtection = false
+		end
+	end)
 	self.m_RedeemBeaconSpawnPos = nil
 	self.m_RedeemBeaconSpawnAngles = nil
 

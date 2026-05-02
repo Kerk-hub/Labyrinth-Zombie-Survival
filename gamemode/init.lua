@@ -1023,6 +1023,8 @@ function GM:PlayerSelectSpawn(pl)
 		-- Try to spawn at a barricade beacon if one exists
 		local beaconpos, beaconang = self:GetRandomSafeRedeemBeaconSpawn(pl)
 		if beaconpos then
+			-- Mark player for beacon spawn protection
+			pl.m_RedeemBeaconSpawnPos = beaconpos
 			-- Create a temporary spawn entity at the beacon position
 			local spawn = ents.Create("info_player_start")
 			if spawn and spawn:IsValid() then
