@@ -246,12 +246,12 @@ local function ShouldShowPhasePropPrompt()
 	       maxs.x = maxs.x - 1
 	       maxs.y = maxs.y - 1
 
-	       for _, ent in pairs(ents.FindInBox(mins, maxs)) do
-		       if ent:IsValid() and ent ~= MySelf and ent:IsNailed() then
-			       PhasePropPromptTouching = true
-			       break
+		       for _, ent in pairs(ents.FindInBox(mins, maxs)) do
+			       if ent:IsValid() and ent ~= MySelf and (ent:IsNailed() or ent:GetClass() == "prop_aegisboard") then
+				       PhasePropPromptTouching = true
+				       break
+			       end
 		       end
-	       end
        end
 
        SetPhasePropPromptAutoPhasing(PhasePropPromptTouching)
