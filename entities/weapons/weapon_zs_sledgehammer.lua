@@ -17,7 +17,7 @@ SWEP.ViewModel = "models/weapons/v_sledgehammer/c_sledgehammer.mdl"
 SWEP.WorldModel = "models/weapons/w_sledgehammer.mdl"
 SWEP.UseHands = true
 
-SWEP.MeleeDamage = 75
+SWEP.MeleeDamage = 120
 SWEP.MeleeRange = 64
 SWEP.MeleeSize = 1.75
 SWEP.MeleeKnockBack = 270
@@ -35,6 +35,11 @@ SWEP.SwingHoldType = "melee"
 
 SWEP.AllowQualityWeapons = true
 
+SWEP.NailDelay   = 1.5
+SWEP.UnnailDelay = 2.0
+
+BUILDING_WEAPON_MIXIN.ApplyShared(SWEP)
+
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MELEE_IMPACT_DELAY, -0.1, 1)
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.1, 1)
 
@@ -48,4 +53,12 @@ end
 
 function SWEP:PlayHitFleshSound()
 	self:EmitSound("physics/body/body_medium_break"..math.random(2, 4)..".wav", 75, math.Rand(86, 90))
+end
+
+if SERVER then
+	BUILDING_WEAPON_MIXIN.ApplyServer(SWEP)
+end
+
+if CLIENT then
+	BUILDING_WEAPON_MIXIN.ApplyClient(SWEP)
 end

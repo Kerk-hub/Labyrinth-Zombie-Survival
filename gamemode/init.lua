@@ -18,6 +18,7 @@ AddCSLuaFile("sh_colors.lua")
 AddCSLuaFile("sh_serialization.lua")
 AddCSLuaFile("sh_globals.lua")
 AddCSLuaFile("sh_util.lua")
+AddCSLuaFile("sh_building_weapon_mixin.lua")
 AddCSLuaFile("sh_options.lua")			-- worth menu, point shop, other options...
 AddCSLuaFile("sh_zombieclasses.lua")
 AddCSLuaFile("sh_animations.lua")

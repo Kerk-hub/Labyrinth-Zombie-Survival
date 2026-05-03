@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "Axe"
-SWEP.Description = "A simple axe, with balanced stats across the board in terms of damage, range and swing speed."
+SWEP.Description = "A simple axe with balanced stats. Can nail and unnail props with SECONDARY FIRE and RELOAD."
 
 if CLIENT then
 	SWEP.ViewModelFOV = 55
@@ -25,7 +25,7 @@ SWEP.UseHands = true
 
 SWEP.HoldType = "melee2"
 
-SWEP.MeleeDamage = 45
+SWEP.MeleeDamage = 80
 SWEP.MeleeRange = 55
 SWEP.MeleeSize = 1.5
 SWEP.MeleeKnockBack = 125
@@ -41,6 +41,8 @@ SWEP.HitDecal = "Manhackcut"
 
 SWEP.AllowQualityWeapons = true
 
+BUILDING_WEAPON_MIXIN.ApplyShared(SWEP)
+
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MELEE_RANGE, 3)
 
 function SWEP:PlaySwingSound()
@@ -53,4 +55,12 @@ end
 
 function SWEP:PlayHitFleshSound()
 	self:EmitSound("physics/body/body_medium_break"..math.random(2, 4)..".wav")
+end
+
+if SERVER then
+	BUILDING_WEAPON_MIXIN.ApplyServer(SWEP)
+end
+
+if CLIENT then
+	BUILDING_WEAPON_MIXIN.ApplyClient(SWEP)
 end

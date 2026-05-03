@@ -79,3 +79,5 @@ function SWEP:DrawWorldModel()
 		end
 	end
 end
+
+BUILDING_WEAPON_MIXIN.ApplyClient(SWEP)

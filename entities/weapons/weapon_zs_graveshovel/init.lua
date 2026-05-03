@@ -29,3 +29,5 @@ function SWEP:PostOnMeleeHit(hitent, hitflesh, tr)
 
 	self.MeleeDamage = self.OriginalMeleeDamage
 end
+
+BUILDING_WEAPON_MIXIN.ApplyServer(SWEP)

@@ -49,6 +49,7 @@ include("sh_translate.lua")
 include("sh_colors.lua")
 include("sh_serialization.lua")
 include("sh_util.lua")
+include("sh_building_weapon_mixin.lua")
 
 include("skillweb/sh_skillweb.lua")
 
