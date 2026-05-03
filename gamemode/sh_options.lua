@@ -398,13 +398,7 @@ item.Countables = "prop_rollermine"
 item.SkillRequirement = SKILL_U_ROLLERMINE
 
 GM:WorthAdd("wrench", ITEMS_MELEE, 40, "weapon_zs_wrench").SubCategory = 5
-GM:WorthAdd("crphmr", ITEMS_TOOLS, 20, "weapon_zs_hammer").NoClassicMode = true
 -- GM:WorthAdd("junkpack", ITEMS_DEPLOYABLES, 30, "weapon_zs_boardpack") -- Disabled: no longer purchasable.
-GM:WorthAdd("propanetank", ITEMS_TOOLS, 10, "comp_propanecan")
-GM:WorthAdd("busthead", ITEMS_TOOLS, 10, "comp_busthead")
-GM:WorthAdd("sawblade", ITEMS_TOOLS, 10, "comp_sawblade").SkillRequirement = SKILL_U_CRAFTINGPACK
-GM:WorthAdd("cpuparts", ITEMS_TOOLS, 10, "comp_cpuparts").SkillRequirement = SKILL_U_CRAFTINGPACK
-GM:WorthAdd("electrobattery", ITEMS_TOOLS, 10, "comp_electrobattery").SkillRequirement = SKILL_U_CRAFTINGPACK
 
 local function PlayerHasBarricadeBeacon(pl)
 	if pl:GetAmmoCount("striderminigun") > 0 then
@@ -676,11 +670,6 @@ GM:ShopAdd("lamp", ITEMS_MELEE, 40, "weapon_zs_lamp").SubCategory = 5
 GM:ShopAdd("megamash", ITEMS_MELEE, 40, "weapon_zs_megamasher").SubCategory = 5
 GM:ShopAdd("wrench", ITEMS_MELEE, 40, "weapon_zs_wrench").SubCategory = 5
 
-GM:ShopAdd("crphmr", ITEMS_TOOLS, 25, "weapon_zs_hammer", nil, nil, nil, function(pl)
-	pl:GiveEmptyWeapon("weapon_zs_hammer")
-	pl:GiveAmmo(5, "GaussEnergy")
-end)
-GM:ShopAdd("wrench", ITEMS_TOOLS, 20, "weapon_zs_wrench").NoClassicMode = true
 --GM:ShopAdd("arsenalcrate", ITEMS_DEPLOYABLES, 40, "weapon_zs_arsenalcrate").Countables = "prop_arsenalcrate" --
 --GM:ShopAdd("resupplybox", ITEMS_DEPLOYABLES, 40, "weapon_zs_resupplybox").Countables = "prop_resupplybox" -- Disabled: no longer purchasable.
 --GM:ShopAdd("remantler", ITEMS_DEPLOYABLES, 40, "weapon_zs_remantler").Countables = "prop_remantler"
@@ -786,11 +775,6 @@ item = GM:ShopAdd("ffemitter", ITEMS_DEPLOYABLES, 40, "weapon_zs_ffemitter", nil
 	pl:GiveAmmo(30, "pulse")
 end)
 item.Countables = "prop_ffemitter"
-GM:ShopAdd("propanetank", ITEMS_TOOLS, 15, "comp_propanecan")
-GM:ShopAdd("busthead", ITEMS_TOOLS, 15, "comp_busthead")
-GM:ShopAdd("sawblade", ITEMS_TOOLS, 15, "comp_sawblade").SkillRequirement = SKILL_U_CRAFTINGPACK
-GM:ShopAdd("cpuparts", ITEMS_TOOLS, 15, "comp_cpuparts").SkillRequirement = SKILL_U_CRAFTINGPACK
-GM:ShopAdd("electrobattery", ITEMS_TOOLS, 15, "comp_electrobattery").SkillRequirement = SKILL_U_CRAFTINGPACK
 GM:ShopAdd("barricadekit", ITEMS_DEPLOYABLES, 50, "weapon_zs_barricadekit")
 GM:ShopAdd("medkit", ITEMS_TOOLS, 30, "weapon_zs_medicalkit")
 GM:ShopAdd("medgun", ITEMS_TOOLS, 30, "weapon_zs_medicgun")
