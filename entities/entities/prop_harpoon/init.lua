@@ -22,30 +22,6 @@ function ENT:Think()
 				parent:TakeSpecialDamage(self.BleedPerTick, DMG_SLASH, self:GetOwner(), self)
 			end
 		else
-			local ang = self:GetAngles()
-			ang:RotateAroundAxis(ang:Up(), 180)
-
-			local ent = ents.Create("prop_weapon")
-			if ent:IsValid() then
-				ent:SetWeaponType(self.BaseWeapon)
-				ent:SetPos(self:GetPos())
-				ent:SetAngles(ang)
-				ent:Spawn()
-
-				local owner = self:GetOwner()
-				if owner:IsValidHuman() then
-					ent.NoPickupsTime = CurTime() + 15
-					ent.NoPickupsOwner = self:GetOwner()
-				end
-
-				local phys = ent:GetPhysicsObject()
-				if phys:IsValid() then
-					phys:Wake()
-					phys:AddAngleVelocity(VectorRand() * 120)
-					phys:SetVelocityInstantaneous(Vector(0, 0, 200))
-				end
-			end
-
 			self:Remove()
 		end
 	else

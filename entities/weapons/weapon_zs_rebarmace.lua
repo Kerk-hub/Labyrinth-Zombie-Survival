@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "Rebar Mace"
-SWEP.Description = "Disorients zombies hit."
+SWEP.Description = "Disorients zombies hit. Right click to perform an extra jump (7s cooldown)."
 
 if CLIENT then
 	SWEP.ViewModelFlip = false
@@ -28,7 +28,7 @@ SWEP.UseHands = true
 
 SWEP.HoldType = "melee2"
 
-SWEP.MeleeDamage = 135
+SWEP.MeleeDamage = 100
 SWEP.MeleeRange = 70
 SWEP.MeleeSize = 3
 SWEP.MeleeKnockBack = 300
@@ -68,6 +68,8 @@ end)
 function SWEP:PlaySwingSound()
 	self:EmitSound("weapons/iceaxe/iceaxe_swing1.wav", 75, math.random(55, 65))
 end
+
+SURVIVAL_WEAPON_MIXIN.Apply(SWEP)
 
 function SWEP:PlayHitSound()
 	self:EmitSound("physics/concrete/concrete_break"..math.random(2,3)..".wav", 75, math.random(95, 105))

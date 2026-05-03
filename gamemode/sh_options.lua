@@ -292,10 +292,10 @@ GM:WorthAdd("90mkit", ITEMS_AMMO, 20, nil, "90 medical power", nil, "ammo_medpow
 	pl:GiveAmmo(90, "Battery", true)
 end)
 
-local item = GM:WorthAdd("brassknuckles", ITEMS_MELEE, 15, "weapon_zs_brassknuckles")
+local item = GM:WorthAdd("brassknuckles", ITEMS_MELEE, 40, "weapon_zs_brassknuckles")
 item.SubCategory = 3
 item.Model = "models/props_c17/utilityconnecter005.mdl"
-GM:WorthAdd("zpplnk", ITEMS_MELEE, 15, "weapon_zs_plank").SubCategory = 3
+GM:WorthAdd("zpplnk", ITEMS_MELEE, 40, "weapon_zs_plank").SubCategory = 3
 GM:WorthAdd("zpaxe", ITEMS_MELEE, 40, "weapon_zs_axe").SubCategory = 2
 GM:WorthAdd("crwbar", ITEMS_MELEE, 40, "weapon_zs_crowbar").SubCategory = 2
 GM:WorthAdd("broom", ITEMS_MELEE, 40, "weapon_zs_pushbroom").SubCategory = 2

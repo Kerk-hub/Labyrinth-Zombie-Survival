@@ -1,6 +1,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "Bust-on-a-stick"
+SWEP.Description = "A breen bust mounted on a stick, heavy but with wide reach. Right click to perform an extra jump (7s cooldown)."
 
 if CLIENT then
 	SWEP.ViewModelFOV = 70
@@ -28,7 +29,7 @@ SWEP.ViewModel = "models/weapons/c_crowbar.mdl"
 SWEP.WorldModel = Model("models/props_combine/breenbust.mdl")
 SWEP.UseHands = true
 
-SWEP.MeleeDamage = 50
+SWEP.MeleeDamage = 81
 SWEP.MeleeRange = 50
 SWEP.MeleeSize = 1.4
 
@@ -45,6 +46,8 @@ SWEP.AllowQualityWeapons = true
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.1, 1)
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MELEE_RANGE, 2, 1)
+
+SURVIVAL_WEAPON_MIXIN.Apply(SWEP)
 
 SWEP.Tier = 2
 SWEP.DismantleDiv = 2

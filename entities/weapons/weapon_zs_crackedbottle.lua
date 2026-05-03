@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "Cracked Bottle"
-SWEP.Description = "A cracked bottle."
+SWEP.Description = "A cracked bottle with jagged edges that slash through zombie flesh. Right click to perform an extra jump (7s cooldown)."
 
 if CLIENT then
 	SWEP.ViewModelFOV = 55
@@ -28,7 +28,7 @@ SWEP.UseHands = true
 
 SWEP.AutoSwitchFrom	= true
 
-SWEP.MeleeDamage = 20
+SWEP.MeleeDamage = 60
 SWEP.MeleeRange = 45
 SWEP.MeleeSize = 0.875
 
@@ -60,8 +60,4 @@ function SWEP:PlayHitFleshSound()
 	self:EmitSound("physics/glass/glass_bottle_break2.wav")
 end
 
-function SWEP:OnMeleeHit(hitent, hitflesh)
-	if hitent:IsValid() and SERVER then
-		timer.Simple(0, function() self:GetOwner():StripWeapon(self:GetClass()) end)
-	end
-end
+SURVIVAL_WEAPON_MIXIN.Apply(SWEP)

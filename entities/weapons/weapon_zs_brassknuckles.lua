@@ -3,7 +3,7 @@ AddCSLuaFile()
 SWEP.Base = "weapon_zs_fists"
 
 SWEP.PrintName = "Brass Knuckles"
-SWEP.Description = "A pair of brass knuckles used to concentrate strikes from one's fists, increasing the damage done, while keeping their movement speed up."
+SWEP.Description = "A pair of brass knuckles used to concentrate strikes from one's fists, increasing the damage done, while keeping their movement speed up. Right click to perform an extra jump (7s cooldown)."
 
 if CLIENT then
 	SWEP.ViewModelFOV = 52
@@ -30,7 +30,7 @@ SWEP.WorldModel	= "models/weapons/w_grenade.mdl"
 
 SWEP.Weight = 4
 
-SWEP.MeleeDamage = 22.5
+SWEP.MeleeDamage = 40
 
 SWEP.Unarmed = false
 
@@ -43,3 +43,5 @@ SWEP.NoGlassWeapons = false
 SWEP.AllowQualityWeapons = true
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.06)
+
+SURVIVAL_WEAPON_MIXIN.Apply(SWEP)

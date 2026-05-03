@@ -1,5 +1,5 @@
 SWEP.PrintName = "Mechanic's Wrench"
-SWEP.Description = "This tool can be used to repair deployables as long as they were not damaged recently."
+SWEP.Description = "Repairs deployables. While equipped, your gun turrets fire without consuming ammo."
 
 SWEP.Base = "weapon_zs_basemelee"
 
@@ -13,7 +13,7 @@ SWEP.HoldType = "melee"
 SWEP.DamageType = DMG_CLUB
 
 SWEP.Primary.Delay = 0.8
-SWEP.MeleeDamage = 28
+SWEP.MeleeDamage = 56
 SWEP.MeleeRange = 50
 SWEP.MeleeSize = 0.875
 

@@ -3,7 +3,7 @@ AddCSLuaFile()
 SWEP.Base = "weapon_zs_fists"
 
 SWEP.PrintName = "Power Fists"
-SWEP.Description = "A pair of power fists. They are slower than conventional fist combat, but pack a hefty pulse powered punch."
+SWEP.Description = "A pair of power fists. They are slower than conventional fist combat, but pack a hefty pulse powered punch. Every 4 seconds the next punch is supercharged, dealing explosive damage and knocking back all nearby zombies."
 
 if CLIENT then
 	SWEP.ViewModelFOV = 65
@@ -35,7 +35,7 @@ SWEP.WorldModel	= "models/weapons/w_grenade.mdl"
 
 SWEP.Weight = 4
 
-SWEP.MeleeDamage = 86
+SWEP.MeleeDamage = 52
 SWEP.LegDamage = 17
 
 SWEP.Unarmed = false
@@ -57,15 +57,73 @@ SWEP.Primary.Delay = 0.65
 
 SWEP.Tier = 4
 
+SWEP.SuperchargeInterval = 4
+SWEP.SuperchargeRadius    = 200
+
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.07, 1)
 
+function SWEP:Think()
+	if not self.m_NextSupercharge then
+		self.m_NextSupercharge = CurTime() + self.SuperchargeInterval
+	end
+
+	if CLIENT then
+		local isCharged = CurTime() >= self.m_NextSupercharge
+		if isCharged and not self.m_SuperchargeNotified then
+			self.m_SuperchargeNotified = true
+			self:EmitSound("buttons/button1.wav", 75, 150)
+			GAMEMODE:CenterNotify(COLOR_BLUE, "Powerfists Supercharged!")
+		elseif not isCharged then
+			self.m_SuperchargeNotified = false
+		end
+	end
+
+	self.BaseClass.Think(self)
+end
+
 function SWEP:OnMeleeHit(hitent, hitflesh, tr)
+	if not self.m_NextSupercharge then
+		self.m_NextSupercharge = CurTime() + self.SuperchargeInterval
+	end
+
+	local supercharged = CurTime() >= self.m_NextSupercharge
+
 	if hitent:IsValid() then
 		util.CreatePulseImpactEffect(tr.HitPos, tr.HitNormal)
 
 		if hitent:IsPlayer() then
 			hitent:AddLegDamageExt(self.LegDamage, self:GetOwner(), self, SLOWTYPE_PULSE)
 			hitent:EmitSound("Weapon_StunStick.Melee_Hit")
+		end
+	end
+
+	if supercharged then
+		self.m_NextSupercharge = CurTime() + self.SuperchargeInterval
+
+		local owner = self:GetOwner()
+		local explodePos = owner:GetPos() + owner:GetForward() * 10
+		local effectdata = EffectData()
+		effectdata:SetOrigin(explodePos)
+		util.Effect("cball_explode", effectdata)
+		self:EmitSound("weapons/zs_power/power4.wav", 85, 70)
+
+		if SERVER then
+			for _, ent in ipairs(ents.FindInSphere(owner:GetPos(), self.SuperchargeRadius)) do
+				if not ent:IsValid() then continue end
+				if not ent:IsPlayer() then continue end
+				if ent == hitent then continue end
+				if not gamemode.Call("PlayerShouldTakeDamage", ent, owner) then continue end
+
+				local dmginfo = DamageInfo()
+				dmginfo:SetDamage(self.MeleeDamage)
+				dmginfo:SetAttacker(owner)
+				dmginfo:SetInflictor(self)
+				dmginfo:SetDamageType(DMG_BLAST)
+				dmginfo:SetDamagePosition(owner:GetPos())
+				dmginfo:SetDamageForce((ent:GetPos() - owner:GetPos()):GetNormalized() * self.MeleeDamage * 100)
+				ent:TakeDamageInfo(dmginfo)
+				ent:ThrowFromPositionSetZ(owner:GetPos(), self.MeleeKnockBack, nil, true)
+			end
 		end
 	end
 end

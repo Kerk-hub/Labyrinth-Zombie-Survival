@@ -26,11 +26,13 @@ SWEP.HoldType = "melee2"
 
 SWEP.DamageType = DMG_CLUB
 
-SWEP.MeleeDamage = 44
-SWEP.MeleeRange = 68
+SWEP.Description = "Long reach. Hits ignite the target, dealing half of the weapon's damage as burn over 3 seconds."
+
+SWEP.MeleeDamage = 120
+SWEP.MeleeRange = 120
 SWEP.MeleeSize = 2
 
-SWEP.Primary.Delay = 1
+SWEP.Primary.Delay = 1.5
 
 SWEP.WalkSpeed = SPEED_SLOW
 
@@ -42,7 +44,24 @@ SWEP.SwingHoldType = "melee"
 SWEP.AllowQualityWeapons = true
 SWEP.DismantleDiv = 2
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.1)
+if SERVER then
+	function SWEP:OnMeleeHit(hitent, hitflesh, tr)
+		if hitflesh and hitent:IsValid() and hitent:IsPlayer() and not hitent.SpawnProtection then
+			local burnTotal = math.floor(self.MeleeDamage * 0.5)
+			local attacker = self:GetOwner()
+			hitent:Ignite(3)
+			local timerName = "lamp_burn_" .. hitent:EntIndex()
+			timer.Remove(timerName)
+			local tickDmg = math.ceil(burnTotal / 6)
+			local entRef = hitent
+			timer.Create(timerName, 0.5, 6, function()
+				if IsValid(entRef) and IsValid(attacker) then
+					entRef:AddDamage(tickDmg, attacker, attacker)
+				end
+			end)
+		end
+	end
+end
 
 function SWEP:PlaySwingSound()
 	self:EmitSound("weapons/iceaxe/iceaxe_swing1.wav", 80, math.Rand(65, 70))

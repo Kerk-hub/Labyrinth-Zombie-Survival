@@ -32,7 +32,9 @@ SWEP.ViewModel = "models/weapons/v_sledgehammer/c_sledgehammer.mdl"
 SWEP.WorldModel = "models/weapons/w_crowbar.mdl"
 SWEP.UseHands = true
 
-SWEP.MeleeDamage = 190
+SWEP.Description = "When it lands, the impact sends a shockwave dealing 40% damage to all zombies within 175 units of the hit."
+
+SWEP.MeleeDamage = 200
 SWEP.MeleeRange = 75
 SWEP.MeleeSize = 4
 SWEP.MeleeKnockBack = 420
@@ -71,5 +73,15 @@ function SWEP:OnMeleeHit(hitent, hitflesh, tr)
 			effectdata:SetOrigin(tr.HitPos)
 			effectdata:SetNormal(tr.HitNormal)
 		util.Effect("explosion", effectdata)
+	end
+
+	if SERVER then
+		local attacker = self:GetOwner()
+		local shockDmg = math.floor(self.MeleeDamage * 0.4)
+		for _, ent in ipairs(ents.FindInSphere(tr.HitPos, 175)) do
+			if ent ~= hitent and ent:IsValid() and ent:IsPlayer() and gamemode.Call("PlayerShouldTakeDamage", ent, attacker) then
+				ent:AddDamage(shockDmg, attacker, attacker)
+			end
+		end
 	end
 end

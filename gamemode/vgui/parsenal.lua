@@ -145,7 +145,7 @@ function GM:ViewerStatBarUpdate(viewer, display, sweptable)
 						stattext = speedtotext[-1]
 					end
 				elseif statshow[1] == "ClipSize" then
-					stattext = statnum / sweptable.RequiredClip
+					stattext = statnum / (sweptable.RequiredClip or 1)
 				else
 					stattext = statnum
 				end

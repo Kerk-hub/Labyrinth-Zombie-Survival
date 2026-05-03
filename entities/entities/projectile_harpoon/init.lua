@@ -52,28 +52,6 @@ function ENT:Hit(vHitPos, vHitNormal, vel, hitent)
 		hitent:TakeSpecialDamage(self.ProjDamage or 45, DMG_GENERIC, owner, self, self:GetPos())
 		hitent:EmitSound("npc/strider/strider_skewer1.wav", 70, 112)
 	else
-		local ang = self:GetAngles()
-		ang:RotateAroundAxis(ang:Up(), 180)
-
-		local ent = ents.Create("prop_weapon")
-		if ent:IsValid() then
-			ent:SetWeaponType(self.BaseWeapon)
-			ent:SetPos(self:GetPos())
-			ent:SetAngles(ang)
-			ent:Spawn()
-
-			if owner:IsValidHuman() then
-				ent.NoPickupsTime = CurTime() + 15
-				ent.NoPickupsOwner = self:GetOwner()
-			end
-
-			local physob = ent:GetPhysicsObject()
-			if physob:IsValid() then
-				physob:Wake()
-				physob:SetVelocityInstantaneous(vel)
-			end
-		end
-
 		self:EmitSound("physics/metal/metal_sheet_impact_bullet"..math.random(2)..".wav", 70, math.random(90, 95))
 	end
 

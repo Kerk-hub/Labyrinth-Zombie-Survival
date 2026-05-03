@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "'Executioner' Axe"
-SWEP.Description = "Instantly kills zombies brought bellow 10% of their max health."
+SWEP.Description = "Cleaves through multiple zombies in one swing. Instantly kills zombies brought below 10% of their max health."
 
 if CLIENT then
 	SWEP.ViewModelFOV = 55
@@ -31,7 +31,7 @@ SWEP.UseHands = true
 
 SWEP.HoldType = "melee2"
 
-SWEP.MeleeDamage = 125
+SWEP.MeleeDamage = 95
 SWEP.MeleeRange = 75
 SWEP.MeleeSize = 2.75
 SWEP.MeleeKnockBack = 225
@@ -50,6 +50,8 @@ SWEP.Tier = 3
 SWEP.AllowQualityWeapons = true
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.13)
+
+MEDIEVAL_WEAPON_MIXIN.Apply(SWEP)
 
 function SWEP:PlaySwingSound()
 	self:EmitSound("weapons/iceaxe/iceaxe_swing1.wav", 75, math.random(65, 70))
