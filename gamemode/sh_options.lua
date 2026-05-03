@@ -39,7 +39,7 @@ GM.ItemCategories = {
 	[ITEMS_GUNS] = "Guns",
 	[ITEMS_AMMO] = "Ammunition",
 	[ITEMS_MELEE] = "Melee",
-	[ITEMS_TOOLS] = "Tools",
+	[ITEMS_TOOLS] = "Healing",
 	[ITEMS_DEPLOYABLES] = "Deployables",
 	[ITEMS_TRINKETS] = "Trinkets",
 	[ITEMS_OTHER] = "Other",
@@ -484,13 +484,13 @@ GM:WorthAdd("crygasgrenade", ITEMS_OTHER, 15, "weapon_zs_crygasgrenade").SkillRe
 GM:WorthAdd("detpck", ITEMS_OTHER, 15, "weapon_zs_detpack").Countables = "prop_detpack"
 
 -- item.SkillRequirement = SKILL_U_CORRUPTEDFRAGMENT
-item = GM:WorthAdd("medcloud", ITEMS_OTHER, 15, "weapon_zs_mediccloudbomb")
+item = GM:WorthAdd("medcloud", ITEMS_TOOLS, 15, "weapon_zs_mediccloudbomb")
 item.SkillRequirement = SKILL_U_MEDICCLOUD
 --[[
 item = GM:WorthAdd("nanitecloud", ITEMS_OTHER, 25, "weapon_zs_nanitecloudbomb")
 item.SkillRequirement = SKILL_U_NANITECLOUD
 ]]
-GM:WorthAdd("bloodshot", ITEMS_OTHER, 15, "weapon_zs_bloodshotbomb")
+GM:WorthAdd("bloodshot", ITEMS_TOOLS, 15, "weapon_zs_bloodshotbomb")
 -- item = GM:WorthAdd("sigfragment", ITEMS_OTHER, 15, "weapon_zs_sigilfragment")
 -- item.NoClassicMode = true
 -- item = GM:WorthAdd("corfragment", ITEMS_OTHER, 20, "weapon_zs_corruptedfragment")
@@ -904,11 +904,11 @@ item = GM:ShopAdd("crygasgrenade", ITEMS_OTHER, 40, "weapon_zs_crygasgrenade")
 item.SkillRequirement = SKILL_U_CRYGASGREN
 GM:ShopAdd("corgasgrenade", ITEMS_OTHER, 45, "weapon_zs_corgasgrenade")
 -- GM:ShopAdd("sigfragment", ITEMS_OTHER, 30, "weapon_zs_sigilfragment")
-GM:ShopAdd("bloodshot", ITEMS_OTHER, 45, "weapon_zs_bloodshotbomb")
+GM:ShopAdd("bloodshot", ITEMS_TOOLS, 45, "weapon_zs_bloodshotbomb")
 -- item = GM:ShopAdd("corruptedfragment", ITEMS_OTHER, 55, "weapon_zs_corruptedfragment")
 -- item.NoClassicMode = true
 -- item.SkillRequirement = SKILL_U_CORRUPTEDFRAGMENT
-item = GM:ShopAdd("medcloud", ITEMS_OTHER, 40, "weapon_zs_mediccloudbomb")
+item = GM:ShopAdd("medcloud", ITEMS_TOOLS, 40, "weapon_zs_mediccloudbomb")
 item.SkillRequirement = SKILL_U_MEDICCLOUD
 --[[
 item = GM:ShopAdd("nanitecloud", ITEMS_OTHER, 40, "weapon_zs_nanitecloudbomb")

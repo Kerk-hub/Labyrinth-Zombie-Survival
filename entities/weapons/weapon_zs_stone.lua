@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "Stone"
-SWEP.Description = "A heavy stone used for bashing and nailing props. Hold SHIFT to hurl it at zombies — it returns to you after a few seconds. You cannot nail or unnail props while the stone is in flight."
+SWEP.Description = "A heavy stone used for bashing and nailing props. Hold SHIFT to hurl it at zombies — it returns to you after a few seconds."
 
 if CLIENT then
 	SWEP.ViewModelFlip = false
@@ -33,7 +33,7 @@ SWEP.UseHands = true
 
 SWEP.DamageType = DMG_CLUB
 
-SWEP.MeleeDamage = 100
+SWEP.MeleeDamage = 80
 SWEP.MeleeRange = 55
 SWEP.MeleeSize = 1.2
 SWEP.Primary.Delay = 1.0
@@ -47,25 +47,6 @@ BUILDING_WEAPON_MIXIN.ApplyShared(SWEP)
 
 if SERVER then
 	BUILDING_WEAPON_MIXIN.ApplyServer(SWEP)
-
-	-- Wrap mixin nail/unnail to block while stone is airborne
-	local mixinNail   = SWEP.SecondaryAttack
-	local mixinUnnail = SWEP.Reload
-
-	function SWEP:SecondaryAttack()
-		if self.StoneInFlight then return end
-		mixinNail(self)
-	end
-
-	function SWEP:Reload()
-		if self.StoneInFlight then return end
-		mixinUnnail(self)
-	end
-
-	function SWEP:PrimaryAttack()
-		if self.StoneInFlight then return end
-		self.BaseClass.PrimaryAttack(self)
-	end
 
 	function SWEP:ThrowStone()
 		if self.StoneInFlight then return end
