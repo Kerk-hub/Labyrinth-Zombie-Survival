@@ -28,7 +28,7 @@ SWEP.DamageType = DMG_CLUB
 
 SWEP.Description = "Long reach. Hits ignite the target, dealing half of the weapon's damage as burn over 3 seconds."
 
-SWEP.MeleeDamage = 120
+SWEP.MeleeDamage = 100
 SWEP.MeleeRange = 120
 SWEP.MeleeSize = 2
 
@@ -56,7 +56,7 @@ if SERVER then
 			local entRef = hitent
 			timer.Create(timerName, 0.5, 6, function()
 				if IsValid(entRef) and IsValid(attacker) then
-					entRef:AddDamage(tickDmg, attacker, attacker)
+					entRef:TakeDamage(tickDmg, attacker, attacker)
 				end
 			end)
 		end
