@@ -4538,6 +4538,10 @@ function GM:HumanKilledZombie(pl, attacker, inflictor, dmginfo, headshot, suicid
 		if wep.OnZombieKilled then
 			wep:OnZombieKilled(pl, totaldamage, dmginfo)
 		end
+
+		if wep.Culinary and (not wep.Branch or wep.Branch == 0) and attacker.MaxBloodArmor and attacker.MaxBloodArmor > 0 then
+			attacker:SetBloodArmor(math.min(attacker.MaxBloodArmor, attacker:GetBloodArmor() + 10))
+		end
 	end
 
 	gamemode.Call("PostHumanKilledZombie", pl, attacker, inflictor, dmginfo, mostdamager, mostassistdamage, headshot)

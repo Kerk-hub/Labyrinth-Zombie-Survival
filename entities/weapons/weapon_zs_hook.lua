@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "Meat Hook"
-SWEP.Description = "Impales itself into zombies, dealing damage over time for a seconds. The hook can be recollected by the owner."
+SWEP.Description = "A hooked blade that causes zombies to bleed on hit, dealing additional damage over time."
 
 if CLIENT then
 	SWEP.ViewModelFlip = false
@@ -26,7 +26,7 @@ SWEP.ViewModel = "models/weapons/c_crowbar.mdl"
 SWEP.WorldModel = "models/props_junk/meathook001a.mdl"
 SWEP.UseHands = true
 
-SWEP.MeleeDamage = 40
+SWEP.MeleeDamage = 70
 SWEP.MeleeRange = 50
 SWEP.MeleeSize = 1.15
 
@@ -40,6 +40,7 @@ SWEP.SwingHoldType = "grenade"
 SWEP.NoGlassWeapons = true
 
 SWEP.AllowQualityWeapons = true
+SWEP.Culinary = true
 SWEP.Weaken = false
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MELEE_IMPACT_DELAY, -0.1)
@@ -61,23 +62,19 @@ function SWEP:PlayHitSound()
 end
 
 function SWEP:OnMeleeHit(hitent, hitflesh, tr)
-	if SERVER and hitent:IsValid() and hitent:IsPlayer() and hitent:Health() > self.MeleeDamage and not hitent.SpawnProtection then
-		local ang = self:GetOwner():EyeAngles()
-		ang:RotateAroundAxis(ang:Forward(), 180)
-
-		local ent = ents.Create("prop_meathook")
-		if ent:IsValid() then
-			ent:SetPos(tr.HitPos)
-			ent.BaseWeapon = self:GetClass()
-			ent.Weaken = true
-			ent:Spawn()
-			ent.BleedPerTick = 2
-			ent.TicksRemaining = 20
-			ent:SetOwner(self:GetOwner())
-			ent:SetParent(hitent)
-			ent:SetAngles(ang)
+	if SERVER and hitflesh and hitent:IsValid() and hitent:IsPlayer() and not hitent.SpawnProtection then
+		local bleed = hitent:GiveStatus("bleed")
+		if bleed and bleed:IsValid() then
+			bleed:AddDamage(30)
+			bleed.Damager = self:GetOwner()
 		end
 
-		timer.Simple(0, function() self:GetOwner():StripWeapon(self:GetClass()) end)
+		if self.Weaken then
+			local status = hitent:GiveStatus("zombiestrdebuff")
+			if status and status:IsValid() then
+				status.DieTime = CurTime() + 3
+				status.Applier = self:GetOwner()
+			end
+		end
 	end
 end

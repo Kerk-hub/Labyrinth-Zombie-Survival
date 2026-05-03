@@ -69,6 +69,15 @@ function ENT:OnTakeDamage(dmginfo)
 
 		util.Blood(self:GetPos(), math.random(2), Vector(0, 0, 1), 100, self:GetDTInt(0), true)
 	end
+
+	local attacker = dmginfo:GetAttacker()
+	if attacker:IsValid() and attacker:IsPlayer() and attacker:Team() == TEAM_HUMAN then
+		local wep = attacker:GetActiveWeapon()
+		if wep:IsValid() and wep.Culinary and (not wep.Branch or wep.Branch == 0)
+			and attacker.MaxBloodArmor and attacker.MaxBloodArmor > 0 then
+			attacker:SetBloodArmor(math.min(attacker.MaxBloodArmor, attacker:GetBloodArmor() + 10))
+		end
+	end
 end
 
 function ENT:Think()

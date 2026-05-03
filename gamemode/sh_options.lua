@@ -243,9 +243,12 @@ end)
 GM:WorthAdd("2smgcp", ITEMS_AMMO, 15, nil, "72 SMG ammo", nil, "ammo_smg", function(pl)
 	pl:GiveAmmo(72, "smg1", true)
 end)
-GM:WorthAdd("3smgcp", ITEMS_AMMO, 20, nil, "108 SMG ammo", nil, "ammo_smg", function(pl)
-	pl:GiveAmmo(108, "smg1", true)
-end)
+GM:WorthAdd("csknf", ITEMS_MELEE, 40, "weapon_zs_swissarmyknife").SubCategory = 1
+GM:WorthAdd("zpfryp", ITEMS_MELEE, 40, "weapon_zs_fryingpan").SubCategory = 1
+GM:WorthAdd("hook", ITEMS_MELEE, 40, "weapon_zs_hook").SubCategory = 1
+GM:WorthAdd("butcherknf", ITEMS_MELEE, 40, "weapon_zs_butcherknife").SubCategory = 1
+GM:WorthAdd("zpcpot", ITEMS_MELEE, 40, "weapon_zs_pot").SubCategory = 1
+GM:WorthAdd("meattenderizer", ITEMS_MELEE, 40, "weapon_zs_meattenderizer").SubCategory = 1
 GM:WorthAdd("2arcp", ITEMS_AMMO, 15, nil, "64 assault rifle ammo", nil, "ammo_assault", function(pl)
 	pl:GiveAmmo(64, "ar2", true)
 end)
@@ -289,18 +292,31 @@ GM:WorthAdd("90mkit", ITEMS_AMMO, 20, nil, "90 medical power", nil, "ammo_medpow
 	pl:GiveAmmo(90, "Battery", true)
 end)
 
-GM:WorthAdd("brassknuckles", ITEMS_MELEE, 15, "weapon_zs_brassknuckles").Model =
-	"models/props_c17/utilityconnecter005.mdl"
-GM:WorthAdd("csknf", ITEMS_MELEE, 15, "weapon_zs_swissarmyknife")
-GM:WorthAdd("zpplnk", ITEMS_MELEE, 15, "weapon_zs_plank")
-GM:WorthAdd("hook", ITEMS_MELEE, 30, "weapon_zs_hook")
-GM:WorthAdd("zpfryp", ITEMS_MELEE, 30, "weapon_zs_fryingpan")
-GM:WorthAdd("zpcpot", ITEMS_MELEE, 30, "weapon_zs_pot")
-GM:WorthAdd("ladel", ITEMS_MELEE, 30, "weapon_zs_ladel")
-GM:WorthAdd("zpaxe", ITEMS_MELEE, 40, "weapon_zs_axe")
-GM:WorthAdd("crwbar", ITEMS_MELEE, 40, "weapon_zs_crowbar")
-GM:WorthAdd("stnbtn", ITEMS_MELEE, 40, "weapon_zs_stunbaton")
-GM:WorthAdd("pipe", ITEMS_MELEE, 40, "weapon_zs_pipe")
+local item = GM:WorthAdd("brassknuckles", ITEMS_MELEE, 15, "weapon_zs_brassknuckles")
+item.SubCategory = 3
+item.Model = "models/props_c17/utilityconnecter005.mdl"
+GM:WorthAdd("zpplnk", ITEMS_MELEE, 15, "weapon_zs_plank").SubCategory = 3
+GM:WorthAdd("zpaxe", ITEMS_MELEE, 40, "weapon_zs_axe").SubCategory = 2
+GM:WorthAdd("crwbar", ITEMS_MELEE, 40, "weapon_zs_crowbar").SubCategory = 2
+GM:WorthAdd("broom", ITEMS_MELEE, 40, "weapon_zs_pushbroom").SubCategory = 2
+GM:WorthAdd("stone", ITEMS_MELEE, 40, "weapon_zs_stone").SubCategory = 2
+GM:WorthAdd("sledgehammer", ITEMS_MELEE, 40, "weapon_zs_sledgehammer").SubCategory = 2
+GM:WorthAdd("graveshvl", ITEMS_MELEE, 40, "weapon_zs_graveshovel").SubCategory = 2
+GM:WorthAdd("stnbtn", ITEMS_MELEE, 40, "weapon_zs_stunbaton").SubCategory = 5
+GM:WorthAdd("pipe", ITEMS_MELEE, 40, "weapon_zs_pipe").SubCategory = 3
+GM:WorthAdd("busthead", ITEMS_MELEE, 40, "weapon_zs_bust").SubCategory = 3
+GM:WorthAdd("rebarmace", ITEMS_MELEE, 40, "weapon_zs_rebarmace").SubCategory = 3
+GM:WorthAdd("crbottle", ITEMS_MELEE, 40, "weapon_zs_crackedbottle").SubCategory = 3
+GM:WorthAdd("scythe", ITEMS_MELEE, 40, "weapon_zs_scythe").SubCategory = 4
+GM:WorthAdd("longsword", ITEMS_MELEE, 40, "weapon_zs_longsword").SubCategory = 4
+GM:WorthAdd("executioner", ITEMS_MELEE, 40, "weapon_zs_executioner").SubCategory = 4
+GM:WorthAdd("kongol", ITEMS_MELEE, 40, "weapon_zs_kongolaxe").SubCategory = 4
+GM:WorthAdd("frotchet", ITEMS_MELEE, 40, "weapon_zs_frotchet").SubCategory = 4
+GM:WorthAdd("harpoon", ITEMS_MELEE, 40, "weapon_zs_harpoon").SubCategory = 4
+GM:WorthAdd("powerfists", ITEMS_MELEE, 40, "weapon_zs_powerfists").SubCategory = 5
+GM:WorthAdd("keyboard", ITEMS_MELEE, 40, "weapon_zs_keyboard").SubCategory = 5
+GM:WorthAdd("lamp", ITEMS_MELEE, 40, "weapon_zs_lamp").SubCategory = 5
+GM:WorthAdd("megamash", ITEMS_MELEE, 40, "weapon_zs_megamasher").SubCategory = 5
 
 
 local item
@@ -381,7 +397,7 @@ end)
 item.Countables = "prop_rollermine"
 item.SkillRequirement = SKILL_U_ROLLERMINE
 
-GM:WorthAdd("wrench", ITEMS_TOOLS, 15, "weapon_zs_wrench").NoClassicMode = true
+GM:WorthAdd("wrench", ITEMS_MELEE, 40, "weapon_zs_wrench").SubCategory = 5
 GM:WorthAdd("crphmr", ITEMS_TOOLS, 20, "weapon_zs_hammer").NoClassicMode = true
 -- GM:WorthAdd("junkpack", ITEMS_DEPLOYABLES, 30, "weapon_zs_boardpack") -- Disabled: no longer purchasable.
 GM:WorthAdd("propanetank", ITEMS_TOOLS, 10, "comp_propanecan")
@@ -619,36 +635,46 @@ end)
 item.NoClassicMode = true
 item.CanMakeFromScrap = true
 -- Tier 1
-GM:ShopAdd("brassknuckles", ITEMS_MELEE, 15, "weapon_zs_brassknuckles").Model =
-	"models/props_c17/utilityconnecter005.mdl"
-GM:ShopAdd("knife", ITEMS_MELEE, 15, "weapon_zs_swissarmyknife")
-GM:ShopAdd("zpplnk", ITEMS_MELEE, 15, "weapon_zs_plank")
-GM:ShopAdd("axe", ITEMS_MELEE, 15, "weapon_zs_axe")
-GM:ShopAdd("zpfryp", ITEMS_MELEE, 15, "weapon_zs_fryingpan")
-GM:ShopAdd("zpcpot", ITEMS_MELEE, 15, "weapon_zs_pot")
-GM:ShopAdd("ladel", ITEMS_MELEE, 15, "weapon_zs_ladel")
-GM:ShopAdd("crowbar", ITEMS_MELEE, 15, "weapon_zs_crowbar")
-GM:ShopAdd("pipe", ITEMS_MELEE, 15, "weapon_zs_pipe")
-GM:ShopAdd("stunbaton", ITEMS_MELEE, 15, "weapon_zs_stunbaton")
-GM:ShopAdd("hook", ITEMS_MELEE, 15, "weapon_zs_hook")
--- Tier 2
-GM:ShopAdd("broom", ITEMS_MELEE, 30, "weapon_zs_pushbroom")
-GM:ShopAdd("shovel", ITEMS_MELEE, 30, "weapon_zs_shovel")
-GM:ShopAdd("sledgehammer", ITEMS_MELEE, 30, "weapon_zs_sledgehammer")
-GM:ShopAdd("harpoon", ITEMS_MELEE, 30, "weapon_zs_harpoon")
-GM:ShopAdd("butcherknf", ITEMS_MELEE, 30, "weapon_zs_butcherknife")
--- Tier 3
-GM:ShopAdd("longsword", ITEMS_MELEE, 60, "weapon_zs_longsword")
-GM:ShopAdd("executioner", ITEMS_MELEE, 60, "weapon_zs_executioner")
-GM:ShopAdd("rebarmace", ITEMS_MELEE, 60, "weapon_zs_rebarmace")
-GM:ShopAdd("meattenderizer", ITEMS_MELEE, 60, "weapon_zs_meattenderizer")
--- Tier 4
-GM:ShopAdd("graveshvl", ITEMS_MELEE, 100, "weapon_zs_graveshovel")
-GM:ShopAdd("kongol", ITEMS_MELEE, 100, "weapon_zs_kongolaxe")
-GM:ShopAdd("scythe", ITEMS_MELEE, 100, "weapon_zs_scythe")
-GM:ShopAdd("powerfists", ITEMS_MELEE, 100, "weapon_zs_powerfists")
--- Tier 5
-GM:ShopAdd("frotchet", ITEMS_MELEE, 150, "weapon_zs_frotchet")
+
+-- Culinary (1)
+GM:ShopAdd("knife", ITEMS_MELEE, 40, "weapon_zs_swissarmyknife").SubCategory = 1
+GM:ShopAdd("zpfryp", ITEMS_MELEE, 40, "weapon_zs_fryingpan").SubCategory = 1
+GM:ShopAdd("hook", ITEMS_MELEE, 40, "weapon_zs_hook").SubCategory = 1
+GM:ShopAdd("butcherknf", ITEMS_MELEE, 40, "weapon_zs_butcherknife").SubCategory = 1
+GM:ShopAdd("zpcpot", ITEMS_MELEE, 40, "weapon_zs_pot").SubCategory = 1
+GM:ShopAdd("meattenderizer", ITEMS_MELEE, 40, "weapon_zs_meattenderizer").SubCategory = 1
+
+-- Building (2)
+GM:ShopAdd("axe", ITEMS_MELEE, 40, "weapon_zs_axe").SubCategory = 2
+GM:ShopAdd("crowbar", ITEMS_MELEE, 40, "weapon_zs_crowbar").SubCategory = 2
+GM:ShopAdd("broom", ITEMS_MELEE, 40, "weapon_zs_pushbroom").SubCategory = 2
+GM:ShopAdd("stone", ITEMS_MELEE, 40, "weapon_zs_stone").SubCategory = 2
+GM:ShopAdd("sledgehammer", ITEMS_MELEE, 40, "weapon_zs_sledgehammer").SubCategory = 2
+GM:ShopAdd("graveshvl", ITEMS_MELEE, 40, "weapon_zs_graveshovel").SubCategory = 2
+
+-- Survival (3)
+GM:ShopAdd("brassknuckles", ITEMS_MELEE, 40, "weapon_zs_brassknuckles").SubCategory = 3
+GM:ShopAdd("zpplnk", ITEMS_MELEE, 40, "weapon_zs_plank").SubCategory = 3
+GM:ShopAdd("pipe", ITEMS_MELEE, 40, "weapon_zs_pipe").SubCategory = 3
+GM:ShopAdd("busthead", ITEMS_MELEE, 40, "weapon_zs_bust").SubCategory = 3
+GM:ShopAdd("rebarmace", ITEMS_MELEE, 40, "weapon_zs_rebarmace").SubCategory = 3
+GM:ShopAdd("crbottle", ITEMS_MELEE, 40, "weapon_zs_crackedbottle").SubCategory = 3
+
+-- Medieval (4)
+GM:ShopAdd("scythe", ITEMS_MELEE, 40, "weapon_zs_scythe").SubCategory = 4
+GM:ShopAdd("longsword", ITEMS_MELEE, 40, "weapon_zs_longsword").SubCategory = 4
+GM:ShopAdd("executioner", ITEMS_MELEE, 40, "weapon_zs_executioner").SubCategory = 4
+GM:ShopAdd("kongol", ITEMS_MELEE, 40, "weapon_zs_kongolaxe").SubCategory = 4
+GM:ShopAdd("frotchet", ITEMS_MELEE, 40, "weapon_zs_frotchet").SubCategory = 4
+GM:ShopAdd("harpoon", ITEMS_MELEE, 40, "weapon_zs_harpoon").SubCategory = 4
+
+-- Techno (5)
+GM:ShopAdd("powerfists", ITEMS_MELEE, 40, "weapon_zs_powerfists").SubCategory = 5
+GM:ShopAdd("stunbaton", ITEMS_MELEE, 40, "weapon_zs_stunbaton").SubCategory = 5
+GM:ShopAdd("keyboard", ITEMS_MELEE, 40, "weapon_zs_keyboard").SubCategory = 5
+GM:ShopAdd("lamp", ITEMS_MELEE, 40, "weapon_zs_lamp").SubCategory = 5
+GM:ShopAdd("megamash", ITEMS_MELEE, 40, "weapon_zs_megamasher").SubCategory = 5
+GM:ShopAdd("wrench", ITEMS_MELEE, 40, "weapon_zs_wrench").SubCategory = 5
 
 GM:ShopAdd("crphmr", ITEMS_TOOLS, 25, "weapon_zs_hammer", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_hammer")

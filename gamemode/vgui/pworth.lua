@@ -388,26 +388,74 @@ function MakepWorth()
 		list:AddItem(cartpan)
 	end
 
+	local meleeSubcats = {"Culinary", "Building", "Survival", "Medieval", "Techno"}
 	for catid, catname in ipairs(GAMEMODE.ItemCategories) do
 		if catid ~= ITEMS_AMMO then -- Skip Ammunition tab
-			local itemframe = vgui.Create("DScrollPanel", propertysheet)
 			local trinkets = catid == ITEMS_TRINKETS
+			local ismelee = catid == ITEMS_MELEE
+			local offset = ismelee and (64 * screenscale) or 0
 
-			--list = vgui.Create("DPanelList", itemframe)
-			list = vgui.Create("DGrid", itemframe)
-			list:SetSize(propertysheet:GetWide() - 328, propertysheet:GetTall() - 32)
-			list:SetCols(2)
-			list:SetColWide(290 * screenscale)
-			list:SetRowHeight((trinkets and 64 or 100) * screenscale)
+			local tabpane = ismelee and vgui.Create("DPanel", propertysheet) or nil
+			if tabpane then tabpane.Paint = function() end end
 
-			sheet = propertysheet:AddSheet(catname, itemframe, GAMEMODE.ItemCategoryIcons[catid], false, false)
-			sheet.Panel:SetPos(0, tabhei + 2)
+			local itemframe = vgui.Create("DScrollPanel", tabpane or propertysheet)
+			local grids = {}
+			local subcatbuts = {}
+
+			local mkgrid = function()
+				local g = vgui.Create("DGrid", itemframe)
+				g:SetPos(0, 0)
+				g:SetSize(propertysheet:GetWide() - 328, propertysheet:GetTall() - 32)
+				g:SetCols(2)
+				g:SetColWide(290 * screenscale)
+				g:SetRowHeight((trinkets and 64 or 100) * screenscale)
+				return g
+			end
+
+			if ismelee then
+				itemframe:SetSize(propertysheet:GetWide(), propertysheet:GetTall() - 32 - offset)
+				itemframe:SetPos(0, offset)
+				local ind = 1
+				for i, name in ipairs(meleeSubcats) do
+					local start = i == 1
+					local tbn = EasyButton(tabpane, name, 2, 8)
+					tbn:SetFont("ZSHUDFontSmall")
+					tbn:SetAlpha(start and 255 or 70)
+					tbn:AlignRight(-15 * screenscale - (i - ind) * 110 * screenscale)
+					tbn:AlignTop(16)
+					tbn:SetContentAlignment(5)
+					tbn:SizeToContents()
+					local captured_i = i
+					tbn.DoClick = function(me)
+						for k, v in pairs(grids) do
+							v:SetVisible(k == captured_i)
+							subcatbuts[k]:SetAlpha(k == captured_i and 255 or 70)
+						end
+					end
+					grids[i] = mkgrid()
+					grids[i]:SetVisible(start)
+					subcatbuts[i] = tbn
+				end
+				sheet = propertysheet:AddSheet(catname, tabpane, GAMEMODE.ItemCategoryIcons[catid], false, false)
+				sheet.Panel:SetPos(0, tabhei + 2)
+			else
+				list = mkgrid()
+				sheet = propertysheet:AddSheet(catname, itemframe, GAMEMODE.ItemCategoryIcons[catid], false, false)
+				sheet.Panel:SetPos(0, tabhei + 2)
+			end
 
 			for i, tab in ipairs(GAMEMODE.Items) do
 				if tab.Category == catid and tab.WorthShop then
 					local button = vgui.Create("ZSWorthButton")
 					button:SetWorthID(i)
-					list:AddItem(button)
+					if ismelee then
+						local subcat = tab.SubCategory or 1
+						if grids[subcat] then
+							grids[subcat]:AddItem(button)
+						end
+					else
+						list:AddItem(button)
+					end
 					WorthButtons[i] = button
 				end
 			end

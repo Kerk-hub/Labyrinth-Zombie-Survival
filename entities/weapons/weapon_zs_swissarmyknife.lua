@@ -17,13 +17,13 @@ SWEP.ViewModel = "models/weapons/cstrike/c_knife_t.mdl"
 SWEP.WorldModel = "models/weapons/w_knife_t.mdl"
 SWEP.UseHands = true
 
-SWEP.MeleeDamage = 19
+SWEP.MeleeDamage = 50
 SWEP.MeleeRange = 52
 SWEP.MeleeSize = 0.875
 
 SWEP.WalkSpeed = SPEED_FASTEST
 
-SWEP.Primary.Delay = 0.85
+SWEP.Primary.Delay = 0.585
 SWEP.Secondary.Automatic = false
 
 SWEP.HitDecal = "Manhackcut"
@@ -37,6 +37,7 @@ SWEP.MissAnim = ACT_VM_PRIMARYATTACK
 SWEP.NoHitSoundFlesh = true
 
 SWEP.AllowQualityWeapons = true
+SWEP.Culinary = true
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.085)
 GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Spring' Knife", "Right click while in the air to double jump 5 second cooldown. Deals less damage.", function(wept)
