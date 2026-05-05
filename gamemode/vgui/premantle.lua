@@ -527,7 +527,8 @@ function GM:OpenRemantlerMenu(remantler, dockedtoarsenal, dockedtoworth)
 	end
 
 	local screenscale = BetterScreenScale()
-	local wid, hei = math.min(ScrW(), 900) * screenscale, math.min(ScrH(), 800) * screenscale
+	local hei = math.min(ScrH(), 800) * screenscale
+	local wid = linked and math.floor((ScrW() - 32) * 0.5) or math.min(ScrW(), 900) * screenscale
 	local tabhei = 24 * screenscale
 
 	local frame = vgui.Create("DFrame")
