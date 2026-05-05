@@ -559,7 +559,7 @@ end
 
 function GM:ShowTeam(pl)
 	if pl:Team() == TEAM_HUMAN and not self.ZombieEscape then
-		pl:SendLua(self:GetWave() > 0 and "GAMEMODE:OpenArsenalMenu()" or "MakepWorth()")
+		pl:SendLua("GAMEMODE:OpenArsenalMenu()")
 	end
 end
 
@@ -2549,9 +2549,11 @@ function GM:PlayerReadyRound(pl)
 		-- This is just so they get updated on what class they are and have their hulls set up right.
 		pl:DoHulls(classid, TEAM_UNDEAD)
 	elseif pl:Team() == TEAM_HUMAN then
-		if self:GetWave() <= 0 and self.StartingWorth > 0 and not self.StartingLoadout and not self.ZombieEscape then
-			pl:SendLua("InitialWorthMenu()")
-		else
+		if not self.ZombieEscape then
+			pl:AddPoints(100)
+			pl:SendLua("GAMEMODE:OpenArsenalMenu()")
+		end
+		if self.StartingLoadout or self.ZombieEscape then
 			gamemode.Call("GiveDefaultOrRandomEquipment", pl)
 		end
 	end

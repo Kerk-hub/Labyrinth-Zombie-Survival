@@ -198,11 +198,7 @@ local function GetContextMenuBind()
 end
 
 local function ShouldShowWorthPrompt()
-	if WorthArsenalPromptConsumed or not MySelf:IsValid() or P_Team(MySelf) ~= TEAM_HUMAN or not MySelf:Alive() then
-		return false
-	end
-
-	return GAMEMODE:GetWave() <= 0 and GAMEMODE.StartingWorth > 0 and not GAMEMODE.StartingLoadout and not GAMEMODE.ZombieEscape
+	return false
 end
 
 local function ShouldShowArsenalPrompt()
@@ -2783,20 +2779,13 @@ function GM:ZombieSpawnMenu()
 end
 
 function GM:OpenWorthOrArsenalMenu()
-	--[[ Disabled for now: keep F2/context menu from acting as a close toggle.
-	if self:IsShopMenuOpen() then
-		self:CloseShopMenus()
-		return
-	end
-	]]
-
 	if P_Team(MySelf) == TEAM_UNDEAD then
 		RunConsoleCommand("gm_showspare1")
 		return
 	end
 
 	WorthArsenalPromptConsumed = true
-	RunConsoleCommand("gm_showteam")
+	self:OpenArsenalMenu()
 end
 
 function GM:PlayerBindPress(pl, bind, wasin)
