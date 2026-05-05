@@ -3,7 +3,8 @@ AddCSLuaFile()
 SWEP.Base = "weapon_zs_baseshotgun"
 
 SWEP.PrintName = "'Annabelle' Rifle"
-SWEP.Description = "This rifle loads rounds individually, at the cost of being not perfectly accurate."
+SWEP.Description = "Tube-loaded rifle that loads one round at a time. Headshot kills build Reaper stacks."
+SWEP.Slot = 1
 
 if CLIENT then
 	SWEP.ViewModelFlip = false
@@ -26,9 +27,9 @@ SWEP.UseHands = true
 SWEP.CSMuzzleFlashes = false
 
 SWEP.Primary.Sound = Sound("Weapon_Shotgun.Single")
-SWEP.Primary.Damage = 74
+SWEP.Primary.Damage = 38
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Delay = 0.9
+SWEP.Primary.Delay = 0.38
 
 SWEP.ReloadDelay = 0.4
 
@@ -37,41 +38,49 @@ SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "357"
 SWEP.Primary.DefaultClip = 25
 
-SWEP.ConeMax = 4
-SWEP.ConeMin = 0.25
+SWEP.ConeMax = 6
+SWEP.ConeMin = 0
+
+SWEP.HeadshotMulti = 3
 
 SWEP.ReloadSound = Sound("Weapon_Shotgun.Reload")
 SWEP.PumpSound = Sound("Weapon_Shotgun.Special1")
 
-SWEP.WalkSpeed = SPEED_SLOW
+SWEP.WalkSpeed = SPEED_NORMAL
+SWEP.PhaseEndTime = 0
+SWEP.PhaseCooldown = 0
 
-SWEP.Tier = 2
-
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MAX_SPREAD, -0.5, 1)
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MIN_SPREAD, -0.05, 1)
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.1, 1)
 GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Annabelle' Birdshot Rifle", "Fires a spread of less accurate shots that deal more total damage", function(wept)
 	wept.Primary.Damage = wept.Primary.Damage / 5
 	wept.Primary.NumShots = 6
-	wept.ConeMin = wept.ConeMin * 8
-	wept.ConeMax = wept.ConeMax * 2
+	wept.ConeMin = 4
+	wept.ConeMax = 8
 end)
+
+function SWEP:IsPhasing()
+	return CurTime() < self.PhaseEndTime
+end
+
+function SWEP:GetWalkSpeed()
+	if self:IsPhasing() then
+		return self.BaseClass.GetWalkSpeed(self) * 1.5
+	end
+	return self.BaseClass.GetWalkSpeed(self)
+end
+
+function SWEP:SecondaryAttack()
+	if CurTime() < self.PhaseCooldown then return end
+	self.PhaseEndTime = CurTime() + 3
+	self.PhaseCooldown = CurTime() + 8
+	self:GetOwner():ResetSpeed()
+	self:EmitSound("npc/scanner/scanner_scan4.wav", 55, 130, 0.6)
+end
 
 function SWEP:EmitFireSound()
 	self:EmitSound(self.Primary.Sound, 75, math.random(95, 103), 0.8)
 	self:EmitSound("weapons/shotgun/shotgun_fire6.wav", 75, math.random(78, 81), 0.65, CHAN_WEAPON + 20)
 end
 
-function SWEP:SecondaryAttack()
-	if self:GetNextSecondaryFire() <= CurTime() and not self:GetOwner():IsHolding() and self:GetReloadFinish() == 0 then
-		self:SetIronsights(true)
-	end
-end
-
 function SWEP:Think()
-	if self:GetIronsights() and not self:GetOwner():KeyDown(IN_ATTACK2) then
-		self:SetIronsights(false)
-	end
-
 	self.BaseClass.Think(self)
 end

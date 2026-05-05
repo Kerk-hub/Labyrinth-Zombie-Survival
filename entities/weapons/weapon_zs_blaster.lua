@@ -3,7 +3,8 @@ AddCSLuaFile()
 SWEP.Base = "weapon_zs_baseshotgun"
 
 SWEP.PrintName = "'Blaster' Shotgun"
-SWEP.Description = "A basic shotgun that can deal significant amounts of damage at close range."
+SWEP.Description = "A reliable pump shotgun. Solid close-range damage with no frills."
+SWEP.Slot = 1
 
 if CLIENT then
 	SWEP.ViewModelFlip = false
@@ -23,7 +24,7 @@ SWEP.UseHands = false
 SWEP.ReloadDelay = 0.4
 
 SWEP.Primary.Sound = Sound("Weapon_Shotgun.NPC_Single")
-SWEP.Primary.Damage = 8.325
+SWEP.Primary.Damage = 10
 SWEP.Primary.NumShots = 8
 SWEP.Primary.Delay = 0.8
 
@@ -32,8 +33,8 @@ SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "buckshot"
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
 
-SWEP.ConeMax = 8.75
-SWEP.ConeMin = 5
+SWEP.ConeMax = 4
+SWEP.ConeMin = 4
 
 SWEP.WalkSpeed = SPEED_SLOWER
 
@@ -42,7 +43,6 @@ SWEP.ReloadSound = Sound("Weapon_Shotgun.Reload")
 
 SWEP.PumpActivity = ACT_SHOTGUN_PUMP
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_CLIP_SIZE, 1)
 GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Blaster' Slug Gun", "Single accurate slug round, less total damage", function(wept)
 	wept.Primary.Damage = wept.Primary.Damage * 5.5
 	wept.Primary.NumShots = 1

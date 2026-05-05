@@ -3,9 +3,9 @@ AddCSLuaFile()
 --in memory of Gormaoife 1999-2016 rip
 
 SWEP.PrintName = "'Splinter' Sawed-Off Shotgun"
-SWEP.Description = "Can fire both rounds at once for higher burst damage."
+SWEP.Description = "Can fire both rounds at once for higher burst damage. Sustained DPS peaks when double-barreling every shot."
 
-SWEP.Slot = 3
+SWEP.Slot = 1
 SWEP.SlotPos = 0
 
 if CLIENT then
@@ -53,7 +53,7 @@ SWEP.UseHands = true
 SWEP.CSMuzzleFlashes = false
 
 SWEP.Primary.Sound = Sound("weapons/zs_sawnoff/sawnoff_fire1.ogg")
-SWEP.Primary.Damage = 11.35
+SWEP.Primary.Damage = 14.2
 SWEP.Primary.NumShots = 8
 SWEP.Primary.Delay = 0.6
 SWEP.Primary.ClipSize = 2
@@ -65,20 +65,14 @@ SWEP.ReloadSound = Sound("weapons/zs_sawnoff/barrelup.ogg")
 SWEP.ReloadFinishSound = Sound("weapons/zs_sawnoff/barreldown.ogg")
 SWEP.ReloadPlugSound = Sound("Weapon_Shotgun.Reload")
 
-SWEP.ConeMax = 9
-SWEP.ConeMin = 7.75
+SWEP.ConeMax = 4
+SWEP.ConeMin = 4
 SWEP.Recoil = 7.5
 
 SWEP.WalkSpeed = SPEED_SLOWER
 SWEP.ReloadSpeed = 0.6
 SWEP.ReloadDelay = 0.5
 
-SWEP.Tier = 2
-
-SWEP.DryFireSound = Sound("Weapon_Shotgun.Empty")
-
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MAX_SPREAD, -1.125, 1)
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MIN_SPREAD, -1.069, 1)
 GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Splinter' Slug Gun", "Single accurate slug round, less total damage", function(wept)
 	wept.Primary.Damage = wept.Primary.Damage * 5.5
 	wept.Primary.NumShots = 1

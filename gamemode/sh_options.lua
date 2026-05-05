@@ -261,24 +261,6 @@ end)
 GM:WorthAdd("3rcp", ITEMS_AMMO, 20, nil, "24 rifle ammo", nil, "ammo_rifle", function(pl)
 	pl:GiveAmmo(24, "357", true)
 end)
-GM:WorthAdd("2pls", ITEMS_AMMO, 15, nil, "60 pulse ammo", nil, "ammo_pulse", function(pl)
-	pl:GiveAmmo(60, "pulse", true)
-end)
-GM:WorthAdd("3pls", ITEMS_AMMO, 20, nil, "90 pulse ammo", nil, "ammo_pulse", function(pl)
-	pl:GiveAmmo(90, "pulse", true)
-end)
-GM:WorthAdd("xbow1", ITEMS_AMMO, 15, nil, "16 crossbow bolts", nil, "ammo_bolts", function(pl)
-	pl:GiveAmmo(16, "XBowBolt", true)
-end)
-GM:WorthAdd("xbow2", ITEMS_AMMO, 20, nil, "24 crossbow bolts", nil, "ammo_bolts", function(pl)
-	pl:GiveAmmo(24, "XBowBolt", true)
-end)
-GM:WorthAdd("4mines", ITEMS_AMMO, 15, nil, "6 explosives", nil, "ammo_explosive", function(pl)
-	pl:GiveAmmo(6, "impactmine", true)
-end)
-GM:WorthAdd("6mines", ITEMS_AMMO, 20, nil, "9 explosives", nil, "ammo_explosive", function(pl)
-	pl:GiveAmmo(9, "impactmine", true)
-end)
 GM:WorthAdd("8nails", ITEMS_AMMO, 15, nil, "8 nails", nil, "ammo_nail", function(pl)
 	pl:GiveAmmo(8, "GaussEnergy", true)
 end)
@@ -513,9 +495,6 @@ GM:ShopAdd("glock3", ITEMS_GUNS, 40, "weapon_zs_glock3").SubCategory = 1
 GM:ShopAdd("magnum", ITEMS_GUNS, 40, "weapon_zs_magnum").SubCategory = 1
 GM:ShopAdd("eraser", ITEMS_GUNS, 40, "weapon_zs_eraser").SubCategory = 1
 GM:ShopAdd("deagle", ITEMS_GUNS, 40, "weapon_zs_deagle").SubCategory = 1
-GM:ShopAdd("tempest", ITEMS_GUNS, 40, "weapon_zs_tempest").SubCategory = 1
-GM:ShopAdd("longarm", ITEMS_GUNS, 40, "weapon_zs_longarm").SubCategory = 1
-GM:ShopAdd("novacolt", ITEMS_GUNS, 40, "weapon_zs_novacolt").SubCategory = 1
 
 -- Shotgun (2)
 GM:ShopAdd("blstr", ITEMS_GUNS, 40, "weapon_zs_blaster", nil, nil, nil, function(pl)
@@ -548,8 +527,7 @@ GM:ShopAdd("hunter", ITEMS_GUNS, 40, "weapon_zs_hunter").SubCategory = 4
 GM:ShopAdd("onyx", ITEMS_GUNS, 40, "weapon_zs_onyx").SubCategory = 4
 GM:ShopAdd("quicksilver", ITEMS_GUNS, 40, "weapon_zs_quicksilver").SubCategory = 4
 GM:ShopAdd("slugrifle", ITEMS_GUNS, 40, "weapon_zs_slugrifle").SubCategory = 4
-GM:ShopAdd("colossus", ITEMS_GUNS, 40, "weapon_zs_colossus").SubCategory = 4
-GM:ShopAdd("renegade", ITEMS_GUNS, 40, "weapon_zs_renegade").SubCategory = 4
+GM:ShopAdd("colossus", ITEMS_GUNS, 40, "weapon_zs_colossus").SubCategory = 6
 
 -- Assault (5)
 GM:ShopAdd("crklr", ITEMS_GUNS, 40, "weapon_zs_crackler", nil, nil, nil, function(pl)
@@ -560,18 +538,14 @@ GM:ShopAdd("akbar", ITEMS_GUNS, 40, "weapon_zs_akbar").SubCategory = 5
 GM:ShopAdd("stalker", ITEMS_GUNS, 40, "weapon_zs_m4").SubCategory = 5
 GM:ShopAdd("inferno", ITEMS_GUNS, 40, "weapon_zs_inferno").SubCategory = 5
 GM:ShopAdd("juggernaut", ITEMS_GUNS, 40, "weapon_zs_juggernaut").SubCategory = 5
-GM:ShopAdd("scar", ITEMS_GUNS, 40, "weapon_zs_scar").SubCategory = 5
 
 -- Pulse (6)
-GM:ShopAdd("z9000", ITEMS_GUNS, 40, "weapon_zs_z9000", nil, nil, nil, function(pl)
-	pl:GiveEmptyWeapon("weapon_zs_z9000")
-end).SubCategory = 6
+GM:ShopAdd("z9000", ITEMS_GUNS, 40, "weapon_zs_z9000").SubCategory = 6
 GM:ShopAdd("hurricane", ITEMS_GUNS, 40, "weapon_zs_hurricane").SubCategory = 6
 GM:ShopAdd("oberon", ITEMS_GUNS, 40, "weapon_zs_oberon").SubCategory = 6
 GM:ShopAdd("quasar", ITEMS_GUNS, 40, "weapon_zs_quasar").SubCategory = 6
 GM:ShopAdd("gluon", ITEMS_GUNS, 40, "weapon_zs_gluon").SubCategory = 6
 GM:ShopAdd("pulserifle", ITEMS_GUNS, 40, "weapon_zs_pulserifle").SubCategory = 6
-GM:ShopAdd("spinfusor", ITEMS_GUNS, 40, "weapon_zs_spinfusor").SubCategory = 6
 
 GM:ShopAdd("pistolammo", ITEMS_AMMO, 5, nil, "14 pistol ammo", nil, "ammo_pistol", function(pl)
 	pl:GiveAmmo(14, "pistol", true)
@@ -585,17 +559,8 @@ end)
 GM:ShopAdd("rifleammo", ITEMS_AMMO, 5, nil, "8 rifle ammo", nil, "ammo_rifle", function(pl)
 	pl:GiveAmmo(8, "357", true)
 end)
-GM:ShopAdd("crossbowammo", ITEMS_AMMO, 5, nil, "8 crossbow bolts", nil, "ammo_bolts", function(pl)
-	pl:GiveAmmo(8, "XBowBolt", true)
-end)
 GM:ShopAdd("assaultrifleammo", ITEMS_AMMO, 5, nil, "32 assault rifle ammo", nil, "ammo_assault", function(pl)
 	pl:GiveAmmo(32, "ar2", true)
-end)
-GM:ShopAdd("pulseammo", ITEMS_AMMO, 5, nil, "30 pulse ammo", nil, "ammo_pulse", function(pl)
-	pl:GiveAmmo(30, "pulse", true)
-end)
-GM:ShopAdd("impactmine", ITEMS_AMMO, 5, nil, "3 explosives", nil, "ammo_explosive", function(pl)
-	pl:GiveAmmo(3, "impactmine", true)
 end)
 GM:ShopAdd("chemical", ITEMS_AMMO, 5, nil, "20 chemical vials", nil, "ammo_chemical", function(pl)
 	pl:GiveAmmo(20, "chemical", true)

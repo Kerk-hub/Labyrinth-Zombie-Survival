@@ -2,7 +2,10 @@ AddCSLuaFile()
 DEFINE_BASECLASS("weapon_zs_base")
 
 SWEP.PrintName = "'Quasar' Pulse Rifle"
-SWEP.Description = "A scoped pulse rifle that slows targets. Uses 4 pulse per shot."
+SWEP.Description = "A scoped pulse rifle that slows targets."
+
+SWEP.Slot = 1
+SWEP.SlotPos = 0
 
 if CLIENT then
 	SWEP.Slot = 3
@@ -66,21 +69,19 @@ SWEP.UseHands = true
 
 SWEP.ReloadSound = Sound("Weapon_AWP.ClipOut")
 SWEP.Primary.Sound = Sound("Weapon_Quasar.Single")
-SWEP.Primary.Damage = 110
+SWEP.Primary.Damage = 70
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Delay = 1.05
+SWEP.Primary.Delay = 1.25
 SWEP.ReloadDelay = SWEP.Primary.Delay
-SWEP.RequiredClip = 4
 
-SWEP.Primary.ClipSize = 24
+SWEP.Primary.ClipSize = -1
 SWEP.Primary.Automatic = true
-SWEP.Primary.Ammo = "pulse"
-SWEP.Primary.DefaultClip = 25
+SWEP.Primary.Ammo = "none"
 
 SWEP.Primary.Gesture = ACT_HL2MP_GESTURE_RANGE_ATTACK_CROSSBOW
 SWEP.ReloadGesture = ACT_HL2MP_GESTURE_RELOAD_SHOTGUN
 
-SWEP.ConeMax = 3
+SWEP.ConeMax = 6
 SWEP.ConeMin = 0
 SWEP.IronSightsPos = Vector(5.015, -8, 2.52)
 SWEP.IronSightsAng = Vector(0, 0, 0)
@@ -91,12 +92,8 @@ SWEP.TracerName = "AR2Tracer"
 
 SWEP.FireAnimSpeed = 1.3
 
-SWEP.Tier = 4
-SWEP.MaxStock = 3
-
 SWEP.PointsMultiplier = GAMEMODE.PulsePointsMultiplier
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_CLIP_SIZE, 4)
 GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Blazar' Pulse Tri-Rifle", "Shoots 3 pulse shots in a spread out line with more total damage", function(wept)
 	wept.Primary.NumShots = 3
 	wept.Primary.Damage = wept.Primary.Damage * 1.2/3

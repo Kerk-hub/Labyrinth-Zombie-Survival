@@ -3,7 +3,8 @@ AddCSLuaFile()
 SWEP.Base = "weapon_zs_baseshotgun"
 
 SWEP.PrintName = "'Sweeper' Shotgun"
-SWEP.Description = "A pump shotgun with a modest shell number and packs a hefty punch."
+SWEP.Description = "A hard-hitting pump shotgun. Each pellet that connects applies a brief burn to the target."
+SWEP.Slot = 1
 
 if CLIENT then
 	SWEP.ViewModelFlip = false
@@ -25,7 +26,7 @@ SWEP.UseHands = true
 SWEP.ReloadDelay = 0.45
 
 SWEP.Primary.Sound = Sound("Weapon_M3.Single")
-SWEP.Primary.Damage = 14.75
+SWEP.Primary.Damage = 9
 SWEP.Primary.NumShots = 8
 SWEP.Primary.Delay = 0.87
 
@@ -34,13 +35,17 @@ SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "buckshot"
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
 
-SWEP.ConeMax = 5
-SWEP.ConeMin = 3.75
+SWEP.ConeMax = 4
+SWEP.ConeMin = 4
 
 SWEP.FireAnimSpeed = 1.2
 SWEP.WalkSpeed = SPEED_SLOWER
 
-SWEP.Tier = 4
-SWEP.MaxStock = 3
-
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_CLIP_SIZE, 1)
+function SWEP.BulletCallback(attacker, tr, dmginfo)
+	if SERVER then
+		local ent = tr.Entity
+		if ent:IsValidLivingZombie() then
+			ent:TakeDamage(3, attacker, attacker:GetActiveWeapon(), DMG_BURN)
+		end
+	end
+end

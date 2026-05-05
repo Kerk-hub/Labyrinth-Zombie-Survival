@@ -25,9 +25,9 @@ SWEP.WorldModel = "models/weapons/w_snip_g3sg1.mdl"
 SWEP.UseHands = true
 
 SWEP.Primary.Sound = Sound("Weapon_G3SG1.Single")
-SWEP.Primary.Damage = 78.5
+SWEP.Primary.Damage = 85
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Delay = 0.38
+SWEP.Primary.Delay = 0.9
 
 SWEP.Primary.ClipSize = 10
 SWEP.Primary.Automatic = true
@@ -37,23 +37,44 @@ GAMEMODE:SetupDefaultClip(SWEP.Primary)
 SWEP.Primary.Gesture = ACT_HL2MP_GESTURE_RANGE_ATTACK_CROSSBOW
 SWEP.ReloadGesture = ACT_HL2MP_GESTURE_RELOAD_SHOTGUN
 
-SWEP.ConeMax = 6.5
+SWEP.ConeMax = 6
 SWEP.ConeMin = 0
+
+SWEP.HeadshotMulti = 3
 
 SWEP.IronSightsPos = Vector(11, -9, -2.2)
 SWEP.IronSightsAng = Vector(0, 0, 0)
 
 SWEP.WalkSpeed = SPEED_SLOW
 
-SWEP.Tier = 4
-SWEP.MaxStock = 3
-
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.05)
 GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Mercurial' Birdshot Rifle", "Fires a spread of less accurate shots that deal more total damage", function(wept)
 	wept.Primary.Damage = wept.Primary.Damage / 5
 	wept.Primary.NumShots = 6
-	wept.ConeMin = 3
+	wept.ConeMin = 4
+	wept.ConeMax = 8
 end)
+
+function SWEP.BulletCallback(attacker, tr, dmginfo)
+	if SERVER and tr.HitGroup == HITGROUP_HEAD and tr.Entity:IsValidLivingZombie() then
+		local wep = attacker:GetActiveWeapon()
+		if IsValid(wep) then
+			wep.LastShotWasHeadshot = true
+		end
+	end
+end
+
+function SWEP:OnZombieKilled()
+	if not self.LastShotWasHeadshot then return end
+	self.LastShotWasHeadshot = false
+	local killer = self:GetOwner()
+	if killer:IsValid() then
+		local reaperstatus = killer:GiveStatus("reaper", 14)
+		if reaperstatus and reaperstatus:IsValid() then
+			reaperstatus:SetDTInt(1, math.min(reaperstatus:GetDTInt(1) + 1, 3))
+			killer:EmitSound("hl1/ambience/particle_suck1.wav", 55, 150 + reaperstatus:GetDTInt(1) * 30, 0.45)
+		end
+	end
+end
 
 function SWEP:IsScoped()
 	return self:GetIronsights() and self.fIronTime and self.fIronTime + 0.25 <= CurTime()

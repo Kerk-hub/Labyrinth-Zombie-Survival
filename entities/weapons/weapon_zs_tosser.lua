@@ -4,7 +4,7 @@ DEFINE_BASECLASS("weapon_zs_base")
 SWEP.PrintName = "'Tosser' SMG"
 SWEP.Description = "A relatively simple SMG with a decent fire rate and reload speed."
 
-SWEP.Slot = 2
+SWEP.Slot = 1
 SWEP.SlotPos = 0
 
 if CLIENT then
@@ -28,11 +28,11 @@ SWEP.CSMuzzleFlashes = false
 
 SWEP.ReloadSound = Sound("Weapon_SMG1.Reload")
 SWEP.Primary.Sound = Sound("Weapon_AR2.NPC_Single")
-SWEP.Primary.Damage = 14
+SWEP.Primary.Damage = 17.5
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Delay = 0.15
+SWEP.Primary.Delay = 0.17
 
-SWEP.Primary.ClipSize = 24
+SWEP.Primary.ClipSize = 20
 SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "smg1"
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
@@ -48,7 +48,6 @@ SWEP.ConeMin = 2.5
 
 SWEP.IronSightsPos = Vector(-6.425, 5, 1.02)
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.015)
 GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Thrower' Burst SMG", "Increased damage but makes the tosser burst fire", function(wept)
 	wept.Primary.Damage = wept.Primary.Damage * 1.1
 	wept.Primary.Delay = wept.Primary.Delay * 3.9

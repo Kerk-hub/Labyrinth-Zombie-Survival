@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "'Peashooter' Handgun"
-SWEP.Description = "A low damage output pistol that only uses half the ammo."
+SWEP.Description = "A fast-firing pistol. Killing a zombie refunds 1 bullet to the clip."
 
 SWEP.Slot = 1
 SWEP.SlotPos = 0
@@ -29,14 +29,13 @@ SWEP.Primary.Damage = 15.5
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Delay = 0.18
 
-SWEP.Primary.ClipSize = 9
+SWEP.Primary.ClipSize = 18
 SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "pistol"
-SWEP.Primary.ClipMultiplier = 12/18 * 2 -- Battleaxe/Owens have 12 clip size, but this has half ammo usage
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
 
-SWEP.ConeMax = 4
-SWEP.ConeMin = 0.75
+SWEP.ConeMax = 2.5
+SWEP.ConeMin = 0.25
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_CLIP_SIZE, 1)
 GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Peashooter' Auto Handgun", "Fully automatic, increased clip size at the cost of accuracy", function(wept)
@@ -49,32 +48,11 @@ end)
 
 SWEP.IronSightsPos = Vector(-6, -1, 2.25)
 
-function SWEP:SetAltUsage(usage)
-	self:SetDTBool(1, usage)
-end
-
-function SWEP:GetAltUsage()
-	return self:GetDTBool(1)
-end
-
-function SWEP:PrimaryAttack()
-	if not self:CanPrimaryAttack() then return end
-	self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
-	self:EmitFireSound()
-
-	local altuse = self:GetAltUsage()
-	if not altuse then
-		self:TakeAmmo()
+if SERVER then
+	function SWEP:OnZombieKilled(zombie)
+		local clip = self:Clip1()
+		if clip < self.Primary.ClipSize then
+			self:SetClip1(clip + 1)
+		end
 	end
-	self:SetAltUsage(not altuse)
-
-	self:ShootBullets(self.Primary.Damage, self.Primary.NumShots, self:GetCone())
-	self.IdleAnimation = CurTime() + self:SequenceDuration()
-end
-
-if not CLIENT then return end
-
-function SWEP:GetDisplayAmmo(clip, spare, maxclip)
-	local minus = self:GetAltUsage() and 0 or 1
-	return math.max(0, (clip * 2) - minus), spare * 2, maxclip * 2
 end

@@ -1,5 +1,7 @@
 SWEP.PrintName = "'Helios' Gluon Gun"
-SWEP.Description = "Projects a stream of gluons at the target, causing immense damage. Hard to wield and aim, and builds up heat over time."
+SWEP.Description = "Projects a stream of pulse energy at the target, slowing zombies on hit. Builds heat over time — vent before you overheat."
+
+SWEP.Slot = 1
 
 SWEP.Base = "weapon_zs_base"
 
@@ -11,22 +13,20 @@ SWEP.ShowViewModel = false
 SWEP.ShowWorldModel = false
 SWEP.UseHands = true
 
-SWEP.Primary.Damage = 14.5
+SWEP.Primary.Damage = 5.2
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Delay = 0.09
 SWEP.Primary.KnockbackScale = 0.1
 SWEP.Primary.MaxDistance = 764
 
-SWEP.Primary.ClipSize = 30
+SWEP.Primary.ClipSize = -1
 SWEP.Primary.Automatic = true
-SWEP.Primary.Ammo = "pulse"
-GAMEMODE:SetupDefaultClip(SWEP.Primary)
+SWEP.Primary.Ammo = "none"
 
 SWEP.ConeMax = 0
 SWEP.ConeMin = 0
 
-SWEP.Tier = 4
-SWEP.MaxStock = 3
+SWEP.LegDamage = true
 
 SWEP.HeatBuildShort = 0.10
 SWEP.HeatBuildLong = 0.045
@@ -42,9 +42,9 @@ SWEP.FireSoundPitch = 125
 
 SWEP.TracerName = "tracer_gluon"
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_SHORT_TEAM_HEAT, -0.01, 1)
+SWEP.PointsMultiplier = GAMEMODE.PulsePointsMultiplier
 
-local branch = GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Hades' Higgs Gun", "Has a pulse slowing effect but deals less damage", function(wept)
+GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Hades' Higgs Gun", "Has a stronger pulse slowing effect but deals less damage", function(wept)
 	wept.Primary.Damage = wept.Primary.Damage * 10.5/12.5
 	wept.TracerName = "tracer_higgs"
 	wept.EmitStartFiringSound = function(self)
@@ -54,6 +54,7 @@ local branch = GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Hades' Higgs Gun", "Has 
 	wept.FireSoundPitch = 96
 	wept.LegDamage = true
 end)
+local branch = GAMEMODE:GetRemantleBranch(SWEP, 1)
 branch.Colors = {Color(160, 160, 160), Color(105, 105, 105), Color(50, 50, 50)}
 branch.NewNames = {"Deep", "Null", "Void"}
 
@@ -138,10 +139,6 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:CanPrimaryAttack()
-	if self:GetPrimaryAmmoCount() <= 0 then
-		return false
-	end
-
 	if self:GetOwner():IsHolding() or self:GetOwner():GetBarricadeGhosting() or self:GetReloadFinish() > 0 then return false end
 
 	return self:GetNextPrimaryFire() <= CurTime()

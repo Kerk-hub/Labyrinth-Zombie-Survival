@@ -1,5 +1,6 @@
 SWEP.PrintName = "'Bulwark' Minigun"
 SWEP.Description = "Incredibly heavy duty minigun. Takes time to spool. Hold right click to spool the gun without firing."
+SWEP.Slot = 1
 
 SWEP.Base = "weapon_zs_base"
 
@@ -11,7 +12,7 @@ SWEP.ShowViewModel = false
 SWEP.ShowWorldModel = false
 SWEP.UseHands = true
 
-SWEP.Primary.Damage = 17
+SWEP.Primary.Damage = 7.4
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Delay = 0.22
 
@@ -27,11 +28,6 @@ SWEP.ConeMin = 5.25
 
 SWEP.Recoil = 0.5
 
-SWEP.Tier = 5
-SWEP.MaxStock = 2
-
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MAX_SPREAD, -0.769)
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MIN_SPREAD, -0.656)
 GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Citadel' Minicannon", "Uses 3 ammo per shot, shoots slower, but more damage and accuracy", function(wept)
 	wept.Primary.Damage = wept.Primary.Damage * 2.5
 	wept.ConeMin = wept.ConeMin * 0.5
@@ -53,7 +49,7 @@ GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Citadel' Minicannon", "Uses 3 ammo per 
 	end
 end)
 
-SWEP.WalkSpeed = SPEED_SLOWEST * 0.75
+SWEP.WalkSpeed = 100
 SWEP.FireAnimSpeed = 0.3
 
 function SWEP:Initialize()

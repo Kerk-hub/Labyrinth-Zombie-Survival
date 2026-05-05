@@ -1,9 +1,9 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "'Juggernaut' M249"
-SWEP.Description = "A light machine gun capable of immense firepower, firing additional red projectiles as it fires."
+SWEP.Description = "A light machine gun with a massive 90-round magazine. Reloading takes a long time, so make every bullet count."
 
-SWEP.Slot = 3
+SWEP.Slot = 1
 SWEP.SlotPos = 0
 
 if CLIENT then
@@ -25,7 +25,7 @@ SWEP.WorldModel = "models/weapons/w_mach_m249para.mdl"
 SWEP.UseHands = true
 
 SWEP.Primary.Sound = Sound("weapons/m249/m249-1.wav")
-SWEP.Primary.Damage = 20
+SWEP.Primary.Damage = 7.2
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Delay = 0.08
 
@@ -39,18 +39,21 @@ SWEP.ReloadGesture = ACT_HL2MP_GESTURE_RELOAD_AR2
 
 SWEP.Recoil = 4
 
-SWEP.ConeMax = 6
-SWEP.ConeMin = 2.4
+SWEP.ConeMax = 3
+SWEP.ConeMin = 1
 
 SWEP.WalkSpeed = SPEED_SLOWEST
 
-SWEP.Tier = 5
-SWEP.MaxStock = 2
+SWEP.ReloadSpeed = 0.5
 
 SWEP.IronSightsAng = Vector(-1, -1, 0)
 SWEP.IronSightsPos = Vector(-3, 4, 3)
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_RELOAD_SPEED, 0.1)
+GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Juggernaut' Belt-Fed M249", "Extends the magazine to 120 rounds with even slower reload, but slightly higher damage", function(wept)
+	wept.Primary.Damage = wept.Primary.Damage * 1.15
+	wept.Primary.ClipSize = 120
+	wept.ReloadSpeed = 0.35
+end)
 
 function SWEP:PrimaryAttack()
 	if not self:CanPrimaryAttack() then return end

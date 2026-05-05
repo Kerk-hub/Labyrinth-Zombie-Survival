@@ -1,9 +1,9 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "'Inferno' AUG"
-SWEP.Description = "A very accurate assault rifle with great damage output and a high clip size."
+SWEP.Description = "Bullets set zombies on fire for 3 seconds on hit."
 
-SWEP.Slot = 2
+SWEP.Slot = 1
 SWEP.SlotPos = 0
 
 if CLIENT then
@@ -25,7 +25,7 @@ SWEP.WorldModel = "models/weapons/w_rif_aug.mdl"
 SWEP.UseHands = true
 
 SWEP.Primary.Sound = Sound("Weapon_AUG.Single")
-SWEP.Primary.Damage = 23
+SWEP.Primary.Damage = 8
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Delay = 0.095
 
@@ -37,32 +37,33 @@ GAMEMODE:SetupDefaultClip(SWEP.Primary)
 SWEP.Primary.Gesture = ACT_HL2MP_GESTURE_RANGE_ATTACK_AR2
 SWEP.ReloadGesture = ACT_HL2MP_GESTURE_RELOAD_AR2
 
-SWEP.ConeMax = 4
+SWEP.ConeMax = 3
 SWEP.ConeMin = 1
 
 SWEP.WalkSpeed = SPEED_SLOW
 
-SWEP.Tier = 4
-SWEP.MaxStock = 3
+SWEP.BurnDuration = 3
 
 SWEP.IronSightsAng = Vector(-1, -1, 0)
 SWEP.IronSightsPos = Vector(-3, 4, 3)
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_RELOAD_SPEED, 0.1)
-GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Inferno' Incendiary Rifle", "Fires incendiary assault rifle rounds, but reduced damage", function(wept)
-	wept.Primary.Damage = wept.Primary.Damage * 0.85
+GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Inferno' Incendiary Rifle", "Burns targets for longer at the cost of reduced damage", function(wept)
+	wept.Primary.Damage = wept.Primary.Damage * 0.8
+	wept.BurnDuration = 6
+end)
 
-	wept.BulletCallback = function(attacker, tr, dmginfo)
+function SWEP.BulletCallback(attacker, tr, dmginfo)
+	if SERVER and tr.Entity:IsValidLivingZombie() then
 		local ent = tr.Entity
-		if SERVER and math.random(6) == 1 and ent:IsValidLivingZombie() then
-			ent:Ignite(6)
-			for __, fire in pairs(ents.FindByClass("entityflame")) do
-				if fire:IsValid() and fire:GetParent() == ent then
-					fire:SetOwner(attacker)
-					fire:SetPhysicsAttacker(attacker)
-					fire.AttackerForward = attacker
-				end
+		local wep = attacker:GetActiveWeapon()
+		local duration = IsValid(wep) and (wep.BurnDuration or 3) or 3
+		ent:Ignite(duration)
+		for _, fire in pairs(ents.FindByClass("entityflame")) do
+			if fire:IsValid() and fire:GetParent() == ent then
+				fire:SetOwner(attacker)
+				fire:SetPhysicsAttacker(attacker)
+				fire.AttackerForward = attacker
 			end
 		end
 	end
-end)
+end

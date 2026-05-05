@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "'Jackhammer' Drum Shotgun"
-SWEP.Description = "An automatic drum shotgun with a large clip size."
+SWEP.Description = "Automatic drum shotgun. Fire rate accelerates the longer you hold the trigger — releasing or reloading resets the spin."
 
 if CLIENT then
 	SWEP.Slot = 3
@@ -42,6 +42,7 @@ if CLIENT then
 end
 
 SWEP.Base = "weapon_zs_base"
+SWEP.Slot = 1
 
 SWEP.HoldType = "shotgun"
 
@@ -53,27 +54,21 @@ SWEP.UseHands = true
 
 SWEP.Primary.Sound = Sound("weapons/xm1014/xm1014-1.wav")
 SWEP.ReloadSound = Sound("Weapon_Deagle.Clipout")
-SWEP.Primary.Damage = 10.5
+SWEP.Primary.Damage = 3.5
 SWEP.Primary.NumShots = 8
-SWEP.Primary.Delay = 0.31
+SWEP.Primary.Delay = 0.45
 
 SWEP.Primary.ClipSize = 12
 SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "buckshot"
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
 
-SWEP.ConeMax = 9
-SWEP.ConeMin = 6.5
+SWEP.ConeMax = 4
+SWEP.ConeMin = 4
 
 SWEP.ReloadSpeed = 0.65
 
 SWEP.WalkSpeed = SPEED_SLOWEST
-
-SWEP.Tier = 4
-SWEP.MaxStock = 3
-
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MAX_SPREAD, -1.125)
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MIN_SPREAD, -0.81)
 GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Anvil' Drum Shotgun", "Uses 3 shells at once, slightly more damage, reduced accuracy", function(wept)
 	wept.Primary.NumShots = wept.Primary.NumShots * 3
 	wept.Primary.Delay = wept.Primary.Delay * 3.3
@@ -96,4 +91,32 @@ function SWEP:EmitFireSound()
 end
 
 function SWEP:SecondaryAttack()
+end
+
+function SWEP:GetSpool()
+	return self:GetDTFloat(9)
+end
+
+function SWEP:SetSpool(s)
+	self:SetDTFloat(9, s)
+end
+
+function SWEP:GetFireDelay()
+	return math.max(0.2, self.BaseClass.GetFireDelay(self) - self:GetSpool() * 0.25)
+end
+
+function SWEP:Think()
+	local owner = self:GetOwner()
+	if owner:KeyDown(IN_ATTACK) and self:GetReloadFinish() == 0 then
+		self:SetSpool(math.min(self:GetSpool() + FrameTime() * 0.25, 1))
+	else
+		self:SetSpool(math.max(self:GetSpool() - FrameTime() * 0.5, 0))
+	end
+	self:NextThink(CurTime())
+	return true
+end
+
+function SWEP:FinishReload()
+	self:SetSpool(0)
+	self.BaseClass.FinishReload(self)
 end

@@ -1,9 +1,9 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "'Shredder' SMG"
-SWEP.Description = "Simple SMG capable of very good damage output at the cost of long range accuracy."
+SWEP.Description = "Bullets pierce through zombies, continuing with reduced damage. Inaccurate at range."
 
-SWEP.Slot = 2
+SWEP.Slot = 1
 SWEP.SlotPos = 0
 
 if CLIENT then
@@ -25,11 +25,11 @@ SWEP.WorldModel = "models/weapons/w_smg_mp5.mdl"
 SWEP.UseHands = true
 
 SWEP.Primary.Sound = Sound("Weapon_MP5Navy.Single")
-SWEP.Primary.Damage = 21
+SWEP.Primary.Damage = 15.5
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Delay = 0.09
+SWEP.Primary.Delay = 0.133
 
-SWEP.Primary.ClipSize = 30
+SWEP.Primary.ClipSize = 19
 SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "smg1"
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
@@ -40,14 +40,26 @@ SWEP.ReloadGesture = ACT_HL2MP_GESTURE_RELOAD_SMG1
 SWEP.ConeMax = 5.5
 SWEP.ConeMin = 2.5
 
-SWEP.WalkSpeed = SPEED_SLOW
-
-SWEP.Tier = 3
+SWEP.WalkSpeed = SPEED_NORMAL
 
 SWEP.IronSightsAng = Vector(0.8, 0, 0)
 SWEP.IronSightsPos = Vector(-5.33, 7, 1.8)
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_RELOAD_SPEED, 0.1)
+local function DoPierce(attacker, startpos, dir, damage)
+	attacker.PierceBullet = true
+	if attacker:IsValid() then
+		attacker:FireBulletsLua(startpos, dir, 0, 1, damage, nil, nil, nil, nil, nil, nil, nil, nil, attacker:GetActiveWeapon())
+	end
+	attacker.PierceBullet = nil
+end
+
+function SWEP.BulletCallback(attacker, tr, dmginfo)
+	if SERVER and not attacker.PierceBullet and tr.Entity:IsValidLivingZombie() then
+		local hitpos, normal, dmg = tr.HitPos, tr.Normal, dmginfo:GetDamage() * 0.6
+		timer.Simple(0, function() DoPierce(attacker, hitpos, normal, dmg) end)
+	end
+end
+
 GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Smasher' SMG", "Additional damage to skeletal enemies, inflicts force, but fires and reloads slower", function(wept)
 	wept.Primary.Delay = 0.15
 	wept.ReloadSpeed = 0.9
