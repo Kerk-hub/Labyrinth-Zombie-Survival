@@ -2,7 +2,7 @@ AddCSLuaFile()
 DEFINE_BASECLASS("weapon_zs_basemelee")
 
 SWEP.PrintName = "Knife"
-SWEP.Description = "A small bladed weapon that deals double damage to the back."
+SWEP.Description = "A fast culinary blade. Backstabs deal 4x damage. Kills restore blood armor."
 
 if CLIENT then
 	SWEP.ViewModelFlip = false
@@ -38,13 +38,23 @@ SWEP.NoHitSoundFlesh = true
 
 SWEP.AllowQualityWeapons = true
 SWEP.Culinary = true
+SWEP.QualityDescs = {
+	"Backstab multiplier increased to 6x. Kills restore 10 blood armor.",
+	"Backstab multiplier increased to 8x. Kills restore 15 blood armor.",
+	"Backstab multiplier increased to 10x. Kills restore 20 blood armor.",
+}
 
-GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Spring' Knife", "Right click while airborne to double jump. Deals less damage.", function(wept)
+GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Spring' Knife", "RMB while airborne to double jump (5s cooldown). -20% damage. Sturdy: 4s cooldown. Honed: 2s cooldown.", function(wept)
 	wept.SwissAltRightClick = true
 	wept.MeleeDamage = wept.MeleeDamage * 0.8
 	local cooldowns = {5, 4, 2}
 	wept.SwissJumpCooldown = cooldowns[wept.QualityTier] or 5
 end)
+SWEP.Branches[1].Descs = {
+	"Gain double jump on RMB. 5s cooldown. -20% damage.",
+	"Cooldown reduced to 4 seconds.",
+	"Cooldown reduced to 2 seconds.",
+}
 
 function SWEP:PlaySwingSound()
 	self:EmitSound("weapons/knife/knife_slash"..math.random(2)..".wav")
@@ -81,7 +91,10 @@ function SWEP:Think()
 				if self.m_LastNotifiedNxt ~= nxt then
 					self.m_LastNotifiedNxt = nxt
 					self:EmitSound("buttons/button1.wav", 75, 100)
-					GAMEMODE:CenterNotify(COLOR_BLUE, "Double Jump Charged")
+					local n = GAMEMODE:CenterNotify(COLOR_BLUE, "Double Jump Charged")
+					if n and n:IsValid() then
+						n:AlphaTo(0, 0.3, 0.5, function() if IsValid(n) then n:Remove() end end)
+					end
 				end
 			else
 				self.m_LastNotifiedNxt = nil

@@ -169,8 +169,11 @@ function GM:CreateWeaponOfQuality(i, orig, quality, classname, branch)
 	end
 
 	if branch and branch.BranchFunc then
-		table.insert(remantledescs, 1, branch.Desc)
+		local desc = (branch.Descs and branch.Descs[i]) or branch.Desc
+		table.insert(remantledescs, 1, desc)
 		branch.BranchFunc(wept)
+	elseif wept.QualityDescs and wept.QualityDescs[i] then
+		table.insert(remantledescs, 1, wept.QualityDescs[i])
 	end
 
 	local newclass = self:GetWeaponClassOfQuality(classname, i, branch and branch.No)
