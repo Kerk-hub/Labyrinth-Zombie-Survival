@@ -4545,7 +4545,8 @@ function GM:HumanKilledZombie(pl, attacker, inflictor, dmginfo, headshot, suicid
 		end
 
 		if wep.Culinary and (not wep.Branch or wep.Branch == 0) and attacker.MaxBloodArmor and attacker.MaxBloodArmor > 0 then
-			attacker:SetBloodArmor(math.min(attacker.MaxBloodArmor, attacker:GetBloodArmor() + 10))
+			local bloodgain = 10 + (wep.QualityTier or 0) * 5
+			attacker:SetBloodArmor(math.min(attacker.MaxBloodArmor, attacker:GetBloodArmor() + bloodgain))
 		end
 	end
 

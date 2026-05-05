@@ -364,7 +364,7 @@ concommand.Add("zs_upgrade", function(sender, command, arguments)
 	end
 
 	local wtbl = weapons.Get(contents)
-	local pointcost = math.ceil(GAMEMODE:ScrapToPoints(GAMEMODE:GetUpgradeScrap(wtbl, desiredqua)))
+	local pointcost = GAMEMODE:GetUpgradeCost(wtbl, desiredqua)
 
 	if wtbl.AmmoIfHas and sender:GetAmmoCount(wtbl.Primary.Ammo) == 0 then
 		sender:SendLua('surface.PlaySound("buttons/button10.wav")')

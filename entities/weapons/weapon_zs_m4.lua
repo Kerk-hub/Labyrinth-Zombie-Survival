@@ -113,7 +113,8 @@ GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Aspirant' Burst M4", "Increased damage,
 
 		wept.HUD3DPos = Vector(-1.2, -5, -1.2)
 	end
-GAMEMODE:GetRemantleBranch(SWEP, 1).Killicon = "weapon_zs_aspirant"
+end)
+SWEP.Branches[1].Killicon = "weapon_zs_aspirant"
 
 function SWEP:SetNextShot(nextshot)
 	self:SetDTFloat(5, nextshot)

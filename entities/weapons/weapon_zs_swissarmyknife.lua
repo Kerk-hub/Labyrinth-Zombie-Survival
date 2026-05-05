@@ -39,10 +39,11 @@ SWEP.NoHitSoundFlesh = true
 SWEP.AllowQualityWeapons = true
 SWEP.Culinary = true
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.085)
-GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Spring' Knife", "Right click while in the air to double jump 5 second cooldown. Deals less damage.", function(wept)
+GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Spring' Knife", "Right click while airborne to double jump. Deals less damage.", function(wept)
 	wept.SwissAltRightClick = true
 	wept.MeleeDamage = wept.MeleeDamage * 0.8
+	local cooldowns = {5, 4, 2}
+	wept.SwissJumpCooldown = cooldowns[wept.QualityTier] or 5
 end)
 
 function SWEP:PlaySwingSound()
@@ -69,21 +70,21 @@ function SWEP:SecondaryAttack()
 		self:EmitSound("Weapon_Flashbang.Bounce")
 	end
 
-	self:SetNextSecondaryFire(CurTime() + 5)
-	self.SwissAltBeeped = false
+	self:SetNextSecondaryFire(CurTime() + (self.SwissJumpCooldown or 5))
 end
 
 function SWEP:Think()
 	if self.Branch == 1 then
-		local isCharged = self:GetNextSecondaryFire() <= CurTime()
-		
 		if CLIENT then
-			if isCharged and not self.m_WasChargedNotified then
-				self.m_WasChargedNotified = true
-				self:EmitSound("buttons/button1.wav", 75, 100)
-				GAMEMODE:CenterNotify(COLOR_BLUE, "Double Jump Charged")
-			elseif not isCharged then
-				self.m_WasChargedNotified = false
+			local nxt = self:GetNextSecondaryFire()
+			if nxt <= CurTime() then
+				if self.m_LastNotifiedNxt ~= nxt then
+					self.m_LastNotifiedNxt = nxt
+					self:EmitSound("buttons/button1.wav", 75, 100)
+					GAMEMODE:CenterNotify(COLOR_BLUE, "Double Jump Charged")
+				end
+			else
+				self.m_LastNotifiedNxt = nil
 			end
 		end
 	end
@@ -93,16 +94,17 @@ end
 
 function SWEP:OnMeleeHit(hitent, hitflesh, tr)
 	if hitent:IsValid() and hitent:IsPlayer() and not self.m_BackStabbing and math.abs(hitent:GetForward():Angle().yaw - self:GetOwner():GetForward():Angle().yaw) <= 90 then
+		local bsmul = 4 + (self.QualityTier or 0) * 2
 		self.m_BackStabbing = true
-		self.MeleeDamage = self.MeleeDamage * 2
+		self.m_BackStabMul = bsmul
+		self.MeleeDamage = self.MeleeDamage * bsmul
 	end
 end
 
 function SWEP:PostOnMeleeHit(hitent, hitflesh, tr)
 	if self.m_BackStabbing then
 		self.m_BackStabbing = false
-
-		self.MeleeDamage = self.MeleeDamage / 2
+		self.MeleeDamage = self.MeleeDamage / self.m_BackStabMul
 	end
 end
 
