@@ -3146,13 +3146,6 @@ function GM:GiveDefaultOrRandomEquipment(pl)
 	if not self.CheckedOut[pl:UniqueID()] and not self.ZombieEscape then
 		if self.StartingLoadout then
 			self:GiveStartingLoadout(pl)
-		else
-			pl:SendLua("GAMEMODE:RequestedDefaultCart()")
-			if self.StartingWorth > 0 then
-				timer.Simple(4, function()
-					TimedOut(pl)
-				end)
-			end
 		end
 	end
 end
