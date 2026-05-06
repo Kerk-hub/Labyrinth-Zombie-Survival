@@ -105,7 +105,7 @@ function ENT:DrawTranslucent()
 		self:DrawNailOverlay(nhp, mnhp)
 	end
 
-	if nhp/mnhp < 0.35 and CurTime() > self.NextEmit then
+	if nhp/mnhp < 0.20 and CurTime() > self.NextEmit then
 		local normal = self:GetForward() * -1
 		local epos = self:GetPos() + normal
 
