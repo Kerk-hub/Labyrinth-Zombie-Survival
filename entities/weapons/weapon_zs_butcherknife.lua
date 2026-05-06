@@ -66,16 +66,17 @@ function SWEP:GetSpeedStack()
 	return self:GetDTFloat(6)
 end
 
-function SWEP:GetFireDelay()
-	local base = self.Primary.Delay
-	local frost = self:GetOwner():GetStatus("frost") and 0.7 or 1
-	return (base / frost) / (1 + self:GetSpeedStack())
+function SWEP:Initialize()
+	self.m_BaseDelay = self.Primary.Delay
+	BaseClass.Initialize(self)
 end
 
 function SWEP:Think()
-	if self:GetSpeedStack() > 0 then
+	local stack = self:GetSpeedStack()
+	self.Primary.Delay = self.m_BaseDelay / (1 + stack)
+	if stack > 0 then
 		if self.m_LastHitTime and (CurTime() - self.m_LastHitTime) >= RESET_TIME then
-			self:SetSpeedStack(0)
+			if SERVER then self:SetSpeedStack(0) end
 		end
 	end
 	BaseClass.Think(self)
@@ -90,8 +91,9 @@ function SWEP:PlayHitSound()
 end
 
 function SWEP:PlayHitFleshSound()
-	self:EmitSound("physics/flesh/flesh_squishy_impact_hard"..math.random(4)..".wav")
-	self:EmitSound("physics/body/body_medium_break"..math.random(2, 4)..".wav")
+	local pitch = 100 + math.floor(self:GetSpeedStack() * 100)
+	self:EmitSound("physics/flesh/flesh_squishy_impact_hard"..math.random(4)..".wav", 72, pitch)
+	self:EmitSound("physics/body/body_medium_break"..math.random(2, 4)..".wav", 72, pitch)
 end
 
 function SWEP:PostOnMeleeHit(hitent, hitflesh, tr)

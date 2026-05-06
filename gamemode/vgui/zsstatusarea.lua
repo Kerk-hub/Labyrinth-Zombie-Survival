@@ -118,6 +118,19 @@ local statusdisplays = {
 	ValFunc = statusValueFunction("renegade"),
 	Max = 14,
 	Icon = Material("zombiesurvival/headshot_stacks.png")
+},
+{
+	Color = Color(255, 140, 20),
+	Name = "FRENZY!",
+	ValFunc = function(self, lp)
+		local wep = lp:GetActiveWeapon()
+		if IsValid(wep) and (wep.BaseQuality or wep:GetClass()) == "weapon_zs_butcherknife" then
+			return wep:GetDTFloat(6) * 100
+		end
+		return 0
+	end,
+	Max = 150,
+	Icon = Material("zombiesurvival/speed_up.png")
 }
 }
 
