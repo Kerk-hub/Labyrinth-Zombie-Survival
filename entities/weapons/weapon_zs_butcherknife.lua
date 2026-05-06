@@ -1,7 +1,8 @@
 AddCSLuaFile()
+DEFINE_BASECLASS("weapon_zs_basemelee")
 
 SWEP.PrintName = "Butcher Knife"
-SWEP.Description = "A very fast swinging butcher knife, capable of mincing zombies very quickly up close."
+SWEP.Description = "A culinary cleaver. Hits build attack speed up to a cap. Kills and gib destruction restore blood armor."
 
 if CLIENT then
 	SWEP.ViewModelFOV = 55
@@ -47,8 +48,38 @@ SWEP.Tier = 2
 
 SWEP.AllowQualityWeapons = true
 SWEP.Culinary = true
+SWEP.QualityDescs = {
+	"Each hit adds 5% attack speed, capped at 50%. Resets after 2s without a hit.",
+	"Each hit adds 10% attack speed, capped at 100%. Resets after 2s without a hit.",
+	"Each hit adds 15% attack speed, capped at 150%. Resets after 2s without a hit.",
+}
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.06)
+local STACK_PER_HIT = {0.03, 0.05, 0.10, 0.15}
+local STACK_CAP    = {0.30, 0.50, 1.00, 1.50}
+local RESET_TIME   = 2
+
+function SWEP:SetSpeedStack(v)
+	self:SetDTFloat(6, v)
+end
+
+function SWEP:GetSpeedStack()
+	return self:GetDTFloat(6)
+end
+
+function SWEP:GetFireDelay()
+	local base = self.Primary.Delay
+	local frost = self:GetOwner():GetStatus("frost") and 0.7 or 1
+	return (base / frost) / (1 + self:GetSpeedStack())
+end
+
+function SWEP:Think()
+	if self:GetSpeedStack() > 0 then
+		if self.m_LastHitTime and (CurTime() - self.m_LastHitTime) >= RESET_TIME then
+			self:SetSpeedStack(0)
+		end
+	end
+	BaseClass.Think(self)
+end
 
 function SWEP:PlaySwingSound()
 	self:EmitSound("weapons/knife/knife_slash"..math.random(2)..".wav", 72, math.Rand(85, 95))
@@ -64,7 +95,12 @@ function SWEP:PlayHitFleshSound()
 end
 
 function SWEP:PostOnMeleeHit(hitent, hitflesh, tr)
-	--[[if hitent:IsValid() and hitent:IsPlayer() and hitent:Health() <= 0 then
-		-- Dismember closest limb to tr.HitPos
-	end]]
+	if SERVER and hitflesh and hitent:IsValid() and hitent:IsPlayer() then
+		local tier = self.QualityTier or 0
+		local step = STACK_PER_HIT[tier + 1]
+		local cap  = STACK_CAP[tier + 1]
+		local newstack = math.min(cap, self:GetSpeedStack() + step)
+		self:SetSpeedStack(newstack)
+		self.m_LastHitTime = CurTime()
+	end
 end
