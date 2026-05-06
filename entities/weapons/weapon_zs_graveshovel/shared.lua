@@ -11,7 +11,7 @@ SWEP.ViewModel = "models/weapons/c_crowbar.mdl"
 SWEP.WorldModel = "models/weapons/w_crowbar.mdl"
 SWEP.UseHands = true
 
-SWEP.MeleeDamage = 130
+SWEP.MeleeDamage = 65
 SWEP.MeleeRange = 78
 SWEP.MeleeSize = 1.5
 SWEP.MeleeKnockBack = 220
@@ -29,6 +29,11 @@ SWEP.Tier = 4
 SWEP.MaxStock = 3
 
 SWEP.AllowQualityWeapons = true
+
+SWEP.NailDelay   = 1.2
+SWEP.UnnailDelay = 1.8
+
+BUILDING_WEAPON_MIXIN.ApplyShared(SWEP)
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.12)
 

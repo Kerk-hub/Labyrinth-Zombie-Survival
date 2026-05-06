@@ -393,7 +393,7 @@ function PANEL:Paint(w, h)
 			local quals = GAMEMODE.WeaponQualities[hovquality]
 			if quals then
 				txt = self.RemantleNodes[hovbranch][hovquality].Name or hovbranch == 0 and quals[1] or quals[3]
-				scost = math.ceil(GAMEMODE:ScrapToPoints(GAMEMODE:GetUpgradeScrap(self.GunTab, hovquality)))
+				scost = GAMEMODE:GetUpgradeCost(self.GunTab, hovquality)
 			end
 
 			self.QualityName:SetText(txt)
@@ -447,7 +447,7 @@ net.Receive("zs_remantleconf", function()
 
 	GAMEMODE.GunTab = weapons.Get(upgclass)
 	local gtbl = GAMEMODE.GunTab
-	local scost = math.ceil(GAMEMODE:ScrapToPoints(GAMEMODE:GetUpgradeScrap(gtbl, desiredqua)))
+	local scost = GAMEMODE:GetUpgradeCost(gtbl, desiredqua)
 
 	path.RemantleNodes[hovbranch][hovquality].Unlocked = true
 	path.ScrapCost:SetTextColor((MySelf:GetPoints() - scost) >= scost and COLOR_WHITE or COLOR_RED)
@@ -476,7 +476,7 @@ function PANEL:OnMousePressed(mc)
 		local prev = self.RemantleNodes[hovbranch][hovquality - 1] or hovquality == 1 and self.RemantleNodes[0][0]
 		if cqua and hovquality > cqua and prev and prev.Unlocked and not current.Locked then
 
-			local scost = math.ceil(GAMEMODE:ScrapToPoints(GAMEMODE:GetUpgradeScrap(self.GunTab, hovquality)))
+			local scost = GAMEMODE:GetUpgradeCost(self.GunTab, hovquality)
 			if MySelf:GetPoints() >= scost then
 				GAMEMODE.RemantlerInterface.BranchCache = hovbranch
 				RunConsoleCommand("zs_upgrade", hovbranch ~= 0 and hovbranch)
@@ -527,7 +527,8 @@ function GM:OpenRemantlerMenu(remantler, dockedtoarsenal, dockedtoworth)
 	end
 
 	local screenscale = BetterScreenScale()
-	local wid, hei = math.min(ScrW(), 900) * screenscale, math.min(ScrH(), 800) * screenscale
+	local hei = math.min(ScrH(), 800) * screenscale
+	local wid = linked and math.floor((ScrW() - 32) * 0.5) or math.min(ScrW(), 900) * screenscale
 	local tabhei = 24 * screenscale
 
 	local frame = vgui.Create("DFrame")

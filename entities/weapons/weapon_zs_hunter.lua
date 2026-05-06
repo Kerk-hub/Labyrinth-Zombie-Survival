@@ -1,8 +1,8 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "'Hunter' Rifle"
-SWEP.Description = "Fires special large caliber rounds. The reloading time is slow but it packs a powerful punch."
-SWEP.Slot = 3
+SWEP.Description = "Single-shot bolt-action rifle. Overkill damage is released as an explosion on kill."
+SWEP.Slot = 1
 SWEP.SlotPos = 0
 
 if CLIENT then
@@ -36,7 +36,7 @@ SWEP.UseHands = true
 
 SWEP.ReloadSound = Sound("Weapon_AWP.ClipOut")
 SWEP.Primary.Sound = Sound("Weapon_Hunter.Single")
-SWEP.Primary.Damage = 95
+SWEP.Primary.Damage = 160
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Delay = 0.3
 SWEP.ReloadDelay = SWEP.Primary.Delay
@@ -49,40 +49,38 @@ SWEP.Primary.DefaultClip = 15
 SWEP.Primary.Gesture = ACT_HL2MP_GESTURE_RANGE_ATTACK_CROSSBOW
 SWEP.ReloadGesture = ACT_HL2MP_GESTURE_RELOAD_SHOTGUN
 
-SWEP.ConeMax = 5.75
+SWEP.ConeMax = 6
 SWEP.ConeMin = 0
+
+SWEP.HeadshotMulti = 3
 
 SWEP.IronSightsPos = Vector(5.015, -8, 2.52)
 SWEP.IronSightsAng = Vector(0, 0, 0)
 
 SWEP.WalkSpeed = SPEED_SLOWER
 
-SWEP.Tier = 3
-
 SWEP.TracerName = "AR2Tracer"
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_RELOAD_SPEED, 0.1)
-GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Hunter' Explosive Rifle", "Uses twice as much ammo, reloads slowly, but overkill damage is dealt as an explosion", function(wept)
-	wept.Primary.ClipSize = 2
-	wept.RequiredClip = 2
-	wept.ReloadSpeed = 0.9
-
-	wept.OnZombieKilled = function(self, zombie, total, dmginfo)
-		local killer = self:GetOwner()
-		local minushp = -zombie:Health()
-		if killer:IsValid() and minushp > 10 then
-			local pos = zombie:GetPos()
-
-			timer.Simple(0.15, function()
-				util.BlastDamagePlayer(killer:GetActiveWeapon(), killer, pos, 72, minushp, DMG_ALWAYSGIB, 0.94)
-			end)
-
-			local effectdata = EffectData()
-				effectdata:SetOrigin(pos)
-			util.Effect("Explosion", effectdata, true, true)
-		end
-	end
+GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Hunter' Detonator Rifle", "Overkill explosion has a larger radius and transfers 50% more excess damage", function(wept)
+	wept.ExplosionRadius = 128
+	wept.ExplosionOverkillMult = 1.5
 end)
+
+function SWEP:OnZombieKilled(zombie, total, dmginfo)
+	local killer = self:GetOwner()
+	local minushp = -zombie:Health()
+	if killer:IsValid() and minushp > 10 then
+		local pos = zombie:GetPos()
+		local radius = self.ExplosionRadius or 72
+		local mult = self.ExplosionOverkillMult or 1
+		timer.Simple(0.15, function()
+			util.BlastDamagePlayer(killer:GetActiveWeapon(), killer, pos, radius, minushp * mult, DMG_ALWAYSGIB, 0.94)
+		end)
+		local effectdata = EffectData()
+			effectdata:SetOrigin(pos)
+		util.Effect("Explosion", effectdata, true, true)
+	end
+end
 
 function SWEP:IsScoped()
 	return self:GetIronsights() and self.fIronTime and self.fIronTime + 0.25 <= CurTime()

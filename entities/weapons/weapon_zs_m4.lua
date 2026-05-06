@@ -2,8 +2,8 @@ AddCSLuaFile()
 DEFINE_BASECLASS("weapon_zs_base")
 
 SWEP.PrintName = "'Stalker' M4"
-SWEP.Description = "Using this gun will severely reduce the distance in which zombies can see your aura."
-SWEP.Slot = 2
+SWEP.Description = "Completely hides your aura from zombies and allows you to move at full speed while equipped."
+SWEP.Slot = 1
 SWEP.SlotPos = 0
 
 if CLIENT then
@@ -25,7 +25,7 @@ SWEP.WorldModel = "models/weapons/w_rif_m4a1.mdl"
 SWEP.UseHands = true
 
 SWEP.Primary.Sound = Sound("Weapon_m4a1.Single")
-SWEP.Primary.Damage = 24.5
+SWEP.Primary.Damage = 9
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Delay = 0.11
 
@@ -37,24 +37,19 @@ GAMEMODE:SetupDefaultClip(SWEP.Primary)
 SWEP.Primary.Gesture = ACT_HL2MP_GESTURE_RANGE_ATTACK_SMG1
 SWEP.ReloadGesture = ACT_HL2MP_GESTURE_RELOAD_SMG1
 
-SWEP.ConeMax = 5
-SWEP.ConeMin = 1.5
+SWEP.ConeMax = 3
+SWEP.ConeMin = 1
 
-SWEP.WalkSpeed = SPEED_SLOW
-
-SWEP.Tier = 4
-SWEP.MaxStock = 3
+SWEP.WalkSpeed = SPEED_NORMAL
 
 SWEP.IronSightsPos = Vector(-3, 0, 2)
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MAX_SPREAD, -0.625)
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MIN_SPREAD, -0.187)
-local branch = GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Aspirant' Burst M4", "Increased damage, shoots in a slower, more accurate 3 round burst", function(wept)
+GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Aspirant' Burst M4", "Increased damage, shoots in a slower, more accurate 3 round burst", function(wept)
 	wept.Primary.Damage = wept.Primary.Damage * 1.1
 	wept.Primary.Delay = wept.Primary.Delay * 5.7
 	wept.Primary.BurstShots = 3
-	wept.ConeMin = wept.ConeMin * 0.6
-	wept.ConeMax = wept.ConeMax * 0.5
+	wept.ConeMin = 0.6
+	wept.ConeMax = 1.5
 
 	wept.PrimaryAttack = function(self)
 		if not self:CanPrimaryAttack() then return end
@@ -119,7 +114,7 @@ local branch = GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Aspirant' Burst M4", "In
 		wept.HUD3DPos = Vector(-1.2, -5, -1.2)
 	end
 end)
-branch.Killicon = "weapon_zs_aspirant"
+SWEP.Branches[1].Killicon = "weapon_zs_aspirant"
 
 function SWEP:SetNextShot(nextshot)
 	self:SetDTFloat(5, nextshot)
@@ -138,5 +133,9 @@ function SWEP:GetShotsLeft()
 end
 
 function SWEP:GetAuraRange()
-	return 512
+	return 0
+end
+
+function SWEP:GetWalkSpeed()
+	return SPEED_NORMAL
 end

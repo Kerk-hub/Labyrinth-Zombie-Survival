@@ -2,7 +2,7 @@ AddCSLuaFile()
 DEFINE_BASECLASS("weapon_zs_base")
 
 SWEP.PrintName = "'Ricochete' Magnum"
-SWEP.Description = "This gun's bullets will bounce off of walls which will then deal extra damage."
+SWEP.Description = "Bullets bounce off walls and deal bonus damage. Each wall bounce hit shortens your next reload."
 SWEP.Slot = 1
 SWEP.SlotPos = 0
 
@@ -27,7 +27,7 @@ SWEP.CSMuzzleFlashes = false
 
 SWEP.Primary.Sound = Sound("Weapon_357.Single")
 SWEP.Primary.Delay = 0.7
-SWEP.Primary.Damage = 59
+SWEP.Primary.Damage = 72
 SWEP.Primary.NumShots = 1
 
 SWEP.Primary.ClipSize = 6
@@ -38,9 +38,10 @@ GAMEMODE:SetupDefaultClip(SWEP.Primary)
 
 SWEP.Tier = 2
 
-SWEP.ConeMax = 3.75
-SWEP.ConeMin = 2
+SWEP.ConeMax = 2.5
+SWEP.ConeMin = 0.25
 SWEP.BounceMulti = 1.5
+SWEP.BounceReloadStacks = 0
 
 SWEP.IronSightsPos = Vector(-4.65, 4, 0.25)
 SWEP.IronSightsAng = Vector(0, 0, 1)
@@ -48,6 +49,17 @@ SWEP.IronSightsAng = Vector(0, 0, 1)
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MAX_SPREAD, -0.7, 1)
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MIN_SPREAD, -0.35, 1)
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.07, 1)
+
+function SWEP:GetReloadSpeedMultiplier()
+	local base = BaseClass.GetReloadSpeedMultiplier and BaseClass.GetReloadSpeedMultiplier(self) or 1
+	local stacks = self.BounceReloadStacks or 0
+	return base * (1 + stacks * 0.2)
+end
+
+function SWEP:FinishReload()
+	self.BounceReloadStacks = 0
+	BaseClass.FinishReload(self)
+end
 GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Backlash' Magnum", "Gets more accurate for each direct hit, but less damage on non-bounced shots", function(wept)
 	wept.Primary.Damage = wept.Primary.Damage * 0.85
 	wept.BounceMulti = 1.764
@@ -66,6 +78,9 @@ local function DoRicochet(attacker, hitpos, hitnormal, normal, damage)
 		local wep = att:GetActiveWeapon()
 		if wep.Branch == 1 and ent:IsValidZombie() then
 			wep:SetDTInt(9, wep:GetDTInt(9) + 2)
+		end
+		if IsValid(wep) and ent:IsValidLivingZombie() then
+			wep.BounceReloadStacks = math.min((wep.BounceReloadStacks or 0) + 1, 5)
 		end
 	end
 

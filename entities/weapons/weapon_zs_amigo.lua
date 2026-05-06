@@ -4,7 +4,7 @@ DEFINE_BASECLASS("weapon_zs_base")
 SWEP.PrintName = "'Amigo' Assault Rifle"
 SWEP.Description = "The Amigo gets extra headshot damage, but has a slow fire rate for an assault rifle."
 
-SWEP.Slot = 2
+SWEP.Slot = 1
 SWEP.SlotPos = 0
 
 if CLIENT then
@@ -27,7 +27,7 @@ SWEP.UseHands = true
 
 SWEP.ReloadSound = Sound("Weapon_SG552.Clipout")
 SWEP.Primary.Sound = Sound("Weapon_SG552.Single")
-SWEP.Primary.Damage = 18
+SWEP.Primary.Damage = 12
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Delay = 0.135
 
@@ -36,24 +36,20 @@ SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "ar2"
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
 
-SWEP.ConeMax = 1.5
-SWEP.ConeMin = 0.7
-SWEP.HeadshotMulti = 1.9
+SWEP.ConeMax = 3
+SWEP.ConeMin = 1
+SWEP.HeadshotMulti = 3
 
 SWEP.ReloadSpeed = 0.9
 
 SWEP.WalkSpeed = SPEED_SLOW
 
-SWEP.Tier = 2
-
 SWEP.IronSightsPos = Vector(-5, 1, 3)
 SWEP.IronSightsAng = Vector(0, 0, 0)
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.01, 1)
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_HEADSHOT_MULTI, 0.07)
 GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Comrade' Micronaut Rifle", "Reduced accuracy, damage but increased clip size and fires additional projectiles", function(wept)
-	wept.ConeMax = wept.ConeMax * 1.5
-	wept.ConeMin = wept.ConeMin * 1.5
+	wept.ConeMax = 4.5
+	wept.ConeMin = 1.5
 	wept.Primary.Damage = wept.Primary.Damage * 0.8
 	wept.Primary.ClipSize = 35
 
@@ -100,8 +96,8 @@ local branch = GAMEMODE:AddNewRemantleBranch(SWEP, 2, "'Horizon' Battle Rifle", 
 	wept.Primary.Damage = wept.Primary.Damage * 1.12
 	wept.Primary.Delay = wept.Primary.Delay * 6
 	wept.Primary.BurstShots = 3
-	wept.ConeMin = wept.ConeMin * 0.6
-	wept.ConeMax = wept.ConeMax * 0.85
+	wept.ConeMin = 0.6
+	wept.ConeMax = 2.55
 
 	wept.PrimaryAttack = function(self)
 		if not self:CanPrimaryAttack() then return end

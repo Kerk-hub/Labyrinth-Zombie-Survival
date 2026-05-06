@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "Plank"
-SWEP.Description = "A strip of wood of which repeated swings that connect with it build up momentum and overall damage output."
+SWEP.Description = "A strip of wood of which repeated swings that connect with it build up momentum and overall damage output. Right click to perform an extra jump (7s cooldown)."
 
 if CLIENT then
 	SWEP.ViewModelFOV = 55
@@ -28,7 +28,7 @@ SWEP.UseHands = true
 SWEP.BoxPhysicsMin = Vector(-0.5764, -2.397225, -20.080572) * SWEP.ModelScale
 SWEP.BoxPhysicsMax = Vector(0.70365, 2.501825, 19.973375) * SWEP.ModelScale
 
-SWEP.MeleeDamage = 16
+SWEP.MeleeDamage = 26
 SWEP.MeleeRange = 48
 SWEP.MeleeSize = 0.875
 SWEP.Primary.Delay = 0.37
@@ -43,6 +43,8 @@ SWEP.MissGesture = SWEP.HitGesture
 SWEP.AllowQualityWeapons = true
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MELEE_RANGE, 4)
+
+SURVIVAL_WEAPON_MIXIN.Apply(SWEP)
 
 function SWEP:PlaySwingSound()
 	self:EmitSound("weapons/knife/knife_slash"..math.random(2)..".wav")

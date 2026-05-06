@@ -3,7 +3,7 @@ AddCSLuaFile()
 SWEP.PrintName = "'Reaper' UMP"
 SWEP.Description = "A hard hitting SMG that provides a short duration stacking damage buff if you earn a kill."
 
-SWEP.Slot = 2
+SWEP.Slot = 1
 SWEP.SlotPos = 0
 
 if CLIENT then
@@ -25,11 +25,11 @@ SWEP.WorldModel = "models/weapons/w_smg_ump45.mdl"
 SWEP.UseHands = true
 
 SWEP.Primary.Sound = Sound("Weapon_UMP45.Single")
-SWEP.Primary.Damage = 19.125
+SWEP.Primary.Damage = 17.2
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Delay = 0.12
+SWEP.Primary.Delay = 0.172
 
-SWEP.Primary.ClipSize = 30
+SWEP.Primary.ClipSize = 22
 SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "smg1"
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
@@ -44,13 +44,8 @@ SWEP.WalkSpeed = SPEED_NORMAL
 
 SWEP.ReloadSpeed = 1.05
 
-SWEP.Tier = 4
-SWEP.MaxStock = 3
-
 SWEP.IronSightsPos = Vector(-5.3, -3, 4.4)
 SWEP.IronSightsAng = Vector(-1, 0.2, 2.55)
-
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.015)
 
 function SWEP:OnZombieKilled()
 	local killer = self:GetOwner()

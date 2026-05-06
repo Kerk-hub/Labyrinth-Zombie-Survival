@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "Kongol Axe"
-SWEP.Description = "A very heavy greataxe with no other special properties other than sheer damage output."
+SWEP.Description = "A very heavy greataxe that cleaves through all zombies in its swing arc."
 
 if CLIENT then
 	SWEP.ViewModelFOV = 65
@@ -36,7 +36,7 @@ SWEP.UseHands = true
 
 SWEP.HoldType = "melee2"
 
-SWEP.MeleeDamage = 150
+SWEP.MeleeDamage = 115
 SWEP.MeleeRange = 75
 SWEP.MeleeSize = 3
 SWEP.MeleeKnockBack = 350
@@ -58,6 +58,8 @@ SWEP.MaxStock = 3
 SWEP.AllowQualityWeapons = true
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.13)
+
+MEDIEVAL_WEAPON_MIXIN.Apply(SWEP)
 
 function SWEP:PlaySwingSound()
 	self:EmitSound("weapons/iceaxe/iceaxe_swing1.wav", 75, math.random(40, 45))

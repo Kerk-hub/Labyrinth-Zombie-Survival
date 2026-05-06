@@ -132,7 +132,9 @@ function ENT:FireTurret(src, dir)
 		local twinvolley = self:GetManualControl() and owner:IsSkillActive(SKILL_TWINVOLLEY)
 		if curammo > (twinvolley and 1 or 0) then
 			self:SetNextFire(CurTime() + self.FireDelay * (twinvolley and 1.5 or 1))
-			self:SetAmmo(curammo - (twinvolley and 2 or 1))
+			if not owner.m_WrenchActive then
+				self:SetAmmo(curammo - (twinvolley and 2 or 1))
+			end
 
 			if self:GetAmmo() == 0 then
 				owner:SendDeployableOutOfAmmoMessage(self)

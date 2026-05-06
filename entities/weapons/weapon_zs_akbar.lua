@@ -1,9 +1,9 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "'Akbar' Assault Rifle"
-SWEP.Description = "Reliable assault rifle with a very fast reload speed. Not quite as accurate as other assault rifles, but still precise enough nonetheless."
+SWEP.Description = "Reliable assault rifle whose bullets penetrate through one target."
 
-SWEP.Slot = 2
+SWEP.Slot = 1
 SWEP.SlotPos = 0
 
 if CLIENT then
@@ -26,7 +26,7 @@ SWEP.UseHands = true
 
 SWEP.ReloadSound = Sound("Weapon_AK47.Clipout")
 SWEP.Primary.Sound = Sound("Weapon_AK47.Single")
-SWEP.Primary.Damage = 21.75
+SWEP.Primary.Damage = 10
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Delay = 0.12
 
@@ -35,14 +35,26 @@ SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "ar2"
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
 
-SWEP.ConeMax = 2.65
-SWEP.ConeMin = 1.275
+SWEP.ConeMax = 3
+SWEP.ConeMin = 1
 
 SWEP.WalkSpeed = SPEED_SLOW
 
-SWEP.Tier = 3
-
 SWEP.IronSightsPos = Vector(-6.6, 20, 3.1)
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MAX_SPREAD, -0.344)
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MIN_SPREAD, -0.172)
+GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Akbar' Breacher Rifle", "Bullets penetrate through two targets at the cost of reduced damage per hit", function(wept)
+	wept.PenetrationLayers = 2
+	wept.PenetrationDamageMul = 0.65
+end)
+
+function SWEP.BulletCallback(attacker, tr, dmginfo)
+	if SERVER and not attacker.PenetrationBullet then
+		local wep = attacker:GetActiveWeapon()
+		local layers = IsValid(wep) and (wep.PenetrationLayers or 1) or 1
+		local dmgmul = IsValid(wep) and (wep.PenetrationDamageMul or 0.8) or 0.8
+		local dir = tr.Normal
+		attacker.PenetrationBullet = true
+		attacker:FireBulletsLua(tr.HitPos + dir * 2, dir, 0, 1, dmginfo:GetDamage() * dmgmul, nil, nil, nil, layers > 1 and SWEP.BulletCallback or nil, nil, nil, nil, nil, wep)
+		attacker.PenetrationBullet = nil
+	end
+end

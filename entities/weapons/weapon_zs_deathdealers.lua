@@ -1,9 +1,9 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "'Deathdealers' Dual Shotguns"
-SWEP.Description = "A unique pair of fast firing, high damage shotguns. Reloads quickly by quickly replacing the shotguns used with a new pair, throwing the old away."
+SWEP.Description = "Dual shotguns with a fast reload. Killing a zombie builds Reaper stacks, increasing damage dealt."
 
-SWEP.Slot = 3
+SWEP.Slot = 1
 SWEP.SlotPos = 0
 
 if CLIENT then
@@ -60,7 +60,7 @@ SWEP.WorldModel = "models/weapons/w_pist_elite.mdl"
 SWEP.FakeWorldModel = "models/weapons/w_shotgun.mdl"
 SWEP.UseHands = true
 
-SWEP.Primary.Damage = 15.75
+SWEP.Primary.Damage = 7
 SWEP.Primary.NumShots = 8
 SWEP.Primary.Delay = 0.6
 
@@ -69,14 +69,30 @@ SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "buckshot"
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
 
-SWEP.ConeMax = 6
+SWEP.ConeMax = 4
 SWEP.ConeMin = 4
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MAX_SPREAD, -0.75)
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MIN_SPREAD, -0.5)
+function SWEP:OnZombieKilled()
+	local killer = self:GetOwner()
+	if killer:IsValid() then
+		local reaperstatus = killer:GiveStatus("reaper", 14)
+		if reaperstatus and reaperstatus:IsValid() then
+			reaperstatus:SetDTInt(1, math.min(reaperstatus:GetDTInt(1) + 1, 3))
+			killer:EmitSound("hl1/ambience/particle_suck1.wav", 55, 150 + reaperstatus:GetDTInt(1) * 30, 0.45)
+		end
+	end
+end
 
-SWEP.Tier = 5
-SWEP.MaxStock = 2
+function SWEP.BulletCallback(attacker, tr, dmginfo)
+	if not SERVER then return end
+	local status = attacker:GetStatus("reaper")
+	if status and status:IsValid() then
+		local stacks = status:GetDTInt(1)
+		if stacks > 0 then
+			dmginfo:SetDamage(dmginfo:GetDamage() * (1 + stacks * 0.1))
+		end
+	end
+end
 
 function SWEP:SendReloadAnimation()
 	self:SendWeaponAnim(ACT_VM_DRAW)

@@ -4,7 +4,7 @@ DEFINE_BASECLASS("weapon_zs_base")
 SWEP.PrintName = "'Stubber' Rifle"
 SWEP.Description = "Your basic bolt action sniper rifle, capable of providing good damage on headshots."
 
-SWEP.Slot = 3
+SWEP.Slot = 1
 SWEP.SlotPos = 0
 
 if CLIENT then
@@ -26,7 +26,7 @@ SWEP.UseHands = true
 
 SWEP.ReloadSound = Sound("Weapon_Scout.ClipOut")
 SWEP.Primary.Sound = Sound("Weapon_Scout.Single")
-SWEP.Primary.Damage = 55
+SWEP.Primary.Damage = 100
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Delay = 1.25
 SWEP.ReloadDelay = SWEP.Primary.Delay
@@ -39,17 +39,18 @@ SWEP.Primary.DefaultClip = 25
 SWEP.Primary.Gesture = ACT_HL2MP_GESTURE_RANGE_ATTACK_CROSSBOW
 SWEP.ReloadGesture = ACT_HL2MP_GESTURE_RELOAD_SHOTGUN
 
-SWEP.ConeMax = 3.75
+SWEP.ConeMax = 6
 SWEP.ConeMin = 0
+
+SWEP.HeadshotMulti = 3
 
 SWEP.IronSightsPos = Vector(5.015, -8, 2.52)
 SWEP.IronSightsAng = Vector(0, 0, 0)
 
 SWEP.WalkSpeed = SPEED_SLOW
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_CLIP_SIZE, 1)
 GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Prodder' Rifle", "Slightly more headshot damage and zoom, half clip and increased fire delay", function(wept)
-	wept.HeadshotMulti = 2.2
+	wept.HeadshotMulti = 3.6
 	wept.Primary.ClipSize = math.ceil(wept.Primary.ClipSize / 2)
 	wept.Primary.Delay = wept.Primary.Delay * 1.7
 

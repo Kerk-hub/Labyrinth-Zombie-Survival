@@ -2,9 +2,9 @@ AddCSLuaFile()
 DEFINE_BASECLASS("weapon_zs_base")
 
 SWEP.PrintName = "'Adonis' Pulse Rifle"
-SWEP.Description = "Deals massive damage and slows targets."
+SWEP.Description = "A full-auto pulse rifle that slows targets on hit."
 
-SWEP.Slot = 2
+SWEP.Slot = 1
 SWEP.SlotPos = 0
 
 if CLIENT then
@@ -28,14 +28,13 @@ SWEP.CSMuzzleFlashes = false
 
 SWEP.ReloadSound = Sound("Weapon_SMG1.Reload")
 SWEP.Primary.Sound = Sound("Airboat.FireGunHeavy")
-SWEP.Primary.Damage = 40
+SWEP.Primary.Damage = 12.25
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Delay = 0.15
+SWEP.Primary.Delay = 0.175
 
-SWEP.Primary.ClipSize = 20
+SWEP.Primary.ClipSize = -1
 SWEP.Primary.Automatic = true
-SWEP.Primary.Ammo = "pulse"
-GAMEMODE:SetupDefaultClip(SWEP.Primary)
+SWEP.Primary.Ammo = "none"
 
 SWEP.ConeMax = 3
 SWEP.ConeMin = 1
@@ -44,9 +43,6 @@ SWEP.WalkSpeed = SPEED_SLOW
 
 SWEP.IronSightsPos = Vector(-3, 1, 1)
 
-SWEP.Tier = 5
-SWEP.MaxStock = 2
-
 SWEP.PointsMultiplier = GAMEMODE.PulsePointsMultiplier
 
 SWEP.TracerName = "AR2Tracer"
@@ -54,8 +50,7 @@ SWEP.TracerName = "AR2Tracer"
 SWEP.FireAnimSpeed = 0.4
 SWEP.LegDamage = 5.5
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.014, 1)
-GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Servitor' Pulse Rifle", "Refreshes zapper cooldown on kill, more leg damage, reduced accuracy and reload speed", function(wept)
+GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Servitor' Pulse Rifle", "Refreshes zapper cooldown on kill, more leg damage, reduced accuracy", function(wept)
 	wept.ConeMin = 2.25
 	wept.ConeMax = 3.75
 	wept.ReloadSpeed = 0.85

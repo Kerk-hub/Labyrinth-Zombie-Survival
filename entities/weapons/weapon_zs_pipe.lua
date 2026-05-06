@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "Lead Pipe"
-SWEP.Description = "The weight of a lead pipe carries enough force to shock a target's focus but has a lower swing speed than other melee weapons."
+SWEP.Description = "The weight of a lead pipe carries enough force to shock a target's focus but has a lower swing speed than other melee weapons. Right click to perform an extra jump (7s cooldown)."
 
 if CLIENT then
 	SWEP.ViewModelFlip = false
@@ -28,7 +28,7 @@ SWEP.UseHands = true
 
 SWEP.WalkSpeed = SPEED_NORMAL
 
-SWEP.MeleeDamage = 45
+SWEP.MeleeDamage = 92
 SWEP.MeleeRange = 58
 SWEP.MeleeSize = 1.15
 
@@ -46,6 +46,8 @@ SWEP.SwingHoldType = "grenade"
 SWEP.AllowQualityWeapons = true
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.12)
+
+SURVIVAL_WEAPON_MIXIN.Apply(SWEP)
 
 function SWEP:PlaySwingSound()
 	self:EmitSound("weapons/iceaxe/iceaxe_swing1.wav", 75, math.random(55, 65))

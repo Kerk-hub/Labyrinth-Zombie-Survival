@@ -32,27 +32,28 @@ SWEP.CSMuzzleFlashes = false
 
 SWEP.ReloadSound = Sound("weapons/alyx_gun/alyx_shotgun_cock1.wav")
 SWEP.Primary.Sound = Sound("weapons/alyx_gun/alyx_gun_fire3.wav")
-SWEP.Primary.Damage = 14.5
+SWEP.Primary.Damage = 18.9
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Delay = 0.2
+SWEP.Primary.Delay = 0.222
 
-SWEP.Primary.ClipSize = 10
+SWEP.Primary.ClipSize = -1
 SWEP.Primary.Automatic = true
-SWEP.Primary.Ammo = "pulse"
-SWEP.Primary.DefaultClip = 50
+SWEP.Primary.Ammo = "none"
 
-SWEP.ConeMax = 2
-SWEP.ConeMin = 1.5
+SWEP.ConeMax = 2.5
+SWEP.ConeMin = 0.25
 
 SWEP.IronSightsPos = Vector(-5.95, 3, 2.75)
 SWEP.IronSightsAng = Vector(-0.15, -1, 2)
 
 SWEP.TracerName = "AR2Tracer"
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MAX_SPREAD, -0.25)
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.0175, 1)
-
 SWEP.PointsMultiplier = GAMEMODE.PulsePointsMultiplier
+
+GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Z9000' Heavy Pulse Pistol", "Slower fire rate and larger shots that slow more", function(wept)
+	wept.Primary.Damage = wept.Primary.Damage * 1.4
+	wept.Primary.Delay = wept.Primary.Delay * 1.6
+end)
 
 function SWEP.BulletCallback(attacker, tr, dmginfo)
 	local ent = tr.Entity

@@ -3,6 +3,9 @@ AddCSLuaFile()
 SWEP.PrintName = "'Oberon' Pulse Shotgun"
 SWEP.Description = "Fires a spread of pulse shots that slow targets."
 
+SWEP.Slot = 1
+SWEP.SlotPos = 0
+
 if CLIENT then
 	SWEP.Slot = 3
 	SWEP.SlotPos = 0
@@ -50,19 +53,18 @@ SWEP.UseHands = true
 SWEP.CSMuzzleFlashes = false
 
 SWEP.Primary.Sound = Sound("Weapon_Oberon.Single")
-SWEP.Primary.Damage = 12
-SWEP.Primary.NumShots = 5
+SWEP.Primary.Damage = 7
+SWEP.Primary.NumShots = 8
 SWEP.Primary.Delay = 0.8
 
 SWEP.FireAnimSpeed = 0.55
 
-SWEP.Primary.ClipSize = 7
+SWEP.Primary.ClipSize = -1
 SWEP.Primary.Automatic = true
-SWEP.Primary.Ammo = "pulse"
-SWEP.Primary.DefaultClip = 30
+SWEP.Primary.Ammo = "none"
 
-SWEP.ConeMax = 7.5
-SWEP.ConeMin = 5
+SWEP.ConeMax = 4
+SWEP.ConeMin = 4
 
 SWEP.ReloadDelay = 0.4
 
@@ -74,14 +76,11 @@ SWEP.PumpSound = Sound("Weapon_Shotgun.Special1")
 SWEP.ReloadSound = Sound("Weapon_Shotgun.Reload")
 
 SWEP.LegDamage = 9
-SWEP.Tier = 3
 
 SWEP.PointsMultiplier = GAMEMODE.PulsePointsMultiplier
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_LEG_DAMAGE, 1)
-GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Neptune' Pulse Shotgun", "Fast firing and reloading, uses 3x ammo", function(wept)
-	wept.RequiredClip = 3
-	wept.Primary.ClipSize = 21
+GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Neptune' Pulse Shotgun", "Fast firing and reloading with more pellets", function(wept)
+	wept.Primary.NumShots = 12
 	wept.Primary.Delay = 0.6
 	wept.ReloadDelay = 0.1
 	wept.ReloadSound = Sound("npc/scanner/scanner_scan4.wav")

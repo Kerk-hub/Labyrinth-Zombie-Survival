@@ -2,8 +2,8 @@ AddCSLuaFile()
 DEFINE_BASECLASS("weapon_zs_baseshotgun")
 
 SWEP.PrintName = "'Tiny' Slug Rifle"
-SWEP.Description = "This powerful rifle deals massive damage on a head shot."
-SWEP.Slot = 3
+SWEP.Description = "A scoped bolt-action rifle. Headshots mark the target, causing them to take 30% increased damage from all sources for 4 seconds."
+SWEP.Slot = 1
 SWEP.SlotPos = 0
 
 if CLIENT then
@@ -54,7 +54,7 @@ SWEP.WorldModel = "models/weapons/w_shot_xm1014.mdl"
 SWEP.UseHands = true
 
 SWEP.Primary.Sound = Sound("Weapon_AWP.Single")
-SWEP.Primary.Damage = 118
+SWEP.Primary.Damage = 100
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Delay = 1.3
 SWEP.ReloadDelay = 0.6
@@ -64,27 +64,38 @@ SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "357"
 SWEP.Primary.DefaultClip = 10
 
-SWEP.HeadshotMulti = 2.5
+SWEP.HeadshotMulti = 3
 
 SWEP.Primary.Gesture = ACT_HL2MP_GESTURE_RANGE_ATTACK_CROSSBOW
 SWEP.ReloadGesture = ACT_HL2MP_GESTURE_RELOAD_SHOTGUN
 
 SWEP.ConeMax = 6
-SWEP.ConeMin = 0.25
-
-SWEP.Tier = 4
-SWEP.MaxStock = 3
+SWEP.ConeMin = 0
 
 SWEP.IronSightsPos = Vector(0, 0, 0)
 SWEP.IronSightsAng = Vector(0, -1, 0)
 
 SWEP.WalkSpeed = SPEED_SLOWER
+SWEP.MarkDuration = 4
+SWEP.MarkScale = 1.3
 
-GAMEMODE:SetPrimaryWeaponModifier(SWEP, WEAPON_MODIFIER_RELOAD_SPEED, 0.135)
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.09, 1)
+GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Barbed' Slug Rifle", "Headshots mark targets for 6 seconds with 40% increased damage taken, at the cost of a longer aim-in time", function(wept)
+	wept.MarkDuration = 6
+	wept.MarkScale = 1.4
+	wept.fIronTimeRequired = 0.5
+end)
+
+if SERVER then
+	hook.Add("EntityTakeDamage", "SlugRifleMarkDamage", function(ent, dmginfo)
+		if not ent:IsValidLivingZombie() then return end
+		if not ent.SlugMarkExpire or ent.SlugMarkExpire < CurTime() then return end
+		dmginfo:ScaleDamage(ent.SlugMarkScale or 1.3)
+	end)
+end
 
 function SWEP:IsScoped()
-	return self:GetIronsights() and self.fIronTime and self.fIronTime + 0.25 <= CurTime()
+	local irontime = self.fIronTimeRequired or 0.25
+	return self:GetIronsights() and self.fIronTime and self.fIronTime + irontime <= CurTime()
 end
 
 function SWEP:SecondaryAttack()
@@ -121,16 +132,12 @@ if CLIENT then
 	end
 end
 
-function SWEP.BulletCallback(attacker, tr, dmginfo)
-	if tr.HitGroup == HITGROUP_HEAD then
-		local ent = tr.Entity
-		if ent:IsValidLivingZombie() and ent:GetZombieClassTable().Boss then
-			return
-		end
-
-		if gamemode.Call("PlayerShouldTakeDamage", ent, attacker) then
-			dmginfo:SetDamageType(DMG_DIRECT)
-			dmginfo:SetDamage(dmginfo:GetDamage() + ent:GetMaxHealthEx() * 0.55)
+function SWEP:BulletCallback(attacker, tr, dmginfo)
+	if SERVER and tr.HitGroup == HITGROUP_HEAD and tr.Entity:IsValidLivingZombie() then
+		local wep = attacker:GetActiveWeapon()
+		if IsValid(wep) then
+			tr.Entity.SlugMarkExpire = CurTime() + (wep.MarkDuration or 4)
+			tr.Entity.SlugMarkScale = wep.MarkScale or 1.3
 		end
 	end
 end

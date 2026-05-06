@@ -2,7 +2,7 @@ AddCSLuaFile()
 DEFINE_BASECLASS("weapon_zs_basemelee")
 
 SWEP.PrintName = "Knife"
-SWEP.Description = "A small bladed weapon that deals double damage to the back."
+SWEP.Description = "A fast culinary blade. Backstabs deal 4x damage. Kills restore blood armor."
 
 if CLIENT then
 	SWEP.ViewModelFlip = false
@@ -17,13 +17,13 @@ SWEP.ViewModel = "models/weapons/cstrike/c_knife_t.mdl"
 SWEP.WorldModel = "models/weapons/w_knife_t.mdl"
 SWEP.UseHands = true
 
-SWEP.MeleeDamage = 19
+SWEP.MeleeDamage = 50
 SWEP.MeleeRange = 52
 SWEP.MeleeSize = 0.875
 
 SWEP.WalkSpeed = SPEED_FASTEST
 
-SWEP.Primary.Delay = 0.85
+SWEP.Primary.Delay = 0.585
 SWEP.Secondary.Automatic = false
 
 SWEP.HitDecal = "Manhackcut"
@@ -37,12 +37,24 @@ SWEP.MissAnim = ACT_VM_PRIMARYATTACK
 SWEP.NoHitSoundFlesh = true
 
 SWEP.AllowQualityWeapons = true
+SWEP.Culinary = true
+SWEP.QualityDescs = {
+	"Backstab multiplier increased to 6x. Kills restore 10 blood armor.",
+	"Backstab multiplier increased to 8x. Kills restore 15 blood armor.",
+	"Backstab multiplier increased to 10x. Kills restore 20 blood armor.",
+}
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.085)
-GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Spring' Knife", "Right click while in the air to double jump 5 second cooldown. Deals less damage.", function(wept)
+GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Spring' Knife", "RMB while airborne to double jump (5s cooldown). -20% damage. Sturdy: 4s cooldown. Honed: 2s cooldown.", function(wept)
 	wept.SwissAltRightClick = true
 	wept.MeleeDamage = wept.MeleeDamage * 0.8
+	local cooldowns = {5, 4, 2}
+	wept.SwissJumpCooldown = cooldowns[wept.QualityTier] or 5
 end)
+SWEP.Branches[1].Descs = {
+	"Gain double jump on RMB. 5s cooldown. -20% damage.",
+	"Cooldown reduced to 4 seconds.",
+	"Cooldown reduced to 2 seconds.",
+}
 
 function SWEP:PlaySwingSound()
 	self:EmitSound("weapons/knife/knife_slash"..math.random(2)..".wav")
@@ -68,21 +80,24 @@ function SWEP:SecondaryAttack()
 		self:EmitSound("Weapon_Flashbang.Bounce")
 	end
 
-	self:SetNextSecondaryFire(CurTime() + 5)
-	self.SwissAltBeeped = false
+	self:SetNextSecondaryFire(CurTime() + (self.SwissJumpCooldown or 5))
 end
 
 function SWEP:Think()
 	if self.Branch == 1 then
-		local isCharged = self:GetNextSecondaryFire() <= CurTime()
-		
 		if CLIENT then
-			if isCharged and not self.m_WasChargedNotified then
-				self.m_WasChargedNotified = true
-				self:EmitSound("buttons/button1.wav", 75, 100)
-				GAMEMODE:CenterNotify(COLOR_BLUE, "Double Jump Charged")
-			elseif not isCharged then
-				self.m_WasChargedNotified = false
+			local nxt = self:GetNextSecondaryFire()
+			if nxt <= CurTime() then
+				if self.m_LastNotifiedNxt ~= nxt then
+					self.m_LastNotifiedNxt = nxt
+					self:EmitSound("buttons/button1.wav", 75, 100)
+					local n = GAMEMODE:CenterNotify(COLOR_BLUE, "Double Jump Charged")
+					if n and n:IsValid() then
+						n:AlphaTo(0, 0.3, 0.5, function() if IsValid(n) then n:Remove() end end)
+					end
+				end
+			else
+				self.m_LastNotifiedNxt = nil
 			end
 		end
 	end
@@ -92,16 +107,17 @@ end
 
 function SWEP:OnMeleeHit(hitent, hitflesh, tr)
 	if hitent:IsValid() and hitent:IsPlayer() and not self.m_BackStabbing and math.abs(hitent:GetForward():Angle().yaw - self:GetOwner():GetForward():Angle().yaw) <= 90 then
+		local bsmul = 4 + (self.QualityTier or 0) * 2
 		self.m_BackStabbing = true
-		self.MeleeDamage = self.MeleeDamage * 2
+		self.m_BackStabMul = bsmul
+		self.MeleeDamage = self.MeleeDamage * bsmul
 	end
 end
 
 function SWEP:PostOnMeleeHit(hitent, hitflesh, tr)
 	if self.m_BackStabbing then
 		self.m_BackStabbing = false
-
-		self.MeleeDamage = self.MeleeDamage / 2
+		self.MeleeDamage = self.MeleeDamage / self.m_BackStabMul
 	end
 end
 

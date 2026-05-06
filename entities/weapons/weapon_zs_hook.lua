@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "Meat Hook"
-SWEP.Description = "Impales itself into zombies, dealing damage over time for a seconds. The hook can be recollected by the owner."
+SWEP.Description = "A culinary hook. Hits cause bleeding. Taking damage spawns a gib. Destroying gibs and kills restore blood armor."
 
 if CLIENT then
 	SWEP.ViewModelFlip = false
@@ -26,7 +26,7 @@ SWEP.ViewModel = "models/weapons/c_crowbar.mdl"
 SWEP.WorldModel = "models/props_junk/meathook001a.mdl"
 SWEP.UseHands = true
 
-SWEP.MeleeDamage = 40
+SWEP.MeleeDamage = 70
 SWEP.MeleeRange = 50
 SWEP.MeleeSize = 1.15
 
@@ -40,13 +40,35 @@ SWEP.SwingHoldType = "grenade"
 SWEP.NoGlassWeapons = true
 
 SWEP.AllowQualityWeapons = true
-SWEP.Weaken = false
+SWEP.Culinary = true
+SWEP.CulinaryNoKillArmor = true
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MELEE_IMPACT_DELAY, -0.1)
-GAMEMODE:AddNewRemantleBranch(SWEP, 1, "Meat Grapple", "Deals less damage but zombies affected by it take more damage from any source", function(wept)
-	wept.Weaken = true
-	wept.MeleeDamage = wept.MeleeDamage * 0.65
-end)
+local HOOK_ARMOR = {10, 15, 20, 20}
+
+SWEP.QualityDescs = {
+	"Kills and gib destruction restore 15 blood armor.",
+	"Kills and gib destruction restore 20 blood armor.",
+	"Kills and gib destruction restore 20 blood armor. Kills and gib destruction also restore 5 health.",
+}
+
+function SWEP:CulinaryGibReward(attacker)
+	if not attacker:IsValid() then return end
+	local armor = HOOK_ARMOR[(self.QualityTier or 0) + 1]
+	if attacker.MaxBloodArmor and attacker.MaxBloodArmor > 0 then
+		attacker:SetBloodArmor(math.min(attacker.MaxBloodArmor, attacker:GetBloodArmor() + armor))
+	end
+	if self.QualityTier == 3 then
+		attacker:SetHealth(math.min(attacker:GetMaxHealth(), attacker:Health() + 5))
+	end
+end
+
+if SERVER then
+	function SWEP:OnZombieKilled(pl, totaldamage, dmginfo)
+		local attacker = self:GetOwner()
+		if not attacker:IsValid() then return end
+		self:CulinaryGibReward(attacker)
+	end
+end
 
 function SWEP:PlaySwingSound()
 	self:EmitSound("weapons/iceaxe/iceaxe_swing1.wav", 75, math.random(95, 105))
@@ -60,24 +82,29 @@ function SWEP:PlayHitSound()
 	self:EmitSound("physics/metal/metal_sheet_impact_bullet"..math.random(2)..".wav")
 end
 
-function SWEP:OnMeleeHit(hitent, hitflesh, tr)
-	if SERVER and hitent:IsValid() and hitent:IsPlayer() and hitent:Health() > self.MeleeDamage and not hitent.SpawnProtection then
-		local ang = self:GetOwner():EyeAngles()
-		ang:RotateAroundAxis(ang:Forward(), 180)
-
-		local ent = ents.Create("prop_meathook")
-		if ent:IsValid() then
-			ent:SetPos(tr.HitPos)
-			ent.BaseWeapon = self:GetClass()
-			ent.Weaken = true
-			ent:Spawn()
-			ent.BleedPerTick = 2
-			ent.TicksRemaining = 20
-			ent:SetOwner(self:GetOwner())
-			ent:SetParent(hitent)
-			ent:SetAngles(ang)
+if SERVER then
+	function SWEP:OnMeleeHit(hitent, hitflesh, tr)
+		if not hitflesh or not hitent:IsValid() or not hitent:IsPlayer() or hitent.SpawnProtection then return end
+		local bleed = hitent:GiveStatus("bleed")
+		if bleed and bleed:IsValid() then
+			bleed:AddDamage(30)
+			bleed.Damager = self:GetOwner()
 		end
-
-		timer.Simple(0, function() self:GetOwner():StripWeapon(self:GetClass()) end)
 	end
+end
+
+if SERVER then
+	hook.Add("PostEntityTakeDamage", "meathook_gib_on_damage", function(ent, dmginfo, wasDamageTaken)
+		if not wasDamageTaken then return end
+		if not ent:IsValid() or not ent:IsPlayer() or ent:Team() ~= TEAM_HUMAN then return end
+		local wep = ent:GetActiveWeapon()
+		if not IsValid(wep) or wep:GetClass() ~= "weapon_zs_hook" then return end
+		local gib = ents.CreateLimited("prop_playergib")
+		if gib:IsValid() then
+			gib:SetPos(ent:GetPos() + VectorRand():GetNormalized() * math.Rand(1, 8))
+			gib:SetAngles(VectorRand():Angle())
+			gib:SetGibType(math.random(3, #GAMEMODE.HumanGibs))
+			gib:Spawn()
+		end
+	end)
 end

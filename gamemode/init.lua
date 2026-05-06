@@ -18,6 +18,9 @@ AddCSLuaFile("sh_colors.lua")
 AddCSLuaFile("sh_serialization.lua")
 AddCSLuaFile("sh_globals.lua")
 AddCSLuaFile("sh_util.lua")
+AddCSLuaFile("sh_building_weapon_mixin.lua")
+AddCSLuaFile("sh_survival_weapon_mixin.lua")
+AddCSLuaFile("sh_medieval_weapon_mixin.lua")
 AddCSLuaFile("sh_options.lua")			-- worth menu, point shop, other options...
 AddCSLuaFile("sh_zombieclasses.lua")
 AddCSLuaFile("sh_animations.lua")
@@ -556,7 +559,7 @@ end
 
 function GM:ShowTeam(pl)
 	if pl:Team() == TEAM_HUMAN and not self.ZombieEscape then
-		pl:SendLua(self:GetWave() > 0 and "GAMEMODE:OpenArsenalMenu()" or "MakepWorth()")
+		pl:SendLua("GAMEMODE:OpenArsenalMenu()")
 	end
 end
 
@@ -2546,9 +2549,11 @@ function GM:PlayerReadyRound(pl)
 		-- This is just so they get updated on what class they are and have their hulls set up right.
 		pl:DoHulls(classid, TEAM_UNDEAD)
 	elseif pl:Team() == TEAM_HUMAN then
-		if self:GetWave() <= 0 and self.StartingWorth > 0 and not self.StartingLoadout and not self.ZombieEscape then
-			pl:SendLua("InitialWorthMenu()")
-		else
+		if not self.ZombieEscape then
+			pl:AddPoints(100)
+			pl:SendLua("GAMEMODE:OpenArsenalMenu()")
+		end
+		if self.StartingLoadout or self.ZombieEscape then
 			gamemode.Call("GiveDefaultOrRandomEquipment", pl)
 		end
 	end
@@ -3141,13 +3146,6 @@ function GM:GiveDefaultOrRandomEquipment(pl)
 	if not self.CheckedOut[pl:UniqueID()] and not self.ZombieEscape then
 		if self.StartingLoadout then
 			self:GiveStartingLoadout(pl)
-		else
-			pl:SendLua("GAMEMODE:RequestedDefaultCart()")
-			if self.StartingWorth > 0 then
-				timer.Simple(4, function()
-					TimedOut(pl)
-				end)
-			end
 		end
 	end
 end
@@ -4537,6 +4535,11 @@ function GM:HumanKilledZombie(pl, attacker, inflictor, dmginfo, headshot, suicid
 
 		if wep.OnZombieKilled then
 			wep:OnZombieKilled(pl, totaldamage, dmginfo)
+		end
+
+		if wep.Culinary and not wep.CulinaryNoKillArmor and (not wep.Branch or wep.Branch == 0) and attacker.MaxBloodArmor and attacker.MaxBloodArmor > 0 then
+			local bloodgain = 5 + (wep.QualityTier or 0) * 5
+			attacker:SetBloodArmor(math.min(attacker.MaxBloodArmor, attacker:GetBloodArmor() + bloodgain))
 		end
 	end
 

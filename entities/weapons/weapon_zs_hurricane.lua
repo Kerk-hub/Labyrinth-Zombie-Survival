@@ -3,6 +3,9 @@ AddCSLuaFile()
 SWEP.PrintName = "'Hurricane' Pulse SMG"
 SWEP.Description = "Fires rapid pulse shots that slow targets."
 
+SWEP.Slot = 1
+SWEP.SlotPos = 0
+
 if CLIENT then
 	SWEP.Slot = 2
 	SWEP.SlotPos = 0
@@ -53,14 +56,13 @@ SWEP.CSMuzzleFlashes = false
 
 SWEP.ReloadSound = Sound("Weapon_SMG1.Reload")
 SWEP.Primary.Sound = Sound("Weapon_Hurricane.Single")
-SWEP.Primary.Damage = 14.5
+SWEP.Primary.Damage = 12.25
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Delay = 0.09
+SWEP.Primary.Delay = 0.17
 
-SWEP.Primary.ClipSize = 40
+SWEP.Primary.ClipSize = -1
 SWEP.Primary.Automatic = true
-SWEP.Primary.Ammo = "pulse"
-GAMEMODE:SetupDefaultClip(SWEP.Primary)
+SWEP.Primary.Ammo = "none"
 
 SWEP.TracerName = "AR2Tracer"
 
@@ -69,25 +71,20 @@ SWEP.ReloadGesture = ACT_HL2MP_GESTURE_RELOAD_SMG1
 
 SWEP.ReloadSpeed = 0.9
 
-SWEP.ConeMax = 4.1
-SWEP.ConeMin = 2.5
+SWEP.ConeMax = 3
+SWEP.ConeMin = 1.5
 
 SWEP.WalkSpeed = SPEED_NORMAL
-
-SWEP.Tier = 2
 
 SWEP.PointsMultiplier = GAMEMODE.PulsePointsMultiplier
 
 SWEP.IronSightsPos = Vector(-6.425, 5, 1.02)
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MAX_SPREAD, -0.5375, 1)
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MIN_SPREAD, -0.3125, 1)
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_CLIP_SIZE, 1, 1)
 GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Typhoon' Pulse SMG", "Less damage, more accuracy, and gains damage if spooled", function(wept)
 	wept.Primary.Damage = wept.Primary.Damage * 0.82
 	wept.Primary.Delay = wept.Primary.Delay * 2.3
-	wept.ConeMax = wept.ConeMax * 0.5
-	wept.ConeMin = wept.ConeMin * 0.7
+	wept.ConeMax = 1.5
+	wept.ConeMin = 1.05
 
 	wept.GetFireDelay = function(self) return BaseClass.GetFireDelay(self) - (self:GetDTFloat(9) * 0.15) end
 	wept.ShootBullets = function(self, dmg, numbul, cone)

@@ -1,5 +1,17 @@
 INC_SERVER()
 
+function SWEP:Deploy()
+	local owner = self:GetOwner()
+	if owner:IsValid() then owner.m_WrenchActive = true end
+	return self.BaseClass.Deploy(self)
+end
+
+function SWEP:Holster(wep)
+	local owner = self:GetOwner()
+	if owner:IsValid() then owner.m_WrenchActive = nil end
+	return self.BaseClass.Holster(self, wep)
+end
+
 function SWEP:PlayRepairSound(hitent)
 	hitent:EmitSound("npc/dog/dog_servo"..math.random(7, 8)..".wav", 70, math.random(100, 105))
 end

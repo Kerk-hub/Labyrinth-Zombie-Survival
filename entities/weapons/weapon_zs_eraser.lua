@@ -2,7 +2,7 @@ AddCSLuaFile()
 DEFINE_BASECLASS("weapon_zs_base")
 
 SWEP.PrintName = "'Eraser' Tactical Pistol"
-SWEP.Description = "Damage increases as remaining bullets decrease."
+SWEP.Description = "Damage scales up as the clip depletes — the last bullet hits hardest. Headshots deal double damage."
 SWEP.Slot = 1
 SWEP.SlotPos = 0
 
@@ -24,7 +24,7 @@ SWEP.WorldModel = "models/weapons/w_pist_fiveseven.mdl"
 SWEP.UseHands = true
 
 SWEP.Primary.Sound = Sound("weapons/ar2/npc_ar2_altfire.wav")
-SWEP.Primary.Damage = 23.5
+SWEP.Primary.Damage = 11.3
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Delay = 0.15
 
@@ -34,20 +34,16 @@ SWEP.Primary.Ammo = "pistol"
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
 
 SWEP.ConeMax = 2.5
-SWEP.ConeMin = 1.25
+SWEP.ConeMin = 0.25
 
 SWEP.ReloadSpeed = 1
 SWEP.HeadshotMulti = 2
 
-SWEP.Tier = 2
-
 SWEP.IronSightsPos = Vector(-5.95, 0, 2.5)
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_RELOAD_SPEED, 0.1, 1)
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_HEADSHOT_MULTI, 0.07)
 GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Cleanser' Tactical Pistol", "Less reload speed, accuracy and headshot multiplier but gains increased damage per wave", function(wept)
-	wept.ConeMax = wept.ConeMax * 1.7
-	wept.ConeMin = wept.ConeMin * 2.1
+	wept.ConeMax = 4.25
+	wept.ConeMin = 2.625
 	wept.ReloadSpeed = wept.ReloadSpeed * 0.7
 	wept.HeadshotMulti = wept.HeadshotMulti * 0.9
 

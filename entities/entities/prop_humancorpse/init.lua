@@ -26,6 +26,19 @@ local function ResolveZombieDamager(dmginfo)
 	end
 end
 
+local function ResolveHumanMeleeDamager(dmginfo)
+	local dmgtype = dmginfo:GetDamageType()
+	local inflictor = dmginfo:GetInflictor()
+	if bit.band(dmgtype, DMG_SLASH) == 0 and bit.band(dmgtype, DMG_CLUB) == 0 and not (inflictor and inflictor.IsMelee) then
+		return
+	end
+
+	local attacker = dmginfo:GetAttacker()
+	if attacker:IsPlayer() and attacker:Team() == TEAM_HUMAN then
+		return attacker
+	end
+end
+
 local function GetBloodDirection(dmginfo)
 	local force = dmginfo:GetDamageForce()
 	if force:LengthSqr() > 0 then
@@ -99,7 +112,11 @@ function ENT:OnTakeDamage(dmginfo)
 
 	local attacker = ResolveZombieDamager(dmginfo)
 	if not attacker then
-		return
+		attacker = ResolveHumanMeleeDamager(dmginfo)
+		if not attacker then
+			return
+		end
+		dmginfo:SetDamage(math.min(dmginfo:GetDamage(), 35))
 	end
 
 	local bloodpos = dmginfo:GetDamagePosition()

@@ -1,4 +1,5 @@
 GM.WeaponQualityModifiers = {}
+GM.UpgradeCosts = {100, 300, 900}
 GM.WeaponQualities = {
 	{"Sturdy", 1.09, "Tuned"},
 	{"Honed", 1.19, "Modified"},
@@ -168,8 +169,11 @@ function GM:CreateWeaponOfQuality(i, orig, quality, classname, branch)
 	end
 
 	if branch and branch.BranchFunc then
-		table.insert(remantledescs, 1, branch.Desc)
+		local desc = (branch.Descs and branch.Descs[i]) or branch.Desc
+		table.insert(remantledescs, 1, desc)
 		branch.BranchFunc(wept)
+	elseif wept.QualityDescs and wept.QualityDescs[i] then
+		table.insert(remantledescs, 1, wept.QualityDescs[i])
 	end
 
 	local newclass = self:GetWeaponClassOfQuality(classname, i, branch and branch.No)
@@ -284,6 +288,10 @@ function GM:GetUpgradeScrap(wtbl, qualitychoice)
 	local itier = wtbl.Tier
 
 	return math.ceil(self.ScrapVals[itier or 1] * qualitychoice * (wtbl.IsMelee and 0.85 or 1))
+end
+
+function GM:GetUpgradeCost(wtbl, qualitychoice)
+	return self.UpgradeCosts[qualitychoice] or 0
 end
 
 function GM:ScrapToPoints(scrap)

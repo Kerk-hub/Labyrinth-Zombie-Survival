@@ -3,7 +3,7 @@ DEFINE_BASECLASS("weapon_zs_base")
 
 SWEP.PrintName = "'Bullet Storm' SMG"
 SWEP.Description = "Hold right click to use the Storm firing mode: fire rate is reduced to 60% but two bullets are fired at once."
-SWEP.Slot = 2
+SWEP.Slot = 1
 SWEP.SlotPos = 0
 
 if CLIENT then
@@ -24,9 +24,9 @@ SWEP.WorldModel = "models/weapons/w_smg_p90.mdl"
 SWEP.UseHands = true
 
 SWEP.Primary.Sound = Sound("Weapon_p90.Single")
-SWEP.Primary.Damage = 17.5
+SWEP.Primary.Damage = 12
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Delay = 0.07
+SWEP.Primary.Delay = 0.133
 
 SWEP.Primary.ClipSize = 50
 SWEP.Primary.Automatic = true
@@ -39,15 +39,10 @@ SWEP.ConeMin = 3
 SWEP.Primary.Gesture = ACT_HL2MP_GESTURE_RANGE_ATTACK_SMG1
 SWEP.ReloadGesture = ACT_HL2MP_GESTURE_RELOAD_SMG1
 
-SWEP.WalkSpeed = SPEED_SLOW
-
-SWEP.Tier = 4
-SWEP.MaxStock = 3
+SWEP.WalkSpeed = 218
 
 SWEP.IronSightsPos = Vector(-2, 6, 3)
 SWEP.IronSightsAng = Vector(0, 2, 0)
-
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_RELOAD_SPEED, 0.1)
 
 function SWEP:PrimaryAttack()
 	if not self:CanPrimaryAttack() then return end

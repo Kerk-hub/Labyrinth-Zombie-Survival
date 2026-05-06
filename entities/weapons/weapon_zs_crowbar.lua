@@ -17,7 +17,7 @@ SWEP.HoldType = "melee"
 
 SWEP.DamageType = DMG_CLUB
 
-SWEP.MeleeDamage = 35
+SWEP.MeleeDamage = 56
 SWEP.OriginalMeleeDamage = SWEP.MeleeDamage
 SWEP.MeleeRange = 55
 SWEP.MeleeSize = 1.5
@@ -30,6 +30,8 @@ SWEP.SwingRotation = Angle(30, -30, -30)
 SWEP.SwingHoldType = "grenade"
 
 SWEP.AllowQualityWeapons = true
+
+BUILDING_WEAPON_MIXIN.ApplyShared(SWEP)
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MELEE_RANGE, 3)
 
@@ -49,6 +51,14 @@ function SWEP:PostOnMeleeHit(hitent, hitflesh, tr)
 	if hitent:IsValid() and hitent:IsPlayer() and hitent:Team() == TEAM_UNDEAD and hitent:IsHeadcrab() and gamemode.Call("PlayerShouldTakeDamage", hitent, self:GetOwner()) then
 		hitent:TakeSpecialDamage(hitent:Health(), DMG_DIRECT, self:GetOwner(), self, tr.HitPos)
 	end
+end
+
+if SERVER then
+	BUILDING_WEAPON_MIXIN.ApplyServer(SWEP)
+end
+
+if CLIENT then
+	BUILDING_WEAPON_MIXIN.ApplyClient(SWEP)
 end
 
 --[[function SWEP:OnMeleeHit(hitent, hitflesh, tr)

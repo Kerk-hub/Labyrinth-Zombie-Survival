@@ -62,7 +62,7 @@ SWEP.WorldModel = "models/weapons/w_snip_sg550.mdl"
 SWEP.UseHands = true
 
 SWEP.Primary.Sound = Sound("weapons/sg550/sg550-1.wav")
-SWEP.Primary.Damage = 86.5
+SWEP.Primary.Damage = 60
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Delay = 0.6
 
@@ -74,19 +74,41 @@ GAMEMODE:SetupDefaultClip(SWEP.Primary)
 SWEP.Primary.Gesture = ACT_HL2MP_GESTURE_RANGE_ATTACK_CROSSBOW
 SWEP.ReloadGesture = ACT_HL2MP_GESTURE_RELOAD_SHOTGUN
 
-SWEP.ConeMax = 6.5
+SWEP.ConeMax = 6
 SWEP.ConeMin = 0
+
+SWEP.HeadshotMulti = 3
 
 SWEP.IronSightsPos = Vector(11, -9, -2.2)
 SWEP.IronSightsAng = Vector(0, 0, 0)
 
 SWEP.WalkSpeed = SPEED_SLOWER
 
-SWEP.Tier = 3
-
 SWEP.FireAnimSpeed = 0.6
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.1, 1)
+local function DoPenetration(attacker, hitpos, dir, damage, depth)
+	if depth <= 0 then return end
+	attacker.PenetrationBullet = true
+	if attacker:IsValid() then
+		attacker:FireBulletsLua(hitpos + dir * 2, dir, 0, 1, damage, nil, nil, nil,
+			function(att, tr2, dmginfo2)
+				dmginfo2:SetDamage(damage)
+				timer.Simple(0, function()
+					DoPenetration(att, tr2.HitPos, tr2.Normal, damage * 0.7, depth - 1)
+				end)
+			end,
+		nil, nil, nil, nil, attacker:GetActiveWeapon())
+	end
+	attacker.PenetrationBullet = nil
+end
+
+function SWEP.BulletCallback(attacker, tr, dmginfo)
+	if not attacker.PenetrationBullet then
+		timer.Simple(0, function()
+			DoPenetration(attacker, tr.HitPos, tr.Normal, dmginfo:GetDamage() * 0.7, 5)
+		end)
+	end
+end
 
 function SWEP:EmitFireSound()
 	self:EmitSound(self.Primary.Sound, 77, 75, 1)

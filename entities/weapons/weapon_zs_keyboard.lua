@@ -1,6 +1,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "Keyboard"
+SWEP.Description = "A keyboard that permanently gains damage with each zombie struck. Gains +2 damage per hit."
 
 if CLIENT then
 	SWEP.ViewModelFOV = 55
@@ -31,7 +32,7 @@ SWEP.ViewModel = "models/weapons/c_stunstick.mdl"
 SWEP.WorldModel = "models/props_c17/computer01_keyboard.mdl"
 SWEP.UseHands = true
 
-SWEP.MeleeDamage = 35
+SWEP.MeleeDamage = 40
 SWEP.MeleeRange = 52
 SWEP.MeleeSize = 1.25
 
@@ -46,6 +47,41 @@ SWEP.AllowQualityWeapons = true
 SWEP.DismantleDiv = 2
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.075)
+
+SWEP.OriginalMeleeDamage = SWEP.MeleeDamage
+
+function SWEP:SetKeyboardCharge(charge)
+	self:SetDTInt(9, charge)
+end
+
+function SWEP:GetKeyboardCharge()
+	return self:GetDTInt(9)
+end
+
+function SWEP:Deploy()
+	self:SetKeyboardCharge(self:GetOwner().KeyboardDamage or 0)
+	return self.BaseClass.Deploy(self)
+end
+
+if SERVER then
+	function SWEP:OnMeleeHit(hitent, hitflesh, tr)
+		if self:GetOwner().KeyboardDamage then
+			self.MeleeDamage = self.MeleeDamage + self:GetOwner().KeyboardDamage
+		end
+	end
+
+	function SWEP:PostOnMeleeHit(hitent, hitflesh, tr)
+		self.MeleeDamage = self.OriginalMeleeDamage
+	end
+
+	function SWEP:OnZombieKilled(zombie, total, dmginfo)
+		local killer = self:GetOwner()
+		if not killer:IsValid() then return end
+		killer.KeyboardDamage = (killer.KeyboardDamage or 0) + 2
+		killer:EmitSound("buttons/blip1.wav", 60, math.random(130, 150))
+		self:SetKeyboardCharge(killer.KeyboardDamage)
+	end
+end
 
 function SWEP:PlayHitSound()
 	self:EmitSound("weapons/melee/keyboard/keyboard_hit-0"..math.random(4)..".ogg")

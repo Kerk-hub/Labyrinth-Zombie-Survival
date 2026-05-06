@@ -1,9 +1,9 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "'Crackler' Assault Rifle"
-SWEP.Description = "An unsophisticated assault rifle which has good damage and accuracy."
+SWEP.Description = "A dependable full-auto assault rifle. Solid damage and accuracy with no frills."
 
-SWEP.Slot = 2
+SWEP.Slot = 1
 SWEP.SlotPos = 0
 
 if CLIENT then
@@ -25,7 +25,7 @@ SWEP.UseHands = true
 
 SWEP.ReloadSound = Sound("Weapon_FAMAS.Clipout")
 SWEP.Primary.Sound = Sound("Weapon_FAMAS.Single")
-SWEP.Primary.Damage = 15
+SWEP.Primary.Damage = 17.5
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Delay = 0.175
 
@@ -34,8 +34,8 @@ SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "ar2"
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
 
-SWEP.ConeMax = 3.0 --0.045
-SWEP.ConeMin = 1.6 --0.019
+SWEP.ConeMax = 3.0
+SWEP.ConeMin = 1.0
 
 SWEP.ReloadSpeed = 1.1
 
@@ -43,13 +43,11 @@ SWEP.WalkSpeed = SPEED_SLOW
 
 SWEP.IronSightsPos = Vector(-3, 3, 2)
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MAX_SPREAD, -0.375, 1)
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MIN_SPREAD, -0.2, 1)
 GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Crackler' Combat Rifle", "Loses automatic fire rate but gains a bit of damage and accuracy", function(wept)
 	wept.Primary.Damage = wept.Primary.Damage * 1.2
 	wept.Primary.Delay = wept.Primary.Delay * 2
 	wept.Primary.ClipSize = 15
-	wept.ConeMin = wept.ConeMin * 0.7
-	wept.ConeMax = wept.ConeMax * 0.7
+	wept.ConeMin = 0.7
+	wept.ConeMax = 2.1
 	wept.Primary.Automatic = false
 end)

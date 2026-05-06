@@ -145,7 +145,7 @@ function GM:ViewerStatBarUpdate(viewer, display, sweptable)
 						stattext = speedtotext[-1]
 					end
 				elseif statshow[1] == "ClipSize" then
-					stattext = statnum / sweptable.RequiredClip
+					stattext = statnum / (sweptable.RequiredClip or 1)
 				else
 					stattext = statnum
 				end
@@ -774,6 +774,7 @@ function GM:OpenArsenalMenu()
 	propertysheet:CenterHorizontal(0.33)
 
 	for catid, catname in ipairs(GAMEMODE.ItemCategories) do
+		if catid == ITEMS_TRINKETS then continue end
 		local hasitems = false
 		for i, tab in ipairs(GAMEMODE.Items) do
 			if tab.Category == catid and tab.PointShop then
@@ -807,33 +808,74 @@ function GM:OpenArsenalMenu()
 				return list
 			end
 
-			local subcats = GAMEMODE.ItemSubCategories
+			local meleeSubcats = {"Culinary", "Building", "Survival", "Medieval", "Techno"}
 			if usecats then
-				local ind, tbn = 1
-				for i = ind, (trinkets and #subcats or 5) do
-					local ispacer = trinkets and ((i - 1) % 3) + 1 or i
-					local start = i == (catid == ITEMS_GUNS and 2 or ind)
-
-					tbn = EasyButton(tabpane, trinkets and subcats[i] or ("Tier " .. i), 2, 8)
-					tbn:SetFont(trinkets and "ZSHUDFontSmallest" or "ZSHUDFontSmall")
-					tbn:SetAlpha(start and 255 or 70)
-					tbn:AlignRight(
-						(trinkets and -35 or -15) * screenscale
-							- (ispacer - ind) * (ind == 1 and (trinkets and 190 or 110) or 145) * screenscale
-					)
-					tbn:AlignTop(trinkets and i <= 3 and 0 or trinkets and 28 or 16)
-					tbn:SetContentAlignment(5)
-					tbn:SizeToContents()
-					tbn.DoClick = function(me)
-						for k, v in pairs(tabpane.Grids) do
-							v:SetVisible(k == i)
-							tabpane.Buttons[k]:SetAlpha(k == i and 255 or 70)
+				if catid == ITEMS_MELEE then
+					local ind, tbn = 1
+					for i, name in ipairs(meleeSubcats) do
+						local start = i == 1
+						tbn = EasyButton(tabpane, name, 2, 8)
+						tbn:SetFont("ZSHUDFontSmall")
+						tbn:SetAlpha(start and 255 or 70)
+						tbn:AlignRight(-15 * screenscale - (i - ind) * 110 * screenscale)
+						tbn:AlignTop(16)
+						tbn:SetContentAlignment(5)
+						tbn:SizeToContents()
+						tbn.DoClick = function(me)
+							for k, v in pairs(tabpane.Grids) do
+								v:SetVisible(k == i)
+								tabpane.Buttons[k]:SetAlpha(k == i and 255 or 70)
+							end
 						end
+						tabpane.Grids[i] = mkgrid()
+						tabpane.Grids[i]:SetVisible(start)
+						tabpane.Buttons[i] = tbn
 					end
-
-					tabpane.Grids[i] = mkgrid()
-					tabpane.Grids[i]:SetVisible(start)
-					tabpane.Buttons[i] = tbn
+				elseif catid == ITEMS_GUNS then
+					local gunSubcats = {"Pistol", "Shotgun", "SMG", "Rifle", "Assault", "Pulse"}
+					local ind, tbn = 1
+					for i, name in ipairs(gunSubcats) do
+						local start = i == 1
+						tbn = EasyButton(tabpane, name, 2, 8)
+						tbn:SetFont("ZSHUDFontSmall")
+						tbn:SetAlpha(start and 255 or 70)
+						tbn:AlignRight(-15 * screenscale - (i - ind) * 95 * screenscale)
+						tbn:AlignTop(16)
+						tbn:SetContentAlignment(5)
+						tbn:SizeToContents()
+						tbn.DoClick = function(me)
+							for k, v in pairs(tabpane.Grids) do
+								v:SetVisible(k == i)
+								tabpane.Buttons[k]:SetAlpha(k == i and 255 or 70)
+							end
+						end
+						tabpane.Grids[i] = mkgrid()
+						tabpane.Grids[i]:SetVisible(start)
+						tabpane.Buttons[i] = tbn
+					end
+				else
+					local subcats = GAMEMODE.ItemSubCategories
+					local ind, tbn = 1
+					for i = ind, #subcats do
+						local ispacer = ((i - 1) % 3) + 1
+						local start = i == ind
+						tbn = EasyButton(tabpane, subcats[i], 2, 8)
+						tbn:SetFont("ZSHUDFontSmallest")
+						tbn:SetAlpha(start and 255 or 70)
+						tbn:AlignRight(-35 * screenscale - (ispacer - ind) * 190 * screenscale)
+						tbn:AlignTop(i <= 3 and 0 or 28)
+						tbn:SetContentAlignment(5)
+						tbn:SizeToContents()
+						tbn.DoClick = function(me)
+							for k, v in pairs(tabpane.Grids) do
+								v:SetVisible(k == i)
+								tabpane.Buttons[k]:SetAlpha(k == i and 255 or 70)
+							end
+						end
+						tabpane.Grids[i] = mkgrid()
+						tabpane.Grids[i]:SetVisible(start)
+						tabpane.Buttons[i] = tbn
+					end
 				end
 			else
 				tabpane.Grid = mkgrid()
@@ -845,7 +887,11 @@ function GM:OpenArsenalMenu()
 			for i, tab in ipairs(GAMEMODE.Items) do
 				if tab.PointShop and tab.Category == catid then
 					self:ShopAdd(
-						trinkets and tabpane.Grids[tab.SubCategory] or tabpane.Grid or tabpane.Grids[tab.Tier or 1],
+						trinkets and tabpane.Grids[tab.SubCategory]
+						or (catid == ITEMS_MELEE and tabpane.Grids[tab.SubCategory])
+						or (catid == ITEMS_GUNS and tabpane.Grids[tab.SubCategory])
+						or tabpane.Grid
+						or tabpane.Grids[tab.Tier or 1],
 						i,
 						tab
 					)
