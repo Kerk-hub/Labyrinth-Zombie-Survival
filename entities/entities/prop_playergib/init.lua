@@ -73,9 +73,11 @@ function ENT:OnTakeDamage(dmginfo)
 	local attacker = dmginfo:GetAttacker()
 	if attacker:IsValid() and attacker:IsPlayer() and attacker:Team() == TEAM_HUMAN then
 		local wep = attacker:GetActiveWeapon()
-		if wep:IsValid() and wep.Culinary and (not wep.Branch or wep.Branch == 0)
+		if wep:IsValid() and wep.Culinary and not wep.CulinaryNoKillArmor and (not wep.Branch or wep.Branch == 0)
 			and attacker.MaxBloodArmor and attacker.MaxBloodArmor > 0 then
 			attacker:SetBloodArmor(math.min(attacker.MaxBloodArmor, attacker:GetBloodArmor() + 10))
+		elseif wep:IsValid() and wep.CulinaryGibReward then
+			wep:CulinaryGibReward(attacker)
 		end
 	end
 end
