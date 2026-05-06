@@ -1,7 +1,8 @@
 AddCSLuaFile()
+DEFINE_BASECLASS("weapon_zs_basemelee")
 
 SWEP.PrintName = "Meat Tenderizer"
-SWEP.Description = "A slow swinging meat tenderizer with not much special about it apart from the fact it's a culinary tool."
+SWEP.Description = "A culinary mallet. Hits tenderize zombies, increasing all damage they take. Kills restore blood armor."
 
 if CLIENT then
 	SWEP.ViewModelFOV = 70
@@ -35,7 +36,7 @@ SWEP.ViewModel = "models/weapons/v_sledgehammer/c_sledgehammer.mdl"
 SWEP.WorldModel = "models/weapons/w_crowbar.mdl"
 SWEP.UseHands = true
 
-SWEP.MeleeDamage = 127
+SWEP.MeleeDamage = 100
 SWEP.MeleeRange = 60
 SWEP.MeleeSize = 3.55
 SWEP.MeleeKnockBack = 240
@@ -53,6 +54,49 @@ SWEP.SwingHoldType = "melee"
 
 SWEP.AllowQualityWeapons = true
 SWEP.Culinary = true
+SWEP.QualityDescs = {
+	"Tenderize duration increased to 4s. Damage vulnerability increased to 15%.",
+	"Tenderize duration increased to 5s. Damage vulnerability increased to 20%.",
+	"Tenderize duration increased to 5s. Damage vulnerability increased to 25%. Kills restore 20 blood armor.",
+}
+
+-- Tenderize: hit zombie takes increased damage from all sources for a short duration.
+-- tier 0/1/2/3: 10/15/20/25% vulnerability, 3/4/5/5s duration, 5/10/15/20 blood armor on kill
+local TENDERIZE_MUL      = {1.10, 1.15, 1.20, 1.25}
+local TENDERIZE_DURATION = {3, 4, 5, 5}
+local BLOOD_ARMOR        = {5, 10, 15, 20}
+
+if SERVER then
+	hook.Add("EntityTakeDamage", "TenderizerVulnerability", function(ent, dmginfo)
+		if not ent.m_TenderizedExpiry then return end
+		if CurTime() > ent.m_TenderizedExpiry then
+			ent.m_TenderizedExpiry = nil
+			ent.m_TenderizedMul = nil
+			return
+		end
+		local attacker = dmginfo:GetAttacker()
+		if attacker:IsValid() and attacker:IsPlayer() and attacker:Team() == TEAM_HUMAN then
+			dmginfo:ScaleDamage(ent.m_TenderizedMul)
+		end
+	end)
+
+	function SWEP:OnMeleeHit(hitent, hitflesh, tr)
+		if not hitflesh or not hitent:IsValid() or hitent.SpawnProtection then return end
+		local tier = self.QualityTier or 0
+		hitent.m_TenderizedExpiry = CurTime() + TENDERIZE_DURATION[tier + 1]
+		hitent.m_TenderizedMul = TENDERIZE_MUL[tier + 1]
+		hitent:EmitSound("physics/flesh/flesh_squishy_impact_hard"..math.random(4)..".wav", 65, math.random(90, 110))
+	end
+
+	function SWEP:OnZombieKilled()
+		local owner = self:GetOwner()
+		if not owner:IsValid() then return end
+		local tier = self.QualityTier or 0
+		if owner.MaxBloodArmor and owner.MaxBloodArmor > 0 then
+			owner:SetBloodArmor(math.min(owner.MaxBloodArmor, owner:GetBloodArmor() + BLOOD_ARMOR[tier + 1]))
+		end
+	end
+end
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MELEE_IMPACT_DELAY, -0.12)
 
