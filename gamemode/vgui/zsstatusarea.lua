@@ -131,6 +131,19 @@ local statusdisplays = {
 	end,
 	Max = 150,
 	Icon = Material("zombiesurvival/speed_up.png")
+},
+{
+	Color = Color(60, 200, 80),
+	Name = "STEW!",
+	ValFunc = function(self, lp)
+		local wep = lp:GetActiveWeapon()
+		if IsValid(wep) and (wep.BaseQuality or wep:GetClass()) == "weapon_zs_pot" then
+			return wep:GetDTInt(1)
+		end
+		return 0
+	end,
+	Max = 10,
+	Icon = Material("zombiesurvival/bleed.png")
 }
 }
 
