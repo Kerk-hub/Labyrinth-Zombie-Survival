@@ -49,10 +49,11 @@ end
 
 function ENT:DrawNailOverlay(nhp, mnhp)
 	local healthfrac = mnhp > 0 and math.Clamp(nhp / mnhp, 0, 1) or 1
+	local t = 1 - math.Clamp((healthfrac - 0.2) / 0.8, 0, 1)
 
 	cam.IgnoreZ(true)
 	render.SuppressEngineLighting(true)
-	render.SetColorModulation(1, 0.65 + healthfrac * 0.35, 0.2 + healthfrac * 0.2)
+	render.SetColorModulation(t, 1 - t, 0)
 
 	render.SetBlend(0.15)
 	render.ModelMaterialOverride(matNailOverlay)
