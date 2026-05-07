@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "Rebar Mace"
-SWEP.Description = "Disorients zombies hit. Right click to perform an extra jump (7s cooldown)."
+SWEP.Description = "Disorients zombies hit. Carrying the mace grants flat damage resistance."
 
 if CLIENT then
 	SWEP.ViewModelFlip = false
@@ -45,9 +45,16 @@ SWEP.SwingHoldType = "melee"
 SWEP.Tier = 3
 
 SWEP.AllowQualityWeapons = true
+SWEP.QualityDescs = {
+	"Grants 16% damage resistance while held.",
+	"Grants 24% damage resistance while held.",
+	"Grants 32% damage resistance while held.",
+}
+
+local DAMAGE_RESIST = {0.08, 0.16, 0.24, 0.32}
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.15)
-GAMEMODE:AddNewRemantleBranch(SWEP, 1, "Rebar Ward Hammer", "Grants defence on kill, does not knockback zombie vision, faster but less damage and knockback", function(wept)
+--[[GAMEMODE:AddNewRemantleBranch(SWEP, 1, "Rebar Ward Hammer", "Grants defence on kill, does not knockback zombie vision, faster but less damage and knockback", function(wept)
 	wept.Primary.Delay = wept.Primary.Delay * 0.8
 	wept.MeleeDamage = wept.MeleeDamage * 0.75
 	wept.MeleeKnockBack = 200
@@ -63,13 +70,22 @@ GAMEMODE:AddNewRemantleBranch(SWEP, 1, "Rebar Ward Hammer", "Grants defence on k
 	if SERVER then
 		wept.OnMeleeHit = function() end
 	end
-end)
+end)]]
 
 function SWEP:PlaySwingSound()
 	self:EmitSound("weapons/iceaxe/iceaxe_swing1.wav", 75, math.random(55, 65))
 end
 
-SURVIVAL_WEAPON_MIXIN.Apply(SWEP)
+if SERVER then
+	hook.Add("EntityTakeDamage", "RebarMaceResistance", function(victim, dmginfo)
+		if not victim:IsValid() or not victim:IsPlayer() or not victim:Alive() or victim:Team() ~= TEAM_HUMAN then return end
+		local wep = victim:GetActiveWeapon()
+		if not wep:IsValid() then return end
+		if (wep.BaseQuality or wep:GetClass()) ~= "weapon_zs_rebarmace" then return end
+		local tier = wep.QualityTier or 0
+		dmginfo:SetDamage(dmginfo:GetDamage() * (1 - DAMAGE_RESIST[tier + 1]))
+	end)
+end
 
 function SWEP:PlayHitSound()
 	self:EmitSound("physics/concrete/concrete_break"..math.random(2,3)..".wav", 75, math.random(95, 105))

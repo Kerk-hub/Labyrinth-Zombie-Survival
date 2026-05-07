@@ -1,5 +1,5 @@
 SWEP.PrintName = "Great Scythe"
-SWEP.Description = "A great scythe that can pierce and cut through multiple zombies. Has a 3 hit combo, the last hit deals extra damage."
+SWEP.Description = "A great scythe that cleaves through multiple zombies. Has a 3 hit combo, the last hit deals extra damage. Zombie kills build Reaper stacks, amplifying all damage dealt (8% per stack)."
 
 SWEP.Base = "weapon_zs_basemelee"
 
@@ -29,8 +29,15 @@ SWEP.Tier = 4
 SWEP.MaxStock = 3
 
 SWEP.AllowQualityWeapons = true
+SWEP.QualityDescs = {
+	"-0.12s swing delay. Reaper stack cap increased to 5.",
+	"-0.24s swing delay. Reaper stack cap increased to 7.",
+	"-0.36s swing delay. Reaper stack cap increased to 10.",
+}
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.12)
+
+local REAPER_MAX_STACKS = {3, 5, 7, 10}
 
 function SWEP:PlaySwingSound()
 	self:EmitSound("weapons/iceaxe/iceaxe_swing1.wav", 75, math.random(55, 65))
@@ -245,4 +252,19 @@ function SWEP:MeleeHitEntity(tr, hitent, damagemultiplier, damage)
 		effectdata:SetEntity(hitent)
 		util.Effect("Impact", effectdata)
 	end
+end
+
+if SERVER then
+	hook.Add("PostHumanKilledZombie", "ScytheReaperStacks", function(pl, attacker, inflictor, dmginfo, assistpl, assistamount, headshot)
+		local wep = attacker:GetActiveWeapon()
+		if not IsValid(wep) or (wep.BaseQuality or wep:GetClass()) ~= "weapon_zs_scythe" then return end
+
+		local maxStacks = REAPER_MAX_STACKS[(wep.QualityTier or 0) + 1]
+		local reaperstatus = attacker:GiveStatus("reaper", 10)
+		if reaperstatus and reaperstatus:IsValid() then
+			local newStacks = math.min(reaperstatus:GetDTInt(1) + 1, maxStacks)
+			reaperstatus:SetDTInt(1, newStacks)
+			attacker:EmitSound("hl1/ambience/particle_suck1.wav", 55, 150 + newStacks * 20, 0.45)
+		end
+	end)
 end
