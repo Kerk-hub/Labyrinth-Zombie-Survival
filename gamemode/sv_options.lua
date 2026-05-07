@@ -4,6 +4,11 @@ GM.StartLoadouts = {
 }
 
 
+GM.PropCarryAutoSwitch = CreateConVar("zs_propcarry_autoswitch", "1", FCVAR_ARCHIVE + FCVAR_NOTIFY, "When a human picks up a prop, automatically switch to their building-category melee weapon if they have one. 1 to enable, 0 to disable."):GetBool()
+cvars.AddChangeCallback("zs_propcarry_autoswitch", function(cvar, oldvalue, newvalue)
+	GAMEMODE.PropCarryAutoSwitch = tonumber(newvalue) == 1
+end)
+
 GM.BossZombies = CreateConVar("zs_bosszombies", "1", FCVAR_ARCHIVE + FCVAR_NOTIFY, "Summon a boss zombie when a new wave starts."):GetBool()
 cvars.AddChangeCallback("zs_bosszombies", function(cvar, oldvalue, newvalue)
 	GAMEMODE.BossZombies = tonumber(newvalue) == 1

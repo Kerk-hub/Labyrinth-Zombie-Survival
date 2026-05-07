@@ -25,6 +25,16 @@ function ENT:Initialize()
 				wep:SetIronsights(false)
 			end
 		end
+
+		if GAMEMODE.PropCarryAutoSwitch and (not wep:IsValid() or not wep.NoPropThrowing) then
+			for _, w in pairs(owner:GetWeapons()) do
+				if w:IsValid() and w.NoPropThrowing then
+					self.PreHoldWeapon = wep:IsValid() and wep:GetClass() or nil
+					owner:SelectWeapon(w:GetClass())
+					break
+				end
+			end
+		end
 	else
 		self:SetModel("models/weapons/c_arms_citizen.mdl")
 	end
@@ -122,6 +132,14 @@ function ENT:OnRemove()
 			local wep = owner:GetActiveWeapon()
 			if wep:IsValid() then
 				wep:SendWeaponAnim(ACT_VM_DRAW)
+			end
+
+			if self.PreHoldWeapon then
+				local prevwep = owner:GetWeapon(self.PreHoldWeapon)
+				if prevwep:IsValid() then
+					owner:SelectWeapon(self.PreHoldWeapon)
+				end
+				self.PreHoldWeapon = nil
 			end
 		end
 	end
