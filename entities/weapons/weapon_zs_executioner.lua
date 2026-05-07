@@ -48,6 +48,11 @@ SWEP.SwingHoldType = "melee"
 SWEP.Tier = 3
 
 SWEP.AllowQualityWeapons = true
+SWEP.QualityDescs = {
+	"-0.13s swing delay. Execution threshold increased to 13%.",
+	"-0.26s swing delay. Execution threshold increased to 16%.",
+	"-0.39s swing delay. Execution threshold increased to 19%.",
+}
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.13)
 
@@ -66,7 +71,8 @@ function SWEP:PlayHitFleshSound()
 end
 
 function SWEP:PostOnMeleeHit(hitent, hitflesh, tr)
-	if hitent:IsValid() and hitent:IsPlayer() and hitent:Alive() and hitent:Health() <= hitent:GetMaxHealthEx() * 0.1 and gamemode.Call("PlayerShouldTakeDamage", hitent, self:GetOwner()) then
+	local threshold = 0.10 + (self.QualityTier or 0) * 0.03
+	if hitent:IsValid() and hitent:IsPlayer() and hitent:Alive() and hitent:Health() <= hitent:GetMaxHealthEx() * threshold and gamemode.Call("PlayerShouldTakeDamage", hitent, self:GetOwner()) then
 		if SERVER then
 			hitent:SetWasHitInHead()
 		end
