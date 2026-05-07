@@ -1,5 +1,24 @@
 INC_SERVER()
 
+local NAIL_REWARD = {1, 2, 3, 4}
+
+hook.Add("NailedPropDestroyed", "HammerNailRefund", function(prop, nails)
+	local owners = {}
+	for _, nail in ipairs(nails) do
+		if nail and nail:IsValid() then
+			local o = nail:GetOwner()
+			if o and o:IsValid() and o:IsPlayer() and o:Alive() and o:Team() == TEAM_HUMAN and not owners[o] then
+				owners[o] = true
+				local wep = o:GetActiveWeapon()
+				if wep:IsValid() and (wep.BaseQuality or wep:GetClass()) == "weapon_zs_hammer" then
+					local tier = wep.QualityTier or 0
+					o:GiveAmmo(NAIL_REWARD[tier + 1], "GaussEnergy")
+				end
+			end
+		end
+	end
+end)
+
 function SWEP:Reload()
 	if CurTime() < self:GetNextPrimaryFire() then return end
 
@@ -28,7 +47,7 @@ function SWEP:Reload()
 	local nailowner = ent:GetOwner()
 	if nailowner:IsValid() and nailowner:IsPlayer() and nailowner ~= owner and nailowner:Team() == TEAM_HUMAN and not gamemode.Call("CanRemoveOthersNail", owner, nailowner, ent) then return end
 
-	self:SetNextPrimaryFire(CurTime() + (#trent.Nails > 2 and 0.5 or 1))
+	self:SetNextPrimaryFire(CurTime() + (#trent.Nails > 2 and self.UnnailDelay * 0.5 or self.UnnailDelay))
 
 	ent.m_PryingOut = true -- Prevents infinite loops
 
@@ -189,7 +208,7 @@ function SWEP:SecondaryAttack()
 
 		owner:DoAnimationEvent(ACT_HL2MP_GESTURE_RANGE_ATTACK_MELEE)
 
-		self:SetNextPrimaryFire(CurTime() + 0.5)
+		self:SetNextPrimaryFire(CurTime() + self.NailDelay)
 		self:TakePrimaryAmmo(1)
 
 		local nail = ents.Create("prop_nail")

@@ -1,7 +1,8 @@
 AddCSLuaFile()
+DEFINE_BASECLASS("weapon_zs_basemelee")
 
 SWEP.PrintName = "Push Broom"
-SWEP.Description = "A long-reach broom that hits hard enough to send zombies flying. Low damage output compensated by exceptional range and knockback."
+SWEP.Description = "A long-reach broom that sends zombies flying. If a knocked-back zombie collides with an entity before landing, they take the hit damage again."
 
 if CLIENT then
 	SWEP.ViewModelFOV = 70
@@ -27,7 +28,7 @@ SWEP.ViewModel = "models/weapons/c_crowbar.mdl"
 SWEP.WorldModel = "models/weapons/w_crowbar.mdl"
 SWEP.UseHands = true
 
-SWEP.MeleeDamage = 80
+SWEP.MeleeDamage = 68
 SWEP.MeleeRange = 80
 SWEP.MeleeSize = 1.7
 SWEP.MeleeKnockBack = 300
@@ -45,6 +46,18 @@ SWEP.SwingHoldType = "melee"
 
 SWEP.AllowQualityWeapons = true
 SWEP.DismantleDiv = 2
+SWEP.QualityDescs = {
+	"Knockback increased to 400. Collision bounce damage applies.",
+	"Knockback increased to 500. Collision bounce damage applies.",
+	"Knockback increased to 600. Collision bounce damage applies.",
+}
+
+local KNOCKBACK = {300, 400, 500, 600}
+
+function SWEP:Initialize()
+	BaseClass.Initialize(self)
+	self.MeleeKnockBack = KNOCKBACK[(self.QualityTier or 0) + 1]
+end
 
 BUILDING_WEAPON_MIXIN.ApplyShared(SWEP)
 
@@ -63,7 +76,56 @@ function SWEP:PlayHitFleshSound()
 	self:EmitSound("physics/wood/wood_plank_impact_hard"..math.random(4)..".wav", 75, math.random(75, 80))
 end
 
+function SWEP:PostOnMeleeHit(hitent, hitflesh, tr)
+	if not SERVER then return end
+	if not hitflesh then return end
+	if not hitent:IsValid() or not hitent:IsPlayer() or not hitent:IsValidLivingZombie() then return end
+	local owner = self:GetOwner()
+	if not owner:IsValid() then return end
+
+	local vel = hitent:GetVelocity()
+	hitent.m_BroomBounce = {
+		owner     = owner,
+		weapon    = self,
+		damage    = self.MeleeDamage,
+		expiry    = CurTime() + 1,
+		prevhspeed = Vector(vel.x, vel.y, 0):Length(),
+	}
+end
+
 if SERVER then
+	hook.Add("Think", "PushBroomBounceCheck", function()
+		for _, ply in ipairs(player.GetAll()) do
+			if not ply:IsValidLivingZombie() then
+				ply.m_BroomBounce = nil
+				continue
+			end
+			local bounce = ply.m_BroomBounce
+			if not bounce then continue end
+
+			if CurTime() > bounce.expiry then
+				ply.m_BroomBounce = nil
+				continue
+			end
+
+			local vel = ply:GetVelocity()
+			local hspeed = Vector(vel.x, vel.y, 0):Length()
+			local prev   = bounce.prevhspeed
+
+			-- Detect sudden horizontal stop (wall/entity collision, not normal floor landing)
+			if prev > 120 and hspeed < prev * 0.35 then
+				local owner = bounce.owner
+				local wep   = bounce.weapon
+				if owner:IsValid() and wep:IsValid() and gamemode.Call("PlayerShouldTakeDamage", ply, owner) then
+					ply:TakeSpecialDamage(bounce.damage, DMG_CLUB, owner, wep, ply:GetPos())
+				end
+				ply.m_BroomBounce = nil
+			else
+				bounce.prevhspeed = hspeed
+			end
+		end
+	end)
+
 	BUILDING_WEAPON_MIXIN.ApplyServer(SWEP)
 end
 

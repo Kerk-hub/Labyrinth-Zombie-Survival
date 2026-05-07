@@ -572,6 +572,9 @@ function meta:DamageNails(attacker, inflictor, damage, dmginfo)
 			-- Store nails before removing the prop
 			local storedNails = nails
 
+			-- Notify before removal so listeners can still read nail ownership
+			hook.Call("NailedPropDestroyed", GAMEMODE, self, storedNails)
+
 			-- Remove the prop immediately
 			self:Remove()
 

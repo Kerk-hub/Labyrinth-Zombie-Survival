@@ -144,6 +144,19 @@ local statusdisplays = {
 	end,
 	Max = 10,
 	Icon = Material("zombiesurvival/bleed.png")
+},
+{
+	Color = Color(160, 160, 160),
+	Name = "FORTIFY!",
+	ValFunc = function(self, lp)
+		local wep = lp:GetActiveWeapon()
+		if IsValid(wep) and (wep.BaseQuality or wep:GetClass()) == "weapon_zs_sledgehammer" then
+			return wep:GetDTInt(2)
+		end
+		return 0
+	end,
+	Max = 100,
+	Icon = Material("zombiesurvival/defense.png")
 }
 }
 

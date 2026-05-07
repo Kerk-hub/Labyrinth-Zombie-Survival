@@ -8,11 +8,14 @@ function ENT:Move(pl, mv)
 
 	local object = self:GetObject()
 	if object:IsValid() then
+		local wep = pl:GetActiveWeapon()
+		if wep:IsValid() and (wep.BaseQuality or wep:GetClass()) == "weapon_zs_hammer" then return end
+
 		--local objectphys = object:GetPhysicsObject()
 		--if objectphys:IsValid() then
 			mv:SetMaxSpeed(math.max(
 				mv:GetMaxSpeed() / 4,
-				mv:GetMaxSpeed() - self:GetObjectMass() * CARRY_SPEEDLOSS_PERKG * pl.PropCarrySlowMul)
+				mv:GetMaxSpeed() - self:GetObjectMass() * CARRY_SPEEDLOSS_PERKG * (pl.PropCarrySlowMul or 1))
 			)
 			mv:SetMaxClientSpeed(mv:GetMaxSpeed())
 		--end

@@ -281,7 +281,7 @@ GM:WorthAdd("zpplnk", ITEMS_MELEE, 40, "weapon_zs_plank").SubCategory = 3
 GM:WorthAdd("zpaxe", ITEMS_MELEE, 40, "weapon_zs_axe").SubCategory = 2
 GM:WorthAdd("crwbar", ITEMS_MELEE, 40, "weapon_zs_crowbar").SubCategory = 2
 GM:WorthAdd("broom", ITEMS_MELEE, 40, "weapon_zs_pushbroom").SubCategory = 2
-GM:WorthAdd("stone", ITEMS_MELEE, 40, "weapon_zs_stone").SubCategory = 2
+GM:WorthAdd("hammer", ITEMS_MELEE, 40, "weapon_zs_hammer").SubCategory = 2
 GM:WorthAdd("sledgehammer", ITEMS_MELEE, 40, "weapon_zs_sledgehammer").SubCategory = 2
 GM:WorthAdd("graveshvl", ITEMS_MELEE, 40, "weapon_zs_graveshovel").SubCategory = 2
 GM:WorthAdd("stnbtn", ITEMS_MELEE, 40, "weapon_zs_stunbaton").SubCategory = 5
@@ -597,7 +597,7 @@ GM:ShopAdd("meattenderizer", ITEMS_MELEE, 40, "weapon_zs_meattenderizer").SubCat
 GM:ShopAdd("axe", ITEMS_MELEE, 40, "weapon_zs_axe").SubCategory = 2
 GM:ShopAdd("crowbar", ITEMS_MELEE, 40, "weapon_zs_crowbar").SubCategory = 2
 GM:ShopAdd("broom", ITEMS_MELEE, 40, "weapon_zs_pushbroom").SubCategory = 2
-GM:ShopAdd("stone", ITEMS_MELEE, 40, "weapon_zs_stone").SubCategory = 2
+GM:ShopAdd("hammer", ITEMS_MELEE, 40, "weapon_zs_hammer").SubCategory = 2
 GM:ShopAdd("sledgehammer", ITEMS_MELEE, 40, "weapon_zs_sledgehammer").SubCategory = 2
 GM:ShopAdd("graveshvl", ITEMS_MELEE, 40, "weapon_zs_graveshovel").SubCategory = 2
 

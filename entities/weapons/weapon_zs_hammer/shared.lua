@@ -1,8 +1,9 @@
+DEFINE_BASECLASS("weapon_zs_basemelee")
+
 SWEP.Base = "weapon_zs_basemelee"
 
 SWEP.PrintName = "Carpenter's Hammer"
-SWEP.Description =
-	"A simple but extremely useful tool. Allows you to hammer in nails to make barricades.\nPress SECONDARY FIRE to hammer in nail. It will be attached to whatever is behind it.\nPress RELOAD to take a nail out.\nUse PRIMARY FIRE to bash zombie brains.\nYou get a point penalty for removing another player's nails."
+SWEP.Description = "Eliminates movement speed penalty from carrying props. When your nailed props are destroyed, you recover nails. Higher tiers increase nail and unnail speed and nails recovered. Can nail and unnail props with SECONDARY FIRE and RELOAD."
 
 SWEP.DamageType = DMG_CLUB
 
@@ -41,6 +42,22 @@ SWEP.NoHolsterOnCarry = true
 SWEP.NoGlassWeapons = true
 
 SWEP.AllowQualityWeapons = true
+SWEP.QualityDescs = {
+	"Nail/unnail 20% faster. Owned props breaking return 2 nails.",
+	"Nail/unnail 40% faster. Owned props breaking return 3 nails.",
+	"Nail/unnail 60% faster. Owned props breaking return 4 nails.",
+}
+
+SWEP.NailDelay   = 0.5
+SWEP.UnnailDelay = 1.0
+
+function SWEP:Initialize()
+	BaseClass.Initialize(self)
+	local tier = self.QualityTier or 0
+	local speed = 1 - tier * 0.20
+	self.NailDelay   = 0.5 * speed
+	self.UnnailDelay = 1.0 * speed
+end
 
 GAMEMODE:SetPrimaryWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.04)
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MELEE_RANGE, 3, 1)
