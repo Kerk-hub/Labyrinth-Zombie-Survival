@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "Kongol Axe"
-SWEP.Description = "A very heavy greataxe that cleaves through all zombies in its swing arc."
+SWEP.Description = "A very heavy greataxe that cleaves through all zombies in its swing arc. Each remantler tier doubles the damage bonus."
 
 if CLIENT then
 	SWEP.ViewModelFOV = 65
@@ -36,7 +36,7 @@ SWEP.UseHands = true
 
 SWEP.HoldType = "melee2"
 
-SWEP.MeleeDamage = 115
+SWEP.MeleeDamage = 100
 SWEP.MeleeRange = 75
 SWEP.MeleeSize = 3
 SWEP.MeleeKnockBack = 350
@@ -56,10 +56,26 @@ SWEP.Tier = 4
 SWEP.MaxStock = 3
 
 SWEP.AllowQualityWeapons = true
+SWEP.QualityDescs = {
+	"-0.13s swing delay. +10% damage.",
+	"-0.26s swing delay. +20% damage.",
+	"-0.39s swing delay. +40% damage.",
+}
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.13)
 
 MEDIEVAL_WEAPON_MIXIN.Apply(SWEP)
+
+local m_BaseMeleeSwing = SWEP.MeleeSwing
+local TIER_DAMAGE_MUL = {1, 1.10, 1.20, 1.40}
+
+function SWEP:MeleeSwing()
+	local mul = TIER_DAMAGE_MUL[(self.QualityTier or 0) + 1]
+	local base = self.MeleeDamage
+	self.MeleeDamage = base * mul
+	m_BaseMeleeSwing(self)
+	self.MeleeDamage = base
+end
 
 function SWEP:PlaySwingSound()
 	self:EmitSound("weapons/iceaxe/iceaxe_swing1.wav", 75, math.random(40, 45))
