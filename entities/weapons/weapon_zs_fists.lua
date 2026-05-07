@@ -98,6 +98,16 @@ function SWEP:PrimaryAttack(right)
 		end
 	end
 
+	-- Alternating-hand speed bonus (set by subclasses via m_FastNextHand)
+	if self.m_FastNextHand ~= nil then
+		local isRight = right == true
+		if self.m_FastNextHand == isRight then
+			hitdelay = hitdelay / 2
+			owner:GetViewModel():SetPlaybackRate(2 / armdelay)
+			self.m_FastNextHand = nil
+		end
+	end
+
 	self:SetNextMeleeAttack( time + hitdelay )
 
 	self:SetNextPrimaryFire( time + self.Primary.Delay * armdelay )
@@ -129,8 +139,7 @@ function SWEP:DealDamage()
 	local tr = owner:CompensatedMeleeTrace(self.HitDistance * (owner.MeleeRangeMul or 1), 3)
 
 	local hitent = tr.Entity
-
-	-- We need the second part for single player because SWEP:Think is ran shared in SP.
+	local hitplayer = hitent:IsValid() and hitent:IsPlayer()
 	if tr.Hit and not ( game.SinglePlayer() and CLIENT ) then
 		self:EmitSound( self.HitSound, 75, 100, 1, CHAN_WEAPON + 1)
 	end
@@ -234,6 +243,14 @@ function SWEP:DealDamage()
 				phys:ApplyForceOffset( aimvector * 2000, tr.HitPos )
 				hitent:SetPhysicsAttacker(owner)
 			end
+		end
+
+		if SERVER and anim == "fists_uppercut" and self.OnUppercutLand then
+			self:OnUppercutLand(hitent, tr)
+		end
+
+		if SERVER and self.OnKnuckleHit then
+			self:OnKnuckleHit(anim == "fists_right", hitent)
 		end
 	end
 

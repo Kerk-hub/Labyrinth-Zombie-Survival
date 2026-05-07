@@ -3,7 +3,7 @@ AddCSLuaFile()
 SWEP.Base = "weapon_zs_fists"
 
 SWEP.PrintName = "Brass Knuckles"
-SWEP.Description = "A pair of brass knuckles used to concentrate strikes from one's fists, increasing the damage done, while keeping their movement speed up. Right click to perform an extra jump (7s cooldown)."
+SWEP.Description = "Landing a hit with one hand charges up the opposite hand for a lightning-fast follow-up. Kills grant a burst of movement speed."
 
 if CLIENT then
 	SWEP.ViewModelFOV = 52
@@ -41,7 +41,36 @@ SWEP.NoDismantle = false
 SWEP.NoGlassWeapons = false
 
 SWEP.AllowQualityWeapons = true
+SWEP.QualityDescs = {
+	"On kill: +20% speed for 9 seconds.",
+	"On kill: +30% speed for 11 seconds.",
+	"On kill: +40% speed for 13 seconds.",
+}
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.06)
 
-SURVIVAL_WEAPON_MIXIN.Apply(SWEP)
+-- Hitting with M1 makes the next M2 instant (and vice versa).
+-- Stored as m_FastNextHand: true = right hand gets bonus, false = left hand gets bonus.
+function SWEP:OnKnuckleHit(isRight, hitent)
+	if not hitent:IsValid() then return end
+	-- Grant speed bonus to opposite hand
+	self.m_FastNextHand = not isRight
+end
+
+-- Speed buff values: additive walk speed per tier (SPEED_NORMAL = 200)
+local SPEED_BONUS  = {40, 60, 80, 100}
+local BUFF_DURATION = {7, 9, 11, 13}
+
+if SERVER then
+	hook.Add("PostHumanKilledZombie", "BrassKnucklesSpeedBoost", function(pl, attacker, inflictor)
+		if not attacker:IsValid() or not attacker:IsPlayer() then return end
+		local wep = attacker:GetActiveWeapon()
+		if not wep:IsValid() then return end
+		if (wep.BaseQuality or wep:GetClass()) ~= "weapon_zs_brassknuckles" then return end
+		local tier = wep.QualityTier or 0
+		local boost = attacker:GiveStatus("adrenalineamp", BUFF_DURATION[tier + 1])
+		if boost and boost:IsValid() then
+			boost:SetSpeed(SPEED_BONUS[tier + 1])
+		end
+	end)
+end

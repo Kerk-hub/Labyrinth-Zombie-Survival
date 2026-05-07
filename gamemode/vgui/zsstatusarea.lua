@@ -157,6 +157,19 @@ local statusdisplays = {
 	end,
 	Max = 100,
 	Icon = Material("zombiesurvival/defense.png")
+},
+{
+	Color = Color(210, 170, 20),
+	Name = "GRAVEDIGGER!",
+	ValFunc = function(self, lp)
+		local wep = lp:GetActiveWeapon()
+		if IsValid(wep) and (wep.BaseQuality or wep:GetClass()) == "weapon_zs_graveshovel" then
+			return wep:GetDTInt(2)
+		end
+		return 0
+	end,
+	Max = 100,
+	Icon = Material("zombiesurvival/headshot_stacks.png")
 }
 }
 
