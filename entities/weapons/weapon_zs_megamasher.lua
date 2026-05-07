@@ -40,7 +40,7 @@ SWEP.QualityDescs = {
 	"Kill explosion radius increased to 220 and damage to 120.",
 }
 
-SWEP.MeleeDamage = 200
+SWEP.MeleeDamage = 150
 SWEP.MeleeRange = 75
 SWEP.MeleeSize = 4
 SWEP.MeleeKnockBack = 420
@@ -113,7 +113,7 @@ function SWEP:OnMeleeHit(hitent, hitflesh, tr)
 		local shockDmg = math.floor(self.MeleeDamage * 0.4)
 		for _, ent in ipairs(ents.FindInSphere(tr.HitPos, 175)) do
 			if ent ~= hitent and ent:IsValid() and ent:IsPlayer() and gamemode.Call("PlayerShouldTakeDamage", ent, attacker) then
-				ent:AddDamage(shockDmg, attacker, attacker)
+				ent:TakeSpecialDamage(shockDmg, DMG_CLUB, attacker, self, tr.HitPos)
 			end
 		end
 	end

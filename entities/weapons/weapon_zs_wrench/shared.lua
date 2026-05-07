@@ -1,5 +1,11 @@
 SWEP.PrintName = "Mechanic's Wrench"
-SWEP.Description = "Repairs deployables. While equipped, your gun turrets fire without consuming ammo."
+SWEP.Description = "Repairs deployables. While equipped, your gun turrets fire without consuming ammo. Each remantler tier increases your turrets' scan speed by 30%."
+
+SWEP.QualityDescs = {
+	"Turret scan speed increased by 30%.",
+	"Turret scan speed increased by 60%.",
+	"Turret scan speed increased by 90%.",
+}
 
 SWEP.Base = "weapon_zs_basemelee"
 
