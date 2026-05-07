@@ -835,7 +835,11 @@ function meta:GiveEmptyWeapon(weptype)
 	if not self:HasWeapon(weptype) then
 		local wep = self:Give(weptype)
 		if wep and wep:IsValid() and wep:IsWeapon() then
-			wep:EmptyAll()
+			if wep.InfiniteReserveAmmo then
+				wep:SetClip1(wep:GetMaxClip1())
+			else
+				wep:EmptyAll()
+			end
 		end
 
 		return wep

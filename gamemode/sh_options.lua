@@ -527,7 +527,6 @@ GM:ShopAdd("hunter", ITEMS_GUNS, 40, "weapon_zs_hunter").SubCategory = 4
 GM:ShopAdd("onyx", ITEMS_GUNS, 40, "weapon_zs_onyx").SubCategory = 4
 GM:ShopAdd("quicksilver", ITEMS_GUNS, 40, "weapon_zs_quicksilver").SubCategory = 4
 GM:ShopAdd("slugrifle", ITEMS_GUNS, 40, "weapon_zs_slugrifle").SubCategory = 4
-GM:ShopAdd("colossus", ITEMS_GUNS, 40, "weapon_zs_colossus").SubCategory = 6
 
 -- Assault (5)
 GM:ShopAdd("crklr", ITEMS_GUNS, 40, "weapon_zs_crackler", nil, nil, nil, function(pl)
@@ -561,9 +560,6 @@ GM:ShopAdd("rifleammo", ITEMS_AMMO, 5, nil, "8 rifle ammo", nil, "ammo_rifle", f
 end)
 GM:ShopAdd("assaultrifleammo", ITEMS_AMMO, 5, nil, "32 assault rifle ammo", nil, "ammo_assault", function(pl)
 	pl:GiveAmmo(32, "ar2", true)
-end)
-GM:ShopAdd("chemical", ITEMS_AMMO, 5, nil, "20 chemical vials", nil, "ammo_chemical", function(pl)
-	pl:GiveAmmo(20, "chemical", true)
 end)
 item = GM:ShopAdd(
 	"40mkit",
@@ -671,6 +667,7 @@ item = GM:ShopAdd(
 )
 item.NoClassicMode = true
 item.Countables = "prop_gunturret_assault"
+--[[ Rocket Turret (disabled)
 item = GM:ShopAdd(
 	"rocketturret",
 	ITEMS_DEPLOYABLES,
@@ -687,15 +684,13 @@ item = GM:ShopAdd(
 item.Countables = "prop_gunturret_rocket"
 item.NoClassicMode = true
 item.SkillRequirement = SKILL_U_ROCKETTURRET
+--]]
 GM:ShopAdd("manhack", ITEMS_DEPLOYABLES, 30, "weapon_zs_manhack").Countables = "prop_manhack"
 item = GM:ShopAdd("drone", ITEMS_DEPLOYABLES, 40, "weapon_zs_drone")
 item.Countables = "prop_drone"
 item = GM:ShopAdd("pulsedrone", ITEMS_DEPLOYABLES, 40, "weapon_zs_drone_pulse")
 item.Countables = "prop_drone_pulse"
 item.SkillRequirement = SKILL_U_DRONE
-item = GM:ShopAdd("hauldrone", ITEMS_DEPLOYABLES, 15, "weapon_zs_drone_hauler")
-item.Countables = "prop_drone_hauler"
-item.SkillRequirement = SKILL_HAULMODULE
 item = GM:ShopAdd("rollermine", ITEMS_DEPLOYABLES, 35, "weapon_zs_rollermine")
 item.Countables = "prop_rollermine"
 item.SkillRequirement = SKILL_U_ROLLERMINE

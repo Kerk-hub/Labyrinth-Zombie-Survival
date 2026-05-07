@@ -25,8 +25,6 @@ SWEP.MeleeDamage = 34
 SWEP.MeleeRange = 50
 SWEP.MeleeSize = 0.875
 
-SWEP.MaxStock = 5
-
 SWEP.UseMelee1 = true
 SWEP.AutoBuyAmmoOnSecondary = true
 

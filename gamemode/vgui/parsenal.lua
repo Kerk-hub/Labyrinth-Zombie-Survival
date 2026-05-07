@@ -832,7 +832,7 @@ function GM:OpenArsenalMenu()
 						tabpane.Buttons[i] = tbn
 					end
 				elseif catid == ITEMS_GUNS then
-					local gunSubcats = {"Pistol", "Shotgun", "SMG", "Rifle", "Assault", "Pulse"}
+					local gunSubcats = {"Pistol", "Shotgun", "SMG", "Rifle", "Assault"} -- "Pulse" tab disabled temporarily
 					local ind, tbn = 1
 					for i, name in ipairs(gunSubcats) do
 						local start = i == 1
@@ -886,15 +886,23 @@ function GM:OpenArsenalMenu()
 
 			for i, tab in ipairs(GAMEMODE.Items) do
 				if tab.PointShop and tab.Category == catid then
-					self:ShopAdd(
-						trinkets and tabpane.Grids[tab.SubCategory]
-						or (catid == ITEMS_MELEE and tabpane.Grids[tab.SubCategory])
-						or (catid == ITEMS_GUNS and tabpane.Grids[tab.SubCategory])
-						or tabpane.Grid
-						or tabpane.Grids[tab.Tier or 1],
-						i,
-						tab
-					)
+					local targetgrid
+					if catid == ITEMS_GUNS then
+						if tab.SubCategory then
+							targetgrid = tabpane.Grids[tab.SubCategory]
+						else
+							targetgrid = tabpane.Grids[tab.Tier or 1]
+						end
+					elseif catid == ITEMS_MELEE then
+						targetgrid = tabpane.Grids[tab.SubCategory]
+					elseif trinkets then
+						targetgrid = tabpane.Grids[tab.SubCategory]
+					else
+						targetgrid = tabpane.Grid or tabpane.Grids[tab.Tier or 1]
+					end
+					if targetgrid then
+						self:ShopAdd(targetgrid, i, tab)
+					end
 				end
 			end
 

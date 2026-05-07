@@ -33,7 +33,9 @@ SWEP.Primary.Automatic = false
 SWEP.Primary.Ammo = "pulse"
 SWEP.Primary.Sound = Sound("Weapon_Slayer.Single")
 
-SWEP.Primary.ClipSize = 7
+SWEP.InfiniteReserveAmmo = true
+
+SWEP.Primary.ClipSize = 21
 SWEP.Primary.DefaultClip = 30
 SWEP.RequiredClip = 7
 

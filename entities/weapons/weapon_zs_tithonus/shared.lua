@@ -20,10 +20,11 @@ SWEP.Primary.Damage = 17.5
 SWEP.Primary.NumShots = 4
 SWEP.Primary.Delay = 0.85
 
-SWEP.Primary.ClipSize = 18
+SWEP.Primary.ClipSize = 36
 SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "pulse"
-SWEP.Primary.DefaultClip = 18
+SWEP.Primary.DefaultClip = 36
+SWEP.InfiniteReserveAmmo = true
 
 SWEP.RequiredClip = 3
 

@@ -26,8 +26,6 @@ function BUILDING_WEAPON_MIXIN.ApplyShared(SWEP)
 	SWEP.Secondary.DefaultClip = 1
 	SWEP.Secondary.Ammo        = "dummy"
 
-	SWEP.MaxStock = 5
-
 	SWEP.AutoBuyAmmoOnSecondary = true
 	SWEP.NoPropThrowing         = true
 

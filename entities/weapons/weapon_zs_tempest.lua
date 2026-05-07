@@ -69,11 +69,13 @@ end)
 local branch = GAMEMODE:AddNewRemantleBranch(SWEP, 2, "'Cosmos' Pulse Blaster", "Turns the Tempest in a burst pulse ammo blaster", function(wept)
 	wept.Primary.Damage = wept.Primary.Damage * 0.55
 	wept.Primary.Delay = wept.Primary.Delay * 1.5
+	wept.Primary.ClipSize = 24
 	wept.ConeMin = wept.ConeMin * 0.75
 
 	wept.MaxDistance = 512
 	wept.TracerName = "tracer_cosmos"
 	wept.Primary.Ammo = "pulse"
+	wept.InfiniteReserveAmmo = true
 
 	wept.EmitFireSound = function(self)
 		self:EmitSound("weapons/stunstick/alyx_stunner2.wav", 70, 155, 0.65, CHAN_AUTO)

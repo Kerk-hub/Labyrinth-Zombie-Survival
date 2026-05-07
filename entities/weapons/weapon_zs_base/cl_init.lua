@@ -118,7 +118,11 @@ function SWEP:Draw3DHUD(vm, pos, ang)
 
 		local displayspare = dmaxclip > 0 and self.Primary.DefaultClip ~= 99999
 		if displayspare then
-			draw.SimpleTextBlurry(dspare, dspare >= 1000 and "ZS3D2DFontSmall" or "ZS3D2DFont", x + wid * 0.5, y + hei * 0.75, dspare == 0 and colRed or dspare <= dmaxclip and colYellow or colWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+			if self.InfiniteReserveAmmo then
+				draw.SimpleTextBlurry("\xe2\x88\x9e", "ZS3D2DFont", x + wid * 0.5, y + hei * 0.75, colWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+			else
+				draw.SimpleTextBlurry(dspare, dspare >= 1000 and "ZS3D2DFontSmall" or "ZS3D2DFont", x + wid * 0.5, y + hei * 0.75, dspare == 0 and colRed or dspare <= dmaxclip and colYellow or colWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+			end
 		end
 
 		GetAmmoColor(dclip, dmaxclip)
@@ -141,7 +145,11 @@ function SWEP:Draw2DHUD()
 
 	local displayspare = dmaxclip > 0 and self.Primary.DefaultClip ~= 99999
 	if displayspare then
-		draw.SimpleTextBlurry(dspare, dspare >= 1000 and "ZSHUDFontSmall" or "ZSHUDFont", x + wid * 0.75, y + hei * 0.5, dspare == 0 and colRed or dspare <= dmaxclip and colYellow or colWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+		if self.InfiniteReserveAmmo then
+			draw.SimpleTextBlurry("\xe2\x88\x9e", "ZSHUDFont", x + wid * 0.75, y + hei * 0.5, colWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+		else
+			draw.SimpleTextBlurry(dspare, dspare >= 1000 and "ZSHUDFontSmall" or "ZSHUDFont", x + wid * 0.75, y + hei * 0.5, dspare == 0 and colRed or dspare <= dmaxclip and colYellow or colWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+		end
 	end
 
 	GetAmmoColor(dclip, dmaxclip)

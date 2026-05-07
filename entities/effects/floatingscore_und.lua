@@ -1,10 +1,8 @@
 local messages = {
 	"MUNCH!",
-	"BRAIN GET!",
 	"+1!",
 	"JOIN US!",
 	"ONE OF US!",
-	"BUTT MANGLED!",
 	"CHOMP!"
 }
 

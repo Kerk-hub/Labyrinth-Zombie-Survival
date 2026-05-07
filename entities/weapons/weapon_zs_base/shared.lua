@@ -126,16 +126,17 @@ function SWEP:FinishReload()
 	local max2 = self:GetMaxClip2()
 
 	if max1 > 0 then
-		local ammotype = self:GetPrimaryAmmoType()
-		local spare = owner:GetAmmoCount(ammotype)
 		local current = self:Clip1()
-		local needed = max1 - current
-
-		needed = math.min(spare, needed)
-
-		self:SetClip1(current + needed)
-		if SERVER then
-			owner:RemoveAmmo(needed, ammotype)
+		if self.InfiniteReserveAmmo then
+			self:SetClip1(max1)
+		else
+			local ammotype = self:GetPrimaryAmmoType()
+			local spare = owner:GetAmmoCount(ammotype)
+			local needed = math.min(spare, max1 - current)
+			self:SetClip1(current + needed)
+			if SERVER then
+				owner:RemoveAmmo(needed, ammotype)
+			end
 		end
 	end
 
@@ -263,7 +264,7 @@ end
 function SWEP:CanReload()
 	return self:GetNextReload() <= CurTime() and self:GetReloadFinish() == 0 and
 		(
-			self:GetMaxClip1() > 0 and self:Clip1() < self:GetPrimaryClipSize() and self:ValidPrimaryAmmo() and self:GetOwner():GetAmmoCount(self:GetPrimaryAmmoType()) > 0
+			self:GetMaxClip1() > 0 and self:Clip1() < self:GetPrimaryClipSize() and self:ValidPrimaryAmmo() and (self.InfiniteReserveAmmo or self:GetOwner():GetAmmoCount(self:GetPrimaryAmmoType()) > 0)
 			or self:GetMaxClip2() > 0 and self:Clip1() < self:GetMaxClip2() and self:ValidSecondaryAmmo() and self:GetOwner():GetAmmoCount(self:GetSecondaryAmmoType()) > 0
 		)
 end

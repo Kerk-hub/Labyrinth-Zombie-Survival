@@ -1,5 +1,5 @@
 SWEP.PrintName = "Barricade Beacon"
-SWEP.Description = "Marks a barricade location for your team and helps turn props into scrap rewards.\nBring or nail props near the beacon to search them for a reward.\nPress SECONDARY ATTACK to select a message.\nPress PRIMARY ATTACK to deploy.\nPress SPRINT on your deployed beacon to pick it up."
+SWEP.Description = "Marks a barricade location for your team.\nNail or bring props within 260 units to search them for 1 point reward.\nYour nailed props are protected from being removed by others unless they are your Steam friend.\nOne deployed beacon at a time.\nPress SECONDARY ATTACK to select a message.\nPress PRIMARY ATTACK to deploy.\nPress SPRINT on your deployed beacon to pick it up."
 SWEP.Slot = 4
 SWEP.SlotPos = 0
 

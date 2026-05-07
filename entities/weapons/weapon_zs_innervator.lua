@@ -64,9 +64,10 @@ SWEP.Primary.Delay = 1.6
 SWEP.Primary.MaxDistance = 288
 SWEP.Primary.BurstShots = 5
 
-SWEP.Primary.ClipSize = 30
+SWEP.Primary.ClipSize = 9
 SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "pulse"
+SWEP.InfiniteReserveAmmo = true
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
 
 SWEP.ReloadSpeed = 0.33
