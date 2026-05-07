@@ -5006,6 +5006,7 @@ function GM:PlayerSpawn(pl)
 			and not pl:GetZombieClassTable().NeverAlive
 			and pl.SpawnedOnSpawnPoint
 			and not pl.DidntSpawnOnSpawnPoint
+			and self:GetWave() ~= 1
 		then
 			pl:GiveStatus("zombiespawnbuff", self.ObjectiveMap and 1.5 or 3)
 		end
