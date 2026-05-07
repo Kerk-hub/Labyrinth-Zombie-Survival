@@ -26,7 +26,13 @@ SWEP.HoldType = "melee2"
 
 SWEP.DamageType = DMG_CLUB
 
-SWEP.Description = "Long reach. Hits ignite the target, dealing half of the weapon's damage as burn over 3 seconds."
+SWEP.Description = "Long reach. Hits ignite the target. Hitting a target that is already on fire deals +10% bonus damage."
+
+SWEP.QualityDescs = {
+	"Bonus damage on burning targets increased to +20%.",
+	"Bonus damage on burning targets increased to +30%.",
+	"Bonus damage on burning targets increased to +40%.",
+}
 
 SWEP.MeleeDamage = 100
 SWEP.MeleeRange = 120
@@ -47,18 +53,11 @@ SWEP.DismantleDiv = 2
 if SERVER then
 	function SWEP:OnMeleeHit(hitent, hitflesh, tr)
 		if hitflesh and hitent:IsValid() and hitent:IsPlayer() and not hitent.SpawnProtection then
-			local burnTotal = math.floor(self.MeleeDamage * 0.5)
-			local attacker = self:GetOwner()
+			local bonusMul = ((self.QualityTier or 0) + 1) * 0.10
+			if hitent:IsOnFire() then
+				hitent:TakeSpecialDamage(math.floor(self.MeleeDamage * bonusMul), DMG_BURN, self:GetOwner(), self, tr.HitPos)
+			end
 			hitent:Ignite(3)
-			local timerName = "lamp_burn_" .. hitent:EntIndex()
-			timer.Remove(timerName)
-			local tickDmg = math.ceil(burnTotal / 6)
-			local entRef = hitent
-			timer.Create(timerName, 0.5, 6, function()
-				if IsValid(entRef) and IsValid(attacker) then
-					entRef:TakeDamage(tickDmg, attacker, attacker)
-				end
-			end)
 		end
 	end
 end
