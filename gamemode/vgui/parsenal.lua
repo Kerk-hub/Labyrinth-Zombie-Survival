@@ -739,13 +739,6 @@ function GM:OpenArsenalMenu()
 	topspace:AlignTop(8)
 	topspace:CenterHorizontal()
 
-	local wsb = EasyButton(topspace, "Worth Menu", 8, 4)
-	wsb:SetFont("ZSHUDFontSmaller")
-	wsb:SizeToContents()
-	wsb:AlignRight(8)
-	wsb:AlignTop(8)
-	wsb.DoClick = worthmenuDoClick
-
 	local bottomspace = vgui.Create("DPanel", frame)
 	bottomspace:SetWide(topspace:GetWide())
 

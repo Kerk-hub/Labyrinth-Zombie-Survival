@@ -1131,6 +1131,15 @@ function GM:HumanHUD(screenscale)
 					local lineH     = draw_GetFontHeight("ZSHUDFontSmall")
 					local tipOffset = heldprop:IsValid() and (lineH * 4 + 4) or (lineH * 2)
 					draw_SimpleTextBlurry("MOUSE 2: Nail prop", "ZSHUDFontSmall", cx, cy + tipOffset, COLOR_GRAY, TEXT_ALIGN_CENTER)
+					if nailCount > 0 then
+						draw_SimpleTextBlurry("RELOAD: Remove nail", "ZSHUDFontSmall", cx, cy + tipOffset + lineH + 2, COLOR_GRAY, TEXT_ALIGN_CENTER)
+					end
+				elseif nailCount > 0 then
+					local cx        = w * 0.5
+					local cy        = h * 0.5
+					local lineH     = draw_GetFontHeight("ZSHUDFontSmall")
+					local tipOffset = heldprop:IsValid() and (lineH * 4 + 4) or (lineH * 2)
+					draw_SimpleTextBlurry("RELOAD: Remove nail", "ZSHUDFontSmall", cx, cy + tipOffset, COLOR_GRAY, TEXT_ALIGN_CENTER)
 				end
 			end
 		end
