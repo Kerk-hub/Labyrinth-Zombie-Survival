@@ -183,6 +183,19 @@ local statusdisplays = {
 	end,
 	Max = 100,
 	Icon = Material("zombiesurvival/headshot_stacks.png")
+},
+{
+	Color = Color(220, 60, 60),
+	Name = "OUTRAGE!",
+	ValFunc = function(self, lp)
+		local wep = lp:GetActiveWeapon()
+		if IsValid(wep) and (wep.BaseQuality or wep:GetClass()) == "weapon_zs_bust" then
+			return wep:GetDTInt(2)
+		end
+		return 0
+	end,
+	Max = 10,
+	Icon = Material("zombiesurvival/headshot_stacks.png")
 }
 }
 

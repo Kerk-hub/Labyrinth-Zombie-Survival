@@ -1,7 +1,8 @@
 AddCSLuaFile()
+DEFINE_BASECLASS("weapon_zs_basemelee")
 
 SWEP.PrintName = "Bust-on-a-stick"
-SWEP.Description = "A breen bust mounted on a stick, heavy but with wide reach. Right click to perform an extra jump (7s cooldown)."
+SWEP.Description = "A Breen bust mounted on a stick. Taking hits from zombies builds narcissistic rage — each stack supercharges your next swing."
 
 if CLIENT then
 	SWEP.ViewModelFOV = 70
@@ -43,6 +44,11 @@ SWEP.SwingTime = 0.3
 SWEP.SwingHoldType = "grenade"
 
 SWEP.AllowQualityWeapons = true
+SWEP.QualityDescs = {
+	"Rage stacks grant +75% damage per stack on next swing.",
+	"Rage stacks grant +100% damage per stack on next swing.",
+	"Rage stacks grant +125% damage per stack on next swing.",
+}
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.1, 1)
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MELEE_RANGE, 2, 1)
@@ -51,6 +57,46 @@ SURVIVAL_WEAPON_MIXIN.Apply(SWEP)
 
 SWEP.Tier = 2
 SWEP.DismantleDiv = 2
+
+-- Damage bonus per stack per tier (base = 50%, +25% per tier)
+local DAMAGE_PER_STACK = {0.50, 0.75, 1.00, 1.25}
+local STACK_CAP = 10
+
+function SWEP:SetRageStacks(v) self:SetDTInt(2, v) end
+function SWEP:GetRageStacks()  return self:GetDTInt(2) end
+
+function SWEP:Initialize()
+	self.m_BaseMeleeDamage = self.MeleeDamage
+	BaseClass.Initialize(self)
+end
+
+function SWEP:MeleeSwing()
+	if SERVER then
+		local stacks = self:GetRageStacks()
+		if stacks > 0 then
+			local tier = self.QualityTier or 0
+			self.MeleeDamage = self.m_BaseMeleeDamage * (1 + stacks * DAMAGE_PER_STACK[tier + 1])
+			self:SetRageStacks(0)
+		end
+	end
+	BaseClass.MeleeSwing(self)
+	if SERVER then
+		self.MeleeDamage = self.m_BaseMeleeDamage
+	end
+end
+
+if SERVER then
+	hook.Add("PlayerHurt", "BustNarcissisticRage", function(victim, attacker)
+		if not victim:IsValid() or not victim:IsPlayer() then return end
+		if victim:Team() ~= TEAM_HUMAN then return end
+		if not attacker:IsValid() or not attacker:IsPlayer() then return end
+		if attacker:Team() ~= TEAM_UNDEAD then return end
+		local wep = victim:GetActiveWeapon()
+		if not wep:IsValid() then return end
+		if (wep.BaseQuality or wep:GetClass()) ~= "weapon_zs_bust" then return end
+		wep:SetRageStacks(math.min(STACK_CAP, wep:GetRageStacks() + 1))
+	end)
+end
 
 function SWEP:PlaySwingSound()
 	self:EmitSound("weapons/iceaxe/iceaxe_swing1.wav", 75, math.Rand(35, 45))
