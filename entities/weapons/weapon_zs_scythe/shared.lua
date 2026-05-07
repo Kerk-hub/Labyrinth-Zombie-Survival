@@ -1,5 +1,5 @@
 SWEP.PrintName = "Great Scythe"
-SWEP.Description = "A great scythe that cleaves through multiple zombies. Has a 3 hit combo, the last hit deals extra damage. Zombie kills build Reaper stacks, amplifying all damage dealt (8% per stack)."
+SWEP.Description = "A great scythe that cleaves through multiple zombies. Has a 3 hit combo, the last hit deals extra damage (+35%). Zombie kills grant a Reaper buff (+8% damage) that refreshes on each kill."
 
 SWEP.Base = "weapon_zs_basemelee"
 
@@ -11,7 +11,7 @@ SWEP.ViewModel = "models/weapons/c_crowbar.mdl"
 SWEP.WorldModel = "models/weapons/w_crowbar.mdl"
 SWEP.UseHands = true
 
-SWEP.MeleeDamage = 97.5
+SWEP.MeleeDamage = 75
 SWEP.MeleeRange = 75
 SWEP.MeleeSize = 3.5
 SWEP.MeleeKnockBack = 0
@@ -30,14 +30,14 @@ SWEP.MaxStock = 3
 
 SWEP.AllowQualityWeapons = true
 SWEP.QualityDescs = {
-	"-0.12s swing delay. Reaper stack cap increased to 5.",
-	"-0.24s swing delay. Reaper stack cap increased to 7.",
-	"-0.36s swing delay. Reaper stack cap increased to 10.",
+	"-0.12s swing delay. Combo extended to 4 swings.",
+	"-0.24s swing delay. Combo extended to 5 swings.",
+	"-0.36s swing delay. Combo extended to 6 swings.",
 }
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.12)
 
-local REAPER_MAX_STACKS = {3, 5, 7, 10}
+local COMBO_LENGTH = {3, 4, 5, 6}
 
 function SWEP:PlaySwingSound()
 	self:EmitSound("weapons/iceaxe/iceaxe_swing1.wav", 75, math.random(55, 65))
@@ -75,6 +75,7 @@ end
 function SWEP:MeleeSwing()
 	local owner = self:GetOwner()
 	local combo = self:GetDTInt(10)
+	local maxCombo = COMBO_LENGTH[(self.QualityTier or 0) + 1]
 
 	owner:DoAttackEvent()
 	self:SendWeaponAnim(self.MissAnim)
@@ -94,7 +95,7 @@ function SWEP:MeleeSwing()
 		end
 	end
 
-	if combo == 2 then
+	if combo == maxCombo - 1 then
 		damagemultiplier = damagemultiplier * 1.35
 	end
 
@@ -143,10 +144,10 @@ function SWEP:MeleeSwing()
 
 	local armdelay = owner:GetMeleeSpeedMul()
 	self:SetNextPrimaryFire(CurTime() +
-		self.Primary.Delay * (combo < 2 and 0.36 or 1.25) * armdelay
+		self.Primary.Delay * (combo < maxCombo - 1 and 0.36 or 1.25) * armdelay
 	)
 
-	self:SetDTInt(10, combo >= 2 and 0 or combo + 1)
+	self:SetDTInt(10, combo >= maxCombo - 1 and 0 or combo + 1)
 end
 
 function SWEP:MeleeHitEntity(tr, hitent, damagemultiplier, damage)
@@ -255,16 +256,14 @@ function SWEP:MeleeHitEntity(tr, hitent, damagemultiplier, damage)
 end
 
 if SERVER then
-	hook.Add("PostHumanKilledZombie", "ScytheReaperStacks", function(pl, attacker, inflictor, dmginfo, assistpl, assistamount, headshot)
+	hook.Add("PostHumanKilledZombie", "ScytheReaperBuff", function(pl, attacker, inflictor, dmginfo, assistpl, assistamount, headshot)
 		local wep = attacker:GetActiveWeapon()
 		if not IsValid(wep) or (wep.BaseQuality or wep:GetClass()) ~= "weapon_zs_scythe" then return end
 
-		local maxStacks = REAPER_MAX_STACKS[(wep.QualityTier or 0) + 1]
 		local reaperstatus = attacker:GiveStatus("reaper", 10)
 		if reaperstatus and reaperstatus:IsValid() then
-			local newStacks = math.min(reaperstatus:GetDTInt(1) + 1, maxStacks)
-			reaperstatus:SetDTInt(1, newStacks)
-			attacker:EmitSound("hl1/ambience/particle_suck1.wav", 55, 150 + newStacks * 20, 0.45)
+			reaperstatus:SetDTInt(1, 1)
+			attacker:EmitSound("hl1/ambience/particle_suck1.wav", 55, 170, 0.45)
 		end
 	end)
 end
