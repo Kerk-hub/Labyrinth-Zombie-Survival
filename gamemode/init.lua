@@ -5107,7 +5107,7 @@ function GM:PlayerSpawn(pl)
 				func(pl, start)
 			end
 
-			pl:Give("weapon_zs_fists")
+			--pl:Give("weapon_zs_fists")
 
 			if self.StartingLoadout then
 				self:GiveStartingLoadout(pl)
