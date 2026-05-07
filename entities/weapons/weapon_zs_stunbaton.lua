@@ -1,7 +1,13 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "Stun Baton"
-SWEP.Description = "This baton has the ability to slow zombies with pulse slowing technology and it gains +25% extra points."
+SWEP.Description = "This baton has the ability to slow zombies and it gains +25% extra points. Hitting a zombie temporarily reduces the attack cooldown of all zappers you own by 30%, refreshed on each hit."
+
+SWEP.QualityDescs = {
+	"Increases zapper haste to 40%",
+	"Increases zapper haste to 50%",
+	"Increases zapper haste to 60%",
+}
 
 if CLIENT then
 	SWEP.ViewModelFOV = 50
@@ -45,8 +51,23 @@ function SWEP:PlayHitFleshSound()
 	self:EmitSound("Weapon_StunStick.Melee_Hit")
 end
 
+local BATON_DELAY_MUL = {0.70, 0.60, 0.50, 0.40}
+local BATON_BUFF_DURATION = 6
+
 function SWEP:OnMeleeHit(hitent, hitflesh, tr)
 	if hitent:IsValid() and hitent:IsPlayer() then
 		hitent:AddLegDamageExt(self.LegDamage, self:GetOwner(), self, SLOWTYPE_PULSE)
+
+		if SERVER then
+			local owner = self:GetOwner()
+			local mul = BATON_DELAY_MUL[(self.QualityTier or 0) + 1]
+			local expiry = CurTime() + BATON_BUFF_DURATION
+			for _, zapper in pairs(ents.FindByClass("prop_zapper*")) do
+				if zapper:IsValid() and not zapper.Destroyed and zapper:GetObjectOwner() == owner then
+					zapper.ZapBatonMul = mul
+					zapper.ZapBatonExpiry = expiry
+				end
+			end
+		end
 	end
 end

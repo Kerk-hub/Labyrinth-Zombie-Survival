@@ -78,7 +78,7 @@ function ENT:DrawZapper()
 	render.ModelMaterialOverride()
 	render.SetColorModulation(1, 1, 1)
 
-	if self:GetObjectOwner():IsValid() and self:GetAmmo() > 1 then
+	if self:GetObjectOwner():IsValid() then
 		local charge = math.Clamp(29 - ((self:GetNextZap() - CurTime())/4.5)*49, -20, 34)
 		local spread = ((20 +charge)/34)*3
 
@@ -94,7 +94,7 @@ function ENT:DrawZapper()
 end
 
 function ENT:Think()
-	if self:GetObjectOwner():IsValid() and self:GetAmmo() > 2 then
+	if self:GetObjectOwner():IsValid() then
 		local charge = math.Clamp(29 - ((self:GetNextZap() - CurTime())/4.5)*49, -20, 25)
 
 		self.AmbientSound:PlayEx(0.6, 65 + charge/1.5)

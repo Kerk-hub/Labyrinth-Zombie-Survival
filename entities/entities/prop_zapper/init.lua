@@ -159,21 +159,16 @@ function ENT:Think()
 
 	if CurTime() < self:GetNextZap() or CurTime() < self.NextZapCheck then return end
 
-	local curammo = self:GetAmmo()
 	local owner = self:GetObjectOwner()
-	if curammo >= 2 and owner:IsValid() then
+	if owner:IsValid() then
 		self.NextZapCheck = CurTime() + 0.4
 
 		local pos = self:LocalToWorld(Vector(0, 0, 24))
 		local target = self:FindZapperTarget(pos, owner)
 
 		if target then
-			self:SetAmmo(curammo - 2)
-			if self:GetAmmo() == 0 then
-				owner:SendDeployableOutOfAmmoMessage(self)
-			end
-
-			self:SetNextZap(CurTime() + 3 * (owner.FieldDelayMul or 1))
+			local batonMul = (self.ZapBatonExpiry and CurTime() < self.ZapBatonExpiry and self.ZapBatonMul) or 1
+			self:SetNextZap(CurTime() + 3 * (owner.FieldDelayMul or 1) * batonMul)
 
 			target:AddLegDamageExt(self.LegDamage, owner, self, SLOWTYPE_PULSE)
 
@@ -197,4 +192,27 @@ function ENT:Think()
 
 	self:NextThink(CurTime())
 	return true
+end
+
+function ENT:ForceZapTarget(target)
+	if self.Destroyed or not target:IsValid() then return end
+	local owner = self:GetObjectOwner()
+	if not owner:IsValid() then return end
+
+	local pos = self:LocalToWorld(Vector(0, 0, 24))
+	if not TrueVisibleFilters(pos, target:NearestPoint(pos), self, target) then return end
+
+	self:SetNextZap(CurTime() + 3 * (owner.FieldDelayMul or 1))
+
+	target:AddLegDamageExt(self.LegDamage, owner, self, SLOWTYPE_PULSE)
+	if self.PointsMultiplier then POINTSMULTIPLIER = self.PointsMultiplier end
+	target:TakeSpecialDamage(self.Damage, DMG_SHOCK, owner, self)
+	if self.PointsMultiplier then POINTSMULTIPLIER = nil end
+
+	local effectdata = EffectData()
+	effectdata:SetOrigin(target:WorldSpaceCenter())
+	effectdata:SetStart(pos)
+	effectdata:SetEntity(self)
+	util.Effect("tracer_zapper", effectdata)
+	self:EmitSound("ambient/levels/labs/electric_explosion5.wav", 80, 200)
 end

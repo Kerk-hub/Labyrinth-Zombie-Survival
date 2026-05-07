@@ -43,7 +43,6 @@ function ENT:DrawTranslucent()
 	self:DrawZapper()
 
 	local owner = self:GetObjectOwner()
-	local ammo = self:GetAmmo()
 
 	if MySelf:IsValid() and MySelf:Team() == TEAM_HUMAN then
 		local ang = self:LocalToWorldAngles(Angle(0, 90, 0))
@@ -54,18 +53,13 @@ function ENT:DrawTranslucent()
 			end
 			self:Draw3DHealthBar(math.Clamp(self:GetObjectHealth() / self:GetMaxObjectHealth(), 0, 1), name, 0, 0.8)
 
-			if ammo > 0 then
-				draw.SimpleTextBlurry("["..ammo.." / "..self.MaxAmmo.."]", "ZS3D2DFont", 0, 450, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-			else
-				draw.SimpleTextBlurry(translate.Get("empty"), "ZS3D2DFont", 0, 450, COLOR_RED, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-			end
 		cam.End3D2D()
 	end
 end
 
 ENT.NextEmit = 0
 function ENT:Think()
-	if self:GetObjectOwner():IsValid() and self:GetAmmo() > 1 then
+	if self:GetObjectOwner():IsValid() then
 		self.AmbientSound:PlayEx(0.5, 90)
 
 		if CurTime() >= self.NextEmit then

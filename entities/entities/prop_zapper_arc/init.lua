@@ -21,9 +21,8 @@ function ENT:Think()
 
 	if CurTime() < self:GetNextZap() or CurTime() < self.NextZapCheck then return end
 
-	local curammo = self:GetAmmo()
 	local owner = self:GetObjectOwner()
-	if curammo >= 3 and owner:IsValid() then
+	if owner:IsValid() then
 		self.NextZapCheck = CurTime() + 0.4
 
 		local pos = self:LocalToWorld(Vector(0, 0, 29))
@@ -31,13 +30,8 @@ function ENT:Think()
 
 		local shocked = {}
 		if target then
-			self:SetAmmo(curammo - 3)
-
-			if self:GetAmmo() == 0 then
-				owner:SendDeployableOutOfAmmoMessage(self)
-			end
-
-			self:SetNextZap(CurTime() + 4.5 * (owner.FieldDelayMul or 1))
+			local batonMul = (self.ZapBatonExpiry and CurTime() < self.ZapBatonExpiry and self.ZapBatonMul) or 1
+			self:SetNextZap(CurTime() + 4.5 * (owner.FieldDelayMul or 1) * batonMul)
 			self:HitTarget(target, self.Damage, owner)
 
 			local effectdata = EffectData()
@@ -79,4 +73,22 @@ function ENT:Think()
 
 	self:NextThink(CurTime())
 	return true
+end
+
+function ENT:ForceZapTarget(target)
+	if self.Destroyed or not target:IsValid() then return end
+	local owner = self:GetObjectOwner()
+	if not owner:IsValid() then return end
+
+	local pos = self:LocalToWorld(Vector(0, 0, 29))
+	if not TrueVisibleFilters(pos, target:NearestPoint(pos), self, target) then return end
+
+	self:SetNextZap(CurTime() + 4.5 * (owner.FieldDelayMul or 1))
+	self:HitTarget(target, self.Damage, owner)
+
+	local effectdata = EffectData()
+	effectdata:SetOrigin(target:WorldSpaceCenter())
+	effectdata:SetStart(pos)
+	effectdata:SetEntity(self)
+	util.Effect("tracer_zapper", effectdata)
 end
