@@ -1083,6 +1083,59 @@ function GM:HumanHUD(screenscale)
 		end
 	end
 
+	do
+		local wep = MySelf:GetActiveWeapon()
+		if wep:IsValid() and wep.NailDelay and wep:GetPrimaryAmmoCount() > 0 then
+			local shootPos = MySelf:GetShootPos()
+			local aimVec   = MySelf:GetAimVector()
+			local endPos   = shootPos + aimVec * 64
+			local filter   = {MySelf}
+			if heldprop:IsValid() then filter[#filter + 1] = heldprop end
+
+			-- Mirror server MeleeTrace: try line first, then hull
+			local sz  = wep.MeleeSize or 4
+			local tr  = util.TraceLine({ start = shootPos, endpos = endPos, filter = filter, mask = MASK_SOLID })
+			if not tr.Hit then
+				tr = util.TraceHull({ start = shootPos, endpos = endPos,
+					mins = Vector(-sz, -sz, -sz), maxs = Vector(sz, sz, sz),
+					filter = filter, mask = MASK_SOLID })
+			end
+
+			local trent = tr.Entity
+			if trent:IsValid()
+				and not trent:IsWorld()
+				and not trent:IsPlayer()
+				and trent:GetMoveType() == MOVETYPE_VPHYSICS
+			then
+				-- Count existing nails on this prop and check proximity to hit pos
+				local maxNails = GAMEMODE.MaxNails or 4
+				local nailCount = 0
+				local tooClose = false
+				for _, nail in pairs(ents.FindByClass("prop_nail")) do
+					if nail:IsValid() then
+						local base = nail.GetBaseEntity and nail:GetBaseEntity()
+						local attach = nail.GetAttachEntity and nail:GetAttachEntity()
+						if base == trent or attach == trent then
+							nailCount = nailCount + 1
+							local npos = nail.GetActualPos and nail:GetActualPos() or nail:GetPos()
+							if npos:DistToSqr(tr.HitPos) <= 81 then
+								tooClose = true
+							end
+						end
+					end
+				end
+
+				if not tooClose and nailCount < maxNails then
+					local cx        = w * 0.5
+					local cy        = h * 0.5
+					local lineH     = draw_GetFontHeight("ZSHUDFontSmall")
+					local tipOffset = heldprop:IsValid() and (lineH * 4 + 4) or (lineH * 2)
+					draw_SimpleTextBlurry("MOUSE 2: Nail prop", "ZSHUDFontSmall", cx, cy + tipOffset, COLOR_GRAY, TEXT_ALIGN_CENTER)
+				end
+			end
+		end
+	end
+
 	if packup and packup:IsValid() then
 		self:DrawPackUpBar(
 			w * 0.5,
