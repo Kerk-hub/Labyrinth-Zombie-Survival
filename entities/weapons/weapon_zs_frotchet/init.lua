@@ -16,13 +16,16 @@ function SWEP:OnMeleeHit(hitent, hitflesh, tr)
 	end
 
 	if tr.HitWorld and tr.HitNormal.z > 0.8 and hitent == Entity(0) and secondary then
-		local ice = ents.Create("env_protrusionspike")
-		if ice:IsValid() then
-			ice:SetPos(tr.HitPos)
-			ice:SetOwner(owner)
-			ice.Damage = self.MeleeDamage * 0.85
-			ice.Team = owner:Team()
-			ice:Spawn()
+		local tier = self.QualityTier or 0
+		if tier >= 1 then
+			local ice = ents.Create("env_protrusionspike")
+			if ice:IsValid() then
+				ice:SetPos(tr.HitPos)
+				ice:SetOwner(owner)
+				ice.Damage = self.MeleeDamage * (0.85 + (tier - 1) * 0.10)
+				ice.Radius = 36 + (tier - 1) * 18
+				ice:Spawn()
+			end
 		end
 	end
 end

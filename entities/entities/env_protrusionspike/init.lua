@@ -15,7 +15,7 @@ end
 function ENT:Explode()
 	local pos = self:GetPos()
 	local owner = self:GetOwner()
-	local rad = 36
+	local rad = self.Radius or 36
 
 	for _, ent in pairs(util.BlastAlloc(self, owner, pos + Vector(0, 0, rad), rad)) do
 		if ent:IsValidLivingZombie() and gamemode.Call("PlayerShouldTakeDamage", ent, owner) and ent ~= owner then

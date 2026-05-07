@@ -1,5 +1,5 @@
 SWEP.PrintName = "Frotchet"
-SWEP.Description = "An axe made from frost that cleaves through multiple zombies. Secondary attack unleashes a powerful swing, creating an icy explosion when aimed at the ground. Slows zombie movement and attack speed."
+SWEP.Description = "An axe made from frost that cleaves through multiple zombies. Secondary attack unleashes a powerful swing. Upgrade to unlock a frost explosion when aimed at the ground - grows larger and more damaging each tier."
 
 SWEP.Base = "weapon_zs_basemelee"
 
@@ -35,6 +35,11 @@ SWEP.Tier = 5
 SWEP.MaxStock = 2
 
 SWEP.AllowQualityWeapons = true
+SWEP.QualityDescs = {
+	"-0.14s swing delay. Unlocks frost explosion on ground secondary (radius 36, damage 85%).",
+	"-0.28s swing delay. Frost explosion grows (radius 54, damage 95%).",
+	"-0.42s swing delay. Frost explosion grows further (radius 72, damage 105%).",
+}
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.14)
 
