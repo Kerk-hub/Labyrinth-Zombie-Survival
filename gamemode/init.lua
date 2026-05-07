@@ -1385,7 +1385,7 @@ function GM:Think()
 				end
 			end
 
-			if inGas and self.ZombieGasEntryTimes[pl] and curtime - self.ZombieGasEntryTimes[pl] >= 5 then
+			if inGas and self.ZombieGasEntryTimes[pl] and curtime - self.ZombieGasEntryTimes[pl] >= 10 then
 				if self:VolunteerPlayerFromZombieGas(pl, zombiegasses, false) then
 					self.ZombieGasEntryTimes[pl] = nil -- Reset after volunteering
 					if pl:IsBot() or not pl:IsPlayer() then return end

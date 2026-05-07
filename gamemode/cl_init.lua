@@ -975,9 +975,6 @@ end
 
 local colPackUp = Color(20, 255, 20, 220)
 local colPackUpNotOwner = Color(255, 240, 10, 220)
-local colPropSearch = Color(160, 160, 160, 220)
-local LocalPropSearchStart = 0
-local LocalPropSearchEnt = NULL
 function GM:DrawPackUpBar(x, y, fraction, notowner, screenscale)
 	local col = notowner and colPackUpNotOwner or colPackUp
 
@@ -1004,10 +1001,6 @@ function GM:DrawPackUpBar(x, y, fraction, notowner, screenscale)
 	)
 end
 
-function GM:DrawPropSearchBar(x, y, fraction, screenscale)
-	draw_SimpleText("searching...", "ZSHUDFontSmall", x, y - 2, colPropSearch, TEXT_ALIGN_CENTER)
-	draw_SimpleText("Bring to a barricade for a reward!", "ZSHUDFontSmaller", x, y + draw_GetFontHeight("ZSHUDFontSmaller"), colPropSearch, TEXT_ALIGN_CENTER)
-end
 
 local colSigilTeleport = Color(125, 215, 255, 220)
 function GM:DrawSigilTeleportBar(x, y, fraction, target, screenscale)
@@ -1060,7 +1053,7 @@ function GM:HumanHUD(screenscale)
 
 		-- Show volunteering timer message if active
 		if ZS_VolunteerGasActive then
-			local remain = math.max(0, 5 - (CurTime() - ZS_VolunteerGasStart))
+			local remain = math.max(0, 10 - (CurTime() - ZS_VolunteerGasStart))
 			draw_SimpleTextBlurry(
 				"Volunteering For Z-main..." .. (remain > 0 and string.format(" (%.1fs)", remain) or ""),
 				"ZSHUDFontSmall",
@@ -1076,17 +1069,18 @@ function GM:HumanHUD(screenscale)
 	local packup = MySelf.PackUp
 	local sigiltp = MySelf.SigilTeleport
 	local heldprop = MySelf:GetHolding()
-	local propsearched = heldprop:IsValid() and heldprop:GetNWBool("zs_prop_searched", false)
-	local showpropsearch = heldprop:IsValid() and not propsearched
 
-	if showpropsearch then
-		if LocalPropSearchEnt ~= heldprop then
-			LocalPropSearchEnt = heldprop
-			LocalPropSearchStart = curtime
+	if heldprop:IsValid() then
+		local cx, cy = w * 0.5, h * 0.5
+		local lineH = draw_GetFontHeight("ZSHUDFontSmall")
+		local tipY = cy + lineH * 2
+		local hints = {
+			"ALT + LOOK: Rotate prop",
+			"SHIFT: Freeze prop in place",
+		}
+		for i, hint in ipairs(hints) do
+			draw_SimpleTextBlurry(hint, "ZSHUDFontSmall", cx, tipY + (i - 1) * (lineH + 2), COLOR_GRAY, TEXT_ALIGN_CENTER)
 		end
-	else
-		LocalPropSearchEnt = NULL
-		LocalPropSearchStart = 0
 	end
 
 	if packup and packup:IsValid() then
@@ -1097,8 +1091,6 @@ function GM:HumanHUD(screenscale)
 			packup:GetNotOwner(),
 			screenscale
 		)
-	elseif showpropsearch then
-		self:DrawPropSearchBar(w * 0.5, h * 0.55, 0, screenscale)
 	elseif sigiltp and sigiltp:IsValid() then
 		self:DrawSigilTeleportBar(
 			w * 0.5,
@@ -1137,44 +1129,7 @@ function GM:HumanHUD(screenscale)
 					COLOR_GRAY,
 					TEXT_ALIGN_CENTER
 				)
-				draw_SimpleTextBlurry(
-					translate.Format("number_of_initial_zombies_this_game", self.WaveOneZombies * 100, desiredzombies),
-					"ZSHUDFontSmall",
-					w * 0.5,
-					h * 0.7,
-					COLOR_GRAY,
-					TEXT_ALIGN_CENTER
-				)
-
-				for i, pl in ipairs(self.ZombieVolunteers) do
-					if pl:IsValid() then
-						draw_SimpleTextBlurry(
-							translate.Get("zombie_volunteers"),
-							"ZSHUDFontSmall",
-							w * 0.5,
-							h * 0.7 + txth,
-							COLOR_GRAY,
-							TEXT_ALIGN_CENTER
-						)
-						break
-					end
-				end
-
-				local y = h * 0.7 + txth * 1.9
-				txth = draw_GetFontHeight("ZSHUDFontTiny")
-				for i, pl in ipairs(self.ZombieVolunteers) do
-					if pl:IsValid() then
-						draw_SimpleTextBlurry(
-							pl:Name(),
-							"ZSHUDFontTiny",
-							w * 0.5,
-							y,
-							pl == MySelf and COLOR_SOFTRED or COLOR_GRAY,
-							TEXT_ALIGN_CENTER
-						)
-						y = y + txth * 0.8
-					end
-				end
+	
 			end
 		end
 

@@ -2,7 +2,7 @@ INC_SERVER()
 
 
 ENT.TickTime = 0.5
-ENT.VolunteerTime = 8
+ENT.VolunteerTime = 10
 ENT.PlayerTimers = ENT.PlayerTimers or {}
 
 util.AddNetworkString("zs_zgas_volunteertimer")
