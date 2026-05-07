@@ -47,7 +47,14 @@ SWEP.NoDismantle = false
 SWEP.NoGlassWeapons = false
 
 SWEP.AllowQualityWeapons = true
-SWEP.SwingSound = Sound( "weapons/zs_power/power1.ogg" )
+SWEP.QualityDescs = {
+	"-0.07s attack delay. Supercharge interval reduced to 3.5s. Blast radius increased to 230.",
+	"-0.14s attack delay. Supercharge interval reduced to 3s. Blast radius increased to 260.",
+	"-0.21s attack delay. Supercharge interval reduced to 2.5s. Blast radius increased to 290.",
+}
+
+local SUPERCHARGE_INTERVAL = {4, 3.5, 3, 2.5}
+local SUPERCHARGE_RADIUS = {200, 230, 260, 290}
 SWEP.HitSound = Sound( "weapons/zs_power/power4.wav" )
 
 SWEP.FistKnockback = true
@@ -64,7 +71,7 @@ GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.07, 1)
 
 function SWEP:Think()
 	if not self.m_NextSupercharge then
-		self.m_NextSupercharge = CurTime() + self.SuperchargeInterval
+		self.m_NextSupercharge = CurTime() + SUPERCHARGE_INTERVAL[(self.QualityTier or 0) + 1]
 	end
 
 	if CLIENT then
@@ -83,7 +90,7 @@ end
 
 function SWEP:OnMeleeHit(hitent, hitflesh, tr)
 	if not self.m_NextSupercharge then
-		self.m_NextSupercharge = CurTime() + self.SuperchargeInterval
+		self.m_NextSupercharge = CurTime() + SUPERCHARGE_INTERVAL[(self.QualityTier or 0) + 1]
 	end
 
 	local supercharged = CurTime() >= self.m_NextSupercharge
@@ -98,7 +105,7 @@ function SWEP:OnMeleeHit(hitent, hitflesh, tr)
 	end
 
 	if supercharged then
-		self.m_NextSupercharge = CurTime() + self.SuperchargeInterval
+		self.m_NextSupercharge = CurTime() + SUPERCHARGE_INTERVAL[(self.QualityTier or 0) + 1]
 
 		local owner = self:GetOwner()
 		local explodePos = owner:GetPos() + owner:GetForward() * 10
@@ -108,7 +115,7 @@ function SWEP:OnMeleeHit(hitent, hitflesh, tr)
 		self:EmitSound("weapons/zs_power/power4.wav", 85, 70)
 
 		if SERVER then
-			for _, ent in ipairs(ents.FindInSphere(owner:GetPos(), self.SuperchargeRadius)) do
+			for _, ent in ipairs(ents.FindInSphere(owner:GetPos(), SUPERCHARGE_RADIUS[(self.QualityTier or 0) + 1])) do
 				if not ent:IsValid() then continue end
 				if not ent:IsPlayer() then continue end
 				if ent == hitent then continue end
