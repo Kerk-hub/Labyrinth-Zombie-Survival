@@ -32,7 +32,13 @@ SWEP.ViewModel = "models/weapons/v_sledgehammer/c_sledgehammer.mdl"
 SWEP.WorldModel = "models/weapons/w_crowbar.mdl"
 SWEP.UseHands = true
 
-SWEP.Description = "When it lands, the impact sends a shockwave dealing 40% damage to all zombies within 175 units of the hit."
+SWEP.Description = "When it lands, the impact sends a shockwave dealing 40% damage to all zombies within 175 units of the hit. Killing a zombie triggers an explosion at their position."
+
+SWEP.QualityDescs = {
+	"Kill explosion radius increased to 160 and damage to 80.",
+	"Kill explosion radius increased to 190 and damage to 100.",
+	"Kill explosion radius increased to 220 and damage to 120.",
+}
 
 SWEP.MeleeDamage = 200
 SWEP.MeleeRange = 75
@@ -54,6 +60,33 @@ SWEP.AllowQualityWeapons = true
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MELEE_IMPACT_DELAY, -0.15, 1)
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.15, 1)
+
+local EXPLOSION_RADIUS = {130, 160, 190, 220}
+local EXPLOSION_DAMAGE = {60, 80, 100, 120}
+
+if SERVER then
+	hook.Add("PostHumanKilledZombie", "MegaMasherKillExplosion", function(pl, attacker, inflictor, dmginfo)
+		if not attacker:IsValid() or not attacker:IsPlayer() then return end
+		local wep = attacker:GetActiveWeapon()
+		if not wep:IsValid() then return end
+		if (wep.BaseQuality or wep:GetClass()) ~= "weapon_zs_megamasher" then return end
+
+		local tier = wep.QualityTier or 0
+		local radius = EXPLOSION_RADIUS[tier + 1]
+		local damage = EXPLOSION_DAMAGE[tier + 1]
+		local pos = pl:GetPos()
+
+		local effectdata = EffectData()
+			effectdata:SetOrigin(pos)
+		util.Effect("Explosion", effectdata, true, true)
+
+		for _, ent in ipairs(ents.FindInSphere(pos, radius)) do
+			if ent:IsValid() and ent:IsPlayer() and ent ~= pl and gamemode.Call("PlayerShouldTakeDamage", ent, attacker) then
+				ent:TakeSpecialDamage(damage, DMG_BLAST, attacker, wep, pos)
+			end
+		end
+	end)
+end
 
 function SWEP:PlaySwingSound()
 	self:EmitSound("weapons/iceaxe/iceaxe_swing1.wav", 75, math.random(20, 25))
