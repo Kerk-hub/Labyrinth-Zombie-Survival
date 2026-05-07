@@ -482,24 +482,16 @@ GM:WorthAdd("bloodshot", ITEMS_TOOLS, 15, "weapon_zs_bloodshotbomb")
 -- Point Shop --
 ------------
 -- Pistol (1)
-GM:ShopAdd("pshtr", ITEMS_GUNS, 40, "weapon_zs_peashooter", nil, nil, nil, function(pl)
-	pl:GiveEmptyWeapon("weapon_zs_peashooter")
-end).SubCategory = 1
-GM:ShopAdd("btlax", ITEMS_GUNS, 40, "weapon_zs_battleaxe", nil, nil, nil, function(pl)
-	pl:GiveEmptyWeapon("weapon_zs_battleaxe")
-end).SubCategory = 1
-GM:ShopAdd("owens", ITEMS_GUNS, 40, "weapon_zs_owens", nil, nil, nil, function(pl)
-	pl:GiveEmptyWeapon("weapon_zs_owens")
-end).SubCategory = 1
+GM:ShopAdd("pshtr", ITEMS_GUNS, 40, "weapon_zs_peashooter").SubCategory = 1
+GM:ShopAdd("btlax", ITEMS_GUNS, 40, "weapon_zs_battleaxe").SubCategory = 1
+GM:ShopAdd("owens", ITEMS_GUNS, 40, "weapon_zs_owens").SubCategory = 1
 GM:ShopAdd("glock3", ITEMS_GUNS, 40, "weapon_zs_glock3").SubCategory = 1
 GM:ShopAdd("magnum", ITEMS_GUNS, 40, "weapon_zs_magnum").SubCategory = 1
 GM:ShopAdd("eraser", ITEMS_GUNS, 40, "weapon_zs_eraser").SubCategory = 1
 GM:ShopAdd("deagle", ITEMS_GUNS, 40, "weapon_zs_deagle").SubCategory = 1
 
 -- Shotgun (2)
-GM:ShopAdd("blstr", ITEMS_GUNS, 40, "weapon_zs_blaster", nil, nil, nil, function(pl)
-	pl:GiveEmptyWeapon("weapon_zs_blaster")
-end).SubCategory = 2
+GM:ShopAdd("blstr", ITEMS_GUNS, 40, "weapon_zs_blaster").SubCategory = 2
 GM:ShopAdd("sawedoff", ITEMS_GUNS, 40, "weapon_zs_sawedoff").SubCategory = 2
 GM:ShopAdd("ender", ITEMS_GUNS, 40, "weapon_zs_ender").SubCategory = 2
 GM:ShopAdd("sweeper", ITEMS_GUNS, 40, "weapon_zs_sweepershotgun").SubCategory = 2
@@ -508,9 +500,7 @@ GM:ShopAdd("boomstick", ITEMS_GUNS, 40, "weapon_zs_boomstick").SubCategory = 2
 GM:ShopAdd("deathdlrs", ITEMS_GUNS, 40, "weapon_zs_deathdealers").SubCategory = 2
 
 -- SMG (3)
-GM:ShopAdd("tossr", ITEMS_GUNS, 40, "weapon_zs_tosser", nil, nil, nil, function(pl)
-	pl:GiveEmptyWeapon("weapon_zs_tosser")
-end).SubCategory = 3
+GM:ShopAdd("tossr", ITEMS_GUNS, 40, "weapon_zs_tosser").SubCategory = 3
 GM:ShopAdd("uzi", ITEMS_GUNS, 40, "weapon_zs_uzi").SubCategory = 3
 GM:ShopAdd("shredder", ITEMS_GUNS, 40, "weapon_zs_smg").SubCategory = 3
 GM:ShopAdd("silencer", ITEMS_GUNS, 40, "weapon_zs_silencer").SubCategory = 3
@@ -519,9 +509,7 @@ GM:ShopAdd("reaper", ITEMS_GUNS, 40, "weapon_zs_reaper").SubCategory = 3
 GM:ShopAdd("bulwark", ITEMS_GUNS, 40, "weapon_zs_bulwark").SubCategory = 3
 
 -- Rifle (4)
-GM:ShopAdd("stbbr", ITEMS_GUNS, 40, "weapon_zs_stubber", nil, nil, nil, function(pl)
-	pl:GiveEmptyWeapon("weapon_zs_stubber")
-end).SubCategory = 4
+GM:ShopAdd("stbbr", ITEMS_GUNS, 40, "weapon_zs_stubber").SubCategory = 4
 GM:ShopAdd("annabelle", ITEMS_GUNS, 40, "weapon_zs_annabelle").SubCategory = 4
 GM:ShopAdd("hunter", ITEMS_GUNS, 40, "weapon_zs_hunter").SubCategory = 4
 GM:ShopAdd("onyx", ITEMS_GUNS, 40, "weapon_zs_onyx").SubCategory = 4
@@ -529,9 +517,7 @@ GM:ShopAdd("quicksilver", ITEMS_GUNS, 40, "weapon_zs_quicksilver").SubCategory =
 GM:ShopAdd("slugrifle", ITEMS_GUNS, 40, "weapon_zs_slugrifle").SubCategory = 4
 
 -- Assault (5)
-GM:ShopAdd("crklr", ITEMS_GUNS, 40, "weapon_zs_crackler", nil, nil, nil, function(pl)
-	pl:GiveEmptyWeapon("weapon_zs_crackler")
-end).SubCategory = 5
+GM:ShopAdd("crklr", ITEMS_GUNS, 40, "weapon_zs_crackler").SubCategory = 5
 GM:ShopAdd("amigo", ITEMS_GUNS, 40, "weapon_zs_amigo").SubCategory = 5
 GM:ShopAdd("akbar", ITEMS_GUNS, 40, "weapon_zs_akbar").SubCategory = 5
 GM:ShopAdd("stalker", ITEMS_GUNS, 40, "weapon_zs_m4").SubCategory = 5

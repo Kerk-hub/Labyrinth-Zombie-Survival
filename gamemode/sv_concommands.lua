@@ -92,6 +92,18 @@ concommand.Add("zs_pointsshopbuy", function(sender, command, arguments)
 		if itemtab.Callback(sender) == false then
 			return
 		end
+
+		-- Give a free box of ammo for callback-based gun purchases.
+		if itemcat == ITEMS_GUNS and itemtab.SWEP then
+			local stored = weapons.Get(itemtab.SWEP)
+			local ammotype = stored and stored.Primary and stored.Primary.Ammo
+			if ammotype then
+				local boxamt = GAMEMODE.AmmoCache[string.lower(ammotype)]
+				if boxamt and boxamt > 0 then
+					sender:GiveAmmo(boxamt, ammotype)
+				end
+			end
+		end
 	elseif itemtab.SWEP then
 		if string.sub(itemtab.SWEP, 1, 6) ~= "weapon" then
 			if
@@ -135,6 +147,17 @@ concommand.Add("zs_pointsshopbuy", function(sender, command, arguments)
 					local secondary = wep:ValidSecondaryAmmo()
 					if secondary then
 						sender:RemoveAmmo(math.max(0, wep.Secondary.DefaultClip - wep.Secondary.ClipSize), secondary)
+					end
+				end
+			end
+
+			-- Give a free box of ammo when purchasing a gun.
+			if itemcat == ITEMS_GUNS and wep and wep:IsValid() then
+				local ammotype = wep.Primary and wep.Primary.Ammo
+				if ammotype then
+					local boxamt = GAMEMODE.AmmoCache[string.lower(ammotype)]
+					if boxamt and boxamt > 0 then
+						sender:GiveAmmo(boxamt, ammotype)
 					end
 				end
 			end
