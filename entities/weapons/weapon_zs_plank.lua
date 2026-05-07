@@ -1,7 +1,8 @@
 AddCSLuaFile()
+DEFINE_BASECLASS("weapon_zs_basemelee")
 
 SWEP.PrintName = "Plank"
-SWEP.Description = "A strip of wood of which repeated swings that connect with it build up momentum and overall damage output. Right click to perform an extra jump (7s cooldown)."
+SWEP.Description = "A plank of wood that builds momentum with each strike. Hits on zombies increase both attack speed and movement speed. Resets after a short pause. Right click to perform an extra jump (7s cooldown)."
 
 if CLIENT then
 	SWEP.ViewModelFOV = 55
@@ -41,10 +42,51 @@ SWEP.HitGesture = ACT_HL2MP_GESTURE_RANGE_ATTACK_MELEE
 SWEP.MissGesture = SWEP.HitGesture
 
 SWEP.AllowQualityWeapons = true
+SWEP.QualityDescs = {
+	"Each hit adds 5% attack and movement speed, capped at 50%. Resets after 2s without a hit.",
+	"Each hit adds 10% attack and movement speed, capped at 100%. Resets after 2s without a hit.",
+	"Each hit adds 15% attack and movement speed, capped at 150%. Resets after 2s without a hit.",
+}
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MELEE_RANGE, 4)
 
 SURVIVAL_WEAPON_MIXIN.Apply(SWEP)
+
+-- Remove any stale kill hook from a previous load
+if SERVER then hook.Remove("PostHumanKilledZombie", "PlankMomentum") end
+
+local STACK_PER_HIT = {0.03, 0.05, 0.10, 0.15}
+local STACK_CAP    = {0.30, 0.50, 1.00, 1.50}
+local RESET_TIME   = 2
+
+function SWEP:SetSpeedStack(v) self:SetDTFloat(6, v) end
+function SWEP:GetSpeedStack()  return self:GetDTFloat(6) end
+
+function SWEP:GetWalkSpeed()
+	return self.WalkSpeed * (1 + self:GetSpeedStack())
+end
+
+function SWEP:Initialize()
+	self.m_BaseDelay = self.Primary.Delay
+	BaseClass.Initialize(self)
+end
+
+function SWEP:Think()
+	local stack = self:GetSpeedStack()
+	self.Primary.Delay = self.m_BaseDelay / (1 + stack)
+
+	if self.m_CachedStack ~= stack then
+		self.m_CachedStack = stack
+		local owner = self:GetOwner()
+		if owner:IsValid() then owner:ResetSpeed() end
+	end
+
+	if stack > 0 and self.m_LastHitTime and (CurTime() - self.m_LastHitTime) >= RESET_TIME then
+		if SERVER then self:SetSpeedStack(0) end
+	end
+
+	BaseClass.Think(self)
+end
 
 function SWEP:PlaySwingSound()
 	self:EmitSound("weapons/knife/knife_slash"..math.random(2)..".wav")
@@ -59,16 +101,12 @@ function SWEP:PlayHitFleshSound()
 end
 
 function SWEP:PostOnMeleeHit(hitent, hitflesh, tr)
-	if hitent:IsValid() and hitent:IsPlayer() then
-		local combo = self:GetDTInt(2)
-		local owner = self:GetOwner()
-		local armdelay = owner:GetMeleeSpeedMul()
-		self:SetNextPrimaryFire(CurTime() + math.max(0.2, self.Primary.Delay * (1 - combo / 10)) * armdelay)
-
-		self:SetDTInt(2, combo + 1)
+	if SERVER and hitflesh and hitent:IsValid() and hitent:IsPlayer() then
+		local tier = self.QualityTier or 0
+		local cap  = STACK_CAP[tier + 1]
+		self:SetSpeedStack(math.min(cap, self:GetSpeedStack() + STACK_PER_HIT[tier + 1]))
+		self.m_LastHitTime = CurTime()
 	end
 end
 
-function SWEP:PostOnMeleeMiss(tr)
-	self:SetDTInt(2, 0)
-end
+
