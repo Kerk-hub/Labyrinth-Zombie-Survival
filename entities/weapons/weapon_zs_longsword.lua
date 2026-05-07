@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "Type XIIIa Longsword"
-SWEP.Description = "Can cleave through multiple zombies in one swing."
+SWEP.Description = "Can cleave through multiple zombies in one swing. Deals +30 bonus damage when striking a zombie more than 60 units away."
 
 if CLIENT then
 	SWEP.ViewModelFOV = 55
@@ -35,8 +35,8 @@ SWEP.ViewModel = "models/weapons/c_crowbar.mdl"
 SWEP.WorldModel = "models/weapons/w_crowbar.mdl"
 SWEP.UseHands = true
 
-SWEP.MeleeDamage = 90
-SWEP.MeleeRange = 67
+SWEP.MeleeDamage = 60
+SWEP.MeleeRange = 75
 SWEP.MeleeSize = 2.5
 
 SWEP.Primary.Delay = 1.25
@@ -51,6 +51,11 @@ SWEP.SwingTime = 0.65
 SWEP.SwingHoldType = "melee"
 
 SWEP.AllowQualityWeapons = true
+SWEP.QualityDescs = {
+	"-0.125s swing delay. Attack range increased to 85.",
+	"-0.25s swing delay. Attack range increased to 95.",
+	"-0.375s swing delay. Attack range increased to 105.",
+}
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.125)
 
@@ -94,7 +99,8 @@ function SWEP:MeleeSwing()
 	self.IdleAnimation = CurTime() + self:SequenceDuration()
 
 	local hit = false
-	local tr = owner:CompensatedPenetratingMeleeTrace(self.MeleeRange * (owner.MeleeRangeMul or 1), self.MeleeSize)
+	local effectiveRange = self.MeleeRange + (self.QualityTier or 0) * 10
+	local tr = owner:CompensatedPenetratingMeleeTrace(effectiveRange * (owner.MeleeRangeMul or 1), self.MeleeSize)
 	local damage = self:GetDamage(self:GetTracesNumPlayers(tr))
 	local ent
 
@@ -162,6 +168,14 @@ function SWEP:MeleeHitEntity(tr, hitent, damagemultiplier, damage)
 	end
 
 	damage = damage * damagemultiplier
+
+	-- Flat +30 bonus when the hit is near the edge of the weapon's reach
+	if hitent:IsPlayer() then
+		local dist = tr.StartPos:Distance(tr.HitPos)
+		if dist > 60 then
+			damage = damage + 30
+		end
+	end
 
 	local dmginfo = DamageInfo()
 	dmginfo:SetDamagePosition(tr.HitPos)
