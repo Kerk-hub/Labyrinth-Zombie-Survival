@@ -27,7 +27,7 @@ SWEP.ViewModel = "models/weapons/c_stunstick.mdl"
 SWEP.WorldModel = "models/weapons/w_crowbar.mdl"
 SWEP.UseHands = true
 
-SWEP.MeleeDamage = 120
+SWEP.MeleeDamage = 100
 SWEP.MeleeRange = 94
 SWEP.MeleeSize = 0.8
 
@@ -45,6 +45,13 @@ SWEP.SwingHoldType = "slam"
 SWEP.HitAnim = ACT_VM_MISSCENTER
 
 SWEP.AllowQualityWeapons = true
+SWEP.QualityDescs = {
+	"+3 melee range. -0.15s swing delay. Throw cooldown reduced to 5s.",
+	"+6 melee range. -0.30s swing delay. Throw cooldown reduced to 4s.",
+	"+9 melee range. -0.45s swing delay. Throw cooldown reduced to 3s.",
+}
+
+local THROW_COOLDOWN = {6, 5, 4, 3}
 
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MELEE_RANGE, 3, 1)
 GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.15, 1)
@@ -70,7 +77,7 @@ function SWEP:SecondaryAttack()
 	local tr = owner:TraceLine(60)
 	if tr.HitWorld or (tr.Entity:IsValid() and not tr.Entity:IsPlayer()) then return end
 	self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
-	self:SetNextSecondaryFire(CurTime() + 6)
+	self:SetNextSecondaryFire(CurTime() + THROW_COOLDOWN[(self.QualityTier or 0) + 1])
 
 	self:SendWeaponAnim(ACT_VM_MISSCENTER)
 	owner:DoAnimationEvent(ACT_HL2MP_GESTURE_RANGE_ATTACK_GRENADE)
