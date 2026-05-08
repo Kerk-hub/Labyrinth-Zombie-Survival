@@ -1,9 +1,16 @@
+
 AddCSLuaFile()
+
+SWEP.QualityDescs = {
+	[1] = "+1 shell per shot (2 total)",
+	[2] = "+2 shells per shot (3 total)",
+	[3] = "+3 shells per shot (4 total)"
+}
 
 SWEP.Base = "weapon_zs_baseshotgun"
 
 SWEP.PrintName = "Boom Stick"
-SWEP.Description = "Fires one shell per shot with powerful self-knockback. Remantling fires more shells per pull for greater damage and knockback."
+SWEP.Description = "Fires one shell per shot with powerful self-knockback. Remantle path: +1 shell per tier (up to 4). More shells = more damage and knockback."
 SWEP.Slot = 1
 
 if CLIENT then
@@ -39,28 +46,21 @@ SWEP.ConeMin = 4
 
 SWEP.WalkSpeed = SPEED_SLOWER
 SWEP.FireAnimSpeed = 0.4
-SWEP.Knockback = 80
+SWEP.Knockback = 400
 SWEP.ShellsPerShot = 1
 
 SWEP.PumpActivity = ACT_SHOTGUN_PUMP
 SWEP.PumpSound = Sound("Weapon_Shotgun.Special1")
 SWEP.ReloadSound = Sound("Weapon_Shotgun.Reload")
 
-GAMEMODE:AddNewRemantleBranch(SWEP, 1, "Boom Stick Mk.II", "Fires 2 shells per shot for increased damage and knockback", function(wept)
-	wept.ShellsPerShot = 2
-end)
-GAMEMODE:AddNewRemantleBranch(SWEP, 2, "Boom Stick Mk.III", "Fires 3 shells per shot for high damage and knockback", function(wept)
-	wept.ShellsPerShot = 3
-end)
-GAMEMODE:AddNewRemantleBranch(SWEP, 3, "Boom Stick Mk.IV", "Fires all 4 shells at once for maximum damage and full self-knockback", function(wept)
-	wept.ShellsPerShot = 4
-end)
 
 function SWEP:PrimaryAttack()
 	if not self:CanPrimaryAttack() then return end
 
 	local owner = self:GetOwner()
-	local shells = math.min(self.ShellsPerShot, self:Clip1())
+	local qt = self.QualityTier or 0
+	-- Shells per shot: 1 at tier0, 2 at tier1, 3 at tier2, 4 at tier3
+	local shells = math.min(1 + qt, 4, self:Clip1())
 
 	self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
 	self:EmitSound(self.Primary.Sound)
@@ -68,7 +68,7 @@ function SWEP:PrimaryAttack()
 	self:ShootBullets(self.Primary.Damage, self.Primary.NumShots * shells, self:GetCone())
 	self:TakePrimaryAmmo(shells)
 
-	owner:ViewPunch(shells * 0.5 * self.Recoil * Angle(math.Rand(-0.1, -0.1), math.Rand(-0.1, 0.1), 0))
+	owner:ViewPunch(shells * 0.1 * self.Recoil * Angle(math.Rand(-0.1, -0.1), math.Rand(-0.1, 0.1), 0))
 	owner:SetGroundEntity(NULL)
 	owner:SetVelocity(-self.Knockback * (shells / 4) * owner:GetAimVector())
 
