@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "'Owens' Handgun"
-SWEP.Description = "Fires two shots per trigger pull. Less accurate, but high total damage per burst."
+SWEP.Description = "Fires two shots per trigger pull. Gains one additional shot per quality tier."
 
 SWEP.Slot = 1
 SWEP.SlotPos = 0
@@ -29,7 +29,7 @@ SWEP.ReloadSound = Sound("Weapon_Pistol.Reload")
 SWEP.Primary.Sound = Sound("Weapon_Pistol.NPC_Single")
 SWEP.Primary.Damage = 14
 SWEP.Primary.NumShots = 2
-SWEP.Primary.Delay = 0.182
+SWEP.Primary.Delay = 0.28
 
 SWEP.Primary.ClipSize = 10
 SWEP.Primary.Automatic = true
@@ -37,12 +37,12 @@ SWEP.Primary.Ammo = "pistol"
 SWEP.Primary.ClipMultiplier = 12/10
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
 
-SWEP.ReloadSpeed = 0.7
+SWEP.ReloadSpeed = 0.5
 
-SWEP.ConeMax = 2.5
-SWEP.ConeMin = 0.25
+SWEP.ConeMax = 4
+SWEP.ConeMin = 2
 
 SWEP.IronSightsPos = Vector(-5.95, 3, 2.75)
 SWEP.IronSightsAng = Vector(-0.15, -1, 2)
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.0175, 1)
+GAMEMODE:SetPrimaryWeaponModifier(SWEP, WEAPON_MODIFIER_SHOT_COUNT, 1)
