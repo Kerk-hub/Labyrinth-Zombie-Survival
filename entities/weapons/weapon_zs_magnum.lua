@@ -39,16 +39,22 @@ GAMEMODE:SetupDefaultClip(SWEP.Primary)
 SWEP.Tier = 2
 
 SWEP.ConeMax = 2.5
-SWEP.ConeMin = 0.25
+SWEP.ConeMin = 1
 SWEP.BounceMulti = 1.5
 SWEP.BounceReloadStacks = 0
 
 SWEP.IronSightsPos = Vector(-4.65, 4, 0.25)
 SWEP.IronSightsAng = Vector(0, 0, 1)
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MAX_SPREAD, -0.7, 1)
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_MIN_SPREAD, -0.35, 1)
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.07, 1)
+SWEP.ReloadSpeed = 1.0
+
+GAMEMODE:SetPrimaryWeaponModifier(SWEP, WEAPON_MODIFIER_RELOAD_SPEED, -0.05)
+
+SWEP.QualityDescs = {
+	"Bounces twice, 5% faster reload",
+	"Bounces 3 times, 10% faster reload",
+	"Bounces 4 times, 15% faster reload"
+}
 
 function SWEP:GetReloadSpeedMultiplier()
 	local base = BaseClass.GetReloadSpeedMultiplier and BaseClass.GetReloadSpeedMultiplier(self) or 1
@@ -60,27 +66,16 @@ function SWEP:FinishReload()
 	self.BounceReloadStacks = 0
 	BaseClass.FinishReload(self)
 end
-GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Backlash' Magnum", "Gets more accurate for each direct hit, but less damage on non-bounced shots", function(wept)
-	wept.Primary.Damage = wept.Primary.Damage * 0.85
-	wept.BounceMulti = 1.764
-	wept.GetCone = function(self)
-		return BaseClass.GetCone(self) * (1 - self:GetDTInt(9)/13)
-	end
-	wept.FinishReload = function(self)
-		self:SetDTInt(9, 0)
-		BaseClass.FinishReload(self)
-	end
-end)
-
-local function DoRicochet(attacker, hitpos, hitnormal, normal, damage)
+local function DoRicochet(attacker, hitpos, hitnormal, normal, damage, bouncesLeft)
 	local RicoCallback = function(att, tr, dmginfo)
 		local ent = tr.Entity
 		local wep = att:GetActiveWeapon()
-		if wep.Branch == 1 and ent:IsValidZombie() then
-			wep:SetDTInt(9, wep:GetDTInt(9) + 2)
-		end
 		if IsValid(wep) and ent:IsValidLivingZombie() then
 			wep.BounceReloadStacks = math.min((wep.BounceReloadStacks or 0) + 1, 5)
+		end
+		if SERVER and tr.HitWorld and not tr.HitSky and bouncesLeft > 0 then
+			local hp, hn, n, dmg = tr.HitPos, tr.HitNormal, tr.Normal, dmginfo:GetDamage() * wep.BounceMulti
+			timer.Simple(0, function() DoRicochet(att, hp, hn, n, dmg, bouncesLeft - 1) end)
 		end
 	end
 
@@ -93,14 +88,9 @@ end
 function SWEP.BulletCallback(attacker, tr, dmginfo)
 	local ent = tr.Entity
 	if SERVER and tr.HitWorld and not tr.HitSky then
-		local hitpos, hitnormal, normal, dmg = tr.HitPos, tr.HitNormal, tr.Normal, dmginfo:GetDamage() * attacker:GetActiveWeapon().BounceMulti
-		timer.Simple(0, function() DoRicochet(attacker, hitpos, hitnormal, normal, dmg) end)
-	end
-
-	if SERVER then
 		local wep = attacker:GetActiveWeapon()
-		if wep.Branch == 1 and ent:IsValidZombie() then
-			wep:SetDTInt(9, wep:GetDTInt(9) + 1)
-		end
+		local bouncesLeft = wep.QualityTier or 0
+		local hitpos, hitnormal, normal, dmg = tr.HitPos, tr.HitNormal, tr.Normal, dmginfo:GetDamage() * wep.BounceMulti
+		timer.Simple(0, function() DoRicochet(attacker, hitpos, hitnormal, normal, dmg, bouncesLeft) end)
 	end
 end
