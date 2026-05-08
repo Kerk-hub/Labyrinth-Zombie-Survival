@@ -2,7 +2,7 @@ AddCSLuaFile()
 DEFINE_BASECLASS("weapon_zs_base")
 
 SWEP.PrintName = "'Eraser' Tactical Pistol"
-SWEP.Description = "Damage scales up as the clip depletes — the last bullet hits hardest. Headshots deal double damage."
+SWEP.Description = "Damage scales from 1x to 2x as the clip empties — the last bullet always hits hardest. Headshots deal double damage."
 SWEP.Slot = 1
 SWEP.SlotPos = 0
 
@@ -24,7 +24,7 @@ SWEP.WorldModel = "models/weapons/w_pist_fiveseven.mdl"
 SWEP.UseHands = true
 
 SWEP.Primary.Sound = Sound("weapons/ar2/npc_ar2_altfire.wav")
-SWEP.Primary.Damage = 11.3
+SWEP.Primary.Damage = 13.5
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Delay = 0.15
 
@@ -34,23 +34,18 @@ SWEP.Primary.Ammo = "pistol"
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
 
 SWEP.ConeMax = 2.5
-SWEP.ConeMin = 0.25
+SWEP.ConeMin = 1
 
 SWEP.ReloadSpeed = 1
 SWEP.HeadshotMulti = 2
 
 SWEP.IronSightsPos = Vector(-5.95, 0, 2.5)
 
-GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Cleanser' Tactical Pistol", "Less reload speed, accuracy and headshot multiplier but gains increased damage per wave", function(wept)
-	wept.ConeMax = 4.25
-	wept.ConeMin = 2.625
-	wept.ReloadSpeed = wept.ReloadSpeed * 0.7
-	wept.HeadshotMulti = wept.HeadshotMulti * 0.9
-
-	wept.BulletCallback = function(attacker, tr, dmginfo)
-		dmginfo:SetDamage(dmginfo:GetDamage() + dmginfo:GetDamage() * GAMEMODE:GetWave()/15)
-	end
-end)
+SWEP.QualityDescs = {
+	"Last bullet deals 2.5x damage",
+	"Last bullet deals 3x damage",
+	"Last bullet deals 3.5x damage"
+}
 
 function SWEP:EmitFireSound()
 	self:EmitSound("weapons/fiveseven/fiveseven-1.wav", 75, 80 + (1 - (self:Clip1() / self.Primary.ClipSize)) * 30, 0.8, 21)
@@ -58,7 +53,8 @@ function SWEP:EmitFireSound()
 end
 
 function SWEP:ShootBullets(dmg, numbul, cone)
-	dmg = dmg + dmg * (1 - self:Clip1() / self.Primary.ClipSize)
+	local maxBonus = 1 + (self.QualityTier or 0) * 0.5
+	dmg = dmg + dmg * maxBonus * (1 - self:Clip1() / self.Primary.ClipSize)
 
 	BaseClass.ShootBullets(self, dmg, numbul, cone)
 end

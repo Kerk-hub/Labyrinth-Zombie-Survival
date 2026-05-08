@@ -1,7 +1,7 @@
 AddCSLuaFile()										-- make sure client gets this lua file
 
 SWEP.PrintName = "'Battleaxe' Handgun"				-- weapon name and description
-SWEP.Description = "An accurate, reliable pistol with considerable damage."
+SWEP.Description = "A slow, hard-hitting pistol with no special abilities. Gains clip size and fire rate with each quality tier."
 SWEP.Slot = 1										-- weapon item slot in weapon selection
 SWEP.SlotPos = 0
 SWEP.Base = "weapon_zs_base"						-- weapon base class

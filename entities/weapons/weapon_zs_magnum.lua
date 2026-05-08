@@ -2,7 +2,7 @@ AddCSLuaFile()
 DEFINE_BASECLASS("weapon_zs_base")
 
 SWEP.PrintName = "'Ricochete' Magnum"
-SWEP.Description = "Bullets bounce off walls and deal bonus damage. Each wall bounce hit shortens your next reload."
+SWEP.Description = "Bullets bounce off walls dealing 50% bonus damage. Each zombie hit by a bounced bullet adds a 20% reload speed stack, up to 5 stacks. Stacks reset on reload."
 SWEP.Slot = 1
 SWEP.SlotPos = 0
 
