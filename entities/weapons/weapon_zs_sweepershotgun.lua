@@ -3,7 +3,7 @@ AddCSLuaFile()
 SWEP.Base = "weapon_zs_baseshotgun"
 
 SWEP.PrintName = "'Sweeper' Shotgun"
-SWEP.Description = "A hard-hitting pump shotgun. Each pellet that connects applies a brief burn to the target."
+SWEP.Description = "A hard-hitting pump shotgun. Each pellet ignites zombies for 3s. Deals bonus damage to burning targets."
 SWEP.Slot = 1
 
 if CLIENT then
@@ -41,11 +41,35 @@ SWEP.ConeMin = 4
 SWEP.FireAnimSpeed = 1.2
 SWEP.WalkSpeed = SPEED_SLOWER
 
+SWEP.BurnBonus = 0.1 -- 10% per tier
+
+SWEP.BurnDuration = 3
+
+SWEP.QualityDescs = {
+    "+10% damage to burning targets",
+    "+20% damage to burning targets",
+    "+30% damage to burning targets"
+}
+
 function SWEP.BulletCallback(attacker, tr, dmginfo)
-	if SERVER then
-		local ent = tr.Entity
-		if ent:IsValidLivingZombie() then
-			ent:TakeDamage(3, attacker, attacker:GetActiveWeapon(), DMG_BURN)
-		end
-	end
+    if SERVER then
+        local ent = tr.Entity
+        if ent:IsValidLivingZombie() then
+            local wep = attacker:GetActiveWeapon()
+            local tier = (IsValid(wep) and wep.QualityTier or 0)
+            local burnBonus = 1 + (tier + 1) * (wep.BurnBonus or 0.1)
+            local duration = (IsValid(wep) and wep.BurnDuration or 3)
+            ent:Ignite(duration)
+            for _, fire in pairs(ents.FindByClass("entityflame")) do
+                if fire:IsValid() and fire:GetParent() == ent then
+                    fire:SetOwner(attacker)
+                    fire:SetPhysicsAttacker(attacker)
+                    fire.AttackerForward = attacker
+                end
+            end
+            if ent:IsOnFire() then
+                dmginfo:SetDamage(dmginfo:GetDamage() * burnBonus)
+            end
+        end
+    end
 end
