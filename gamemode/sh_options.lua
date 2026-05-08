@@ -495,7 +495,6 @@ GM:ShopAdd("blstr", ITEMS_GUNS, 40, "weapon_zs_blaster").SubCategory = 2
 GM:ShopAdd("sawedoff", ITEMS_GUNS, 40, "weapon_zs_sawedoff").SubCategory = 2
 GM:ShopAdd("ender", ITEMS_GUNS, 40, "weapon_zs_ender").SubCategory = 2
 GM:ShopAdd("sweeper", ITEMS_GUNS, 40, "weapon_zs_sweepershotgun").SubCategory = 2
-GM:ShopAdd("jackhammer", ITEMS_GUNS, 40, "weapon_zs_jackhammer").SubCategory = 2
 GM:ShopAdd("boomstick", ITEMS_GUNS, 40, "weapon_zs_boomstick").SubCategory = 2
 GM:ShopAdd("deathdlrs", ITEMS_GUNS, 40, "weapon_zs_deathdealers").SubCategory = 2
 
