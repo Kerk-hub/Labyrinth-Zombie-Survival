@@ -25,7 +25,7 @@ SWEP.WorldModel = "models/weapons/w_pist_p228.mdl"
 SWEP.UseHands = true
 
 SWEP.Primary.Sound = Sound("Weapon_P228.Single")
-SWEP.Primary.Damage = 15.5
+SWEP.Primary.Damage = 18
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Delay = 0.18
 
@@ -35,24 +35,23 @@ SWEP.Primary.Ammo = "pistol"
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
 
 SWEP.ConeMax = 2.5
-SWEP.ConeMin = 0.25
+SWEP.ConeMin = 1
 
-GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_CLIP_SIZE, 1)
-GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Peashooter' Auto Handgun", "Fully automatic, increased clip size at the cost of accuracy", function(wept)
-	wept.Primary.Delay = 0.15
-	wept.Primary.Automatic = true
-	wept.Primary.ClipSize = math.floor(wept.Primary.ClipSize * 1.25)
+GAMEMODE:AttachWeaponModifier(SWEP, WEAPON_MODIFIER_FIRE_DELAY, -0.009, 1)
 
-	wept.ConeMin = 2.25
-end)
+SWEP.QualityDescs = {
+	"Refunds 4 bullets on zombie kill",
+	"Refunds 7 bullets on zombie kill",
+	"Refunds 10 bullets on zombie kill"
+}
 
 SWEP.IronSightsPos = Vector(-6, -1, 2.25)
 
 if SERVER then
 	function SWEP:OnZombieKilled(zombie)
+		local qt = self.QualityTier or 0
+		local refund = 1 + qt * 3
 		local clip = self:Clip1()
-		if clip < self.Primary.ClipSize then
-			self:SetClip1(clip + 1)
-		end
+		self:SetClip1(math.min(clip + refund, self.Primary.ClipSize))
 	end
 end
