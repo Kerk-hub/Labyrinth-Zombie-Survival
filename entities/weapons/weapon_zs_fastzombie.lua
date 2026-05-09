@@ -68,6 +68,20 @@ function SWEP:Think()
 		end
 	end
 
+	-- Pounce (Leap/Dash) on Shift (IN_SPEED)
+	if not self:IsPouncing() and not self:IsClimbing() and self:GetPounceTime() <= 0 then
+		if owner:KeyDown(IN_SPEED) and owner:IsOnGround() then
+			if CurTime() >= self:GetNextPrimaryFire() and CurTime() >= self:GetNextSecondaryFire() and CurTime() >= (self.NextAllowPounce or 0) then
+				self:SetNextPrimaryFire(math.huge)
+				self:SetPounceTime(CurTime() + self.PounceStartDelay)
+				owner:ResetJumpPower()
+				if IsFirstTimePredicted() then
+					self:PlayPounceStartSound()
+				end
+			end
+		end
+	end
+
 	if self:IsSlowSwinging() then
 		if curtime >= self:GetSlowSwingEnd() then
 			self:SetSlowSwingEnd(0)
@@ -360,18 +374,8 @@ end
 function SWEP:SecondaryAttack()
 	if self:IsPouncing() or self:IsClimbing() or self:GetPounceTime() > 0 then return end
 
-	if self:GetOwner():IsOnGround() then
-		if CurTime() < self:GetNextPrimaryFire() or CurTime() < self:GetNextSecondaryFire() or CurTime() < self.NextAllowPounce then return end
-
-		self:SetNextPrimaryFire(math.huge)
-		self:SetPounceTime(CurTime() + self.PounceStartDelay)
-
-		self:GetOwner():ResetJumpPower()
-
-		if IsFirstTimePredicted() then
-			self:PlayPounceStartSound()
-		end
-	elseif self:GetClimbSurface() then
+	-- Only climbing on Mouse 2
+	if self:GetClimbSurface() then
 		self:StartClimbing()
 	end
 end
