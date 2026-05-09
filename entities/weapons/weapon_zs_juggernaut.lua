@@ -49,6 +49,11 @@ SWEP.ReloadSpeed = 0.8
 SWEP.IronSightsAng = Vector(-1, -1, 0)
 SWEP.IronSightsPos = Vector(-3, 4, 3)
 
+SWEP.QualityDescs = {
+}
+
+GAMEMODE:SetPrimaryWeaponModifier(SWEP, WEAPON_MODIFIER_RELOAD_SPEED, 0.45)
+
 --[[GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Juggernaut' Belt-Fed M249", "Extends the magazine to 120 rounds with even slower reload, but slightly higher damage", function(wept)
 	wept.Primary.Damage = wept.Primary.Damage * 1.15
 	wept.Primary.ClipSize = 120
@@ -90,7 +95,9 @@ function SWEP:ShootBullets(dmg, numbul, cone)
 		for i = 1, zeroclip and 8 or 1 do
 			local ent = ents.Create("projectile_juggernaut")
 			if ent:IsValid() then
-				ent:SetPos(owner:GetShootPos())
+				-- Lower the spawn position by 16 units
+				local spawnPos = owner:GetShootPos() - Vector(0, 0, 16)
+				ent:SetPos(spawnPos)
 
 				local angle = owner:GetAimVector():Angle()
 				angle:RotateAroundAxis(angle:Up(), 90)
