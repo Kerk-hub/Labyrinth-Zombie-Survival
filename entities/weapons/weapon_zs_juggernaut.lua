@@ -29,7 +29,7 @@ SWEP.Primary.Damage = 15
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Delay = 0.15
 
-SWEP.Primary.ClipSize = 90
+SWEP.Primary.ClipSize = 64
 SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "ar2"
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
@@ -44,16 +44,16 @@ SWEP.ConeMin = 1
 
 SWEP.WalkSpeed = SPEED_SLOWEST
 
-SWEP.ReloadSpeed = 0.5
+SWEP.ReloadSpeed = 0.8
 
 SWEP.IronSightsAng = Vector(-1, -1, 0)
 SWEP.IronSightsPos = Vector(-3, 4, 3)
 
-GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Juggernaut' Belt-Fed M249", "Extends the magazine to 120 rounds with even slower reload, but slightly higher damage", function(wept)
+--[[GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Juggernaut' Belt-Fed M249", "Extends the magazine to 120 rounds with even slower reload, but slightly higher damage", function(wept)
 	wept.Primary.Damage = wept.Primary.Damage * 1.15
 	wept.Primary.ClipSize = 120
 	wept.ReloadSpeed = 0.35
-end)
+end)]]--
 
 function SWEP:PrimaryAttack()
 	if not self:CanPrimaryAttack() then return end

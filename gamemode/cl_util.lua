@@ -236,8 +236,19 @@ local function TryAutoBuyAmmo(ply, reloadcheck)
     if ply:GetPoints() < 5 then return end
     if CurTime() - lastautobuytime < 1 then return end
 
-    RunConsoleCommand("zs_quickbuyammo")
-    lastautobuytime = CurTime()
+    -- Check if weapon's clip size is greater than the ammo box amount for its ammo type
+    local ammoTypeName = game.GetAmmoName(ammotype)
+    local ammoBoxAmount = GAMEMODE and GAMEMODE.AmmoCache and ammoTypeName and GAMEMODE.AmmoCache[string.lower(ammoTypeName)] or nil
+    local clipSize = (wep.GetMaxClip1 and wep:GetMaxClip1()) or (wep.Primary and wep.Primary.ClipSize) or -1
+    print("[AutoBuyAmmo Debug] Weapon:", wep:GetClass(), "AmmoType:", ammoTypeName, "ClipSize:", clipSize, "AmmoBoxAmount:", ammoBoxAmount)
+    if ammoBoxAmount and clipSize > ammoBoxAmount then
+        RunConsoleCommand("zs_quickbuyammo")
+        RunConsoleCommand("zs_quickbuyammo")
+        lastautobuytime = CurTime()
+    else
+        RunConsoleCommand("zs_quickbuyammo")
+        lastautobuytime = CurTime()
+    end
 end
 
 local function TryAutoBuyDeployableAmmo(ply)
