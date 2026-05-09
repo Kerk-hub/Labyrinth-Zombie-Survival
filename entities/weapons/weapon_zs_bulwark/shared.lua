@@ -1,8 +1,10 @@
 SWEP.PrintName = "'Bulwark' Minigun"
-SWEP.Description = "Incredibly heavy duty minigun. Takes time to spool. Hold right click to spool the gun without firing."
+SWEP.Description = "Takes time to spool. Hold right click to spool the gun without firing."
 SWEP.Slot = 1
 
 SWEP.Base = "weapon_zs_base"
+
+SWEP.SpoolUpTime = 1.5 -- Default spool up time, can be reduced by remantle upgrades
 
 SWEP.HoldType = "shotgun"
 
@@ -12,7 +14,7 @@ SWEP.ShowViewModel = false
 SWEP.ShowWorldModel = false
 SWEP.UseHands = true
 
-SWEP.Primary.Damage = 7.4
+SWEP.Primary.Damage = 10
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Delay = 0.22
 
@@ -28,7 +30,7 @@ SWEP.ConeMin = 5.25
 
 SWEP.Recoil = 0.5
 
-GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Citadel' Minicannon", "Uses 3 ammo per shot, shoots slower, but more damage and accuracy", function(wept)
+--[[GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Citadel' Minicannon", "Uses 3 ammo per shot, shoots slower, but more damage and accuracy", function(wept)
 	wept.Primary.Damage = wept.Primary.Damage * 2.5
 	wept.ConeMin = wept.ConeMin * 0.5
 	wept.ConeMax = wept.ConeMax * 0.5
@@ -47,10 +49,16 @@ GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Citadel' Minicannon", "Uses 3 ammo per 
 		self:EmitSound("weapons/m249/m249-1.wav", 75, math.random(47, 49), 0.7)
 		self:EmitSound("weapons/m4a1/m4a1_unsil-1.wav", 75, math.random(85, 87), 0.65, CHAN_WEAPON + 20)
 	end
-end)
+end)]]--
 
 SWEP.WalkSpeed = 100
 SWEP.FireAnimSpeed = 0.3
+
+SWEP.QualityDescs = {
+	"Spool-up time reduced to 1.2s.",
+	"Spool-up time reduced to 0.9s.",
+	"Spool-up time reduced to 0.6s."
+}
 
 function SWEP:Initialize()
 	self.BaseClass.Initialize(self)
@@ -61,12 +69,12 @@ end
 function SWEP:PrimaryAttack()
 	if not self:CanPrimaryAttack() then return end
 
-	if not self:GetSpooling() then
-		self:SetSpooling(true)
-		self:EmitSound("ambient/machines/spinup.wav", 75, 65)
-		self:GetOwner():ResetSpeed()
+	   if not self:GetSpooling() then
+		   self:SetSpooling(true)
+		   self:EmitSound("ambient/machines/spinup.wav", 75, 65)
+		   self:GetOwner():ResetSpeed()
 
-		self:SetNextPrimaryFire(CurTime() + 0.75)
+		   self:SetNextPrimaryFire(CurTime() + (self.SpoolUpTime or 1.5))
 	else
 		self:SetNextPrimaryFire(CurTime() + self:GetFireDelay())
 
@@ -80,12 +88,12 @@ end
 function SWEP:SecondaryAttack()
 	if not self:CanSecondaryAttack() then return end
 
-	if not self:GetSpooling() then
-		self:SetSpooling(true)
-		self:EmitSound("ambient/machines/spinup.wav", 75, 65)
-		self:GetOwner():ResetSpeed()
+	   if not self:GetSpooling() then
+		   self:SetSpooling(true)
+		   self:EmitSound("ambient/machines/spinup.wav", 75, 65)
+		   self:GetOwner():ResetSpeed()
 
-		self:SetNextPrimaryFire(CurTime() + 0.75)
+		   self:SetNextPrimaryFire(CurTime() + (self.SpoolUpTime or 1.5))
 	else
 		self.IdleAnimation = CurTime() + self:SequenceDuration()
 	end
