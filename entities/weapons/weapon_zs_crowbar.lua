@@ -2,7 +2,7 @@ AddCSLuaFile()
 DEFINE_BASECLASS("weapon_zs_basemelee")
 
 SWEP.PrintName = "Crowbar"
-SWEP.Description = "Destroys your own nailed props at 20% health, converting them into arsenal items.Instantly kills headcrabs on hit and reduces damage taken from headcrabs. Higher tiers increase headcrab damage resistance and nail/unnail speed."
+SWEP.Description = "Destroys your own nailed props at 20% health, converting them into arsenal items.Instantly kills headcrabs on hit and reduces damage taken from headcrabs."
 
 if CLIENT then
 	SWEP.ViewModelFOV = 65
