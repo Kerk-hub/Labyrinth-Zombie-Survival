@@ -10,13 +10,33 @@ CLASS.Unlocked = true
 CLASS.IsDefault = true
 CLASS.Order = 0
 
-CLASS.Health = 225
+-- Tiered health system
+CLASS.BaseHealth = 200
+CLASS.HealthPerTier = 100
+
+-- Returns the current zombie tier (1-5) based on wave or other logic
+function CLASS:GetTier()
+	local wave = GAMEMODE and GAMEMODE.GetWave and GAMEMODE:GetWave() or 1
+	return math.Clamp(wave, 1, 5)
+end
+
+function CLASS:GetScaledHealth()
+	return self.BaseHealth + (self:GetTier() - 1) * self.HealthPerTier
+end
+
+-- Color scaling: 20% more red per tier
+function CLASS:GetTierColor()
+	local tier = self:GetTier()
+	local baseColor = Color(180, 50, 50)
+	local redScale = 1 + 0.2 * (tier - 1)
+	return Color(math.Clamp(baseColor.r * redScale, 0, 255), baseColor.g, baseColor.b)
+end
 CLASS.Speed = 175
 CLASS.Revives = true
 
 CLASS.CanTaunt = true
 
-CLASS.Points = CLASS.Health/GM.HumanoidZombiePointRatio
+CLASS.Points = (CLASS.BaseHealth or 200)/GM.HumanoidZombiePointRatio
 
 CLASS.SWEP = "weapon_zs_zombie"
 
@@ -237,10 +257,21 @@ if SERVER then
 		return true
 	end
 
+
+	-- Always break into legs, torso, or fall down and get up, regardless of death type
 	function CLASS:ReviveCallback(pl, attacker, dmginfo)
 		if not pl:ShouldReviveFrom(dmginfo) then return false end
 
-		local classtable = math_random(3) == 3 and GAMEMODE.ZombieClasses["Zombie Legs"] or GAMEMODE.ZombieClasses["Zombie Torso"]
+		local r = math_random(3)
+		local classtable
+		if r == 1 then
+			classtable = GAMEMODE.ZombieClasses["Zombie Legs"]
+		elseif r == 2 then
+			classtable = GAMEMODE.ZombieClasses["Zombie Torso"]
+		else
+			classtable = nil -- Falldown and get up (second wind)
+		end
+
 		if classtable then
 			pl:RemoveStatus("overridemodel", false, true)
 			local deathclass = pl.DeathClass or pl:GetZombieClass()
@@ -270,6 +301,14 @@ if SERVER then
 				end
 			end)
 
+			return true
+		else
+			-- Falldown and get up (second wind)
+			timer.Simple(0, function()
+				if pl:IsValid() then
+					pl:SecondWind()
+				end
+			end)
 			return true
 		end
 
