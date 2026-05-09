@@ -27,9 +27,9 @@ SWEP.UseHands = true
 
 SWEP.ReloadSound = Sound("Weapon_SG552.Clipout")
 SWEP.Primary.Sound = Sound("Weapon_SG552.Single")
-SWEP.Primary.Damage = 12
+SWEP.Primary.Damage = 15
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Delay = 0.135
+SWEP.Primary.Delay = 0.15
 
 SWEP.Primary.ClipSize = 25
 SWEP.Primary.Automatic = true

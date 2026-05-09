@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "'Owens' Handgun"
-SWEP.Description = "Fires two shots per trigger pull. Gains one additional shot per quality tier."
+SWEP.Description = "Gains one additional shot per quality tier."
 
 SWEP.Slot = 1
 SWEP.SlotPos = 0
@@ -27,11 +27,11 @@ SWEP.CSMuzzleFlashes = false
 
 SWEP.ReloadSound = Sound("Weapon_Pistol.Reload")
 SWEP.Primary.Sound = Sound("Weapon_Pistol.NPC_Single")
-SWEP.Primary.Damage = 14
-SWEP.Primary.NumShots = 2
+SWEP.Primary.Damage = 20
+SWEP.Primary.NumShots = 1
 SWEP.Primary.Delay = 0.28
 
-SWEP.Primary.ClipSize = 10
+SWEP.Primary.ClipSize = 8
 SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "pistol"
 SWEP.Primary.ClipMultiplier = 12/10

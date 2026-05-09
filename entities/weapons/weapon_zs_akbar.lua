@@ -26,9 +26,9 @@ SWEP.UseHands = true
 
 SWEP.ReloadSound = Sound("Weapon_AK47.Clipout")
 SWEP.Primary.Sound = Sound("Weapon_AK47.Single")
-SWEP.Primary.Damage = 10
+SWEP.Primary.Damage = 15
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Delay = 0.12
+SWEP.Primary.Delay = 0.15
 
 SWEP.Primary.ClipSize = 30
 SWEP.Primary.Automatic = true
