@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "Meat Hook"
-SWEP.Description = "A culinary hook. Hits cause bleeding. Taking damage spawns a gib. Destroying gibs and kills restore blood armor."
+SWEP.Description = "A culinary hook. Hits cause (30) bleeding damage. Taking damage spawns a gib. Destroying gibs and kills restore blood armor."
 
 if CLIENT then
 	SWEP.ViewModelFlip = false
@@ -26,7 +26,7 @@ SWEP.ViewModel = "models/weapons/c_crowbar.mdl"
 SWEP.WorldModel = "models/props_junk/meathook001a.mdl"
 SWEP.UseHands = true
 
-SWEP.MeleeDamage = 70
+SWEP.MeleeDamage = 80
 SWEP.MeleeRange = 50
 SWEP.MeleeSize = 1.15
 
