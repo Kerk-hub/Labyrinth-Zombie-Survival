@@ -3,7 +3,7 @@ DEFINE_BASECLASS("weapon_zs_basemelee")
 SWEP.Base = "weapon_zs_basemelee"
 
 SWEP.PrintName = "Carpenter's Hammer"
-SWEP.Description = "Eliminates movement speed penalty from carrying props. When your nailed props are destroyed, you recover nails. Higher tiers increase nail and unnail speed and nails recovered. Can nail and unnail props with SECONDARY FIRE and RELOAD."
+SWEP.Description = "Ignore movement speed penalty from carrying props. When your props are destroyed, you recover nails. Higher tiers increase nail and unnail speed and nails recovered."
 
 SWEP.DamageType = DMG_CLUB
 
@@ -21,7 +21,7 @@ SWEP.Secondary.ClipSize = 1
 SWEP.Secondary.DefaultClip = 1
 SWEP.Secondary.Ammo = "dummy"
 
-SWEP.MeleeDamage = 34
+SWEP.MeleeDamage = 95
 SWEP.MeleeRange = 50
 SWEP.MeleeSize = 0.875
 
