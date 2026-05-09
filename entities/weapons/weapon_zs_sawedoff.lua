@@ -73,12 +73,12 @@ SWEP.WalkSpeed = SPEED_SLOWER
 SWEP.ReloadSpeed = 0.6
 SWEP.ReloadDelay = 0.5
 
-GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Splinter' Slug Gun", "Single accurate slug round, less total damage", function(wept)
+--[[GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Splinter' Slug Gun", "Single accurate slug round, less total damage", function(wept)
 	wept.Primary.Damage = wept.Primary.Damage * 5.5
 	wept.Primary.NumShots = 1
 	wept.ConeMin = wept.ConeMin * 0.15
 	wept.ConeMax = wept.ConeMax * 0.3
-end)
+end)]]--
 
 SWEP.ReloadStartActivity = ACT_VM_RELOAD
 SWEP.ReloadActivity = ACT_VM_HOLSTER
