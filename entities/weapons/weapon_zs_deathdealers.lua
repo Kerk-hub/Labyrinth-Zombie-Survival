@@ -1,7 +1,14 @@
 AddCSLuaFile()
 
+
 SWEP.PrintName = "'Deathdealers' Dual Shotguns"
-SWEP.Description = "Dual shotguns with a fast reload. Killing a zombie builds Reaper stacks, increasing damage dealt."
+SWEP.Description = "Dual shotguns with a fast reload. Zombie kills grant a Reaper buff (up to 3 stacks, +10% damage per stack, increased by remantle tier) that refreshes and increases on each kill."
+
+SWEP.QualityDescs = {
+	"+1 max Reaper stack (4 total)",
+	"+2 max Reaper stacks (5 total)",
+	"+3 max Reaper stacks (6 total)",
+}
 
 SWEP.Slot = 1
 SWEP.SlotPos = 0
@@ -77,7 +84,11 @@ function SWEP:OnZombieKilled()
 	if killer:IsValid() then
 		local reaperstatus = killer:GiveStatus("reaper", 14)
 		if reaperstatus and reaperstatus:IsValid() then
-			reaperstatus:SetDTInt(1, math.min(reaperstatus:GetDTInt(1) + 1, 3))
+			local maxStacks = 3
+			if self.QualityTier then
+				maxStacks = 3 + self.QualityTier -- Each remantle tier adds 1 max stack
+			end
+			reaperstatus:SetDTInt(1, math.min(reaperstatus:GetDTInt(1) + 1, maxStacks))
 			killer:EmitSound("hl1/ambience/particle_suck1.wav", 55, 150 + reaperstatus:GetDTInt(1) * 30, 0.45)
 		end
 	end
