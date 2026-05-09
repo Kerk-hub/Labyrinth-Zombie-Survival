@@ -28,7 +28,7 @@ SWEP.ViewModel = "models/weapons/c_crowbar.mdl"
 SWEP.WorldModel = "models/weapons/w_crowbar.mdl"
 SWEP.UseHands = true
 
-SWEP.MeleeDamage = 105
+SWEP.MeleeDamage = 94
 SWEP.MeleeRange = 80
 SWEP.MeleeSize = 1.7
 SWEP.MeleeKnockBack = 300
@@ -49,10 +49,10 @@ SWEP.DismantleDiv = 2
 SWEP.QualityDescs = {
 	"Knockback increased to 400. Collision bounce damage applies.",
 	"Knockback increased to 500. Collision bounce damage applies.",
-	"Knockback increased to 600. Collision bounce damage applies.",
+	"Knockback increased to 700. Collision bounce damage applies.",
 }
 
-local KNOCKBACK = {300, 400, 500, 600}
+local KNOCKBACK = {300, 400, 500, 700}
 
 function SWEP:Initialize()
 	BaseClass.Initialize(self)
@@ -87,8 +87,8 @@ function SWEP:PostOnMeleeHit(hitent, hitflesh, tr)
 	hitent.m_BroomBounce = {
 		owner     = owner,
 		weapon    = self,
-		damage    = self.MeleeDamage,
-		expiry    = CurTime() + 1,
+		damage    = (self.MeleeDamage * 0.5),
+		expiry    = CurTime() + 2,
 		prevhspeed = Vector(vel.x, vel.y, 0):Length(),
 	}
 end
