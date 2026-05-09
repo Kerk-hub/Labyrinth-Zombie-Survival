@@ -31,7 +31,8 @@ function ENT:Think()
 		self.HealCarryOver = self.HealCarryOver + FrameTime() * self:GetReviveHeal()
 		if self.HealCarryOver >= 1 then
 			local toheal = math.floor(self.HealCarryOver)
-			owner:SetHealth(math.min(owner:GetMaxHealth(), owner:Health() + toheal))
+			local maxhealth = owner:GetMaxHealth() or 100
+			owner:SetHealth(math.min(maxhealth, owner:Health() + toheal))
 			self.HealCarryOver = self.HealCarryOver - toheal
 		end
 	end
