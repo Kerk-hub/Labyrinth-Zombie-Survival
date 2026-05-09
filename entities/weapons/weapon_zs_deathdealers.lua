@@ -112,30 +112,11 @@ end
 function SWEP:SecondaryAttack()
 end
 
+
 function SWEP:Reload()
-	local owner = self:GetOwner()
-	if owner:IsHolding() or not self:CanReload() then return end
-
-	if SERVER then
-		for i=1,2 do
-			local ent = ents.Create("prop_fakeweapon")
-			if ent:IsValid() then
-				ent:SetOwner(owner)
-				ent:SetWeaponType(self:GetClass())
-				local pos = owner:EyePos() + owner:EyeAngles():Right() * (i == 1 and 8 or -8)
-				ent:SetPos(pos)
-				ent:SetAngles(VectorRand():Angle())
-				ent:Spawn()
-				local phys = ent:GetPhysicsObject()
-				if phys:IsValid() then
-					phys:AddAngleVelocity(Vector(math.Rand(-420, 420), math.Rand(-420, 420), math.Rand(-420, 420)))
-					phys:ApplyForceCenter(phys:GetMass() * owner:GetAimVector() * math.random(64, 128))
-				end
-			end
-		end
-	end
-
-	self.BaseClass.Reload(self)
+   local owner = self:GetOwner()
+   if owner:IsHolding() or not self:CanReload() then return end
+   self.BaseClass.Reload(self)
 end
 
 function SWEP:SendWeaponAnimation()
