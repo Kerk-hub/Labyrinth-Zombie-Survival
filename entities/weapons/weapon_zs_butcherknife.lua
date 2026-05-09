@@ -2,7 +2,7 @@ AddCSLuaFile()
 DEFINE_BASECLASS("weapon_zs_basemelee")
 
 SWEP.PrintName = "Butcher Knife"
-SWEP.Description = "A culinary cleaver. Hits build attack speed up to a cap. Kills and gib destruction restore blood armor."
+SWEP.Description = "A culinary cleaver. Hits build 2% attack speed up 20%. Kills and gib destruction restore blood armor."
 
 if CLIENT then
 	SWEP.ViewModelFOV = 55
@@ -49,13 +49,13 @@ SWEP.Tier = 2
 SWEP.AllowQualityWeapons = true
 SWEP.Culinary = true
 SWEP.QualityDescs = {
+	"Each hit adds 3% attack speed, capped at 30%. Resets after 2s without a hit.",
 	"Each hit adds 5% attack speed, capped at 50%. Resets after 2s without a hit.",
-	"Each hit adds 10% attack speed, capped at 100%. Resets after 2s without a hit.",
-	"Each hit adds 15% attack speed, capped at 150%. Resets after 2s without a hit.",
+	"Each hit adds 10% attack speed, capped at 100%. Resets after 2s without a hit."
 }
 
-local STACK_PER_HIT = {0.03, 0.05, 0.10, 0.15}
-local STACK_CAP    = {0.30, 0.50, 1.00, 1.50}
+local STACK_PER_HIT = {0.02, 0.03, 0.05, 0.10}
+local STACK_CAP    = {0.20, 0.30, 0.50, 1.00}
 local RESET_TIME   = 2
 
 function SWEP:SetSpeedStack(v)
