@@ -36,7 +36,7 @@ SWEP.UseHands = true
 
 SWEP.ReloadSound = Sound("Weapon_AWP.ClipOut")
 SWEP.Primary.Sound = Sound("Weapon_Hunter.Single")
-SWEP.Primary.Damage = 160
+SWEP.Primary.Damage = 100
 SWEP.Primary.NumShots = 1
 SWEP.Primary.Delay = 0.3
 SWEP.ReloadDelay = SWEP.Primary.Delay
@@ -59,20 +59,44 @@ SWEP.IronSightsAng = Vector(0, 0, 0)
 
 SWEP.WalkSpeed = SPEED_SLOWER
 
+
 SWEP.TracerName = "AR2Tracer"
 
-GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Hunter' Detonator Rifle", "Overkill explosion has a larger radius and transfers 50% more excess damage", function(wept)
-	wept.ExplosionRadius = 128
-	wept.ExplosionOverkillMult = 1.5
-end)
+
+-- Overkill explosion scales with remantle tier (base ability)
+SWEP.Description = "Single-shot bolt-action rifle. Overkill damage is released as an explosion on kill. Each remantle tier increases explosion radius (+32 units) and overkill damage (+25%)."
+
+SWEP.QualityDescs = {
+	"Explosion radius 104; overkill damage multiplier 1.25",
+	"Explosion radius 136; overkill damage multiplier 1.5",
+	"Explosion radius 168; overkill damage multiplier 1.75"
+}
+
+function SWEP:GetExplosionStats()
+    local base_radius = 72
+    local base_mult = 1
+    local tier = 0
+    if self.GetWeaponRemantleTier then
+        tier = self:GetWeaponRemantleTier()
+    end
+    local radius = base_radius + 32 * tier
+    local mult = base_mult + 0.25 * tier
+    return radius, mult
+end
+
 
 function SWEP:OnZombieKilled(zombie, total, dmginfo)
 	local killer = self:GetOwner()
 	local minushp = -zombie:Health()
 	if killer:IsValid() and minushp > 10 then
 		local pos = zombie:GetPos()
-		local radius = self.ExplosionRadius or 72
-		local mult = self.ExplosionOverkillMult or 1
+		local radius, mult = 72, 1
+		if self.GetExplosionStats then
+			radius, mult = self:GetExplosionStats()
+		elseif self.ExplosionRadius or self.ExplosionOverkillMult then
+			radius = self.ExplosionRadius or 72
+			mult = self.ExplosionOverkillMult or 1
+		end
 		timer.Simple(0.15, function()
 			util.BlastDamagePlayer(killer:GetActiveWeapon(), killer, pos, radius, minushp * mult, DMG_ALWAYSGIB, 0.94)
 		end)
