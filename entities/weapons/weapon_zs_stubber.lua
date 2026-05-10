@@ -49,13 +49,13 @@ SWEP.IronSightsAng = Vector(0, 0, 0)
 
 SWEP.WalkSpeed = SPEED_SLOW
 
-GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Prodder' Rifle", "Slightly more headshot damage and zoom, half clip and increased fire delay", function(wept)
+--[[GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Prodder' Rifle", "Slightly more headshot damage and zoom, half clip and increased fire delay", function(wept)
 	wept.HeadshotMulti = 3.6
 	wept.Primary.ClipSize = math.ceil(wept.Primary.ClipSize / 2)
 	wept.Primary.Delay = wept.Primary.Delay * 1.7
 
 	wept.IronsightsMultiplier = 0.15
-end)
+end)]]--
 
 function SWEP:IsScoped()
 	return self:GetIronsights() and self.fIronTime and self.fIronTime + 0.25 <= CurTime()
