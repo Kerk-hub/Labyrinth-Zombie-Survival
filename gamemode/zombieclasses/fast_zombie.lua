@@ -10,11 +10,23 @@ CLASS.Model = Model("models/player/zombie_fast.mdl")
 CLASS.Wave = 2 / 6
 CLASS.Revives = true
 
-CLASS.Health = 150
+CLASS.BaseHealth = 150
+CLASS.HealthPerTier = 50
+CLASS.Health = CLASS.BaseHealth
 CLASS.Speed = 255
 CLASS.SWEP = "weapon_zs_fastzombie"
 
-CLASS.Points = CLASS.Health/GM.NoHeadboxZombiePointRatio
+
+CLASS.Points = (CLASS.BaseHealth or 150)/GM.NoHeadboxZombiePointRatio
+
+function CLASS:GetTier()
+	local wave = GAMEMODE and GAMEMODE.GetWave and GAMEMODE:GetWave() or 1
+	return math.Clamp(wave, 1, 5)
+end
+
+function CLASS:GetScaledHealth()
+	return self.BaseHealth + (self:GetTier() - 1) * self.HealthPerTier
+end
 
 CLASS.CanTaunt = true
 
