@@ -3,7 +3,7 @@ CLASS.TranslationName = "class_fast_zombie"
 CLASS.Description = "description_fast_zombie"
 CLASS.Help = "controls_fast_zombie"
 
-CLASS.BetterVersion = "Lacerator"
+--CLASS.BetterVersion = "Lacerator"
 
 CLASS.Model = Model("models/player/zombie_fast.mdl")
 

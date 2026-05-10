@@ -50,7 +50,7 @@ function SWEP:Think()
 	end
 
 	if self:GetClimbing() then
-		if self:GetClimbSurface() and owner:KeyDown(IN_ATTACK2) then
+		if self:GetClimbSurface() and owner:KeyDown(IN_SPEED) then
 			if curtime >= self.NextClimbSound and IsFirstTimePredicted() then
 				local speed = owner:GetVelocity():LengthSqr()
 				if speed >= 2500 then
@@ -68,9 +68,8 @@ function SWEP:Think()
 		end
 	end
 
-	-- Pounce (Leap/Dash) on Shift (IN_SPEED)
 	if not self:IsPouncing() and not self:IsClimbing() and self:GetPounceTime() <= 0 then
-		if owner:KeyDown(IN_SPEED) and owner:IsOnGround() then
+		if owner:KeyDown(IN_ATTACK2) and owner:IsOnGround() then
 			if CurTime() >= self:GetNextPrimaryFire() and CurTime() >= self:GetNextSecondaryFire() and CurTime() >= (self.NextAllowPounce or 0) then
 				self:SetNextPrimaryFire(math.huge)
 				self:SetPounceTime(CurTime() + self.PounceStartDelay)

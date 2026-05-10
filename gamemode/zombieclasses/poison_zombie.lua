@@ -3,7 +3,7 @@ CLASS.TranslationName = "class_poison_zombie"
 CLASS.Description = "description_poison_zombie"
 CLASS.Help = "controls_poison_zombie"
 
-CLASS.BetterVersion = "Wild Poison Zombie"
+--CLASS.BetterVersion = "Wild Poison Zombie"
 
 CLASS.Model = Model("models/Zombie/Poison.mdl")
 
