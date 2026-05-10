@@ -3,11 +3,8 @@ INC_SERVER()
 ENT.DieTime = 0
 
 function ENT:Initialize()
-	self.ObjHealth = 25
-
-	if self.DieTime == 0 then
-		self.DieTime = CurTime() + GAMEMODE.GibLifeTime
-	end
+	       self.ObjHealth = 25
+	       self.DieTime = CurTime() + (GAMEMODE.GibLifeTime or 10)
 
 	local modelid
 	if self.m_GibType then

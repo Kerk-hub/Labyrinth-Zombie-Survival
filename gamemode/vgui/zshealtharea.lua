@@ -201,7 +201,8 @@ local function ContentsPaint(self, w, h)
 		end
 
 		local health = math.max(lp:Health(), 0)
-		local healthperc = math.Clamp(health / lp:GetMaxHealthEx(), 0, 1)
+		local maxHealth = lp:GetMaxHealthEx() or 1
+		local healthperc = math.Clamp(health / maxHealth, 0, 1)
 		local wid, hei = 320 * screenscale, 44 * screenscale
 
 		colHealth.r = 110
@@ -229,7 +230,8 @@ local function ContentsPaint(self, w, h)
 		surface.DrawTexturedRect(x + 2 + subwidth - 6, y + 1 - hei/2, 4, hei * 2)
 
 		local phantomhealth = math.max(lp:GetPhantomHealth(), 0)
-		healthperc = math.Clamp(phantomhealth / lp:GetMaxHealthEx(), 0, 1)
+		local maxHealth = lp:GetMaxHealthEx() or 1
+		healthperc = math.Clamp(phantomhealth / maxHealth, 0, 1)
 
 		colHealth.r = 100
 		colHealth.g = 90
@@ -247,7 +249,7 @@ local function ContentsPaint(self, w, h)
 				y = 148 * screenscale
 				wid, hei = 260 * screenscale, 30 * screenscale
 
-				healthperc = math.Clamp(bloodarmor / (lp.MaxBloodArmor or 10), 0, 1)
+				   healthperc = math.Clamp(bloodarmor / (lp.MaxBloodArmor or 10), 0, 1)
 				colHealth.r = 50 + healthperc * 205
 				colHealth.g = 0
 				colHealth.b = (1 - healthperc) * 50
