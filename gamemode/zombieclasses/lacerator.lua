@@ -13,6 +13,8 @@ CLASS.Wave = 4 / 6
 CLASS.Health = 225
 CLASS.Speed = 270
 CLASS.SWEP = "weapon_zs_lacerator"
+CLASS.Hidden = true
+CLASS.Disabled = true
 
 CLASS.Hull = {Vector(-16, -16, 0), Vector(16, 16, 58)}
 CLASS.HullDuck = {Vector(-16, -16, 0), Vector(16, 16, 32)}

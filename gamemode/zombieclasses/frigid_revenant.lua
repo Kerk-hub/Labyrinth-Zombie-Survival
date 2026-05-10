@@ -11,7 +11,8 @@ CLASS.Wave = 4 / 6
 
 CLASS.Health = 300
 CLASS.Speed = 180
-
+CLASS.Hidden = true
+CLASS.Disabled = true
 CLASS.Points = CLASS.Health/GM.HumanoidZombiePointRatio
 
 CLASS.ResistFrost = true

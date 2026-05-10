@@ -9,7 +9,8 @@ CLASS.Model = Model("models/player/corpse1.mdl")
 CLASS.OverrideModel = Model("models/player/skeleton.mdl")
 
 CLASS.CanTaunt = true
-
+CLASS.Hidden = true
+CLASS.Disabled = true
 CLASS.SWEP = "weapon_zs_shadowwalker"
 
 CLASS.Wave = 2 / 6

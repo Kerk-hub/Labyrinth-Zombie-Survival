@@ -15,7 +15,8 @@ CLASS.SWEP = "weapon_zs_skeletallurker"
 
 CLASS.Wave = 2 / 6
 CLASS.Unlocked = false
-CLASS.Hidden = false
+CLASS.Hidden = true
+CLASS.Disabled = true
 
 CLASS.Health = 75
 CLASS.Speed = 155

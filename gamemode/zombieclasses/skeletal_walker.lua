@@ -9,6 +9,8 @@ CLASS.Health = 100
 CLASS.Speed = 150
 
 CLASS.CanTaunt = true
+CLASS.Hidden = true
+CLASS.Disabled = true
 
 CLASS.Points = CLASS.Health/GM.SkeletonPointRatio
 

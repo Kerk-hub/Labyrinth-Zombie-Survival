@@ -12,6 +12,9 @@ CLASS.BetterVersion = "Noxious Ghoul"
 CLASS.Health = 190
 CLASS.Speed = 165
 
+CLASS.Hidden = true
+CLASS.Disabled = true
+
 CLASS.Points = CLASS.Health/GM.HumanoidZombiePointRatio
 
 CLASS.SWEP = "weapon_zs_elderghoul"

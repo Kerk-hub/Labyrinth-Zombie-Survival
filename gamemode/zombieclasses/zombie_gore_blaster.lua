@@ -9,6 +9,8 @@ CLASS.BetterVersion = "Chem Burster"
 
 CLASS.Wave = 0
 CLASS.Unlocked = true
+CLASS.Hidden = true
+CLASS.Disabled = true
 
 CLASS.Health = 220
 CLASS.Speed = 180

@@ -15,7 +15,8 @@ CLASS.SWEP = "weapon_zs_shadowlurker"
 
 CLASS.Wave = 2 / 6
 CLASS.Unlocked = false
-CLASS.Hidden = false
+CLASS.Hidden = true
+CLASS.Disabled = true
 
 CLASS.Health = 165
 CLASS.Speed = 160

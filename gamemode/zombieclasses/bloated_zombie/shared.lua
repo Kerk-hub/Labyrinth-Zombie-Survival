@@ -5,9 +5,31 @@ CLASS.Help = "controls_bloated_zombie"
 
 CLASS.BetterVersion = "Vile Bloated Zombie"
 
-CLASS.Wave = 2 / 6
+CLASS.Wave = 0
 
-CLASS.Health = 325
+CLASS.BaseHealth = 300
+CLASS.HealthPerTier = 150
+CLASS.BaseSpeed = 140
+CLASS.Speed = CLASS.BaseSpeed
+
+-- Health scaling per wave
+CLASS.GetMaxZombieHealth = function(self)
+	return self:GetScaledHealth()
+end
+CLASS.Health = CLASS.BaseHealth
+if GAMEMODE and GAMEMODE.GetWave then
+	CLASS.Health = CLASS.BaseHealth + (math.Clamp(GAMEMODE:GetWave(), 1, 5) - 1) * CLASS.HealthPerTier
+end
+CLASS.Points = (CLASS.BaseHealth or 300)/GM.HumanoidZombiePointRatio
+
+function CLASS:GetTier()
+	local wave = GAMEMODE and GAMEMODE.GetWave and GAMEMODE:GetWave() or 1
+	return math.Clamp(wave, 1, 5)
+end
+
+function CLASS:GetScaledHealth()
+	return self.BaseHealth + (self:GetTier() - 1) * self.HealthPerTier
+end
 CLASS.Speed = 125
 --CLASS.JumpPower = DEFAULT_JUMP_POWER * 0.811
 CLASS.Mass = DEFAULT_MASS * 2

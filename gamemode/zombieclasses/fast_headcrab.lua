@@ -17,6 +17,8 @@ CLASS.JumpPower = 100
 
 CLASS.NoFallDamage = true
 CLASS.NoFallSlowdown = true
+CLASS.Hidden = true
+CLASS.Disabled = true
 
 CLASS.Points = CLASS.Health/GM.HeadcrabZombiePointRatio
 
