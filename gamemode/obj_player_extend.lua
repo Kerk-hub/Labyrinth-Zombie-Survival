@@ -1037,8 +1037,10 @@ function meta:NearestRemantler()
 	return remantler
 end
 
+
 function meta:GetMaxZombieHealth()
-	return self:GetZombieClassTable().Health
+	-- Health scaling removed: always return base class health, no scaling or bonus
+	return self:GetZombieClassTable().BaseHealth or self:GetZombieClassTable().Health
 end
 
 local oldmaxhealth = FindMetaTable("Entity").GetMaxHealth
