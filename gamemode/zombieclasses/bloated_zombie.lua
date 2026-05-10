@@ -43,25 +43,53 @@ function CLASS:GetTierColor()
     return Color(math.Clamp(baseColor.r * redScale, 0, 255), baseColor.g, baseColor.b)
 end
 
-if SERVER then
-    function CLASS:OnKilled(pl, attacker, inflictor, suicide, headshot, dmginfo)
-        -- Spew 5 puke projectiles in facing direction
-        local ang = pl:EyeAngles()
-        local pos = pl:GetShootPos()
-        for i = 1, 5 do
+
+-- Poison projectile logic adapted from Pukepuss
+local function CreateFlesh(pl, damage, damagepos, damagedir)
+    damage = math.min(damage, 300)
+    pl:EmitSound(string.format("physics/body/body_medium_break%d.wav", math.random(2, 4)), 74, 125 - damage * 0.50)
+    if SERVER then
+        damagepos = pl:LocalToWorld(damagepos)
+        for i=1, math.max(1, math.floor(damage / 12)) do
             local ent = ents.Create("projectile_puke")
             if ent:IsValid() then
-                ent:SetPos(pos)
-                local spread = Angle(0, (i-3)*8, 0)
-                ent:SetAngles(ang + spread)
+                local heading = (damagedir + VectorRand() * 0.3):GetNormalized()
+                ent:SetPos(damagepos + heading)
                 ent:SetOwner(pl)
                 ent:Spawn()
                 local phys = ent:GetPhysicsObject()
                 if phys:IsValid() then
-                    phys:SetVelocity((ang:Forward() + VectorRand() * 0.1):GetNormalized() * 400)
+                    phys:Wake()
+                    phys:SetVelocityInstantaneous(math.min(325, 100 + damage ^ math.Rand(1.15, 1.25)) * heading)
                 end
             end
         end
+    end
+end
+
+function CLASS:ProcessDamage(pl, dmginfo)
+    local attacker, damage = dmginfo:GetAttacker(), dmginfo:GetDamage()
+    if attacker ~= pl and damage >= 5 and damage < pl:Health() and CurTime() >= (pl.m_NextPukeEmit or 0) then
+        pl.m_NextPukeEmit = CurTime() + 0.3
+        local pos = pl:WorldToLocal(dmginfo:GetDamagePosition())
+        local norm = dmginfo:GetDamageForce():GetNormalized() * -1
+        timer.Simple(0, function()
+            if pl:IsValid() then
+                CreateFlesh(pl, damage, pos, norm)
+            end
+        end)
+    end
+end
+
+if SERVER then
+    function CLASS:OnKilled(pl, attacker, inflictor, suicide, headshot, dmginfo, assister)
+        local pos = pl:WorldToLocal(dmginfo:GetDamagePosition())
+        local norm = dmginfo:GetDamageForce():GetNormalized() * -1
+        timer.Simple(0, function()
+            if pl:IsValid() then
+                CreateFlesh(pl, 300, pos, norm)
+            end
+        end)
     end
 end
 
