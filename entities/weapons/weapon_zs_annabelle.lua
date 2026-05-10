@@ -27,9 +27,9 @@ SWEP.UseHands = true
 SWEP.CSMuzzleFlashes = false
 
 SWEP.Primary.Sound = Sound("Weapon_Shotgun.Single")
-SWEP.Primary.Damage = 38
+SWEP.Primary.Damage = 70
 SWEP.Primary.NumShots = 1
-SWEP.Primary.Delay = 0.38
+SWEP.Primary.Delay = 0.7
 
 SWEP.ReloadDelay = 0.4
 
@@ -50,12 +50,12 @@ SWEP.WalkSpeed = SPEED_NORMAL
 SWEP.PhaseEndTime = 0
 SWEP.PhaseCooldown = 0
 
-GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Annabelle' Birdshot Rifle", "Fires a spread of less accurate shots that deal more total damage", function(wept)
+--[[GAMEMODE:AddNewRemantleBranch(SWEP, 1, "'Annabelle' Birdshot Rifle", "Fires a spread of less accurate shots that deal more total damage", function(wept)
 	wept.Primary.Damage = wept.Primary.Damage / 5
 	wept.Primary.NumShots = 6
 	wept.ConeMin = 4
 	wept.ConeMax = 8
-end)
+end)]]--
 
 function SWEP:IsPhasing()
 	return CurTime() < self.PhaseEndTime
