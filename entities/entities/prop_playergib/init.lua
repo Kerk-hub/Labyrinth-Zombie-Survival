@@ -83,7 +83,7 @@ function ENT:OnTakeDamage(dmginfo)
 end
 
 function ENT:Think()
-	if self.DieTime >= 0 and self.DieTime <= CurTime() then
+	if self.DieTime and self.DieTime >= 0 and self.DieTime <= CurTime() then
 		self:Remove()
 	end
 end
