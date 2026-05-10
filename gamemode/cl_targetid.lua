@@ -28,16 +28,23 @@ function GM:DrawTargetID(ent, fade)
 	draw.SimpleTextBlur(name, "ZSHUDFontSmaller", x, y, colTemp, TEXT_ALIGN_CENTER)
 	y = y + draw.GetFontHeight("ZSHUDFontSmaller") + 3
 
-	local healthfraction = math_max(ent:Health() / (ent:Team() == TEAM_UNDEAD and ent:GetMaxZombieHealth() or ent:GetMaxHealth()), 0)
-	if healthfraction ~= 1 then
-		util.ColorCopy(0.75 <= healthfraction and COLOR_HEALTHY or 0.5 <= healthfraction and COLOR_SCRATCHED or 0.25 <= healthfraction and COLOR_HURT or COLOR_CRITICAL, colTemp)
+	   local health = ent.Health and ent:Health() or 0
+	   local maxhealth = 1
+	   if ent.Team and ent:Team() == TEAM_UNDEAD and ent.GetMaxZombieHealth then
+		   maxhealth = ent:GetMaxZombieHealth() or 1
+	   elseif ent.GetMaxHealth then
+		   maxhealth = ent:GetMaxHealth() or 1
+	   end
+	   local healthfraction = math_max(health / maxhealth, 0)
+	   if healthfraction ~= 1 then
+		   util.ColorCopy(0.75 <= healthfraction and COLOR_HEALTHY or 0.5 <= healthfraction and COLOR_SCRATCHED or 0.25 <= healthfraction and COLOR_HURT or COLOR_CRITICAL, colTemp)
 
-		local hptxt = self.HealthTargetDisplay == 1 and math_ceil(ent:Health()).." HP" or math_ceil(healthfraction * 100).."%"
+		   local hptxt = self.HealthTargetDisplay == 1 and math_ceil(health).." HP" or math_ceil(healthfraction * 100).."%"
 
-		draw.SimpleTextBlur(hptxt, "ZSHUDFont", x, y, colTemp, TEXT_ALIGN_CENTER)
-		y = y + draw.GetFontHeight("ZSHUDFont") + 3
+		   draw.SimpleTextBlur(hptxt, "ZSHUDFont", x, y, colTemp, TEXT_ALIGN_CENTER)
+		   y = y + draw.GetFontHeight("ZSHUDFont") + 3
 
-		if self.MedicalAura then
+		   if self.MedicalAura then
 			if ent:GetDTBool(DT_PLAYER_BOOL_FRAIL) then
 				util.ColorCopy(COLOR_LBLUE, colTemp)
 				draw.SimpleTextBlur("(FRAIL)", "ZSHUDFontSmaller", x, y, colTemp, TEXT_ALIGN_CENTER)
