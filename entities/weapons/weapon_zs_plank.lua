@@ -2,7 +2,7 @@ AddCSLuaFile()
 DEFINE_BASECLASS("weapon_zs_basemelee")
 
 SWEP.PrintName = "Plank"
-SWEP.Description = "A plank of wood that builds momentum with each strike. Hits on zombies increase both attack speed and movement speed. Resets after a short pause. Right click to perform an extra jump (7s cooldown)."
+SWEP.Description = "A plank of wood that builds momentum with each strike. Right click to perform an extra jump (7s cooldown)."
 
 if CLIENT then
 	SWEP.ViewModelFOV = 55
