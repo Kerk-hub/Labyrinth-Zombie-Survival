@@ -1,5 +1,5 @@
 SWEP.PrintName = "Medic Cloud Bomb"
-SWEP.Description = "Explodes in to a cloud of healing gas. Heals 2HP, every second, for 10 seconds."
+SWEP.Description = "Explodes into a cloud of healing gas. Heals 4HP, every second, for 10 seconds."
 
 SWEP.Base = "weapon_zs_basethrown"
 
