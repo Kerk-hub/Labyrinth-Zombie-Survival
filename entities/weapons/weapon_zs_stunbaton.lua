@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "Stun Baton"
-SWEP.Description = "This baton has the ability to slow zombies and it gains +25% extra points. Hitting a zombie temporarily reduces the attack cooldown of all zappers you own by 30%, refreshed on each hit."
+SWEP.Description = "A baton that slows zombies and gains +25% extra points. Hitting a zombie temporarily reduces the attack cooldown of zappers you own by 30%, refreshed on each hit."
 
 SWEP.QualityDescs = {
 	"Increases zapper haste to 40%",
