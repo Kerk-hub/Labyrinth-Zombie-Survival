@@ -1,5 +1,5 @@
 SWEP.PrintName = "Frotchet"
-SWEP.Description = "An axe made from frost that cleaves through multiple zombies. Secondary attack unleashes a powerful swing. Upgrade to unlock a frost explosion when aimed at the ground - grows larger and more damaging each tier."
+SWEP.Description = "An axe that cleaves multiple zombies. Secondary attack unleashes a powerful swing. Upgrade to unlock a frost explosion when aimed at the ground."
 
 SWEP.Base = "weapon_zs_basemelee"
 
