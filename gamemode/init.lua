@@ -4985,7 +4985,7 @@ function GM:PlayerSpawn(pl)
 				health = health(classtab)
 			end
 			if not health or type(health) ~= "number" then
-				health = 100 -- fallback default
+				health = 300 -- fallback default
 			end
 			pl:SetHealth(health * healthmulti)
 		end
