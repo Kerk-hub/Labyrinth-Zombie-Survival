@@ -1,5 +1,5 @@
 SWEP.PrintName = "Great Scythe"
-SWEP.Description = "A great scythe that cleaves through multiple zombies. Has a 3 hit combo, the last hit deals extra damage (+35%). Zombie kills grant a Reaper buff (+8% damage) that refreshes on each kill."
+SWEP.Description = "A scythe that cleaves multiple zombies. Has a 3 hit combo, the last hit deals extra damage (+35%). Zombie kills grant a Reaper buff (+8% damage), refreshes on each kill."
 
 SWEP.Base = "weapon_zs_basemelee"
 
