@@ -3,7 +3,7 @@ AddCSLuaFile()
 SWEP.Base = "weapon_zs_fists"
 
 SWEP.PrintName = "Power Fists"
-SWEP.Description = "A pair of power fists. They are slower than conventional fist combat, but pack a hefty pulse powered punch. Every 4 seconds the next punch is supercharged, dealing explosive damage and knocking back all nearby zombies."
+SWEP.Description = "A pair of power fists. Every 4 seconds the next punch is supercharged, dealing explosive damage and knocking back nearby zombies."
 
 if CLIENT then
 	SWEP.ViewModelFOV = 65
