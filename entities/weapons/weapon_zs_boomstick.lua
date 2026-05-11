@@ -10,7 +10,7 @@ SWEP.QualityDescs = {
 SWEP.Base = "weapon_zs_baseshotgun"
 
 SWEP.PrintName = "Boom Stick"
-SWEP.Description = "Fires one shell per shot with powerful self-knockback. Remantle path: +1 shell per tier (up to 4). More shells = more damage and knockback."
+SWEP.Description = "Fires one shell per shot with powerful self-knockback. Remantle path: +1 shell per tier (up to 4)."
 SWEP.Slot = 1
 
 if CLIENT then
