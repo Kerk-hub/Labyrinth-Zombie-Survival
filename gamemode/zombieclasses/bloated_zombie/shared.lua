@@ -6,6 +6,7 @@ CLASS.Help = "controls_bloated_zombie"
 CLASS.BetterVersion = "Vile Bloated Zombie"
 
 CLASS.Wave = 0
+CLASS.Unlocked = true
 
 CLASS.BaseHealth = 300
 CLASS.HealthPerTier = 150
