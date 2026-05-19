@@ -1,3 +1,5 @@
+-- Track previous Shift key state for climbing
+SWEP._PrevShiftDown = false
 AddCSLuaFile()
 
 DEFINE_BASECLASS("weapon_zs_zombie")
@@ -6,6 +8,7 @@ SWEP.PrintName = "Fast Zombie"
 
 SWEP.ViewModel = Model("models/weapons/v_fza.mdl")
 SWEP.WorldModel = ""
+
 
 if CLIENT then
 	SWEP.ViewModelFOV = 70
@@ -37,6 +40,7 @@ SWEP.Secondary.Automatic = false
 
 SWEP.NextClimbSound = 0
 SWEP.NextAllowPounce = 0
+
 function SWEP:Think()
 	BaseClass.Think(self)
 
@@ -45,12 +49,23 @@ function SWEP:Think()
 
 	if self.NextAllowJump and self.NextAllowJump <= curtime then
 		self.NextAllowJump = nil
-
 		owner:ResetJumpPower()
 	end
 
+	-- Detect Shift key press (key down event)
+	local shiftDown = owner:KeyDown(IN_SPEED)
+	if shiftDown and not self._PrevShiftDown and not self:GetClimbing() and not self:IsPouncing() and self:GetPounceTime() <= 0 then
+		if self:GetClimbSurface() then
+			self:StartClimbing()
+		end
+	end
+	self._PrevShiftDown = shiftDown
+
+	-- While climbing, stop if Shift is released or wall is lost
 	if self:GetClimbing() then
-		if self:GetClimbSurface() and owner:KeyDown(IN_SPEED) then
+		if not shiftDown or not self:GetClimbSurface() then
+			self:StopClimbing()
+		else
 			if curtime >= self.NextClimbSound and IsFirstTimePredicted() then
 				local speed = owner:GetVelocity():LengthSqr()
 				if speed >= 2500 then
@@ -59,14 +74,13 @@ function SWEP:Think()
 					else
 						self.NextClimbSound = curtime + 0.8
 					end
-
-					self:PlayClimbSound()
 				end
+				self:PlayClimbSound()
 			end
-		else
-			self:StopClimbing()
 		end
 	end
+	-- MISSING END FIXED
+
 
 	if not self:IsPouncing() and not self:IsClimbing() and self:GetPounceTime() <= 0 then
 		if owner:KeyDown(IN_ATTACK2) and owner:IsOnGround() then
@@ -371,13 +385,9 @@ function SWEP:GetClimbSurface()
 end
 
 function SWEP:SecondaryAttack()
-	if self:IsPouncing() or self:IsClimbing() or self:GetPounceTime() > 0 then return end
-
-	-- Only climbing on Mouse 2
-	if self:GetClimbSurface() then
-		self:StartClimbing()
-	end
+	-- No longer used for climbing, so do nothing or keep for future use
 end
+
 
 function SWEP:StartClimbing()
 	if self:GetClimbing() then return end
