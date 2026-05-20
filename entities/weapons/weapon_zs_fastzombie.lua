@@ -66,6 +66,11 @@ function SWEP:Think()
 		if not shiftDown or not self:GetClimbSurface() then
 			self:StopClimbing()
 		else
+			-- Always keep player 20 units away from the wall while climbing
+			local tr = self:GetClimbSurface()
+			if tr and tr.Hit and tr.HitNormal then
+				owner:SetPos(tr.HitPos + tr.HitNormal * 10)
+			end
 			if curtime >= self.NextClimbSound and IsFirstTimePredicted() then
 				local speed = owner:GetVelocity():LengthSqr()
 				if speed >= 2500 then
