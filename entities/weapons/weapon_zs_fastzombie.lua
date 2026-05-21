@@ -364,8 +364,8 @@ function SWEP:GetClimbSurface()
 	local height = owner:OBBMaxs().z
 	local tr
 	local ha
-	-- Start at 25 units above feet to avoid climbing short walls/ramps
-	for i=20, height, 5 do
+	-- Start at i units above feet to avoid climbing short walls/ramps
+	for i=23, height, 5 do
 		if not tr or not tr.Hit then
 			climbtrace.start = pos + up * i
 			climbtrace.endpos = climbtrace.start + fwd * 36
@@ -422,6 +422,14 @@ function SWEP:StopClimbing()
 	if not self:GetClimbing() then return end
 
 	self:SetClimbing(false)
+
+	-- Give a small upward boost when climbing ends
+	local owner = self:GetOwner()
+	if owner and owner:IsValid() then
+		local vel = owner:GetVelocity()
+		vel.z = math.max(vel.z, 180) -- Set upward velocity to at least 180 units/sec
+		owner:SetVelocity(Vector(0, 0, vel.z))
+	end
 
 	self:SetNextSecondaryFire(CurTime())
 end
