@@ -1,3 +1,32 @@
+-- Movement override for climbing
+function SWEP:Move(mv)
+	if self:GetClimbing() then
+		mv:SetMaxSpeed(0)
+		mv:SetMaxClientSpeed(0)
+		local owner = self:GetOwner()
+		local tr = self:GetClimbSurface()
+		local angs = owner:EyeAngles()
+		local dir = tr and tr.Hit and (tr.HitNormal.z <= -0.5 and (angs:Forward() * -1) or math.abs(tr.HitNormal.z) < 0.75 and tr.HitNormal:Angle():Up()) or Vector(0, 0, 1)
+		local vel = Vector(0, 0, 4)
+		if owner:KeyDown(IN_FORWARD) then
+			owner:SetGroundEntity(nil)
+			vel = vel + dir * 150
+		end
+		if owner:KeyDown(IN_BACK) then
+			vel = vel + dir * -150
+		end
+		if vel.z == 4 then
+			if owner:KeyDown(IN_MOVERIGHT) then
+				vel = vel + angs:Right() * 150
+			end
+			if owner:KeyDown(IN_MOVELEFT) then
+				vel = vel + angs:Right() * -150
+			end
+		end
+		mv:SetVelocity(vel)
+		return true
+	end
+end
 SWEP.ZombieOnly = true
 SWEP.IsMelee = true
 
@@ -25,6 +54,34 @@ SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = -1
 SWEP.Secondary.Automatic = true
 SWEP.Secondary.Ammo = "none"
+
+function SWEP:GetMoanHealth()
+	return self:GetDTInt(1)
+end
+
+function SWEP:SetMoanHealth(health)
+	self:SetDTInt(1, health)
+end
+
+function SWEP:GetSwingEndTime()
+	return self:GetDTFloat(0)
+end
+
+function SWEP:SetSwingEndTime(time)
+	self:SetDTFloat(0, time)
+end
+
+function SWEP:GetSwingEndTime()
+	return self:GetDTFloat(0)
+end
+
+function SWEP:SetSwingEndTime(time)
+	self:SetDTFloat(0, time)
+end
+
+function SWEP:IsMoaning()
+	return self:GetDTBool(0)
+end
 
 function SWEP:StopMoaningSound()
 	local owner = self:GetOwner()
@@ -182,7 +239,121 @@ function SWEP:Think()
 	self:CheckAttackAnimation()
 	self:CheckMoaning()
 	self:CheckMeleeAttack()
+
+	-- Climbing logic (from Fast Zombie)
+	local curtime = CurTime()
+	local owner = self:GetOwner()
+	if not owner or not owner:IsValid() then return end
+
+	if self.NextClimbPush == nil then
+		self.NextClimbPush = 0
+	end
+
+	local shiftDown = owner:KeyDown(IN_SPEED)
+	local canClimb = shiftDown and not self:GetClimbing() and self:GetClimbSurface() and curtime >= (self.NextClimbPush or 0)
+
+	if canClimb then
+		self:StartClimbing()
+		self.NextClimbPush = curtime + 0.8
+	end
+
+	if self:GetClimbing() then
+		if not shiftDown or not self:GetClimbSurface() then
+			self:StopClimbing()
+		else
+			if curtime >= (self.NextClimbSound or 0) and IsFirstTimePredicted() then
+				local speed = owner:GetVelocity():LengthSqr()
+				if speed >= 2500 then
+					if speed >= 10000 then
+						self.NextClimbSound = curtime + 0.25
+					else
+						self.NextClimbSound = curtime + 0.8
+					end
+				end
+				self:PlayClimbSound()
+			end
+		end
+	end
 end
+-- Climbing functions (adapted from Fast Zombie)
+local climbtrace = {mask = MASK_SOLID_BRUSHONLY, mins = Vector(-5, -5, -5), maxs = Vector(5, 5, 5)}
+function SWEP:GetClimbSurface()
+	local owner = self:GetOwner()
+	if not owner or not owner:IsValid() then return end
+
+	local fwd = owner:EyeAngles():Forward()
+	local up = owner:GetUp()
+	local pos = owner:GetPos()
+	local height = owner:OBBMaxs().z
+	local tr
+	local ha
+	for i=23, height, 5 do
+		if not tr or not tr.Hit then
+			climbtrace.start = pos + up * i
+			climbtrace.endpos = climbtrace.start + fwd * 36
+			tr = util.TraceHull(climbtrace)
+			ha = i
+			if tr.Hit and not tr.HitSky then break end
+		end
+	end
+
+	if tr and tr.Hit and not tr.HitSky then
+		climbtrace.start = pos + up * ha
+		climbtrace.endpos = climbtrace.start + owner:EyeAngles():Up() * (height - ha)
+		local tr2 = util.TraceHull(climbtrace)
+		if tr2.Hit and not tr2.HitSky then
+			return tr2
+		end
+		return tr
+	end
+end
+
+function SWEP:StartClimbing()
+	if self:GetClimbing() then return end
+	self:SetClimbing(true)
+	self:SetNextSecondaryFire(CurTime() + 0.5)
+
+	local owner = self:GetOwner()
+	local tr = self:GetClimbSurface()
+	if tr and tr.Hit and tr.HitNormal then
+		local pushPos = tr.HitPos + tr.HitNormal * 20
+		local hullTrace = util.TraceHull({
+			start = pushPos,
+			endpos = pushPos,
+			mins = owner:OBBMins(),
+			maxs = owner:OBBMaxs(),
+			filter = owner,
+			mask = MASK_PLAYERSOLID
+		})
+		if not hullTrace.Hit then
+			owner:SetPos(pushPos)
+		end
+	end
+end
+
+function SWEP:StopClimbing()
+	if not self:GetClimbing() then return end
+	self:SetClimbing(false)
+	local owner = self:GetOwner()
+	if owner and owner:IsValid() then
+		local vel = owner:GetVelocity()
+		vel.z = math.max(vel.z, 180)
+		owner:SetVelocity(Vector(0, 0, vel.z))
+	end
+	self:SetNextSecondaryFire(CurTime())
+end
+
+function SWEP:PlayClimbSound()
+	self:EmitSound("player/footsteps/metalgrate"..math.random(4)..".wav")
+end
+
+function SWEP:SetClimbing(climbing)
+	self:SetDTBool(1, climbing)
+end
+function SWEP:GetClimbing()
+	return self:GetDTBool(1)
+end
+SWEP.IsClimbing = SWEP.GetClimbing
 
 function SWEP:MeleeHitWorld(trace)
 end
@@ -268,7 +439,7 @@ function SWEP:ApplyMeleeDamage(hitent, tr, damage)
 end
 
 function SWEP:PrimaryAttack()
-	if CurTime() < self:GetNextPrimaryFire() or IsValid(self:GetOwner().FeignDeath) then return end
+	if CurTime() < self:GetNextPrimaryFire() then return end
 
 	local owner = self:GetOwner()
 	local armdelay = owner:GetMeleeSpeedMul()
@@ -382,7 +553,7 @@ function SWEP:StopMoaning()
 end
 
 function SWEP:StartMoaning()
-	if self:IsMoaning() or IsValid(self:GetOwner().Revive) or IsValid(self:GetOwner().FeignDeath) then return end
+	if self:IsMoaning() or IsValid(self:GetOwner().Revive) then return end
 	self:SetMoaning(true)
 
 	self:SetMoanHealth(self:GetOwner():Health())
@@ -412,28 +583,31 @@ function SWEP:SetMoaning(moaning)
 	self:SetDTBool(0, moaning)
 end
 
-function SWEP:GetMoaning()
-	return self:GetDTBool(0)
+function SWEP:Move(mv)
+	if self:GetClimbing() then
+		mv:SetMaxSpeed(0)
+		mv:SetMaxClientSpeed(0)
+		local owner = self:GetOwner()
+		local tr = self:GetClimbSurface()
+		local angs = owner:EyeAngles()
+		local dir = tr and tr.Hit and (tr.HitNormal.z <= -0.5 and (angs:Forward() * -1) or math.abs(tr.HitNormal.z) < 0.75 and tr.HitNormal:Angle():Up()) or Vector(0, 0, 1)
+		local vel = Vector(0, 0, 4)
+		if owner:KeyDown(IN_FORWARD) then
+			owner:SetGroundEntity(nil)
+			vel = vel + dir * 150
+		end
+		if owner:KeyDown(IN_BACK) then
+			vel = vel + dir * -150
+		end
+		if vel.z == 4 then
+			if owner:KeyDown(IN_MOVERIGHT) then
+				vel = vel + angs:Right() * 150
+			end
+			if owner:KeyDown(IN_MOVELEFT) then
+				vel = vel + angs:Right() * -150
+			end
+		end
+		mv:SetVelocity(vel)
+		return true
+	end
 end
-SWEP.IsMoaning = SWEP.GetMoaning
-
-function SWEP:SetMoanHealth(health)
-	self:SetDTInt(0, health)
-end
-
-function SWEP:GetMoanHealth()
-	return self:GetDTInt(0)
-end
-
-function SWEP:SetSwingEndTime(time)
-	self:SetDTFloat(0, time)
-end
-
-function SWEP:GetSwingEndTime()
-	return self:GetDTFloat(0)
-end
-
-function SWEP:IsSwinging()
-	return self:GetSwingEndTime() > 0
-end
-SWEP.IsAttacking = SWEP.IsSwinging

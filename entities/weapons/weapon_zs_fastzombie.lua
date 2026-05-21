@@ -58,10 +58,11 @@ function SWEP:Think()
 	end
 
 	local shiftDown = owner:KeyDown(IN_SPEED)
-	local canClimb = shiftDown and not self:IsPouncing() and self:GetPounceTime() <= 0 and self:GetClimbSurface()
+	local canClimb = shiftDown and not self:IsPouncing() and self:GetPounceTime() <= 0 and self:GetClimbSurface() and curtime >= (self.NextClimbPush or 0)
 
 	if canClimb and not self:GetClimbing() then
 		self:StartClimbing()
+		self.NextClimbPush = curtime + 0.8
 	end
 
 	if self:GetClimbing() then
@@ -607,6 +608,8 @@ end
 function SWEP:GetSwinging()
 	return self:GetDTBool(2)
 end
+
+SWEP.IsSwinging = SWEP.GetSwinging
 
 function SWEP:SetPouncing(leaping)
 	self:SetDTBool(3, leaping)

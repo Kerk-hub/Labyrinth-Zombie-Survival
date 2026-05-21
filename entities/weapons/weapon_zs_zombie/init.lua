@@ -1,4 +1,8 @@
+
+
+include("weapons/weapon_zs_zombie/shared.lua")
 INC_SERVER()
+
 
 SWEP.MoanDelay = 1
 

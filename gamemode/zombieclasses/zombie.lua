@@ -47,7 +47,7 @@ CLASS.DeathSounds = {"npc/zombie/zombie_die1.wav", "npc/zombie/zombie_die2.wav",
 
 CLASS.VoicePitch = 0.65
 
-CLASS.CanFeignDeath = true
+CLASS.CanFeignDeath = false
 
 local CurTime = CurTime
 local math_random = math.random
@@ -222,9 +222,10 @@ function CLASS:DoesntGiveFear(pl)
 	return pl.FeignDeath and pl.FeignDeath:IsValid()
 end
 
+
 if SERVER then
 	function CLASS:AltUse(pl)
-		pl:StartFeignDeath()
+		-- Disabled: do nothing (no feign death, no third person)
 	end
 
 	function CLASS:ProcessDamage(pl, dmginfo)
