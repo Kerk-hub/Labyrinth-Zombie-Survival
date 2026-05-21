@@ -52,16 +52,13 @@ function SWEP:Think()
 		owner:ResetJumpPower()
 	end
 
-	-- Detect Shift key press (key down event)
 	local shiftDown = owner:KeyDown(IN_SPEED)
-	if shiftDown and not self._PrevShiftDown and not self:GetClimbing() and not self:IsPouncing() and self:GetPounceTime() <= 0 then
-		if self:GetClimbSurface() then
-			self:StartClimbing()
-		end
-	end
-	self._PrevShiftDown = shiftDown
+	local canClimb = shiftDown and not self:IsPouncing() and self:GetPounceTime() <= 0 and self:GetClimbSurface()
 
-	-- While climbing, stop if Shift is released or wall is lost
+	if canClimb and not self:GetClimbing() then
+		self:StartClimbing()
+	end
+
 	if self:GetClimbing() then
 		if not shiftDown or not self:GetClimbSurface() then
 			self:StopClimbing()
@@ -69,7 +66,7 @@ function SWEP:Think()
 			-- Always keep player 20 units away from the wall while climbing
 			local tr = self:GetClimbSurface()
 			if tr and tr.Hit and tr.HitNormal then
-				owner:SetPos(tr.HitPos + tr.HitNormal * 10)
+				owner:SetPos(tr.HitPos + tr.HitNormal * 20)
 			end
 			if curtime >= self.NextClimbSound and IsFirstTimePredicted() then
 				local speed = owner:GetVelocity():LengthSqr()
@@ -367,7 +364,8 @@ function SWEP:GetClimbSurface()
 	local height = owner:OBBMaxs().z
 	local tr
 	local ha
-	for i=5, height, 5 do
+	-- Start at 25 units above feet to avoid climbing short walls/ramps
+	for i=25, height, 5 do
 		if not tr or not tr.Hit then
 			climbtrace.start = pos + up * i
 			climbtrace.endpos = climbtrace.start + fwd * 36
