@@ -47,6 +47,11 @@ function SWEP:Think()
 	local curtime = CurTime()
 	local owner = self:GetOwner()
 
+	-- Initialize climb push timer if not set
+	if self.NextClimbPush == nil then
+		self.NextClimbPush = 0
+	end
+
 	if self.NextAllowJump and self.NextAllowJump <= curtime then
 		self.NextAllowJump = nil
 		owner:ResetJumpPower()
@@ -60,26 +65,21 @@ function SWEP:Think()
 	end
 
 	if self:GetClimbing() then
-		if not shiftDown or not self:GetClimbSurface() then
-			self:StopClimbing()
-		else
-			-- Always keep player 20 units away from the wall while climbing
-			local tr = self:GetClimbSurface()
-			if tr and tr.Hit and tr.HitNormal then
-				owner:SetPos(tr.HitPos + tr.HitNormal * 20)
-			end
-			if curtime >= self.NextClimbSound and IsFirstTimePredicted() then
-				local speed = owner:GetVelocity():LengthSqr()
-				if speed >= 2500 then
-					if speed >= 10000 then
-						self.NextClimbSound = curtime + 0.25
-					else
-						self.NextClimbSound = curtime + 0.8
+			if not shiftDown or not self:GetClimbSurface() then
+				self:StopClimbing()
+			else
+				if curtime >= self.NextClimbSound and IsFirstTimePredicted() then
+					local speed = owner:GetVelocity():LengthSqr()
+					if speed >= 2500 then
+						if speed >= 10000 then
+							self.NextClimbSound = curtime + 0.25
+						else
+							self.NextClimbSound = curtime + 0.8
+						end
 					end
+					self:PlayClimbSound()
 				end
-				self:PlayClimbSound()
 			end
-		end
 	end
 	-- MISSING END FIXED
 
@@ -263,18 +263,18 @@ function SWEP:Move(mv)
 
 		if owner:KeyDown(IN_FORWARD) then
 			owner:SetGroundEntity(nil)
-			vel = vel + dir * 250 --160
+			vel = vel + dir * 150
 		end
 		if owner:KeyDown(IN_BACK) then
-			vel = vel + dir * -250 ---160
+			vel = vel + dir * -150
 		end
 
 		if vel.z == 4 then
 			if owner:KeyDown(IN_MOVERIGHT) then
-				vel = vel + angs:Right() * 100 --60
+				vel = vel + angs:Right() * 150
 			end
 			if owner:KeyDown(IN_MOVELEFT) then
-				vel = vel + angs:Right() * -100 ---60
+				vel = vel + angs:Right() * -150
 			end
 		end
 
@@ -396,8 +396,26 @@ function SWEP:StartClimbing()
 	if self:GetClimbing() then return end
 
 	self:SetClimbing(true)
-
 	self:SetNextSecondaryFire(CurTime() + 0.5)
+
+	-- Push player away from the wall when climbing starts, but only if the world is not in the way
+	local owner = self:GetOwner()
+	local tr = self:GetClimbSurface()
+	if tr and tr.Hit and tr.HitNormal then
+		local pushPos = tr.HitPos + tr.HitNormal * 20
+		-- Check if the push position is inside the world (solid)
+		local hullTrace = util.TraceHull({
+			start = pushPos,
+			endpos = pushPos,
+			mins = owner:OBBMins(),
+			maxs = owner:OBBMaxs(),
+			filter = owner,
+			mask = MASK_PLAYERSOLID
+		})
+		if not hullTrace.Hit then
+			owner:SetPos(pushPos)
+		end
+	end
 end
 
 function SWEP:StopClimbing()
