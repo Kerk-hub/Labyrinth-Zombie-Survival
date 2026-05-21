@@ -365,7 +365,7 @@ function SWEP:GetClimbSurface()
 	local tr
 	local ha
 	-- Start at 25 units above feet to avoid climbing short walls/ramps
-	for i=25, height, 5 do
+	for i=20, height, 5 do
 		if not tr or not tr.Hit then
 			climbtrace.start = pos + up * i
 			climbtrace.endpos = climbtrace.start + fwd * 36
