@@ -4,7 +4,7 @@ ENT.m_NoNailUnfreeze = true
 ENT.NoNails = true
 
 ENT.CanPackUp = true
-ENT.PackUpTime = 3
+ENT.PackUpTime = 2
 ENT.IgnorePackTimeMul = true
 
 ENT.IsBarricadeObject = true
