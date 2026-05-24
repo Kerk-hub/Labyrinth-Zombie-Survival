@@ -6,16 +6,9 @@ local NON_PLAYER_DAMAGE_CAP = 50
 local HumanCorpseTraceMins = Vector(-4, -4, -4)
 local HumanCorpseTraceMaxs = Vector(4, 4, 4)
 local HumanCorpseSequenceNames = {
-	"death_01",
 	"death_02",
 	"death_03",
-	"death_04",
-	"death_05",
-	"death_06",
-	"death_07",
-	"death_08",
-	"death_09",
-	"death"
+	"death_04"
 }
 
 local function GetHumanCorpseAnchorPosition(pos)
