@@ -1,4 +1,10 @@
+
 INC_CLIENT()
+
+SWEP.DrawAmmo = true
+function SWEP:DrawHUD()
+	self:Draw2DHUD()
+end
 
 SWEP.Slot = 2
 SWEP.SlotPos = 0
