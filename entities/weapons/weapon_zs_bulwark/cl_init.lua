@@ -2,7 +2,9 @@
 INC_CLIENT()
 
 SWEP.DrawAmmo = true
+
 function SWEP:DrawHUD()
+	self:DrawWeaponCrosshair()
 	self:Draw2DHUD()
 end
 
