@@ -234,14 +234,36 @@ concommand.Add("zs_brain", function(sender, command, arguments)
 	GAMEMODE:ConCommandErrorMessage(sender, "Added " .. amount .. " brains.")
 end)
 
+
 concommand.Add("zs_revive", function(sender, command, arguments)
 	if not sender:IsAdmin() then
 		return
 	end
 
 	local pl = sender
-    pl:Redeem()
-	
+	pl:Redeem()
+end)
+
+concommand.Add("zs_redeemplayer", function(sender, command, arguments)
+	if not sender:IsAdmin() then
+		return
+	end
+
+	if not arguments or #arguments < 1 then
+		GAMEMODE:ConCommandErrorMessage(sender, "Usage: zs_redeemplayer <player name>")
+		return
+	end
+
+	local targetName = table.concat(arguments, " "):lower()
+	for _, pl in ipairs(player.GetAll()) do
+		if pl:Name():lower():find(targetName, 1, true) then
+			pl:Redeem()
+			GAMEMODE:ConCommandErrorMessage(sender, "Redeemed " .. pl:Name())
+			return
+		end
+	end
+
+	GAMEMODE:ConCommandErrorMessage(sender, "Player not found: " .. targetName)
 end)
 
 concommand.Add("zs_class", function(sender, command, arguments)
