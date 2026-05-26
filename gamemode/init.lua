@@ -4719,14 +4719,12 @@ function GM:DoPlayerDeath(pl, attacker, dmginfo)
 			gamemode.Call("ZombieKilledHuman", pl, attacker, inflictor, dmginfo, headshot, suicide)
 		end
 
-		self:StoreRedeemInventorySnapshot(pl)
-		timer.Simple(0, function()
-			DelayedChangeToZombie(pl)
-		end) -- We don't want people shooting barrels near teammates.
-		self.PreviouslyDied[pl:UniqueID()] = CurTime()
-		if self:GetWave() == 0 then
-			pl.DiedDuringWave0 = true
-		end
+		   self:StoreRedeemInventorySnapshot(pl)
+		   -- Do NOT move to zombie team on death; let them spectate as human.
+		   self.PreviouslyDied[pl:UniqueID()] = CurTime()
+		   if self:GetWave() == 0 then
+			   pl.DiedDuringWave0 = true
+		   end
 
 		local frags = pl:Frags()
 		if frags < 0 then
@@ -5388,26 +5386,47 @@ function GM:WaveStateChanged(newstate)
 		end
 
 
-		for _, pl in pairs(player.GetAll()) do
-			if pl:Team() == TEAM_HUMAN and pl:Alive() then
-				if self.EndWaveHealthBonus > 0 then
-					pl:SetHealth(math.min(pl:GetMaxHealth(), pl:Health() + self.EndWaveHealthBonus))
-				end
-				if pointsbonus then
-					-- End-wave survival rewards disabled.
-				end
-			elseif pl:Team() == TEAM_UNDEAD and not pl:Alive() and not pl.Revive then
-				local curclass = pl.DeathClass or pl:GetZombieClass()
-				local crowindex = GAMEMODE.ZombieClasses["Crow"].Index
-				pl:SetZombieClass(crowindex)
-				pl:DoHulls(crowindex, TEAM_UNDEAD)
-				pl.DeathClass = nil
-				pl:UnSpectateAndSpawn()
-				pl.DeathClass = curclass
-			end
-
-			pl.SkipCrow = nil
-		end
+		   for _, pl in pairs(player.GetAll()) do
+			   if pl:Team() == TEAM_HUMAN then
+				   if pl:Alive() then
+					   if self.EndWaveHealthBonus > 0 then
+						   pl:SetHealth(math.min(pl:GetMaxHealth(), pl:Health() + self.EndWaveHealthBonus))
+					   end
+					   if pointsbonus then
+						   -- End-wave survival rewards disabled.
+					   end
+				   else
+					   -- Redeem dead humans: respawn them
+					   pl:UnSpectateAndSpawn()
+					   pl:SetHealth(pl:GetMaxHealth())
+					   -- Restore inventory snapshot if available (like original redeem)
+					   if not self:RestoreRedeemInventorySnapshot(pl) then
+						   if self.RedeemLoadout then
+							   for _, class in pairs(self.RedeemLoadout) do
+								   pl:Give(class)
+							   end
+						   else
+							   pl:Give("weapon_zs_redeemers")
+							   pl:Give("weapon_zs_swissarmyknife")
+							   pl:Give("weapon_zs_hammer")
+							   pl:Give("weapon_zs_medicalkit")
+						   end
+					   end
+					   net.Start("zs_playerredeemed")
+					   net.WriteEntity(pl)
+					   net.Broadcast()
+				   end
+			   elseif pl:Team() == TEAM_UNDEAD and not pl:Alive() and not pl.Revive then
+				   local curclass = pl.DeathClass or pl:GetZombieClass()
+				   local crowindex = GAMEMODE.ZombieClasses["Crow"].Index
+				   pl:SetZombieClass(crowindex)
+				   pl:DoHulls(crowindex, TEAM_UNDEAD)
+				   pl.DeathClass = nil
+				   pl:UnSpectateAndSpawn()
+				   pl.DeathClass = curclass
+			   end
+			   pl.SkipCrow = nil
+		   end
 
 		-- Slay all alive zombies at wave end
 		for _, pl in pairs(player.GetAll()) do
