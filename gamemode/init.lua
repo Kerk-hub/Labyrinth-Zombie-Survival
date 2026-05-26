@@ -2041,19 +2041,7 @@ GM.StartingZombie = {}
  GM.WorthCheckedOutInventory = {}
 GM.PreviouslyDied = {}
 GM.StoredUndeadFrags = {}
-
--- Multi-slot Z-main system
 GM.ZMainJoinSequence = 0
-GM.ZMainPlayers = {} -- Table of current Z-main players/bots
-
--- D3bot integration prompt (for developer reference):
---[[
-Z-main system now supports multiple slots (1 per 2 humans). D3bot must:
-- Fill unclaimed Z-main slots with a bot named "Z-main".
-- Remove/reassign bot if a player volunteers for a slot.
-- Ensure D3bot Z-mains have all Z-main properties/abilities.
-- Expose functions to spawn, assign, and remove Z-main bots as needed.
-]]
 
 function GM:DebugPrintZMain(message)
 end
@@ -2062,143 +2050,75 @@ function GM:IsExactZMainBot(pl)
 	return IsValid(pl) and pl:IsPlayer() and pl:IsBot() and pl:Name() == "Z-main"
 end
 
-
 function GM:IsValidZMainCandidate(pl)
 	return IsValid(pl) and pl:IsPlayer() and pl:Team() == TEAM_UNDEAD and (not pl:IsBot() or self:IsExactZMainBot(pl))
 end
-
--- Calculate number of Z-main slots needed
-function GM:GetZMainSlotCount()
-	return math.max(1, math.ceil(#team.GetPlayers(TEAM_HUMAN) / 2))
-end
-
--- Returns a list of current Z-main players (players or bots)
-function GM:GetZMainPlayers()
-	return self.ZMainPlayers or {}
-end
-
--- Returns true if the player/bot is a Z-main
-function GM:IsZMain(pl)
-	for _, zmain in ipairs(self:GetZMainPlayers()) do
-		if zmain == pl then return true end
-	end
-	return false
-end
-
--- Assign Z-main slots (call on round start, player join/leave, etc)
-function GM:UpdateZMainSlots()
-	local slots = self:GetZMainSlotCount()
-	local current = self:GetZMainPlayers()
-	local humans = team.GetPlayers(TEAM_HUMAN)
-	local undead = team.GetPlayers(TEAM_UNDEAD)
-	local newZMain = {}
-
-	-- Keep existing Z-mains if still valid
-	for _, pl in ipairs(current) do
-		if self:IsValidZMainCandidate(pl) then
-			table.insert(newZMain, pl)
-		end
-	end
-
-	-- Fill with volunteering players first
-	for _, pl in ipairs(undead) do
-		if pl:GetNWBool("zs_zmain_volunteer", false) and not self:IsZMain(pl) then
-			table.insert(newZMain, pl)
-		end
-		if #newZMain >= slots then break end
-	end
-
-	-- Fill remaining slots with D3bot Z-mains
-	while #newZMain < slots do
-		local found = false
-		for _, pl in ipairs(undead) do
-			if pl:IsBot() and self:IsExactZMainBot(pl) and not self:IsZMain(pl) then
-				table.insert(newZMain, pl)
-				found = true
-				break
-			end
-		end
-		if not found then
-			-- Spawn a new D3bot Z-main if possible
-			if ZSBOTS and ZSBOTS.CreateBot then
-				ZSBOTS:CreateBot(TEAM_UNDEAD, "Z-main")
-			end
-			break -- Wait for bot to spawn next tick
-		end
-	end
-
-	-- Remove extra Z-mains if too many
-	while #newZMain > slots do
-		local pl = table.remove(newZMain)
-		if pl:IsBot() and self:IsExactZMainBot(pl) then
-			pl:Kick("Z-main bot removed: slot reduced")
-		else
-			pl:SetNWBool("zs_zmain", false)
-		end
-	end
-
-	-- Set NWBool for all Z-mains
-	for _, pl in ipairs(newZMain) do
-		pl:SetNWBool("zs_zmain", true)
-	end
-
-	self.ZMainPlayers = newZMain
-end
-
 
 function GM:ClearZMain(pl)
 	if IsValid(pl) then
 		self:DebugPrintZMain("Clearing Z-main from " .. pl:Name())
 		pl:SetNWBool("zs_zmain", false)
 	end
-	if self.ZMainPlayers then
-		for i, zmain in ipairs(self.ZMainPlayers) do
-			if zmain == pl then table.remove(self.ZMainPlayers, i) break end
-		end
+
+	if self.ZMainPlayer == pl then
+		self.ZMainPlayer = nil
 	end
 end
 
-
 function GM:SetZMain(pl)
+	if self.ZMainPlayer == pl and IsValid(pl) then
+		if not pl:GetNWBool("zs_zmain", false) then
+			self:DebugPrintZMain("Restoring missing Z-main flag on " .. pl:Name())
+			pl:SetNWBool("zs_zmain", true)
+		end
+
+		return pl
+	end
+
+	self:ClearZMain(self.ZMainPlayer)
+
 	if not self:IsValidZMainCandidate(pl) then
 		self:DebugPrintZMain("No valid candidate available for Z-main")
 		return nil
 	end
-	if not self:IsZMain(pl) then
-		table.insert(self.ZMainPlayers, pl)
-	end
+
 	pl:SetNWBool("zs_zmain", true)
+	self.ZMainPlayer = pl
 	self:DebugPrintZMain("Assigned Z-main to " .. pl:Name() .. " [bot=" .. tostring(pl:IsBot()) .. "]")
+
 	return pl
 end
 
-
 function GM:UpdateZMainBossPreview()
-	for _, zmain in ipairs(self:GetZMainPlayers()) do
-		if self:IsValidZMainCandidate(zmain) then
-			self:DebugPrintZMain("Forcing boss selection to " .. zmain:Name())
-			self.LastCalculatedBoss = zmain
-			self.LastCalculatedBossTime = CurTime()
-			net.Start("zs_nextboss")
-			net.WriteEntity(zmain)
-			net.WriteUInt(zmain:GetBossZombieIndex(), 8)
-			net.Broadcast()
-		end
+	if self:IsValidZMainCandidate(self.ZMainPlayer) then
+		local zmain = self.ZMainPlayer
+
+		self:DebugPrintZMain("Forcing boss selection to " .. zmain:Name())
+		self.LastCalculatedBoss = zmain
+		self.LastCalculatedBossTime = CurTime()
+
+		net.Start("zs_nextboss")
+		net.WriteEntity(zmain)
+		net.WriteUInt(zmain:GetBossZombieIndex(), 8)
+		net.Broadcast()
+
+		return zmain
 	end
 end
 
-
 function GM:GetPreferredZMainCandidate()
+	local zmainbot
+
 	for _, pl in pairs(team.GetPlayers(TEAM_UNDEAD)) do
 		if self:IsValidZMainCandidate(pl) then
 			if pl:IsBot() and self:IsExactZMainBot(pl) then
-				return pl
+				zmainbot = pl
 			end
 		end
 	end
-	return nil
-end
 
+	return zmainbot
+end
 
 function GM:ResolveZMain(preferred)
 	if IsValid(preferred) then
@@ -2206,15 +2126,17 @@ function GM:ResolveZMain(preferred)
 	else
 		self:DebugPrintZMain("Resolving Z-main without preferred candidate")
 	end
+
 	if self:IsValidZMainCandidate(preferred) then
 		return self:SetZMain(preferred)
 	end
-	local candidates = self:GetZMainPlayers()
-	for _, pl in ipairs(candidates) do
-		if self:IsValidZMainCandidate(pl) then
-			return self:SetZMain(pl)
-		end
+
+	if self:IsValidZMainCandidate(self.ZMainPlayer) then
+		return self:SetZMain(self.ZMainPlayer)
 	end
+
+	self:ClearZMain(self.ZMainPlayer)
+
 	return self:SetZMain(self:GetPreferredZMainCandidate())
 end
 
