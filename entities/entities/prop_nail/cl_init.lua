@@ -91,7 +91,7 @@ function ENT:DrawTranslucent()
 			local activeweapon = MySelf:GetActiveWeapon()
 			local alwaysshow = GAMEMODE.AlwaysShowNails
 			drawinfo = (alwaysshow or MySelf:KeyDown(IN_SPEED) or GAMEMODE.TraceTargetNoPlayers == parent) and eyepos:DistToSqr(pos) <= 262144 and (alwaysshow or WorldVisible(eyepos, pos))
-			drawoutline = myteam == TEAM_HUMAN and IsHammerWeapon(activeweapon) and GAMEMODE.TraceTargetNoPlayers == parent and eyepos:DistToSqr(pos) <= 262144
+			   drawoutline = myteam == TEAM_HUMAN and GAMEMODE.TraceTargetNoPlayers == parent and eyepos:DistToSqr(pos) <= 262144
 		elseif myteam == TEAM_UNDEAD then
 			drawinfo = GAMEMODE.TraceTargetNoPlayers == parent
 		end
