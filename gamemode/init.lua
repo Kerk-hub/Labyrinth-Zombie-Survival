@@ -2557,7 +2557,7 @@ function GM:PlayerReadyRound(pl)
 	elseif pl:Team() == TEAM_HUMAN then
 		if not self.ZombieEscape then
 			pl:AddPoints(100)
-			pl:SendLua("GAMEMODE:OpenArsenalMenu()")
+			-- pl:SendLua("GAMEMODE:OpenArsenalMenu()") -- Disabled: do not open arsenal menu on join
 		end
 		if self.StartingLoadout or self.ZombieEscape then
 			gamemode.Call("GiveDefaultOrRandomEquipment", pl)
