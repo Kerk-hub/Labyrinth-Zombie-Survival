@@ -19,7 +19,7 @@ end)
 hook.Add("HUDPaint", "ZS_ZGasVolunteerWarning", function()
 	if VolunteerTimer > 0 and CurTime() < VolunteerTimerEnd then
 		local w, h = ScrW(), ScrH()
-		local msg = "YOU WILL VOLUNTEER FOR Z-MAIN SOON!"
+		local msg = "YOU WILL VOLUNTEER FOR ZOMBIE TEAM SOON!"
 		local font = "ZSHUDFontBig"
 		local color = Color(220, 0, 0, 255)
 		local timeleft = math.ceil(VolunteerTimerEnd - CurTime())

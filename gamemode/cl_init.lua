@@ -1051,18 +1051,18 @@ end
 
 function GM:HumanHUD(screenscale)
 
-		-- Show volunteering timer message if active
-		if ZS_VolunteerGasActive then
-			local remain = math.max(0, 10 - (CurTime() - ZS_VolunteerGasStart))
-			draw_SimpleTextBlurry(
-				"Volunteering For Z-main..." .. (remain > 0 and string.format(" (%.1fs)", remain) or ""),
-				"ZSHUDFontSmall",
-				w * 0.5,
-				h * 0.35,
-				COLOR_SOFTRED,
-				TEXT_ALIGN_CENTER
-			)
-		end
+		   -- Show volunteering timer message if active
+		   if ZS_VolunteerGasActive then
+			   local remain = math.max(0, 10 - (CurTime() - ZS_VolunteerGasStart))
+			   draw_SimpleTextBlurry(
+				   "Volunteering For Zombie Team..." .. (remain > 0 and string.format(" (%.1fs)", remain) or ""),
+				   "ZSHUDFontSmall",
+				   w * 0.5,
+				   h * 0.35,
+				   COLOR_SOFTRED,
+				   TEXT_ALIGN_CENTER
+			   )
+		   end
 	local curtime = CurTime()
 	local w, h = ScrW(), ScrH()
 

@@ -1620,16 +1620,8 @@ end
 
 function GM:IsZombieGasVolunteerOpen()
 
-	       if not self:HasNonBotUndeadPlayer() then
-		       return true
-	       end
-
-
-	if self.ZMainPlayer:IsBot() then
-		return true
-	end
-
-	return not self:HasNonBotUndeadPlayer()
+    -- Allow volunteering if there are no non-bot zombies (before wave 1)
+    return not self:HasNonBotUndeadPlayer()
 end
 
 function GM:VolunteerPlayerFromZombieGas(pl, gasses, hasnonbotundead)
@@ -1657,23 +1649,15 @@ function GM:VolunteerPlayerFromZombieGas(pl, gasses, hasnonbotundead)
 	pl:SetDeaths(0)
 
 	self.StartingZombie[pl:UniqueID()] = true
-	self.PreviouslyDied[pl:UniqueID()] = CurTime()
-	if pl ~= nil and IsValid(pl) and pl:IsPlayer() and pl:Alive() then
+	    self.PreviouslyDied[pl:UniqueID()] = CurTime()
+	    if pl ~= nil and IsValid(pl) and pl:IsPlayer() and pl:Alive() then
 		pl:KillSilent()
-	end
-	if self:GetWave() > 0 then
+	    end
+	    if self:GetWave() > 0 then
 		pl:UnSpectateAndSpawn()
-	end
+	    end
 
-	if self.ZMainPlayer ~= pl or not pl:IsZMain() then
-		self:ResolveZMain(pl)
-	end
-
-	if not pl:IsZMain() then
-		self:SetZMain(pl)
-	end
-
-	return true
+	    return true
 end
 
 GM.LastCalculatedBossTime = 0
