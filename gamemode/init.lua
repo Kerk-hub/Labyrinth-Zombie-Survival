@@ -1732,6 +1732,12 @@ function GM:CalculateInfliction(victim, attacker)
 		end
 	end
 
+	-- New zombie win logic: if wave >= 1 and there are no living humans, zombies win
+	if self:GetWave() >= 1 and humans == 0 then
+		gamemode.Call("EndRound", TEAM_UNDEAD)
+		return self.CappedInfliction
+	end
+
 	players = humans + zombies
 
 	if players == 0 and wonhumans == 0 then
@@ -1743,12 +1749,6 @@ function GM:CalculateInfliction(victim, attacker)
 		infliction = 0.999
 	end
 	self.CappedInfliction = infliction
-
-	-- New zombie win logic: if wave >= 1 and there are no living humans, zombies win
-	if self:GetWave() >= 1 and humans == 0 then
-		gamemode.Call("EndRound", TEAM_UNDEAD)
-		return self.CappedInfliction
-	end
 
 	if humans == 1 and 2 < zombies then
 		gamemode.Call("LastHuman", hum)
