@@ -2,7 +2,7 @@ AddCSLuaFile()
 
 SWEP.PrintName = "Medical Kit"
 SWEP.Description = "An advanced kit of medicine, bandages, and morphine.\nVery useful for keeping a group of survivors healthy.\nUse PRIMARY FIRE to heal other players.\nUse SECONDARY FIRE to heal yourself.\nHealing other players is not only faster but you get a nice point bonus!"
-SWEP.Slot = 4
+SWEP.Slot = 2
 SWEP.SlotPos = 0
 
 if CLIENT then
