@@ -3,6 +3,9 @@ CLASS.TranslationName = "class_lacerator_charging"
 CLASS.Description = "description_lacerator_charging"
 CLASS.Help = "controls_lacerator_charging"
 
+CLASS.Hidden = true
+CLASS.Disabled = true
+
 CLASS.Model = Model("models/player/zombie_lacerator2.mdl")
 
 CLASS.Wave = 4 / 6

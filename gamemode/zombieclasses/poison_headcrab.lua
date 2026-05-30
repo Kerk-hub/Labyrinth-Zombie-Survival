@@ -3,6 +3,9 @@ CLASS.TranslationName = "class_poison_headcrab"
 CLASS.Description = "description_poison_headcrab"
 CLASS.Help = "controls_poison_headcrab"
 
+CLASS.Hidden = true
+CLASS.Disabled = true
+
 CLASS.BetterVersion = "Barbed Headcrab"
 
 CLASS.Model = Model("models/headcrabblack.mdl")

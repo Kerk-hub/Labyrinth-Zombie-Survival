@@ -7,6 +7,9 @@ CLASS.TranslationName = "class_fast_zombie_slingshot"
 CLASS.Description = "description_fast_zombie_slingshot"
 CLASS.Help = "controls_fast_zombie_slingshot"
 
+CLASS.Hidden = true
+CLASS.Disabled = true
+
 CLASS.Revives = false
 
 CLASS.Health = 180

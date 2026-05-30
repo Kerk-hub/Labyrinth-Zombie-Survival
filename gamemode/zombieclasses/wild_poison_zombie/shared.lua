@@ -5,6 +5,9 @@ CLASS.TranslationName = "class_wild_poison_zombie"
 CLASS.Description = "description_wild_poison_zombie"
 CLASS.Help = "controls_poison_zombie"
 
+CLASS.Hidden = true
+CLASS.Disabled = true
+
 CLASS.Wave = 5 / 6
 
 CLASS.Health = 460
