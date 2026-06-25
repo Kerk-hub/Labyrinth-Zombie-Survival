@@ -2376,6 +2376,11 @@ function GM:ScalePlayerDamage(pl, hitgroup, dmginfo)
 	GAMEMODE.StatTracking:IncreaseElementKV(STATTRACK_TYPE_WEAPON, inflictor:GetClass(), "Hits", 1)
 	if hitgroup == HITGROUP_HEAD then
 		GAMEMODE.StatTracking:IncreaseElementKV(STATTRACK_TYPE_WEAPON, inflictor:GetClass(), "Headshots", 1)
+
+		if attacker:IsPlayer() then
+			attacker:EmitSound("weapons/melee/crowbar/crowbar_hit-1.ogg")
+			-- this snippet of code make it so headshots make sound wow! (note: can someone find good sound)
+		end
 	end
 
 	if not dmginfo:IsBulletDamage() then
