@@ -105,10 +105,7 @@ end)
 -- Track manual phase key presses
 hook.Add("PlayerButtonDown", "ZS_PhasePropPromptManualPress", function(ply, button)
 	if ply ~= LocalPlayer() then return end
-	local zoombind = input.LookupBinding("+zoom") or ""
-	local undobind = input.LookupBinding("gmod_undo") or input.LookupBinding("undo") or ""
-	if (zoombind ~= "" and button == input.GetKeyCode(zoombind))
-		or (undobind ~= "" and button == input.GetKeyCode(undobind)) then
+	if button == input.GetKeyCode(input.LookupBinding("+zoom") or "") then
 		PhasePropPromptManualPressed = true
 	end
 end)
@@ -173,11 +170,6 @@ local function HasPhasePropBind()
 	return bind and bind ~= ""
 end
 
-local function HasUndoBind()
-	local bind = input.LookupBinding("gmod_undo") or input.LookupBinding("undo")
-	return bind and bind ~= ""
-end
-
 local function GetPhasePropBind()
 	local bind = input.LookupBinding("+zoom")
 	if bind and bind ~= "" then
@@ -214,7 +206,7 @@ local function ShouldShowArsenalPrompt()
 end
 
 local function ShouldShowPhasePropPrompt()
-	local hasbind = HasPhasePropBind() or HasUndoBind()
+       local hasbind = HasPhasePropBind()
 
        if PhasePropPromptConsumed and hasbind then
 	       SetPhasePropPromptAutoPhasing(false)
