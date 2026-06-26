@@ -559,7 +559,7 @@ item = GM:ShopAdd(
 	end
 )
 item.CanMakeFromScrap = true
-item = GM:ShopAdd("nail", ITEMS_AMMO, 5, nil, "Nail", "It's just one nail.", "ammo_nail", function(pl)
+item = GM:ShopAdd("nail", ITEMS_AMMO, 5, nil, "16 Nails", "Nails to use to cade with.", "ammo_nail", function(pl)
 	pl:GiveAmmo(16, "GaussEnergy", true)
 end)
 item.NoClassicMode = true
