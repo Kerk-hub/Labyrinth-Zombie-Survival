@@ -371,6 +371,13 @@ function GM:ShopAdd(list, i, tab, issub, nopointshop)
 		menu:AddOption("Buy", function()
 			RunConsoleCommand("zs_pointsshopbuy", itempan.ID, itempan.NoPoints and "scrap")
 		end)
+
+		menu:AddOption("Buy Bulk", function()
+   			for i = 1, 3 do
+        		RunConsoleCommand("zs_pointsshopbuy", itempan.ID, itempan.NoPoints and "scrap")
+	 		end
+		end)
+
 		menu:Open()
 	end
 	-- Show description on hover, like worth menu
