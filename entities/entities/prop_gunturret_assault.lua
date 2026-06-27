@@ -10,7 +10,7 @@ ENT.NumShots = 1
 ENT.Damage = 21
 ENT.PlayLoopingShootSound = false
 ENT.Spread = 2
-ENT.MaxAmmo = 500
+ENT.MaxAmmo = 400
 ENT.MaxHealth = 225
 
 if CLIENT then

@@ -615,7 +615,7 @@ end)
 item.Countables = "prop_messagebeacon"
 --GM:ShopAdd("camera", ITEMS_DEPLOYABLES, 15, "weapon_zs_camera").Countables = "prop_camera"
 --GM:ShopAdd("tv", ITEMS_DEPLOYABLES, 25, "weapon_zs_tv").Countables = "prop_tv"
-item = GM:ShopAdd("infturret", ITEMS_DEPLOYABLES, 50, "weapon_zs_gunturret", nil, nil, nil, function(pl)
+item = GM:ShopAdd("infturret", ITEMS_DEPLOYABLES, 75, "weapon_zs_gunturret", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_gunturret")
 	pl:GiveAmmo(1, "thumper")
 end)
@@ -624,7 +624,7 @@ item.Countables = "prop_gunturret"
 item = GM:ShopAdd(
 	"blastturret",
 	ITEMS_DEPLOYABLES,
-	50,
+	75,
 	"weapon_zs_gunturret_buckshot",
 	nil,
 	nil,
