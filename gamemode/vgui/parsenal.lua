@@ -368,16 +368,18 @@ function GM:ShopAdd(list, i, tab, issub, nopointshop)
 	itempan.DoClick = ItemPanelDoClick
 	itempan.DoRightClick = function()
 		local menu = DermaMenu(itempan)
-		menu:AddOption("Buy", function()
+		local buy = menu:AddOption("Buy", function()
 			RunConsoleCommand("zs_pointsshopbuy", itempan.ID, itempan.NoPoints and "scrap")
 		end)
-
-		menu:AddOption("Buy Bulk", function()
+		
+		local buybulk = menu:AddOption("Buy Bulk", function()
    			for i = 1, 3 do
         		RunConsoleCommand("zs_pointsshopbuy", itempan.ID, itempan.NoPoints and "scrap")
 	 		end
 		end)
-
+		buy:SetTextColor(Color(20, 20, 20))
+		buybulk:SetTextColor(Color(20, 20, 20))
+		
 		menu:Open()
 	end
 	-- Show description on hover, like worth menu
