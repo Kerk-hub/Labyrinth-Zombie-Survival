@@ -46,14 +46,9 @@ function SWEP:PostDrawViewModel(vm)
 	local pos, ang = m:GetTranslation(), m:GetAngles()
 
 	pos = pos + ang:Up() * -3
+	pos = pos + ang:Forward() * 2
 
-	local time = CurTime()
-	ang:RotateAroundAxis(ang:Right(), math.sin(time * math.pi) * 20)
-	ang:RotateAroundAxis(ang:Up(), time * 180)
-
-	pos = pos + ang:Forward() * 5
-
-	ang:RotateAroundAxis(ang:Right(), 270)
+	ang:RotateAroundAxis(ang:Right(), 180)
 	ang:RotateAroundAxis(ang:Up(), 270)
 
 	local wid, hei = 144, 144
