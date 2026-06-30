@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "Drone"
-SWEP.Description = "A deployable, remotely controlled device.\nIdeal for scouting, retrieval, and targeted attacks."
+SWEP.Description = "A deployable, remotely controlled device.\nIdeal for scouting and retrieval."
 
 if CLIENT then
 	SWEP.ViewModelFlip = false

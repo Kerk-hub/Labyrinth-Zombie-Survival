@@ -671,7 +671,7 @@ item.NoClassicMode = true
 item.SkillRequirement = SKILL_U_ROCKETTURRET
 --]]
 GM:ShopAdd("manhack", ITEMS_DEPLOYABLES, 30, "weapon_zs_manhack").Countables = "prop_manhack"
-item = GM:ShopAdd("drone", ITEMS_DEPLOYABLES, 40, "weapon_zs_drone")
+item = GM:ShopAdd("drone", ITEMS_DEPLOYABLES, 20, "weapon_zs_drone")
 item.Countables = "prop_drone"
 item = GM:ShopAdd("pulsedrone", ITEMS_DEPLOYABLES, 40, "weapon_zs_drone_pulse")
 item.Countables = "prop_drone_pulse"
