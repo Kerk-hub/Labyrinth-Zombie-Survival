@@ -364,12 +364,6 @@ item = GM:WorthAdd("pulsedrone", ITEMS_DEPLOYABLES, 30, "weapon_zs_drone_pulse",
 	pl:GiveAmmo(1, "pulse_cutter")
 	pl:GiveAmmo(60, "pulse")
 end)
-item.Countables = "prop_drone_pulse"
-item.SkillRequirement = SKILL_U_DRONE
-item = GM:WorthAdd("hauldrone", ITEMS_DEPLOYABLES, 20, "weapon_zs_drone_hauler", nil, nil, nil, function(pl)
-	pl:GiveEmptyWeapon("weapon_zs_drone_hauler")
-	pl:GiveAmmo(1, "drone_hauler")
-end)
 item.Countables = "prop_drone_hauler"
 item.SkillRequirement = SKILL_HAULMODULE
 item = GM:WorthAdd("rollermine", ITEMS_DEPLOYABLES, 20, "weapon_zs_rollermine", nil, nil, nil, function(pl)
@@ -671,10 +665,10 @@ item.NoClassicMode = true
 item.SkillRequirement = SKILL_U_ROCKETTURRET
 --]]
 GM:ShopAdd("manhack", ITEMS_DEPLOYABLES, 30, "weapon_zs_manhack").Countables = "prop_manhack"
-item = GM:ShopAdd("drone", ITEMS_DEPLOYABLES, 20, "weapon_zs_drone")
+item = GM:ShopAdd("drone", ITEMS_DEPLOYABLES, 40, "weapon_zs_drone")
 item.Countables = "prop_drone"
-item = GM:ShopAdd("pulsedrone", ITEMS_DEPLOYABLES, 40, "weapon_zs_drone_pulse")
-item.Countables = "prop_drone_pulse"
+item = GM:ShopAdd("haulerdrone", ITEMS_DEPLOYABLES, 25, "weapon_zs_drone_hauler")
+item.Countables = "prop_drone_hauler"
 item.SkillRequirement = SKILL_U_DRONE
 item = GM:ShopAdd("rollermine", ITEMS_DEPLOYABLES, 35, "weapon_zs_rollermine")
 item.Countables = "prop_rollermine"
@@ -1047,7 +1041,6 @@ GM:AddDeployableInfo("prop_ffemitter", "Force Field Emitter", "weapon_zs_ffemitt
 GM:AddDeployableInfo("prop_manhack", "Manhack", "weapon_zs_manhack")
 GM:AddDeployableInfo("prop_manhack_saw", "Sawblade Manhack", "weapon_zs_manhack_saw")
 GM:AddDeployableInfo("prop_drone", "Drone", "weapon_zs_drone")
-GM:AddDeployableInfo("prop_drone_pulse", "Pulse Drone", "weapon_zs_drone_pulse")
 GM:AddDeployableInfo("prop_drone_hauler", "Hauler Drone", "weapon_zs_drone_hauler")
 GM:AddDeployableInfo("prop_rollermine", "Rollermine", "weapon_zs_rollermine")
 --GM:AddDeployableInfo("prop_tv", "TV", "weapon_zs_tv")

@@ -188,10 +188,7 @@ function ENT:PhysicsSimulate(phys, frametime)
 		if owner:KeyDown(IN_GRENADE1) then
 			movedir = movedir - Vector(0, 0, 0.5)
 		end
-		local angdiff = math.AngleDifference(eyeangles.yaw, phys:GetAngles().yaw)
-		if math.abs(angdiff) > 4 then
-			phys:AddAngleVelocity(Vector(0, 0, math.Clamp(angdiff, -64, 64) * frametime * 100 - phys:GetAngleVelocity().z * 0.95))
-		end
+		phys:SetAngles(Angle(0, eyeangles.yaw, 0))
 	end
 
 	if movedir == vector_origin then
@@ -354,7 +351,12 @@ function ENT:Think()
 	if self:GetAmmo() > 0 then
 		if self:BeingControlled() and owner:KeyDown(IN_ATTACK) then
 			if not self:IsFiring() then self:SetFiring(true) end
-			self:FireTurret(self:GetRedLightPos(), self:GetGunAngles():Forward())
+			local owner = self:GetObjectOwner()
+			local ang = owner:EyeAngles()
+
+			ang.p = math.Clamp(ang.p, -35, 35)
+
+			self:FireTurret(self:GetRedLightPos(), ang:Forward())
 		else
 			self:SetFiring(false)
 		end
