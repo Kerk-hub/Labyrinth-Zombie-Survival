@@ -209,8 +209,8 @@ local function ContentsPaint(self, w, h)
 		colHealth.g = 190
 		colHealth.b = 255
 
-		local x = 4 * screenscale
-		local y = 100 * screenscale
+		local x = 1 * screenscale
+		local y = 135 * screenscale
 		local bgColor = GAMEMODE.HealthBarBackgroundColor or color_black_alpha220
 		local numberColor = Color(bgColor.r, bgColor.g, bgColor.b, 255)
 
