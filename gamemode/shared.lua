@@ -580,7 +580,7 @@ function GM:OnPlayerHitGround(pl, inwater, hitfloater, speed)
 		damage_mul = pl.FallDamageDamageMul or 1
 	end
 
-	local damage = (0.1 * (speed - 525 * threshold_mul)) ^ 1.45
+	local damage = (0.1 * (speed - 600 * threshold_mul)) ^ 1.45 -- change the # inside () for fall dmg height
 	if hitfloater then
 		damage = damage / 2
 	end
@@ -609,6 +609,12 @@ function GM:OnPlayerHitGround(pl, inwater, hitfloater, speed)
 	if math.floor(damage) > 0 then
 		if SERVER then
 			local h = pl:Health()
+
+			if damage * damage_mul >= h then
+				pl:Kill()
+				return true
+			end
+
 			pl:TakeSpecialDamage(damage * damage_mul, DMG_FALL, game.GetWorld(), game.GetWorld(), pl:GetPos())
 			damage = h - pl:Health()
 
