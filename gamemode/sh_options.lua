@@ -1001,7 +1001,6 @@ GM.RestrictedModels = {
 	"models/player/corpse1.mdl",
 	"models/player/charple.mdl",
 	"models/player/skeleton.mdl",
-	"models/player/combine_soldier_prisonguard.mdl",
 	"models/player/soldier_stripped.mdl",
 	"models/player/zelpa/stalker.mdl",
 	"models/player/fatty/fatty.mdl",
