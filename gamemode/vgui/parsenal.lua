@@ -76,7 +76,18 @@ local function ItemPanelThink(self)
 				self.StockLabel:SetText(stocks .. " remaining")
 				self.StockLabel:SizeToContents()
 				self.StockLabel:AlignRight(10)
-				self.StockLabel:SetTextColor(stocks > 0 and COLOR_GRAY or COLOR_RED)
+
+				local color
+
+				if stocks <= 0 then
+					color = COLOR_RED
+				elseif itemtab.MaxStock and stocks <= itemtab.MaxStock * 0.5 then
+					color = Color(255, 255, 0) -- Yellow
+				else
+					color = Color(0, 255, 0) -- Green
+				end
+
+				self.StockLabel:SetTextColor(color)
 				self.StockLabel:InvalidateLayout()
 			end
 		end
