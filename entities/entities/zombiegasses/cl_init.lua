@@ -16,7 +16,7 @@ net.Receive("zs_zgas_volunteertimer", function()
 	end
 end)
 
-hook.Add("HUDPaint", "ZS_ZGasVolunteerWarning", function()
+--[[hook.Add("HUDPaint", "ZS_ZGasVolunteerWarning", function()
 	if VolunteerTimer > 0 and CurTime() < VolunteerTimerEnd then
 		local w, h = ScrW(), ScrH()
 		local msg = "YOU WILL VOLUNTEER FOR ZOMBIE TEAM SOON!"
@@ -26,7 +26,7 @@ hook.Add("HUDPaint", "ZS_ZGasVolunteerWarning", function()
 		draw.SimpleTextBlur(msg, font, w/2, h*0.3, color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 		draw.SimpleTextBlur("("..timeleft.."s)", font, w/2, h*0.3+48, color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	end
-end)
+end)]]
 
 INC_CLIENT()
 if not zs_zgas_volunteer_net_registered then

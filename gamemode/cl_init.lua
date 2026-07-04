@@ -1052,7 +1052,7 @@ end
 function GM:HumanHUD(screenscale)
 
 		   -- Show volunteering timer message if active
-		   if ZS_VolunteerGasActive then
+		   if ZS_VolunteerGasActive and GAMEMODE:GetWave() < 3 then
 			   local remain = math.max(0, 10 - (CurTime() - ZS_VolunteerGasStart))
 			   draw_SimpleTextBlurry(
 				   "Volunteering For Zombie Team..." .. (remain > 0 and string.format(" (%.1fs)", remain) or ""),
