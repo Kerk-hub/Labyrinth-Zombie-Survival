@@ -2,7 +2,7 @@ ENT.Type = "anim"
 
 ENT.CanPackUp = true
 ENT.PackUpTime = 2
-ENT.MaxAmmo = 300 -- 10 minutes of repair time when fully loaded.
+ENT.MaxAmmo = 200
 
 ENT.WrenchRepairMultiplier = 0.5
 

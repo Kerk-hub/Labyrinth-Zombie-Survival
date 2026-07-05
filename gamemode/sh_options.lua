@@ -318,32 +318,24 @@ item = GM:WorthAdd("infturret", ITEMS_DEPLOYABLES, 30, "weapon_zs_gunturret", ni
 end)
 item.Countables = "prop_gunturret"
 item.NoClassicMode = true
-item = GM:WorthAdd(
-	"blastturret",
-	ITEMS_DEPLOYABLES,
-	30,
-	"weapon_zs_gunturret_buckshot",
-	nil,
-	nil,
-	nil,
-	function(pl)
-		pl:GiveEmptyWeapon("weapon_zs_gunturret_buckshot")
-		pl:GiveAmmo(1, "turret_buckshot")
-		pl:GiveAmmo(30, "buckshot")
-	end
-)
+
+item = GM:WorthAdd("blastturret", ITEMS_DEPLOYABLES, 30, "weapon_zs_gunturret_buckshot", nil, nil, nil, function(pl)
+	pl:GiveEmptyWeapon("weapon_zs_gunturret_buckshot")
+	pl:GiveAmmo(1, "turret_buckshot")
+	pl:GiveAmmo(30, "buckshot")
+end)
 item.Countables = "prop_gunturret_buckshot"
 item.NoClassicMode = true
 item.SkillRequirement = SKILL_U_BLASTTURRET
---[[
-item = GM:WorthAdd("repairfield", ITEMS_DEPLOYABLES, 60, "weapon_zs_repairfield", nil, nil, nil, function(pl)
+
+--[[item = GM:WorthAdd("repairfield", ITEMS_DEPLOYABLES, 60, "weapon_zs_repairfield", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_repairfield")
 	pl:GiveAmmo(1, "repairfield")
 	pl:GiveAmmo(50, "pulse")
 end)
 item.Countables = "prop_repairfield"
-item.NoClassicMode = true
-]]
+item.NoClassicMode = true]]
+
 item = GM:WorthAdd("zapper", ITEMS_DEPLOYABLES, 20, "weapon_zs_zapper", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_zapper")
 	pl:GiveAmmo(1, "zapper")
@@ -359,11 +351,13 @@ item = GM:WorthAdd("drone", ITEMS_DEPLOYABLES, 30, "weapon_zs_drone", nil, nil, 
 	pl:GiveAmmo(60, "smg1")
 end)
 item.Countables = "prop_drone"
+
 item = GM:WorthAdd("pulsedrone", ITEMS_DEPLOYABLES, 30, "weapon_zs_drone_pulse", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_drone_pulse")
 	pl:GiveAmmo(1, "pulse_cutter")
 	pl:GiveAmmo(60, "pulse")
 end)
+
 item.Countables = "prop_drone_hauler"
 item.SkillRequirement = SKILL_HAULMODULE
 item = GM:WorthAdd("rollermine", ITEMS_DEPLOYABLES, 20, "weapon_zs_rollermine", nil, nil, nil, function(pl)
@@ -462,10 +456,10 @@ GM:WorthAdd("detpck", ITEMS_OTHER, 15, "weapon_zs_detpack").Countables = "prop_d
 -- item.SkillRequirement = SKILL_U_CORRUPTEDFRAGMENT
 item = GM:WorthAdd("medcloud", ITEMS_TOOLS, 15, "weapon_zs_mediccloudbomb")
 item.SkillRequirement = SKILL_U_MEDICCLOUD
---[[
-item = GM:WorthAdd("nanitecloud", ITEMS_OTHER, 25, "weapon_zs_nanitecloudbomb")
-item.SkillRequirement = SKILL_U_NANITECLOUD
-]]
+
+--[[item = GM:WorthAdd("nanitecloud", ITEMS_OTHER, 25, "weapon_zs_nanitecloudbomb")
+item.SkillRequirement = SKILL_U_NANITECLOUD]]
+
 GM:WorthAdd("bloodshot", ITEMS_TOOLS, 15, "weapon_zs_bloodshotbomb")
 -- item = GM:WorthAdd("sigfragment", ITEMS_OTHER, 15, "weapon_zs_sigilfragment")
 -- item.NoClassicMode = true
@@ -540,18 +534,9 @@ end)
 GM:ShopAdd("assaultrifleammo", ITEMS_AMMO, 5, nil, "32 assault rifle ammo", nil, "ammo_assault", function(pl)
 	pl:GiveAmmo(32, "ar2", true)
 end)
-item = GM:ShopAdd(
-	"40mkit",
-	ITEMS_AMMO,
-	5,
-	nil,
-	"40 Medical Kit power",
-	"40 extra power for the Medical Kit.",
-	"ammo_medpower",
-	function(pl)
-		pl:GiveAmmo(40, "Battery", true)
-	end
-)
+item = GM:ShopAdd("40mkit", ITEMS_AMMO, 5, nil, "40 Medical Kit power", "40 extra power for the Medical Kit.", "ammo_medpower", function(pl)
+	pl:GiveAmmo(40, "Battery", true)
+end)
 item.CanMakeFromScrap = true
 item = GM:ShopAdd("nail", ITEMS_AMMO, 5, nil, "16 Nails", "Nails to use to cade with.", "ammo_nail", function(pl)
 	pl:GiveAmmo(16, "GaussEnergy", true)
@@ -615,55 +600,28 @@ item = GM:ShopAdd("infturret", ITEMS_DEPLOYABLES, 75, "weapon_zs_gunturret", nil
 end)
 item.NoClassicMode = true
 item.Countables = "prop_gunturret"
-item = GM:ShopAdd(
-	"blastturret",
-	ITEMS_DEPLOYABLES,
-	75,
-	"weapon_zs_gunturret_buckshot",
-	nil,
-	nil,
-	nil,
-	function(pl)
-		pl:GiveEmptyWeapon("weapon_zs_gunturret_buckshot")
-		pl:GiveAmmo(1, "turret_buckshot")
-	end
-)
+item = GM:ShopAdd("blastturret", ITEMS_DEPLOYABLES, 75, "weapon_zs_gunturret_buckshot", nil, nil, nil, function(pl)
+	pl:GiveEmptyWeapon("weapon_zs_gunturret_buckshot")
+	pl:GiveAmmo(1, "turret_buckshot")
+end)
 item.Countables = "prop_gunturret_buckshot"
 item.NoClassicMode = true
 item.SkillRequirement = SKILL_U_BLASTTURRET
-item = GM:ShopAdd(
-	"assaultturret",
-	ITEMS_DEPLOYABLES,
-	125,
-	"weapon_zs_gunturret_assault",
-	nil,
-	nil,
-	nil,
-	function(pl)
-		pl:GiveEmptyWeapon("weapon_zs_gunturret_assault")
-		pl:GiveAmmo(1, "turret_assault")
-	end
-)
+item = GM:ShopAdd("assaultturret", ITEMS_DEPLOYABLES, 125, "weapon_zs_gunturret_assault", nil, nil, nil, function(pl)
+	pl:GiveEmptyWeapon("weapon_zs_gunturret_assault")
+	pl:GiveAmmo(1, "turret_assault")
+end)
 item.NoClassicMode = true
 item.Countables = "prop_gunturret_assault"
---[[ Rocket Turret (disabled)
-item = GM:ShopAdd(
-	"rocketturret",
-	ITEMS_DEPLOYABLES,
-	125,
-	"weapon_zs_gunturret_rocket",
-	nil,
-	nil,
-	nil,
-	function(pl)
-		pl:GiveEmptyWeapon("weapon_zs_gunturret_rocket")
-		pl:GiveAmmo(1, "turret_rocket")
-	end
-)
+
+--[[ Rocket Turret (disabled) item = GM:ShopAdd("rocketturret", ITEMS_DEPLOYABLES, 125, "weapon_zs_gunturret_rocket", nil, nil, nil, function(pl)
+	pl:GiveEmptyWeapon("weapon_zs_gunturret_rocket")
+	pl:GiveAmmo(1, "turret_rocket")
+end)
 item.Countables = "prop_gunturret_rocket"
 item.NoClassicMode = true
-item.SkillRequirement = SKILL_U_ROCKETTURRET
---]]
+item.SkillRequirement = SKILL_U_ROCKETTURRET]]
+
 GM:ShopAdd("manhack", ITEMS_DEPLOYABLES, 30, "weapon_zs_manhack").Countables = "prop_manhack"
 item = GM:ShopAdd("drone", ITEMS_DEPLOYABLES, 40, "weapon_zs_drone")
 item.Countables = "prop_drone"
@@ -674,15 +632,14 @@ item = GM:ShopAdd("rollermine", ITEMS_DEPLOYABLES, 35, "weapon_zs_rollermine")
 item.Countables = "prop_rollermine"
 item.SkillRequirement = SKILL_U_ROLLERMINE
 
---[[
-item = GM:ShopAdd("repairfield", ITEMS_DEPLOYABLES, 55, "weapon_zs_repairfield", nil, nil, nil, function(pl)
+--[[item = GM:ShopAdd("repairfield", ITEMS_DEPLOYABLES, 55, "weapon_zs_repairfield", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_repairfield")
 	pl:GiveAmmo(1, "repairfield")
 	pl:GiveAmmo(30, "pulse")
 end)
 item.Countables = "prop_repairfield"
-item.NoClassicMode = true
-]]
+item.NoClassicMode = true]]
+
 item = GM:ShopAdd("zapper", ITEMS_DEPLOYABLES, 50, "weapon_zs_zapper", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_zapper")
 	pl:GiveAmmo(1, "zapper")
@@ -690,6 +647,7 @@ item = GM:ShopAdd("zapper", ITEMS_DEPLOYABLES, 50, "weapon_zs_zapper", nil, nil,
 end)
 item.Countables = "prop_zapper"
 item.NoClassicMode = true
+
 item = GM:ShopAdd("zapper_arc", ITEMS_DEPLOYABLES, 100, "weapon_zs_zapper_arc", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_zapper_arc")
 	pl:GiveAmmo(1, "zapper_arc")
@@ -698,12 +656,14 @@ end)
 item.Countables = "prop_zapper_arc"
 item.NoClassicMode = true
 item.SkillRequirement = SKILL_U_ZAPPER_ARC
-item = GM:ShopAdd("ffemitter", ITEMS_DEPLOYABLES, 40, "weapon_zs_ffemitter", nil, nil, nil, function(pl)
+
+item = GM:ShopAdd("ffemitter", ITEMS_DEPLOYABLES, 25, "weapon_zs_ffemitter", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_ffemitter")
 	pl:GiveAmmo(1, "slam")
 	pl:GiveAmmo(30, "pulse")
 end)
 item.Countables = "prop_ffemitter"
+
 GM:ShopAdd("barricadekit", ITEMS_DEPLOYABLES, 50, "weapon_zs_barricadekit")
 GM:ShopAdd("medkit", ITEMS_TOOLS, 30, "weapon_zs_medicalkit")
 GM:ShopAdd("medgun", ITEMS_TOOLS, 30, "weapon_zs_medicgun")
@@ -771,7 +731,7 @@ GM:ShopAdd("acqmanifest", ITEMS_TRINKETS, 15, "trinket_acqmanifest").SubCategory
 	TRINKETS_SUPPORT
 GM:ShopAdd("mainsuite", ITEMS_TRINKETS, 15, "trinket_mainsuite").SubCategory = TRINKETS_SUPPORT
 -- Tier 3
---GM:ShopAdd("climbinggear",	ITEMS_TRINKETS,		30,				"trinket_climbinggear").SubCategory =							TRINKETS_PERFORMANCE
+--GM:ShopAdd("climbinggear", ITEMS_TRINKETS, 30, "trinket_climbinggear").SubCategory = TRINKETS_PERFORMANCE
 GM:ShopAdd("reachem", ITEMS_TRINKETS, 30, "trinket_reachem").SubCategory = TRINKETS_OFFENSIVE
 GM:ShopAdd("momentumsupsysiii", ITEMS_TRINKETS, 30, "trinket_momentumsupsysiii").SubCategory =
 	TRINKETS_MELEE
@@ -824,6 +784,7 @@ GM:ShopAdd("supasm", ITEMS_TRINKETS, 70, "trinket_supasm").SubCategory = TRINKET
 GM:ShopAdd("pulseimpedance", ITEMS_TRINKETS, 70, "trinket_pulseimpedance").SubCategory =
 	TRINKETS_OFFENSIVE
 
+GM:ShopAdd("stone", ITEMS_OTHER, 5, "weapon_zs_stone")
 GM:ShopAdd("flashbomb", ITEMS_OTHER, 25, "weapon_zs_flashbomb")
 GM:ShopAdd("molotov", ITEMS_OTHER, 30, "weapon_zs_molotov")
 GM:ShopAdd("grenade", ITEMS_OTHER, 35, "weapon_zs_grenade")
@@ -839,10 +800,9 @@ GM:ShopAdd("bloodshot", ITEMS_TOOLS, 45, "weapon_zs_bloodshotbomb")
 -- item.SkillRequirement = SKILL_U_CORRUPTEDFRAGMENT
 item = GM:ShopAdd("medcloud", ITEMS_TOOLS, 40, "weapon_zs_mediccloudbomb")
 item.SkillRequirement = SKILL_U_MEDICCLOUD
---[[
-item = GM:ShopAdd("nanitecloud", ITEMS_OTHER, 40, "weapon_zs_nanitecloudbomb")
-item.SkillRequirement = SKILL_U_NANITECLOUD
-]]
+
+--[[item = GM:ShopAdd("nanitecloud", ITEMS_OTHER, 40, "weapon_zs_nanitecloudbomb")
+item.SkillRequirement = SKILL_U_NANITECLOUD]]
 
 GM:ApplyPurchasableWeaponSlots()
 
@@ -852,7 +812,7 @@ if CLIENT then
 	end)
 end
 
--- These are the honorable mentions that come at the end of the round.
+-- These are the HONORABLE MENTIONS that come at the end of the round.
 
 local function genericcallback(pl, magnitude)
 	return pl:Name(), magnitude
