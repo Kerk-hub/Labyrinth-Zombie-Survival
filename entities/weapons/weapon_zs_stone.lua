@@ -53,14 +53,13 @@ SWEP.DamageType = DMG_CLUB
 SWEP.MeleeDamage = 30
 SWEP.MeleeRange = 50
 SWEP.MeleeSize = 1.2
-SWEP.Primary.Delay = 0.6
+SWEP.Primary.Delay = 1
 SWEP.MaxStock = 10
 
 SWEP.ThrowVel = 700
 SWEP.ThrowAngVel = 360
 
 if SERVER then
-
 	function SWEP:ThrowStone()
 		local owner = self:GetOwner()
 		if not IsValid(owner) then return end
