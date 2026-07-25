@@ -15,7 +15,6 @@ function ENT:Initialize()
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetUseType(SIMPLE_USE)
 	self:SetCollisionGroup(COLLISION_GROUP_WORLD)
-
 	self:CollisionRulesChanged()
 
 	local phys = self:GetPhysicsObject()
@@ -32,7 +31,6 @@ function ENT:Initialize()
 		ent:SetAngles(self:GetAngles())
 		ent:SetOwner(self)
 		ent:Spawn()
-
 		ent:SetEmitter(self)
 	end
 
@@ -69,7 +67,7 @@ function ENT:SetObjectHealth(health)
 		end
 
 		local effectdata = EffectData()
-			effectdata:SetOrigin(self:LocalToWorld(self:OBBCenter()))
+		effectdata:SetOrigin(self:LocalToWorld(self:OBBCenter()))
 		util.Effect("Explosion", effectdata, true, true)
 	end
 end
@@ -89,18 +87,7 @@ end
 function ENT:Use(activator, caller)
 	if self.Destroyed or not activator:IsPlayer() or activator:Team() ~= TEAM_HUMAN or self:GetMaterial() ~= "" then return end
 
-	if self:GetObjectOwner():IsValid() then
-		if not activator:GetZSClientBool("zs_nousetodeposit") then
-			local curammo = self:GetAmmo()
-			local togive = math.min(math.min(15, activator:GetAmmoCount("pulse")), self.MaxAmmo - curammo)
-			if togive > 0 then
-				self:SetAmmo(curammo + togive)
-				activator:RemoveAmmo(togive, "pulse")
-				activator:RestartGesture(ACT_GMOD_GESTURE_ITEM_GIVE)
-				self:EmitSound("npc/scanner/combat_scan1.wav", 60, 250)
-			end
-		end
-	else
+	if not self:GetObjectOwner():IsValid() then
 		self:SetObjectOwner(activator)
 		self:GetObjectOwner():SendDeployableClaimedMessage(self)
 	end
@@ -115,8 +102,6 @@ function ENT:OnPackedUp(pl)
 	pl:GiveAmmo(1, "slam")
 
 	pl:PushPackedItem(self:GetClass(), self:GetObjectHealth())
-	pl:GiveAmmo(self:GetAmmo(), "pulse")
-
 	self:Remove()
 end
 

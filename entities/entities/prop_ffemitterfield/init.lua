@@ -23,23 +23,19 @@ function ENT:OnTakeDamage(dmginfo)
 	local attacker = dmginfo:GetAttacker()
 	if not (attacker:IsValid() and attacker:IsPlayer() and attacker:Team() == TEAM_HUMAN) then
 		local emitter = self:GetEmitter()
-		if emitter and emitter:IsValid() and emitter.GetAmmo and emitter:GetAmmo() > 0 then
+
+		if emitter and emitter:IsValid() and emitter:GetObjectHealth() > 0 then
 			self:SetLastDamaged(CurTime())
 			self:EmitSound("ambient/energy/weld2.wav", 65, 255, 0.6)
+			local damage = dmginfo:GetDamage()
 
-			local ammousage = (dmginfo:GetDamage() / 10) + (emitter.CarryOver or 0)
-			local floor = math.floor(ammousage)
+			emitter:SetObjectHealth(
+				math.max(emitter:GetObjectHealth() - damage, 0)
+			)
 			local owner = emitter:GetObjectOwner()
 
-			emitter.CarryOver = ammousage - floor
-			emitter:SetAmmo(math.max(emitter:GetAmmo() - floor, 0))
-
 			if owner:IsValidLivingHuman() then
-				owner:AddPoints(dmginfo:GetDamage() * 0.02)
-
-				if emitter:GetAmmo() == 0 then
-					owner:SendDeployableOutOfAmmoMessage(emitter)
-				end
+				owner:AddPoints(damage * 0.02)
 			end
 		end
 	end

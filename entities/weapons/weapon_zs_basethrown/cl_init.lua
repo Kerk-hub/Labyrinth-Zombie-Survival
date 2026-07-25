@@ -48,8 +48,11 @@ function SWEP:PostDrawViewModel(vm)
 	pos = pos + ang:Up() * -3
 	pos = pos + ang:Forward() * 2
 
-	ang:RotateAroundAxis(ang:Right(), 180)
-	ang:RotateAroundAxis(ang:Up(), 270)
+	local viewAng = LocalPlayer():EyeAngles()
+	ang = Angle(0, viewAng.y - 90, 90 - viewAng.x)
+
+	pos = pos + viewAng:Right() * 1
+	pos = pos + viewAng:Up() * 1
 
 	local wid, hei = 144, 144
 	local x, y = wid * -0.5, hei * -0.5

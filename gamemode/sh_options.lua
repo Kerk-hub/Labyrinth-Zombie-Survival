@@ -404,10 +404,9 @@ item.Countables = "prop_messagebeacon"
 item = GM:WorthAdd("ffemitter", ITEMS_DEPLOYABLES, 20, "weapon_zs_ffemitter", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_ffemitter")
 	pl:GiveAmmo(1, "slam")
-	pl:GiveAmmo(50, "pulse")
 end)
 item.Countables = "prop_ffemitter"
-GM:WorthAdd("barricadekit", ITEMS_DEPLOYABLES, 30, "weapon_zs_barricadekit")
+GM:WorthAdd("barricadekit", ITEMS_DEPLOYABLES, 0, "weapon_zs_barricadekit")
 --GM:WorthAdd("camera", ITEMS_DEPLOYABLES, 5, "weapon_zs_camera").Countables = "prop_camera"
 --GM:WorthAdd("tv", ITEMS_DEPLOYABLES, 10, "weapon_zs_tv").Countables = "prop_tv"
 
@@ -660,7 +659,6 @@ item.SkillRequirement = SKILL_U_ZAPPER_ARC
 item = GM:ShopAdd("ffemitter", ITEMS_DEPLOYABLES, 25, "weapon_zs_ffemitter", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_ffemitter")
 	pl:GiveAmmo(1, "slam")
-	pl:GiveAmmo(30, "pulse")
 end)
 item.Countables = "prop_ffemitter"
 

@@ -43,12 +43,6 @@ function SWEP:GetWalkSpeed()
 	end
 end
 
-function SWEP:SecondaryAttack()
-end
-
-function SWEP:Reload()
-end
-
 function SWEP:CanPrimaryAttack()
 	if self:GetOwner():IsHolding() then return false end --or owner:GetBarricadeGhosting()--
 

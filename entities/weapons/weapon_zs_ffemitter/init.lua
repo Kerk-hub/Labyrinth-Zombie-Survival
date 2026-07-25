@@ -2,7 +2,6 @@ INC_SERVER()
 
 function SWEP:Deploy()
 	gamemode.Call("WeaponDeployed", self:GetOwner(), self)
-
 	self:SpawnGhost()
 
 	return true
@@ -63,10 +62,6 @@ function SWEP:PrimaryAttack()
 		if stored then
 			ent:SetObjectHealth(stored[1])
 		end
-
-		local ammo = math.min(owner:GetAmmoCount("pulse"), 150)
-		ent:SetAmmo(ammo)
-		owner:RemoveAmmo(ammo, "pulse")
 
 		if self:GetPrimaryAmmoCount() <= 0 then
 			owner:StripWeapon(self:GetClass())

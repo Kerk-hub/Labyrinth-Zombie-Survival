@@ -2,7 +2,6 @@ ENT.Type = "anim"
 
 ENT.CanPackUp = true
 ENT.PackUpTime = 2
-ENT.MaxAmmo = 200
 
 ENT.WrenchRepairMultiplier = 0.5
 
@@ -30,12 +29,4 @@ end
 
 function ENT:GetObjectOwner()
 	return self:GetDTEntity(0)
-end
-
-function ENT:SetAmmo(ammo)
-	self:SetDTInt(0, ammo)
-end
-
-function ENT:GetAmmo()
-	return self:GetDTInt(0)
 end

@@ -2371,15 +2371,17 @@ function GM:EndRound(winner)
 end
 
 function GM:ScalePlayerDamage(pl, hitgroup, dmginfo)
+	pl.m_LastCrit = hitgroup == HITGROUP_HEAD
+
 	local attacker = dmginfo:GetAttacker()
 	local inflictor = dmginfo:GetInflictor()
 	GAMEMODE.StatTracking:IncreaseElementKV(STATTRACK_TYPE_WEAPON, inflictor:GetClass(), "Hits", 1)
+
 	if hitgroup == HITGROUP_HEAD then
 		GAMEMODE.StatTracking:IncreaseElementKV(STATTRACK_TYPE_WEAPON, inflictor:GetClass(), "Headshots", 1)
 
 		if attacker:IsPlayer() then
 			attacker:EmitSound("weapons/melee/crowbar/crowbar_hit-1.ogg")
-			-- this snippet of code make it so headshots make sound wow! (note: can someone find good sound)
 		end
 	end
 
@@ -2391,8 +2393,6 @@ function GM:ScalePlayerDamage(pl, hitgroup, dmginfo)
 		pl.m_LastHeadShot = CurTime()
 	end
 
-	--local crouchpunish = pl:ShouldCrouchJumpPunish()
-
 	if not pl:CallZombieFunction2("ScalePlayerDamage", hitgroup, dmginfo) then
 		if hitgroup == HITGROUP_HEAD then
 			dmginfo:SetDamage(
@@ -2401,22 +2401,17 @@ function GM:ScalePlayerDamage(pl, hitgroup, dmginfo)
 					* (attacker:IsPlayer() and attacker:GetStatus("renegade") and 1.1 or 1)
 			)
 		elseif hitgroup == HITGROUP_LEFTLEG or hitgroup == HITGROUP_RIGHTLEG then
-			--if not crouchpunish then
 			if not pl:ShouldCrouchJumpPunish() then
 				dmginfo:SetDamage(dmginfo:GetDamage() / 4)
 			end
 		end
 	end
 
-	if
-		(hitgroup == HITGROUP_LEFTLEG or hitgroup == HITGROUP_RIGHTLEG)
-		and self:PlayerShouldTakeDamage(pl, dmginfo:GetAttacker())
-		and not pl:CallZombieFunction1("IgnoreLegDamage", dmginfo)
-	then
+	if (hitgroup == HITGROUP_LEFTLEG or hitgroup == HITGROUP_RIGHTLEG) and self:PlayerShouldTakeDamage(pl, dmginfo:GetAttacker()) and not pl:CallZombieFunction1("IgnoreLegDamage", dmginfo) then
 		pl:AddLegDamage(
 			pl:ShouldCrouchJumpPunish()
-					and not (pl.LastBarricadeHit and pl.LastBarricadeHit + 2 > CurTime())
-					and dmginfo:GetDamage() / 4
+				and not (pl.LastBarricadeHit and pl.LastBarricadeHit + 2 > CurTime())
+				and dmginfo:GetDamage() / 4
 				or dmginfo:GetDamage()
 		)
 	end
@@ -3697,7 +3692,7 @@ function GM:EntityTakeDamage(ent, dmginfo)
 		       end
 
 		       if attacker:IsPlayer() and dispatchdamagedisplay and not hasdmgsess then
-			       self:DamageFloater(attacker, ent, dmgpos, floaterdmg)
+			       self:DamageFloater(attacker, ent, dmgpos, floaterdmg, nil, ent.m_LastCrit or false)
 		       elseif hasdmgsess and dispatchdamagedisplay then
 			       attacker:CollectDamageNumberSession(floaterdmg, dmgpos, ent:IsPlayer())
 		       end
@@ -3717,22 +3712,27 @@ function GM:PostEntityTakeDamage(ent, dmginfo, wasDamageTaken)
 	end
 end
 
-function GM:DamageFloater(attacker, victim, dmgpos, dmg, definiteply)
+function GM:DamageFloater(attacker, victim, dmgpos, dmg, definiteply, critical)
 	if attacker == victim then
 		return
 	end
+
 	if dmgpos == vector_origin then
 		dmgpos = victim:NearestPoint(attacker:EyePos())
 	end
 
 	net.Start((definiteply or victim:IsPlayer()) and "zs_dmg" or "zs_dmg_prop")
+
 	if INFDAMAGEFLOATER then
 		INFDAMAGEFLOATER = nil
 		net.WriteUInt(9999, 16)
 	else
 		net.WriteUInt(math.ceil(dmg), 16)
 	end
+
 	net.WriteVector(dmgpos)
+	net.WriteBool(critical or false)
+
 	net.Send(attacker)
 end
 
@@ -5286,7 +5286,7 @@ function GM:PlayerSwitchFlashlight(pl, newstate)
 	end
 
 	if pl:Team() == TEAM_HUMAN and CurTime() >= pl.NextFlashlightSwitch then
-		pl.NextFlashlightSwitch = CurTime() + 0.75
+		pl.NextFlashlightSwitch = CurTime() --+ 0.75
 		return true
 	end
 

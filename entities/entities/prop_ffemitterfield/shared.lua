@@ -7,7 +7,7 @@ ENT.m_NoNailUnfreeze = true
 ENT.NoNails = true
 ENT.IgnoreBullets = true
 ENT.IgnoreMelee = true
-ENT.IgnoreTraces = true
+ENT.IgnoreTraces = false
 ENT.FizzleStatusAOE = true
 
 AccessorFuncDT(ENT, "Emitter", "Entity", 0)
@@ -19,7 +19,7 @@ function ENT:ShouldNotCollide(ent)
 		if owner:IsValid() then
 			if owner:IsHuman() then
 				return true
-			elseif self:GetEmitter():IsValid() and self:GetEmitter().GetAmmo and self:GetEmitter():GetAmmo() < 1 then
+			elseif self:GetEmitter():IsValid() and self:GetEmitter():GetObjectHealth() <= 0 then
 				return true
 			end
 		end

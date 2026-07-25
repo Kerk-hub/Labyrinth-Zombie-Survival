@@ -44,12 +44,13 @@ end)
 net.Receive("zs_dmg", function(length)
 	local damage = net.ReadUInt(16)
 	local pos = net.ReadVector()
+	local critical = net.ReadBool()
 
 	if DamageFloaters then
 		local effectdata = EffectData()
 		effectdata:SetOrigin(pos)
 		effectdata:SetMagnitude(damage)
-		effectdata:SetScale(0)
+		effectdata:SetScale(critical and 2 or 0)
 		util.Effect("damagenumber", effectdata)
 	end
 end)

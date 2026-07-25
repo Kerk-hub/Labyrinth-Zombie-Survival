@@ -7,8 +7,10 @@ local cam = cam
 
 local Particles = {}
 
-local col = Color(220, 0, 0)
-local colprop = Color(220, 220, 0)
+local col = Color(220, 0, 0)          -- Normal damage
+local colprop = Color(220, 220, 0)    -- Prop damage
+local colcrit = Color(180, 0, 255)    -- Critical damage
+
 hook.Add("PostDrawTranslucentRenderables", "DrawDamage", function()
 	if #Particles == 0 then return end
 
@@ -25,14 +27,30 @@ hook.Add("PostDrawTranslucentRenderables", "DrawDamage", function()
 
 	for _, particle in pairs(Particles) do
 		if particle and curtime < particle.DieTime then
-			local c = particle.Type == 1 and colprop or col
+			local c
+
+			if particle.Type == 1 then
+				c = colprop
+			elseif particle.Type == 2 then
+				c = colcrit
+			else
+				c = col
+			end
 
 			done = false
 
 			c.a = math.Clamp(particle.DieTime - curtime, 0, 1) * 220
 
 			cam.Start3D2D(particle:GetPos(), ang, 0.1 * GAMEMODE.DamageNumberScale)
-				draw.SimpleText(particle.Amount, "ZS3D2DFont2", 0, 0, c, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
+				draw.SimpleText(
+					particle.Amount,
+					"ZS3D2DFont2",
+					0,
+					0,
+					c,
+					TEXT_ALIGN_CENTER,
+					TEXT_ALIGN_BOTTOM
+				)
 			cam.End3D2D()
 		end
 	end
@@ -47,6 +65,7 @@ hook.Add("PostDrawTranslucentRenderables", "DrawDamage", function()
 end)
 
 local gravity = Vector(0, 0, -500)
+
 function EFFECT:Init(data)
 	local pos = data:GetOrigin()
 	local amount = data:GetMagnitude()
@@ -59,6 +78,7 @@ function EFFECT:Init(data)
 
 	local emitter = ParticleEmitter(pos)
 	local particle = emitter:Add("sprites/glow04_noz", pos)
+
 	particle:SetDieTime(2)
 	particle:SetStartAlpha(0)
 	particle:SetEndAlpha(0)
@@ -72,11 +92,17 @@ function EFFECT:Init(data)
 
 	particle.Amount = amount
 	particle.DieTime = CurTime() + 2 * GAMEMODE.DamageNumberLifetime
+
+	-- 0 = normal
+	-- 1 = prop
+	-- 2 = critical
 	particle.Type = Type
 
 	table.insert(Particles, particle)
 
-	emitter:Finish() emitter = nil collectgarbage("step", 64)
+	emitter:Finish()
+	emitter = nil
+	collectgarbage("step", 64)
 end
 
 function EFFECT:Think()
