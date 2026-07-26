@@ -1,6 +1,6 @@
 INC_SERVER()
 
-ENT.Heal = 5.1
+ENT.Heal = 0 --5.1 set to 0 b/c of hitscan so the dart isn't the one healing
 ENT.Gravity = true
 
 function ENT:Initialize()
@@ -108,8 +108,8 @@ function ENT:Hit(vHitPos, vHitNormal, eHitEntity, vOldVelocity)
 				self:EmitSound("buttons/button8.wav", 70, math.random(115,128))
 				self:DoRefund(owner)
 			elseif not (owner:IsSkillActive(SKILL_RECLAIMSOL) and ehithp >= ehitmaxhp) then
-				eHitEntity:GiveStatus("healdartboost", self.BuffDuration or 10)
-				owner:HealPlayer(eHitEntity, self.Heal)
+				--eHitEntity:GiveStatus("healdartboost", self.BuffDuration or 10)
+				--owner:HealPlayer(eHitEntity, self.Heal)
 			else
 				self:DoRefund(owner)
 			end
