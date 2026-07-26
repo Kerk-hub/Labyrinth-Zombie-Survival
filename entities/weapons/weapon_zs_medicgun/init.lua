@@ -13,15 +13,45 @@ function SWEP:ShootBullets(damage, numshots, cone)
 	self:SendWeaponAnimation()
 	owner:DoAttackEvent()
 
-	-- Hitscan check
 	local shootpos = owner:GetShootPos()
+	local endpos = shootpos + owner:GetAimVector() * 2048
 
-	local tr = util.TraceLine({
-		start = shootpos,
-		endpos = shootpos + owner:GetAimVector() * 2048,
-		filter = owner,
-		mask = MASK_SHOT
-	})
+	local filter = {owner}
+	local tr
+
+	while true do
+		tr = util.TraceLine({
+			start = shootpos,
+			endpos = endpos,
+			filter = filter,
+			mask = MASK_SHOT
+		})
+
+		local ent = tr.Entity
+
+		if not IsValid(ent) then
+			break
+		end
+
+		if ent:IsPlayer() and ent:Team() ~= TEAM_UNDEAD then
+			local hp = ent:Health()
+			local maxhp = ent:GetMaxHealth()
+
+			-- low hp ppl get za heal
+			if ent:IsSkillActive(SKILL_D_FRAIL) then
+				break
+			end
+
+			-- ppl w/max hp get no heal
+			if hp >= maxhp then
+				table.insert(filter, ent)
+			else
+				break
+			end
+		else
+			break
+		end
+	end
 
 	local hitent = tr.Entity
 
@@ -54,8 +84,6 @@ function SWEP:ShootBullets(damage, numshots, cone)
 		util.Effect("hit_healdart", effectdata)
 	end
 
-	-- Fire the actual dart for visuals
-	-- This keeps the original ZS projectile look
 	for i = 1, numshots do
 		local ent = ents.Create(self.Primary.Projectile)
 
