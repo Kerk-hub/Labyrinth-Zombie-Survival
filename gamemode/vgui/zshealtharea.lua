@@ -245,8 +245,8 @@ local function ContentsPaint(self, w, h)
 		if lp:Team() == TEAM_HUMAN then
 			local bloodarmor = lp:GetBloodArmor()
 			if bloodarmor > 0 then
-				x = 4 * screenscale
-				y = 148 * screenscale
+				x = 1 * screenscale
+				y = 180 * screenscale
 				wid, hei = 260 * screenscale, 30 * screenscale
 
 				   healthperc = math.Clamp(bloodarmor / (lp.MaxBloodArmor or 10), 0, 1)
