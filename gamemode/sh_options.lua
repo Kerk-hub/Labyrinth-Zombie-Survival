@@ -339,7 +339,6 @@ item.NoClassicMode = true]]
 item = GM:WorthAdd("zapper", ITEMS_DEPLOYABLES, 20, "weapon_zs_zapper", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_zapper")
 	pl:GiveAmmo(1, "zapper")
-	pl:GiveAmmo(50, "pulse")
 end)
 item.Countables = "prop_zapper"
 item.NoClassicMode = true
@@ -642,7 +641,6 @@ item.NoClassicMode = true]]
 item = GM:ShopAdd("zapper", ITEMS_DEPLOYABLES, 50, "weapon_zs_zapper", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_zapper")
 	pl:GiveAmmo(1, "zapper")
-	pl:GiveAmmo(30, "pulse")
 end)
 item.Countables = "prop_zapper"
 item.NoClassicMode = true
@@ -650,7 +648,6 @@ item.NoClassicMode = true
 item = GM:ShopAdd("zapper_arc", ITEMS_DEPLOYABLES, 100, "weapon_zs_zapper_arc", nil, nil, nil, function(pl)
 	pl:GiveEmptyWeapon("weapon_zs_zapper_arc")
 	pl:GiveAmmo(1, "zapper_arc")
-	pl:GiveAmmo(30, "pulse")
 end)
 item.Countables = "prop_zapper_arc"
 item.NoClassicMode = true

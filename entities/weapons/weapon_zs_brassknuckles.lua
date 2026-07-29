@@ -26,7 +26,7 @@ end
 SWEP.WalkSpeed = SPEED_FASTEST
 
 SWEP.ViewModel = "models/weapons/c_arms_citizen.mdl"
-SWEP.WorldModel	= "models/weapons/w_grenade.mdl"
+SWEP.WorldModel	= "models/props_c17/utilityconnecter005.mdl"
 
 SWEP.Weight = 4
 

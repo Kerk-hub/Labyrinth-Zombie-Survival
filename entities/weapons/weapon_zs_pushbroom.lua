@@ -25,7 +25,7 @@ SWEP.HoldType = "melee2"
 SWEP.DamageType = DMG_CLUB
 
 SWEP.ViewModel = "models/weapons/c_crowbar.mdl"
-SWEP.WorldModel = "models/weapons/w_crowbar.mdl"
+SWEP.WorldModel = "models/props_c17/pushbroom.mdl"
 SWEP.UseHands = true
 
 SWEP.MeleeDamage = 94

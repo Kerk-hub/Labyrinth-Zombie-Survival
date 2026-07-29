@@ -23,7 +23,7 @@ SWEP.Base = "weapon_zs_basemelee"
 SWEP.DamageType = DMG_SLASH
 
 SWEP.ViewModel = "models/weapons/c_crowbar.mdl"
-SWEP.WorldModel = "models/weapons/w_crowbar.mdl"
+SWEP.WorldModel = "models/props_lab/cleaver.mdl"
 SWEP.UseHands = true
 SWEP.NoDroppedWorldModel = true
 --[[SWEP.BoxPhysicsMax = Vector(8, 1, 4)

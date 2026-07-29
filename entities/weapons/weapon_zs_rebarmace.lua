@@ -23,7 +23,7 @@ SWEP.Base = "weapon_zs_basemelee"
 SWEP.DamageType = DMG_CLUB
 
 SWEP.ViewModel = "models/weapons/c_stunstick.mdl"
-SWEP.WorldModel = "models/weapons/w_crowbar.mdl"
+SWEP.WorldModel = "models/props_debris/rebar004b_48.mdl"
 SWEP.UseHands = true
 
 SWEP.HoldType = "melee2"

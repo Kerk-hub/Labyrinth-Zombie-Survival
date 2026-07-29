@@ -3,8 +3,10 @@ SWEP.Description = "A cloud of strength and defence boosting gas affecting all h
 
 SWEP.Base = "weapon_zs_basethrown"
 
+SWEP.WorldModel = "models/props_lab/labpart.mdl"
+
 SWEP.ShowViewModel = false
-SWEP.ShowWorldModel = false
+SWEP.ShowWorldModel = true
 
 SWEP.Primary.Ammo = "bloodshot"
 

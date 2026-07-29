@@ -31,7 +31,7 @@ SWEP.WalkSpeed = SPEED_FAST
 SWEP.UseHands = true
 
 SWEP.ViewModel = "models/weapons/c_arms_hev.mdl"
-SWEP.WorldModel	= "models/weapons/w_grenade.mdl"
+SWEP.WorldModel	= "models/props_c17/TrapPropeller_Engine.mdl"
 
 SWEP.Weight = 4
 
