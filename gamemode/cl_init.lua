@@ -2964,7 +2964,7 @@ function GM:PostDrawViewModel(vm, pl, wep)
 	if wep and wep:IsValid() then
 		if wep.UseHands or not wep:IsScripted() then
 			local hands = pl:GetHands()
-			if hands and hands:IsValid() then
+			if hands and hands:IsValid() and not GAMEMODE.HideHandModels then
 				hands:DrawModel()
 			end
 		end

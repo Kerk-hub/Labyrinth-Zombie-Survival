@@ -427,6 +427,12 @@ function MakepOptions()
 	visualList:AddItem(check)
 
 	check = vgui.Create("DCheckBoxLabel", Window)
+	check:SetText("Hide hand models")
+	check:SetConVar("labyrinth_zs_hidehandmodels")
+	check:SizeToContents()
+	visualList:AddItem(check)
+
+	check = vgui.Create("DCheckBoxLabel", Window)
 	check:SetText("Hide view models")
 	check:SetConVar("labyrinth_zs_hideviewmodels")
 	check:SizeToContents()

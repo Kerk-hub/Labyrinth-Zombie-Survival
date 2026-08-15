@@ -280,6 +280,11 @@ cvars.AddChangeCallback("labyrinth_zs_nocrosshairrotate", function(cvar, oldvalu
 	GAMEMODE.NoCrosshairRotate = tonumber(newvalue) == 1
 end)
 
+GM.HideHandModels = CreateClientConVar("labyrinth_zs_hidehandmodels", "0", true, false):GetBool()
+cvars.AddChangeCallback("labyrinth_zs_hidehandmodels", function(cvar, oldvalue, newvalue)
+	GAMEMODE.HideHandModels = tonumber(newvalue) == 1
+end)
+
 GM.HideViewModels = CreateClientConVar("labyrinth_zs_hideviewmodels", "0", true, false):GetBool()
 cvars.AddChangeCallback("labyrinth_zs_hideviewmodels", function(cvar, oldvalue, newvalue)
 	GAMEMODE.HideViewModels = tonumber(newvalue) == 1
