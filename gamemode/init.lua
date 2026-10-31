@@ -1710,31 +1710,38 @@ function GM:LastBite(victim, attacker)
 end
 
 function GM:CalculateInfliction(victim, attacker)
-	if self.RoundEnded or self:GetWave() == 0 then
+	if self.RoundEnded then
 		return self.CappedInfliction
 	end
 
 	local players = 0
 	local zombies = 0
 	local humans = 0
+	local humanplayers = 0
 	local wonhumans = 0
 	local hum
 	for _, pl in pairs(player.GetAllActive()) do
 		if not pl.Disconnecting then
 			if pl:Team() == TEAM_UNDEAD then
 				zombies = zombies + 1
-			elseif pl:HasWon() then
-				wonhumans = wonhumans + 1
-			elseif pl:Team() == TEAM_HUMAN and pl:Alive() then
-				humans = humans + 1
-				hum = pl
+			elseif pl:Team() == TEAM_HUMAN then
+				humanplayers = humanplayers + 1
+				if pl:HasWon() then
+					wonhumans = wonhumans + 1
+				elseif pl:Alive() then
+					humans = humans + 1
+					hum = pl
+				end
 			end
 		end
 	end
 
-	-- New zombie win logic: if wave >= 1 and there are no living humans, zombies win
-	if self:GetWave() >= 1 and humans == 0 then
+	if self:GetWave() >= 1 and humanplayers > 0 and humans == 0 and wonhumans == 0 then
 		gamemode.Call("EndRound", TEAM_UNDEAD)
+		return self.CappedInfliction
+	end
+
+	if self:GetWave() == 0 then
 		return self.CappedInfliction
 	end
 
@@ -4230,7 +4237,13 @@ function GM:PlayerUse(pl, ent)
 	return true
 end
 
-function GM:PlayerDeath(pl, inflictor, attacker) end
+function GM:PlayerDeath(pl, inflictor, attacker)
+	if pl:Team() == TEAM_HUMAN then
+		timer.Simple(0, function()
+			gamemode.Call("CalculateInfliction")
+		end)
+	end
+end
 
 function GM:PlayerDeathSound()
 	return true
