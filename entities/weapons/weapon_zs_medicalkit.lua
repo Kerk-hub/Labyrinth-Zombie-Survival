@@ -177,6 +177,8 @@ end
 function SWEP:CanPrimaryAttack()
 	local owner = self:GetOwner()
 	if owner:IsHolding() or owner:GetBarricadeGhosting() then return false end
+	
+	if self:GetNextCharge() > CurTime() then return false end
 
 	if self:GetPrimaryAmmoCount() <= 0 then
 		self:EmitSound("items/medshotno1.wav")
@@ -185,7 +187,7 @@ function SWEP:CanPrimaryAttack()
 		return false
 	end
 
-	return self:GetNextCharge() <= CurTime() and (owner.NextMedKitUse or 0) <= CurTime()
+	 return (owner.NextMedKitUse or 0) <= CurTime()
 end
 
 if not CLIENT then return end
